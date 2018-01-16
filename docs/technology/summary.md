@@ -4,7 +4,7 @@
 
 We spend our days consuming *information*. That information could come in the form of a PDF, an article on Medium, a video on YouTube, an email, or a TED talk. As we consume, our mind parses and plays with the information, embedding it into our synapses, adding our own twists and takes on it, putting it through our personal filter. What comes out the other end is *knowledge*, a usable resource. We then use that knowledge to make decisions, guide conversations, and generally, to create value.
 
-> Each time we consume information, we parse and analyze it, creating value add thoughts that are captured in our mind as knowledge.
+> Each time we consume information, we parse and analyze it, creating value-add thoughts that are captured in our mind as knowledge.
 
 ## Experts
 

@@ -10,10 +10,10 @@ Plan has two primary structures for organizing **tasks**, the fundamental unit o
 
 1. **Lists** represent a related set of tasks. You can imagine that a *design* list would contain anything relating to design. Lists are named. The name of a list should be a single noun. Examples could include the following:
 
-  * Technology
-  * Design
-  * Administration
-  * People
+  * *Technology*
+  * *Design*
+  * *Administration*
+  * *People*
 
 2. **Projects** represent the state of the tasks within a list. You can imagine in a project having tasks that are *Urgent*, *Not Urgent*, *Ideas*. In fact these are the base set of projects every list should have.
 

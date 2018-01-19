@@ -1,36 +1,24 @@
 # Thoughts on Founder  Agreement
 ## Summary
-This document serves to outline our thoughts on a founder's agreement among the founding members if Julian and Cole decide to join Hex Ventures full time. The document is subject to comment and change.
+This document serves to outline our thoughts on a founder's agreement among the founding members if Julian and Cole decide to join the Company full time. The document is subject to comment and change.
 
-## Capitalizing the Business
-Cameron and I are initially capitalizing the LLC with 75k each = 150k. We are doing this because we are committed to the cause and want to be able to act quickly if we need to do something that requires a capital expenditure. It also lets us rest easy that we have money in the bank, and not in crypto.
+## Capitalizing the Initial LLC
+Cameron and Myles are initially capitalizing the LLC with 75k each = 150k. Cameron and Myles are doing this because they are committed to the cause and want to be able to act quickly if they need to do something that requires a capital expenditure. It also lets them rest easy that they have money in the bank, and not in crypto.
 
-This capital will only be going to company expenses. We are not using that money for anything personal like rent or other general living expenses. We will be analyzing our burn rate weekly and will make real time decisions on if more crypto needs to be turned into cash for the LLC. 
+## Converting to C-Corp
+Assuming Julian and Cole join the team as founders, Hex would then convert the llc to a C-Corp to allow for the issuance of shares. And, if Julian and Cole want to join full time it most likely means Hex has been succesful in its infancy, so issuing shares would be necessary to bring on investors.
 
-Assuming Julian and Cole join the team as founders, we would expect them to budget for living expenses accordingly, and not rely on the Company funds for rent and other general expenses.
+Converting to a C-Corp is easy and the upside from keeping it an LLC will most likely outweigh the legal cost of the conversion.
 
-With regards to future capital contributions by founders, we are going to work this out. It will be a question for how we structure this with lawyers. 
+## Julian and Cole Working For LLC
+Hex Ventures will draft up documents that will put into writing the agreement between parties. Hex will describe the following terms to the agreement: 
+* Hourly wage
+* Performance Metrics needed to hit that will most likely mean: "providing tangible contributions to the success of KnowledgeBase" and then define what success means: x,y and z
+* Equity provided at C-Corp conversion if those metrics are met and if Hex converts to C-Corp
+* How to dissolve the agreement
+
+## Future Capital Contributions
+If Hex converts to C-Corp, the corporation will issue common stock to the founders, and if a founder would like to  invest personal/leftover LLC capital into the C-Corp, it would most likely be done in the form of another security, and at a price per share that the founders agree on. Hex will ask their lawyers that question, but is not necessary under the LLC structure.
 
 ## Expenses
-* Food: we have budgeted for a $25 food per diem.
-* Healthcare: Cameron is on his parents plan until next year. Myles is planning on paying for healthcare through the LLC. That option is open to all of us.
-* Legal bills will all be paid by the firm
-
-Any Company related expenses above $1500
-need to be voted on as a group. This includes 1 time expenses or contractual/subscription based expenses that reaches that threshold over time. This threshold was calculated using a 2 orders of magnitude difference below our total budget.
-
-## Capital Structure
-We have a call with the lawyers next week (1/22) to discuss how best to set up equity among the founders that is comenserate with upfront risk/responsibility etc.
-
-We will also be asking the lawyers how best to setup the founder's equity structure that reflects Cameron and Myles' upfront investment and leaves room for Cole and Julian to invest at a later date, but does not penalize anyone if someone has more to invest than another. It may involve two seperate, but similar, securities. 
-
-##Governance/Decision Making
-We believe a majority vote for "strategic business decisions" makes sense
-* Capital raise
-* Liquidation
-* Mission statement
-
-Cameron and I are actively seeking advisors.
-
-## Board Members
-Assuming this takes off, we will want to have a Board of Directors. We will make sure to bring this up with the lawyers when we have our call. 
+As an independent contractor working for the LLC, Hex Ventures will provide a 1099 form, which one can use to write off work expeneses. 

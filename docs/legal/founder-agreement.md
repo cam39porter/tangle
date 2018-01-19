@@ -36,6 +36,16 @@ If a founder would like to  invest personal/leftover LLC capital into the C-Corp
 
 The equity structure of the business including founder shares, shares for employee stock option programs, and outside investors is still being finalized.
 
+It is the intention of Hex Ventures to have the following distribution with regard to founders shares:
+
+* Cameron Porter 35%
+
+* Myles McGinley 35%
+
+* Julian Griggs 15%
+
+* Cole McCracken 15%
+
 ## Expenses
 
 As an independent contractor working for the LLC, Hex Ventures will provide a 1099 form, which one can use to write off work expeneses. 

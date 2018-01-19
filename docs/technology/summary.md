@@ -2,9 +2,9 @@
 
 ## Information to Knowledge
 
-We spend our days consuming *information*. That information could come in the form of a PDF, an article on Medium, a video on YouTube, an email, or a TED talk. As we consume, our mind parses and plays with the information, embedding it into our synapses, adding our own twists and takes on it, putting it through our personal filter. What comes out the other end is *knowledge*, a usable resource. We then use that knowledge to make decisions, guide conversations, and generally, to create value.
+We spend our days consuming *information*. That information could come in the form of a PDF, an article on Medium, a video on YouTube, an email, or a TED talk. As we consume information, our brain filters it, parses it and stores it  based on our experiences and what we already understand. The product of this process is *knowledge* - a usable resource that we then use to make decisions, guide conversations, and more generally, to live as productive humans in our day-to-day lives.
 
-> Each time we consume information, we parse and analyze it, creating value add thoughts that are captured in our mind as knowledge.
+> Each time we consume information, we parse and analyze it, creating value-add thoughts that are captured in our mind as knowledge.
 
 ## Experts
 
@@ -70,7 +70,7 @@ $$ v > \frac{c}{|K|^{\beta}} $$ (8)
 
 > By capturing the connections between the information being consumed, the consumer of that information, and their micro-insights we will drastically increase the value of a firms knowledge base.
 
-So why start with an enterprise software product? Since these firms have large knowledge bases already and a large number of individuals contributing to them the portion of usable knowledge (read $\frac{1}{\alpha}$ or $|K|^{\beta}$) generated will be higher than with a single average consumer. This means that the initial higher costs (read frictions) of acquiring knowledge with early versions of the tooling will be offset by faster gains for the firm as a whole than would occur for an individual consumer. This combined with a clearer monetization strategy for providing an enterprise product makes it a natural starting point.
+So why start with an enterprise software product? Since these firms have large knowledge bases already and a large number of individuals contributing to them, the portion of usable knowledge (read $\frac{1}{\alpha}$ or $|K|^{\beta}$) generated will be higher than with a single average consumer. This means that the initial higher costs (read frictions) of acquiring knowledge with early versions of the tooling will be offset by faster gains for the firm as a whole than would occur for an individual consumer. This combined with a clearer monetization strategy for providing an enterprise product makes it a natural starting point.
 
 > An enterprise software as a service product provides a clear path towards monetization and more immediate value add, offsetting the ease of use frictions of early versions of the tooling.
 

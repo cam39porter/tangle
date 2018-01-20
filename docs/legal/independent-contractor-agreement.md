@@ -2,7 +2,7 @@
 
 | Subject | Description |
 |---------|-------------|
-| *Term*   | The *Term* of this contract is Six months starting at the earlier of Julian Griggs or Cole McCracken signing this agreement or February 1, 2018. |
+| *Term*   | The *Term* of this contract is six months starting at the earlier of Julian Griggs or Cole McCracken signing this agreement or February 1, 2018. |
 | *Wage* | The *Wage* for this contract is $25 per hour to be calculated and kept by the Independent Contractor. This cash compensation can be deferred in recognition of tax and legal overhead and opportunity cost for the annual budget. |
 | *Independent Contractor Status* | The signer of this agreement will have the status of *1099 Independent Contractor*. |
 | *Scope of Work* |  The signer of this agrees to make tangible contributions to the development of a minimally viable product as well as participate in company activities including consistent communications and meetings. |

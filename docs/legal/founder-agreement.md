@@ -52,6 +52,6 @@ As an independent contractor working for the LLC, Hex Ventures will provide a 10
 
 Once converted to a C-corp, Hex Ventures is prepared to cover the follow living expenses of founders:
 
-* $25 perdiem for food
+* $25 per diem for food
 
 * potential stipend for housing

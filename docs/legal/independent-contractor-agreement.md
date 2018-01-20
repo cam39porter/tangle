@@ -32,4 +32,4 @@ The following describes the calculation of the buyback price. Cameron Porter and
 
 ## Notes
 
-* *Vesting*: The vesting of equity will be determined when the Hex Ventures LLC converts to a C-corp at which point all founders will be subject to the same vesting schedule.
+* *Vesting*: The vesting of equity will be determined when Hex Ventures LLC converts to a C-corp at which point all founders will be subject to the same vesting schedule.

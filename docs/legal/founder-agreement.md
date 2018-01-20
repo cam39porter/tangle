@@ -49,3 +49,9 @@ It is the intention of Hex Ventures to have the following distribution with rega
 ## Expenses
 
 As an independent contractor working for the LLC, Hex Ventures will provide a 1099 form, which one can use to write off work expeneses. 
+
+Once converted to a C-corp, Hex Ventures is prepared to cover the follow living expenses of founders:
+
+* $25 perdiem for food
+
+* potential stipend for housing

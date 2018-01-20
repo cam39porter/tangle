@@ -29,3 +29,7 @@ This section describes the rate and nature of equity buyback for the signer of t
 | 1.5% at $2250 | 1.5% at $2250 | 1.5% at $2250 | 1.5% at $2250 | 1.5% at $2250 | 1.5% at $2250 |
 
 The following describes the calculation of the buyback price. Cameron Porter and Myles McGinley each invested $75000 for a 50% stake in Hex Ventures LLC. This puts the value of a 1% stake in Hex Ventures LLC at $1500. The buyback price for a 1.5% stake at $2250 is thus the same rate at which Cameron Porter and Myles McGinley bought into Hex Ventures LLC at.
+
+## Notes
+
+* *Vesting*: The vesting of equity will be determined when the Hex Ventures LLC converts to a C-corp at which point all founders will be subject to the same vesting schedule.

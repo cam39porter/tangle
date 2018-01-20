@@ -28,7 +28,7 @@ Hex Ventures will draft documents that will put into writing the agreement betwe
 
 * How to dissolve the agreement
 
-## Future Capital Contributions
+## Equity Structure & Capital Contributions
 
 If Hex Ventures converts to a C-Corp, the corporation will issue common stock to the founders. 
 

@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import 'tachyons'
 
 class App extends Component {
   render() {
@@ -6,8 +7,8 @@ class App extends Component {
       <div className={``}>
         <h1 className={`f1 tc`}>Corpus</h1>
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App

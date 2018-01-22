@@ -1,6 +1,7 @@
 module.exports = {
   siteMetadata: {
-    title: 'Gatsby Default Starter',
+    title: 'Hex Ventures',
   },
+  pathPrefix: '/reponame',
   plugins: ['gatsby-plugin-react-helmet'],
 };

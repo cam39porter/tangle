@@ -8,6 +8,7 @@
     "gatsby-link": "^1.6.34",
     "gatsby-plugin-react-helmet": "^2.0.3",
     "react-helmet": "^5.2.0",
+    "react-particles-js": "^2.1.0",
     "tachyons": "^4.9.1"
   },
   "keywords": [

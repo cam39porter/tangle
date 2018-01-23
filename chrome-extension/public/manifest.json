@@ -1,10 +1,10 @@
 {
-  "short_name": "Corpus",
-  "name": "Corpus Extension",
+  "short_name": "Opit",
+  "name": "Opit Extension",
   "manifest_version": 2,
   "browser_action": {
     "default_popup": "index.html",
-    "default_title": "React Ext"
+    "default_title": "Opit"
   },
   "version": "1.0"
 }

@@ -90,12 +90,14 @@ const IndexPage = ({ data }) => (
               blink: true,
               element: '|',
               hideWhenDone: true,
-              hideWhenDoneDelay: 0.5,
+              hideWhenDoneDelay: 0,
             }}
           >
-            <span> for manager of future </span>
-            <Typist.Backspace count={8} delay={200} />
-            <span className={`f1 lightest-blue tracked`}> YOU </span>
+            <span className={`f2`}>for teams of the future</span>
+            <Typist.Backspace count={19} delay={1000} />
+            <span className={`f2`}>the executive with vision</span>
+            <Typist.Backspace count={25} delay={1000} />
+            <span className={`f1 lightest-blue tracked`}>...YOU</span>
           </Typist>
         </h1>
       </div>

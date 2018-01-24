@@ -4,5 +4,5 @@ module.exports = {
     base: '#001b44',
     accent: '#cdecff'
   },
-  plugins: ['gatsby-plugin-react-helmet'],
+  pathPrefix: '/hex-ventures'
 };

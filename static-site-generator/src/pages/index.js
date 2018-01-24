@@ -6,6 +6,7 @@ import React from 'react'
 import Link from 'gatsby-link'
 
 import Particles from 'react-particles-js'
+import Typist from 'react-typist'
 
 import 'tachyons'
 
@@ -14,12 +15,14 @@ import 'tachyons'
  */
 
 const IndexPage = ({ data }) => (
-  <div className={``}>
+  <div className={`vh-100`}>
+
+    {/* Network Background */}
     <Particles 
-      className={`vh-100`}
+      className={`fl vh-100 w-100`}
       params={{
         particles: {
-          number: { value: 6, density: { enable: true, value_area: 100 } },
+          number: { value: 6, density: { enable: true, value_area: 200 } },
           color: { value: '#001b44' },
           shape: {
             type: "polygon",
@@ -50,7 +53,7 @@ const IndexPage = ({ data }) => (
             random: false,
             straight: false,
             out_mode: "out",
-            bounce: false,
+            bounce: true,
             attract: { enable: false, rotateX: 600, rotateY: 1200 }
           }
         },
@@ -72,6 +75,32 @@ const IndexPage = ({ data }) => (
         }
       }
     />
+
+    <div className={`dt absolute top-0 vh-100 w-100`}>
+      <div className={`dtc tr vh-100 w-50 v-mid`}>
+        <h1 className={`bg-navy white pa5 f2`}>
+          Next level knowledge<br/>management
+        </h1>
+      </div>
+      <div className={`dtc tl vh-100 w-50 v-mid`}>
+        <h1 className={`navy pa4`}>
+          <Typist
+            cursor={{
+              show: true,
+              blink: true,
+              element: '|',
+              hideWhenDone: true,
+              hideWhenDoneDelay: 0.5,
+            }}
+          >
+            <span> for manager of future </span>
+            <Typist.Backspace count={8} delay={200} />
+            <span className={`f1 lightest-blue tracked`}> YOU </span>
+          </Typist>
+        </h1>
+      </div>
+    </div>
+  
   </div>
 )
 

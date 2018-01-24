@@ -12,19 +12,20 @@ const DefaultWrapper = ({ children, data }) => (
   <div className={`avenir`}>
 
     {/* Header */}
-    <header className={``}>
+    <header className={`w-100 fixed`}>
 
       {/* Navigation */}
-      <nav className={`dt w-100 mw9 center ph6`}>
+      <nav className={`dt w-100 mw8 center`}>
 
         {/* Logo */}
-        <div className={`dtc fl w6 v-mid pa3`}>
+        <div className={`dtc fl v-mid pa3`}>
           <h1 className={`f4 tc navy tracked-mega`}>{data.site.siteMetadata.title}</h1>
         </div>
 
         {/* Actions */}
         <div className={`dtc v-mid tr pa3`}>
-          <Link className={`dim bg-navy pa3 shadow-5 f6 tracked lightest-blue no-underline ttu`}>team</Link>
+          <Link to='/' className={`dim pa3 f6 tracked navy no-underline ttu`}>team</Link>
+          <Link to='/' className={`dim bg-navy pa3 shadow-5 f6 tracked white no-underline ttu`}>message</Link>
         </div>
       </nav>
     </header>

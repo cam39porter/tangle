@@ -10,13 +10,6 @@ import Particles from 'react-particles-js'
 import 'tachyons'
 
 /*!
- * Style Colors
- */
-
-const base  = '#001b44'
-const accent = '##cdecff'
-
-/*!
  * Default parameters
  */
 

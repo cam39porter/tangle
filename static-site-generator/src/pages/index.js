@@ -6,7 +6,7 @@ import React from 'react'
 import Link from 'gatsby-link'
 
 import Particles from 'react-particles-js'
-import particlesUtils from '../lib/particles-utils'
+import utils from '../lib/utils'
 
 import 'tachyons'
 
@@ -14,7 +14,8 @@ import 'tachyons'
 const IndexPage = () => (
   <div className={``}>
     <Particles 
-      params={ particlesUtils.params }
+      className={`vh-90`}
+      params={ utils.particlesParams }
     />
   </div>
 )

@@ -3,34 +3,42 @@
  */
 
 /*!
+ * Style Colors
+ */
+
+module.exports.base  = '#001b44'
+module.exports.accent = '##cdecff'
+
+
+
+/*!
  * Default parameters
  */
 
-module.exports.params = {
+module.exports.particlesParams = {
   particles: {
-    number: { value: 6, density: { enable: true, value_area: 200 } },
-    color: { value: "#1b1e34" },
+    number: { value: 6, density: { enable: true, value_area: 100 } },
+    color: { value: module.exports.base },
     shape: {
       type: "polygon",
-      stroke: { width: 0, color: "#000" },
+      stroke: { width: 0, color: module.exports.base },
       polygon: { nb_sides: 6 },
-      image: { src: "img/github.svg", width: 10, height: 10 }
     },
     opacity: {
-      value: 0.3,
+      value: 0.05,
       random: true,
       anim: { enable: false, speed: 1, opacity_min: 0.1, sync: false }
     },
     size: {
-      value: 4,
+      value: 8,
       random: false,
       anim: { enable: true, speed: 10, size_min: 40, sync: false }
     },
     line_linked: {
       enable: true,
-      distance: 200,
-      color: "#000",
-      opacity: 0.5,
+      distance: 250,
+      color: module.exports.base,
+      opacity: 0.1,
       width: 1
     },
     move: {

@@ -75,6 +75,10 @@ const particlesParams = {
   retina_detect: true
 }
 
+/*!
+ * Component
+ */
+
 const IndexPage = () => (
   <div className={``}>
     <Particles 

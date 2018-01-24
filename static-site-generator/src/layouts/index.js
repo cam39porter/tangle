@@ -6,8 +6,6 @@ import React from 'react'
 
 import Link from 'gatsby-link'
 
-import Particles from 'react-particles-js'
-
 import 'tachyons'
 
 const DefaultWrapper = ({ children, data }) => (

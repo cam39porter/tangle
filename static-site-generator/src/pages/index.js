@@ -77,13 +77,13 @@ const IndexPage = ({ data }) => (
     />
 
     <div className={`dt absolute top-0 vh-100 w-100`}>
-      <div className={`dtc tr vh-100 w-50 v-mid`}>
-        <h1 className={`bg-navy white pa5 f2`}>
+      <div className={`dtc tr center-s vh-100 w-50 v-mid`}>
+        <h1 className={`bg-navy white pa5-ns pa4 f2-ns f4`}>
           Next level knowledge<br/>management
         </h1>
       </div>
-      <div className={`dtc tl vh-100 w-50 v-mid`}>
-        <h1 className={`navy pa4`}>
+      <div className={`dtc tr-ns tl center-s vh-100 w-50-ns v-mid`}>
+        <h1 className={`navy pa4-ns pa3`}>
           <Typist
             cursor={{
               show: true,
@@ -93,11 +93,11 @@ const IndexPage = ({ data }) => (
               hideWhenDoneDelay: 0,
             }}
           >
-            <span className={`f2`}>for teams of the future</span>
+            <span className={`f2-ns f3`}>for the teams of the future</span>
             <Typist.Backspace count={19} delay={1000} />
-            <span className={`f2`}>the executive with vision</span>
+            <span className={`f2-ns f3`}>executive with vision</span>
             <Typist.Backspace count={25} delay={1000} />
-            <span className={`f1 lightest-blue tracked`}>...YOU</span>
+            <span className={`f-headline-ns f1 light-blue tracked-mega pa3-ns`}>YOU</span>
           </Typist>
         </h1>
       </div>

@@ -19,7 +19,7 @@ const DefaultWrapper = ({ children, data }) => (
 
         {/* Logo */}
         <div className={`dtc fl v-mid pa3`}>
-          <h1 className={`f4 tc navy tracked-mega`}>{data.site.siteMetadata.title}</h1>
+          <h1 className={`f4-ns f5 tc-ns tl navy tracked-mega`}>{data.site.siteMetadata.title}</h1>
         </div>
 
         {/* Actions */}

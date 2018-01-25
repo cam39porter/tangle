@@ -7,6 +7,7 @@ import Link from 'gatsby-link'
 
 import Particles from 'react-particles-js'
 import Typist from 'react-typist'
+import { emojify } from 'react-emojione'
 
 import 'tachyons'
 
@@ -76,12 +77,18 @@ const IndexPage = ({ data }) => (
       }
     />
 
-    <div className={`dt absolute bottom-2 vh-75-ns vh-50 w-100`}>
+
+    {/* Headline */}
+    <div className={`dt absolute bottom-2 vh-75 w-100 center`}>
       <div className={`dtc`}>
-        <h1 className={`dib absolute top-2-ns top--2-ns left-0 w-50 bg-navy white pa5-ns pa4 f2-ns f4 tr v-mid`}>
+
+        {/* Left Phrase */}
+        <h1 className={`dib absolute top-2 left-0 w-50 bg-navy white pa5-ns pa4 f2-ns f4 tr v-mid`}>
           <span>Next level </span><span>knowledge</span><br/><span>management</span>
         </h1>
-        <h1 className={`dib absolute top-2-ns top--2-ns right-0 w-50 navy pa5-ns pa4 f2-ns f4 tl v-mid`}>
+
+        {/* Right Phrase */}
+        <h1 className={`dib absolute top-2 right-0 w-50 navy pa5-ns pa4 f2-ns f4 tl v-mid`}>
           <Typist
             cursor={{
               show: true,
@@ -100,7 +107,12 @@ const IndexPage = ({ data }) => (
         </h1>
       </div>
     </div>
-  
+    
+    {/* Message Button */}
+    <div className={`dtc mb5 absolute bottom-2 tc w-100`}>
+      <p className={`mw-1 pa4 f6-ns f7 tracked navy ttu`}>Ask us about our formula {emojify(`:stuck_out_tongue_winking_eye:`)}</p>
+      <Link to='/' className={`mw-1 dim bg-navy pa3 shadow-5 f6-ns f7 tracked white no-underline ttu`}>message</Link>
+    </div>
   </div>
 )
 

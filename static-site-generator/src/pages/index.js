@@ -76,14 +76,12 @@ const IndexPage = ({ data }) => (
       }
     />
 
-    <div className={`dt absolute top-0 vh-100 w-100`}>
-      <div className={`dtc tr center-s vh-100 w-50 v-mid`}>
-        <h1 className={`bg-navy white pa5-ns pa4 f2-ns f4`}>
-          Next level knowledge<br/>management
+    <div className={`dt absolute bottom-2 vh-75-ns vh-50 w-100`}>
+      <div className={`dtc`}>
+        <h1 className={`dib absolute top-2-ns top--2-ns left-0 w-50 bg-navy white pa5-ns pa4 f2-ns f4 tr v-mid`}>
+          <span>Next level </span><span>knowledge</span><br/><span>management</span>
         </h1>
-      </div>
-      <div className={`dtc tr-ns tl-m tl-l center-s vh-100 w-50-ns v-mid`}>
-        <h1 className={`navy pa4-ns pa3`}>
+        <h1 className={`dib absolute top-2-ns top--2-ns right-0 w-50 navy pa5-ns pa4 f2-ns f4 tl v-mid`}>
           <Typist
             cursor={{
               show: true,
@@ -93,11 +91,11 @@ const IndexPage = ({ data }) => (
               hideWhenDoneDelay: 0,
             }}
           >
-            <span className={`f2-ns f3`}>for the teams of the future</span>
+            <span className={`f2-ns f4`}>for the teams of the future</span>
             <Typist.Backspace count={19} delay={1000} />
-            <span className={`f2-ns f3`}>executive with vision</span>
+            <span className={`f2-ns f4`}>executive with vision</span>
             <Typist.Backspace count={25} delay={1000} />
-            <span className={`f-headline-ns f1 light-blue tracked-mega pa3-ns`}>YOU</span>
+            <span className={`f-headline-ns f1 light-blue tracked-mega`}>YOU</span>
           </Typist>
         </h1>
       </div>

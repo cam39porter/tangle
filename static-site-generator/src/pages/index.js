@@ -82,7 +82,7 @@ const IndexPage = ({ data }) => (
           Next level knowledge<br/>management
         </h1>
       </div>
-      <div className={`dtc tr-ns tl center-s vh-100 w-50-ns v-mid`}>
+      <div className={`dtc tr-ns tl-m tl-l center-s vh-100 w-50-ns v-mid`}>
         <h1 className={`navy pa4-ns pa3`}>
           <Typist
             cursor={{

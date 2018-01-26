@@ -50,12 +50,12 @@ export default function Template({ data }) {
       {/* Author Date */}
       <div className={`dt w-50-ns w-100 center`}>
         {/* Author */}
-        <h1 className={`dtc w-50 bg-white navy pa4 f4 fw5 v-mid tc`}>
+        <h1 className={`dtc w-50 bg-white navy pa4 f4 v-mid tc`}>
           {frontmatter.author}
         </h1>
 
         {/* Date */}
-        <h1 className={`dtc w-50 pa3 bg-navy white f5 fw5 lh-copy v-mid tc`}>
+        <h1 className={`dtc w-50 pa3 bg-navy white f5 lh-copy v-mid tc`}>
           {dateFormat(frontmatter.date, 'longDate')}<br />
         </h1>
       </div>

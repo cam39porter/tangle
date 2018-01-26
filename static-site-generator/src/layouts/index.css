@@ -1,7 +1,7 @@
 /* Blog Post Styles for markdown */
 
 .blog h1, .blog h2, .blog h3 {
-  font-weight: 300;
+  font-weight: 500;
 }
 
 .blog p code {

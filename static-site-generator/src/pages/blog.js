@@ -22,16 +22,69 @@ import 'tachyons'
  * Component
  */
 
-const BlogPage = () => (
-  <div className={``}>
+const BlogPage = ({ data }) => (
+  <div className={'blog'}>
 
-    {/* Header Particles */}
+    `{/* Header Particles */}
     <Particles 
       className={`vh-25 w-100`}
       params={particlesConfig}
     />
-    
+
+    {/* List of Blog Posts */}
+    {data.allMarkdownRemark.edges.map((blogPost) =>{
+      return (
+        <div className={`w-100`}>
+          <div className={`dt w-100`} key={blogPost.node.frontmatter.path}>
+            {/* Title */}
+            <Link to={blogPost.node.frontmatter.path} className={`dtc shadow-5 w-50 vh-25 bg-navy white pa4 f2-ns f3 v-mid no-underline dim tr`}>
+              {blogPost.node.frontmatter.title}
+            </Link>
+
+            {/* Subtitle */}
+            <h1 className={`dtc w-50 vh-25 pa3 bg-white navy f4-ns f6 fw3 lh-copy tl v-mid`}>
+              <span>{blogPost.node.frontmatter.subtitle}</span><br />
+              {/* Tags */}
+              <div className={`w-100 tc flex flex-wrap`}>
+                {blogPost.node.frontmatter.tags.map(tag => (
+                  <span className={`ma2 f7 light-blue`} key={tag}>
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            </h1>
+          </div>
+
+          {/* Separator */}
+          <Particles 
+            className={`h3 w-100`}
+            params={particlesConfig}
+          />
+        </div>
+      )
+    })}
   </div>
 )
+
+export const pageQuery = graphql`
+  query IndexQuery {
+    allMarkdownRemark(
+      limit: 2000
+      sort: { fields: [frontmatter___date], order: DESC }
+    ) {
+      edges {
+        node {
+          frontmatter {
+            title
+            subtitle
+            tags
+            date
+            path
+          }
+        }
+      }
+    }
+  }
+`
 
 export default BlogPage

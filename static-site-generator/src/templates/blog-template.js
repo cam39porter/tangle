@@ -86,14 +86,14 @@ export default function Template({ data }) {
         params={particlesConfig}
       />
     </div>
-  );
+  )
 }
 
 /*!
  * GraphQL
  */
 
-export const blogQuery = graphql`
+export const blogTemplateQuery = graphql`
   query BlogPostByPath($path: String!) {
     markdownRemark(frontmatter: { path: { eq: $path } }) {
       html

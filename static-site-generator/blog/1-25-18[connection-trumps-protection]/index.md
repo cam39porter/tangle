@@ -1,6 +1,6 @@
 ---
 path: '/blog/connection-trumps-protection'
-date: '2018-01-18'
+date: '2018-01-25'
 title: 'The Mesh Lens'
 subtitle: 'How Connection Trumps Protection'
 author: 'Myles McGinley'

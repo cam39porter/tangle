@@ -37,7 +37,7 @@ const BlogPage = ({ data }) => (
         <div className={`w-100`}>
           <div className={`dt w-100`} key={blogPost.node.frontmatter.path}>
             {/* Title */}
-            <Link to={blogPost.node.frontmatter.path} className={`dtc shadow-5 w-50 vh-25 bg-navy white pa4 f2-ns f3 v-mid no-underline dim tr`}>
+            <Link to={blogPost.node.frontmatter.path} className={`dtc shadow-5 w-50 vh-25 bg-navy white pa4 f2-ns f3 v-mid tr dim no-underline`}>
               {blogPost.node.frontmatter.title}
             </Link>
 

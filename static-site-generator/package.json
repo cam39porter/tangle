@@ -1,11 +1,13 @@
 {
-  "name": "gatsby-starter-default",
-  "description": "Gatsby default starter",
+  "name": "hex-ventures-static",
+  "description": "Hex Ventures static stite",
   "version": "1.0.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "author": "Cameron Porter <cam@hex.ventures>",
   "dependencies": {
     "gatsby": "^1.9.158",
     "gatsby-link": "^1.6.34",
+    "gatsby-source-filesystem": "^1.5.15",
+    "gatsby-transformer-remark": "^1.7.29",
     "react-feather": "^1.0.8",
     "react-helmet": "^5.2.0",
     "react-hexagon": "^1.1.3",

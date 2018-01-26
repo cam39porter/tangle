@@ -54,7 +54,7 @@ const TeamPage = () => (
         first='Myles'
         last='McGinley'
         title='founder'
-        description='Myles loves helping people solve problems by starting with why. He was an investment banker, strategy consultant, and a decentralization buff before founding  Hex Ventures.'
+        description='Myles loves helping people solve problems by starting with why. He was an investment banker, a strategy consultant, and a decentralization buff before founding  Hex Ventures.'
         right={ true }
         twitter='mylesmcginley1'
         linkedin='myles-mcginley-10708954'

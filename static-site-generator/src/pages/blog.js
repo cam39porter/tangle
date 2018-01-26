@@ -37,8 +37,8 @@ const BlogPage = ({ data }) => (
         <div className={`w-100`}>
           <div className={`dt w-100`} key={blogPost.node.frontmatter.path}>
             {/* Title */}
-            <Link to={blogPost.node.frontmatter.path} className={`dtc shadow-5 w-50 vh-25 bg-navy white pa4 f2-ns f3 v-mid tr dim no-underline`}>
-              <h1>{blogPost.node.frontmatter.title}</h1>
+            <Link to={blogPost.node.frontmatter.path} className={`dtc shadow-5 w-50 vh-25 bg-navy white pa4 v-mid tr dim no-underline`}>
+              <h1 className={`f2-ns f3`}>{blogPost.node.frontmatter.title}</h1>
             </Link>
 
             {/* Subtitle */}
@@ -47,7 +47,7 @@ const BlogPage = ({ data }) => (
               {/* Tags */}
               <div className={`w-100 tc flex flex-wrap`}>
                 {blogPost.node.frontmatter.tags.map(tag => (
-                  <span className={`pa1 f5 light-blue ttl`} key={tag}>
+                  <span className={`pa1 f5-ns f6 light-blue ttl`} key={tag}>
                     #{tag}
                   </span>
                 ))}

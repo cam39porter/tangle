@@ -2,14 +2,16 @@
  * Particle Config
  */
 
+import colors from './colors'
+
 export default 
 {
   particles: {
     number: { value: 6, density: { enable: true, value_area: 200 } },
-    color: { value: '#001b44' },
+    color: { value: colors.base },
     shape: {
       type: "polygon",
-      stroke: { width: 0, color: '#001b44' },
+      stroke: { width: 0, color: colors.base },
       polygon: { nb_sides: 6 },
     },
     opacity: {
@@ -25,7 +27,7 @@ export default
     line_linked: {
       enable: true,
       distance: 250,
-      color: '#001b44',
+      color: colors.base,
       opacity: 0.1,
       width: 1
     },

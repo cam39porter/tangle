@@ -11,6 +11,10 @@ import colors from '../../config/colors'
 import Particles from 'react-particles-js'
 import particlesConfig from '../../config/particles'
 
+import { withPrefix } from 'gatsby-link'
+
+import { Twitter, Linkedin } from 'react-feather'
+
 import 'tachyons'
 
 /*!
@@ -18,16 +22,27 @@ import 'tachyons'
  */
 
 const Name = (props) => (
-  <h1 className={`dtc w-50 vh-25 bg-navy white pa2 f3-ns f4 v-mid ${props.right ? 'tl-ns tr' : 'tr-ns tl'}`}>
+  <h1 className={`dtc w-50 vh-25 bg-navy white pa4 f3-ns f4 v-mid ${props.right ? 'tl-ns tr' : 'tr-ns tl'}`}>
+    {/* Name */}
     <span className={``}>{props.first}<br />
     {props.last}<br /></span>
-    <span className={`f1-ns f2 lh-title light-blue`}>{props.title}</span>
+    {/* Title */}
+    <span className={`f1-ns f2 lh-title light-blue`}>{props.title}</span><br />
+    {/* Social */}
+    <span>
+      <a href={`https://www.twitter.com/${props.twitter}`} className={`white`}>
+        <Twitter className={`pa2`}/>
+      </a>
+      <a href={`https://www.twitter.com/${props.twitter}`} className={`white`}>
+        <Linkedin className={`pa2`}/>
+      </a>
+    </span>
   </h1>
 )
 
 const Description = (props) => (
-  <h1 className={`dtc w-50 vh-25 pa3 bg-white navy f5-ns f6 ${props.right ? 'tr' : 'tl'} v-mid`}>
-    {props.content}
+  <h1 className={`dtc w-50 vh-25 pa3 bg-white navy f6-ns f7 tl v-mid`}>
+    <p className={``}>{props.content}</p>
   </h1>
 )
 
@@ -43,7 +58,7 @@ const Profile = (props) => (
       {/* Picture */}
       <div className={`w-100 tc`}>
         <Hexagon 
-          backgroundImage='http://tachyons.io/img/avatar_1.jpg'
+          backgroundImage={props.pic}
           backgroundScale={1.05}
           flatTop={ true } 
           style={{
@@ -65,6 +80,7 @@ const Profile = (props) => (
               last={props.last} 
               title={props.title}
               right={props.right}
+              twitter={props.twitter}
             />
             <Description 
               content={props.description}

@@ -19,6 +19,13 @@ import Typist from 'react-typist'
 import 'tachyons'
 
 /*!
+ * Pictures
+ */
+
+import camPic from '../assets/team-pics/cam.jpg'
+import mylesPic from '../assets/team-pics/myles.jpg'
+
+/*!
  * Component
  */
 
@@ -39,6 +46,8 @@ const TeamPage = () => (
         title='founder'
         description='Cam played soccer for a while and now does this.'
         right={ false }
+        twitter='cam39porter'
+        pic={ camPic }
       />
       <Profile 
         first='Myles'
@@ -46,6 +55,8 @@ const TeamPage = () => (
         title='founder'
         description='Myles consulted for a while and now does this.'
         right={ true }
+        twitter='mylesmcginley1'
+        pic={ mylesPic }
       />
     </div>
   </div>

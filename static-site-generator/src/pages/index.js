@@ -71,7 +71,7 @@ const IndexPage = () => (
               </div>
             </div>
         </MathJax.Context>
-        <a href='mailto:cam@hex.ventures?subject=Hello%20Hex!' target='_top' className={`mw-1 dim bg-navy pa3 shadow-5 f6-ns f7 tracked white no-underline ttu`}>message</a>
+        <a href='mailto:info@hex.ventures?subject=Hello%20Hex!' target='_top' className={`mw-1 dim bg-navy pa3 shadow-5 f6-ns f7 tracked white no-underline ttu`}>message</a>
       </div>
     </div>
   </div>

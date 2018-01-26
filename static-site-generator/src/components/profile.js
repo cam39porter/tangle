@@ -52,7 +52,7 @@ const Description = (props) => (
  */
 
 const Profile = (props) => (
-  <div className={`dib w-50-ns w-100 vh-75 pb2 bg-white center`}>
+  <div className={`dib w-50-l w-100 vh-75 pb2 bg-white center`}>
     <article className={`w-100`}>
 
       {/* Picture */}

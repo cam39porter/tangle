@@ -47,7 +47,7 @@ const BlogPage = ({ data }) => (
               {/* Tags */}
               <div className={`w-100 tc flex flex-wrap`}>
                 {blogPost.node.frontmatter.tags.map(tag => (
-                  <span className={`ma2 f7 light-blue`} key={tag}>
+                  <span className={`ma2 f7 light-blue ttl`} key={tag}>
                     #{tag}
                   </span>
                 ))}

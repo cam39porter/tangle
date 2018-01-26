@@ -41,21 +41,23 @@ const TeamPage = () => (
     {/* Team Members */}
     <div className={`flex-wrap`}>
       <Profile 
-        first='Cameron'
+        first='Cam'
         last='Porter'
         title='founder'
-        description='Cam played soccer for a while and now does this.'
+        description='Cam loves learning and designing systems to capture what he learns. He was a professional soccer player, engineering consultant, and ML / blockchain aficionado before founding Hex Ventures.'
         right={ false }
         twitter='cam39porter'
+        linkedin='cam39porter'
         pic={ camPic }
       />
       <Profile 
         first='Myles'
         last='McGinley'
         title='founder'
-        description='Myles consulted for a while and now does this.'
+        description='Myles loves helping people solve problems by starting with why. He was an investment banker, strategy consultant, and a decentralization buff before founding  Hex Ventures.'
         right={ true }
         twitter='mylesmcginley1'
+        linkedin='myles-mcginley-10708954'
         pic={ mylesPic }
       />
     </div>

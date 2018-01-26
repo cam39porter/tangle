@@ -33,7 +33,7 @@ const Name = (props) => (
       <a href={`https://www.twitter.com/${props.twitter}`} className={`white`}>
         <Twitter className={`pa2`}/>
       </a>
-      <a href={`https://www.twitter.com/${props.twitter}`} className={`white`}>
+      <a href={`https://www.linkedin.com/in/${props.linkedin}`} className={`white`}>
         <Linkedin className={`pa2`}/>
       </a>
     </span>
@@ -41,7 +41,7 @@ const Name = (props) => (
 )
 
 const Description = (props) => (
-  <h1 className={`dtc w-50 vh-25 pa3 bg-white navy f6-ns f7 tl v-mid`}>
+  <h1 className={`dtc w-50 vh-25 pa3 bg-white navy f5-ns f7 lh-copy v-mid tj`}>
     <p className={``}>{props.content}</p>
   </h1>
 )
@@ -81,6 +81,7 @@ const Profile = (props) => (
               title={props.title}
               right={props.right}
               twitter={props.twitter}
+              linkedin={props.linkedin}
             />
             <Description 
               content={props.description}
@@ -100,6 +101,8 @@ const Profile = (props) => (
               last={props.last} 
               title={props.title}
               right={props.right}
+              twitter={props.twitter}
+              linkedin={props.linkedin}
             />
           </div>
         )}

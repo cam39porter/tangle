@@ -8,6 +8,8 @@ import Link from 'gatsby-link'
 
 import 'tachyons'
 
+import './index.css'
+
 const DefaultWrapper = ({ children, data }) => (
   <div className={`avenir`}>
 

@@ -4,6 +4,7 @@ date: '2018-01-18'
 title: 'The Mesh Lens'
 subtitle: 'How Connection Trumps Protection'
 author: 'Myles McGinley'
+tags: ['mesh', 'knowledge', 'sharing', 'ted']
 ---
 
 ## Dinner Conversation
@@ -13,11 +14,11 @@ I recently had dinner with some former colleagues, all of whom have been in both
 I was surprised by their pessimistic view of these kinds of tools — I imagined they would add a lot of value at companies that generate revenue from their knowledge and ideas.
 So, I prodded and asked why they felt this way...
 
-> "Collaboration and knowledge sharing doesn’t really work in practice. It’s just the way it is."
+> Collaboration and knowledge sharing doesn’t really work in practice. It’s just the way it is.
 
 *Why?*
 
-> "Well, you know, the incentive structure doesn’t support it. Employees do not want others knowing what they know in an organization where salaries are structured with a base and revenue-based bonus." 
+> Well, you know, the incentive structure doesn’t support it. Employees do not want others knowing what they know in an organization where salaries are structured with a base and revenue-based bonus.
 
 *Hmm.*
 
@@ -34,6 +35,10 @@ So, I prodded and asked why they felt this way...
 The next day I went down a deep rabbit hole in pursuit of some semblance of an answer. The search was fruitful. I didn’t find any specific answers, per se, but rather organizing principles around which I could think about a company’s infrastructure, systems, and operations.
 
 One concept I found particularly interesting was the notion of “mesh”. Mesh, the brainchild of Lisa Gansky, is a one-word descriptor for a company that focuses on shareability and leverages technology to track and derive value from customer data.
+
+<div class='aspect-ratio aspect-ratio--16x9'>
+  <iframe class='aspect-ratio--object' src="https://www.youtube.com/embed/IHBGLHgIWJM?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
+</div>
 
 Put simply, a mesh is a sharing network — one in which there is a commodity that is shared, used, and shared again. Mesh networks becomes more useful and durable as more users are added to it. For example, the Airbnb network is strong because if one property owner unlists their home, plenty of options remain.
 

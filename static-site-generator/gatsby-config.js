@@ -9,9 +9,11 @@ module.exports = {
       options: {
         path: './blog',
         name: 'blog-pages'    
-      }
+      },
     },
-    'gatsby-transformer-remark'
+    {
+      resolve: 'gatsby-transformer-remark'
+    }
   ]
 }
  

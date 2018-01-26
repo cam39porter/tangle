@@ -24,7 +24,7 @@ export default function Template({ data }) {
   const { frontmatter, html } = markdownRemark
 
   return (
-    <div className={''}>
+    <div className={'blog'}>
 
       {/* Header Particles */}
       <Particles 
@@ -63,10 +63,14 @@ export default function Template({ data }) {
       {/* Content */}
       <div className={'navy pa4 tj'}>
 
-        {/* Date */}
-        {/* <span className={`f5 tr light-blue`}>
-            {frontmatter.date}
-        </span> */}
+        {/* Tags */}
+        <div className={`w-50-ns w-100 center tc flex justify-center flex-wrap`}>
+          {frontmatter.tags.map(tag => (
+            <span className={`pa2 ma2 f7 light-blue`} key={tag}>
+              #{tag}
+            </span>
+          ))}
+        </div>
 
         {/* Body */}
         <div
@@ -99,6 +103,7 @@ export const blogQuery = graphql`
         title
         subtitle
         author
+        tags
       }
     }
   }

@@ -41,7 +41,7 @@ const Name = (props) => (
 )
 
 const Description = (props) => (
-  <h1 className={`dtc w-50 vh-25 pa3 bg-white navy f5-ns f7 fw3 lh-copy v-mid tj`}>
+  <h1 className={`dtc w-50 vh-25 pa3 bg-white navy f5-ns f7 fw3-ns fw4 lh-copy v-mid tj`}>
     <p className={``}>{props.content}</p>
   </h1>
 )

@@ -66,7 +66,7 @@ export default function Template({ data }) {
         {/* Tags */}
         <div className={`w-50-ns w-100 center tc flex justify-center flex-wrap`}>
           {frontmatter.tags.map(tag => (
-            <span className={`pa2 ma2 f7 light-blue ttl`} key={tag}>
+            <span className={`pa2 ma2 f6 light-blue ttl`} key={tag}>
               #{tag}
             </span>
           ))}

@@ -42,12 +42,12 @@ const BlogPage = ({ data }) => (
             </Link>
 
             {/* Subtitle */}
-            <h1 className={`dtc w-50 vh-25 pa3 bg-white navy f4-ns f6 fw3 lh-copy tl v-mid`}>
+            <h1 className={`dtc w-50 vh-25 pa3 bg-white navy f4-ns f5 fw3-ns fw4 lh-copy tl v-mid`}>
               <span>{blogPost.node.frontmatter.subtitle}</span><br />
               {/* Tags */}
               <div className={`w-100 tc flex flex-wrap`}>
                 {blogPost.node.frontmatter.tags.map(tag => (
-                  <span className={`ma2 f7 light-blue ttl`} key={tag}>
+                  <span className={`pa1 f6 light-blue ttl`} key={tag}>
                     #{tag}
                   </span>
                 ))}

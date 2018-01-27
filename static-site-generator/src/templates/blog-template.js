@@ -42,8 +42,16 @@ export default function Template({ data }) {
         </h1>
 
         {/* Subtitle */}
-        <h1 className={`dtc w-50 vh-25 pa3 bg-white navy f3-ns f4 lh-copy v-mid tl`}>
-          {frontmatter.subtitle}<br />
+        <h1 className={`dtc w-50 vh-25 pa3 bg-white navy f4-ns f5 lh-copy tl v-mid`}>
+          <span>{frontmatter.subtitle}</span><br />
+          {/* Tags */}
+          <div className={`w-100 tc flex flex-wrap`}>
+            {frontmatter.tags.map(tag => (
+              <span className={`pa1 f5-ns f6 light-blue ttl`} key={tag}>
+                #{tag}
+              </span>
+            ))}
+          </div>
         </h1>
       </div>
 
@@ -62,15 +70,6 @@ export default function Template({ data }) {
 
       {/* Content */}
       <div className={'navy pa4 tj'}>
-
-        {/* Tags */}
-        <div className={`w-50-ns w-100 center tc flex justify-center flex-wrap`}>
-          {frontmatter.tags.map(tag => (
-            <span className={`pa2 ma2 f5 light-blue ttl`} key={tag}>
-              #{tag}
-            </span>
-          ))}
-        </div>
 
         {/* Body */}
         <div

@@ -30,7 +30,7 @@ const IndexPage = () => (
       />
 
       {/* Headline */}
-      <div className={`dt absolute bottom-2 vh-75 w-100 center`}>
+      <div className={`dt absolute bottom-2-ns bottom-1 vh-75 w-100 center`}>
         <div className={`dtc`}>
 
           {/* Left Phrase */}
@@ -60,18 +60,18 @@ const IndexPage = () => (
       </div>
       
       {/* Message Button */}
-      <div className={`dtc mb5 absolute bottom-2 tc w-100`}>
+      <div className={`dtc mb5 absolute bottom-2-ns bottom-0 tc w-100`}>
         <MathJax.Context>
-            <div className={`mw-1 pa4 tracked navy ttu`}>
+            <div className={`mw-1 pa4-ns pa2 tracked navy ttu`}>
               <p className={`f6-ns f7`}>Ask us about our formula ;)</p>
-              <div className={`f3`}>
+              <div className={`f3-ns f4`}>
                 <MathJax.Node>
                   {`U(f) \\propto K ( v |K|^{\\beta} - c)`}
                 </MathJax.Node>
               </div>
             </div>
         </MathJax.Context>
-        <a href='mailto:info@hex.ventures?subject=Hello%20Hex!' target='_top' className={`mw-1 dim bg-navy pa3 shadow-5 f6-ns f7 tracked white no-underline ttu`}>message</a>
+        <a href='mailto:info@hex.ventures?subject=Hello%20Hex!' target='_top' className={`mw-1 dim bg-navy pa3  shadow-5 f6-ns f7 tracked white no-underline ttu`}>message</a>
       </div>
     </div>
   </div>

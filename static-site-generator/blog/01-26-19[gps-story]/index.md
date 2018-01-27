@@ -1,8 +1,8 @@
 ---
-path: '/blog/non-actionable-to-actionable'
+path: '/blog/gps-story'
 date: '2018-01-27'
-title: 'Non-Actionable to Actionable'
-subtitle: 'Lessons From the Birth of the Global Positioning System (Part 1 of 2)'
+title: 'The Story of GPS'
+subtitle: 'Non Actionable to Actionable (Part 1)'
 author: 'Myles McGinley'
 tags: ['GPS', 'innovation', 'actionable', 'sharing']
 ---

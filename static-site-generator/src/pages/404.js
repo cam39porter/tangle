@@ -25,11 +25,11 @@ const NotFoundPage = () => (
 
     {/* 404 */}
     <div className={`dt w-100`} key={blogPost.node.frontmatter.path}>
-      <Link to={blogPost.node.frontmatter.path} className={`dtc shadow-5 w-50 vh-25 bg-navy white pa4 v-mid tr dim no-underline`}>
+      <h1 to={blogPost.node.frontmatter.path} className={`dtc w-50 vh-25 bg-navy white pa4 v-mid tr dim no-underline`}>
         <h1 className={`f2-ns f3`}>
           Oh No
         </h1>
-      </Link>
+      </h1>
 
       {/*  */}
       <h1 className={`dtc w-50 vh-25 pa3 bg-white navy f4-ns f5 lh-copy tl v-mid`}>

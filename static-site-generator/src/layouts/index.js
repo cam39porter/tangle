@@ -14,7 +14,7 @@ const DefaultWrapper = ({ children, data }) => (
   <div className={`avenir`}>
 
     {/* Header */}
-    <header className={`w-100 fixed bg-white-50`}>
+    <header className={`w-100 fixed bg-white-50 z-max`}>
 
       {/* Navigation */}
       <nav className={`dt w-100 mw8 center`}>

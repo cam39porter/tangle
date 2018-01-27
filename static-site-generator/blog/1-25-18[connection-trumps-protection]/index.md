@@ -28,7 +28,7 @@ So, I prodded and asked why they felt this way...
 
 2. In the long run, growing the pie is a more effective way to earn higher compensation than trying to cut a bigger slice.
 
-3. Lastly, I began to think about what makes a professional services firm better than another. What is the formula that makes any organization great? Is it that they have the smartest employees who know a lot? Or, perhaps is how these individuals are organized.
+3. Lastly, I began to think about what makes a professional services firm better than another. What is the formula that makes any organization great? Is it that they have the smartest employees who know a lot? Or, perhaps is it how these individuals are organized.
 
 ## The Rabbit Hole
 

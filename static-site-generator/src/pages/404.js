@@ -19,7 +19,7 @@ const NotFoundPage = () => (
 
     {/* Header */}
     <Particles 
-      className={`fl vh-100 w-100`}
+      className={`fl vh-25 w-100`}
       params={particlesConfig}
     />
 
@@ -39,7 +39,7 @@ const NotFoundPage = () => (
 
     {/* Footer */}
     <Particles 
-      className={`fl vh-100 w-100`}
+      className={`fl vh-25 w-100`}
       params={particlesConfig}
     />
   </div>

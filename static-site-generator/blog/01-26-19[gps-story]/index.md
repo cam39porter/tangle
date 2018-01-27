@@ -11,7 +11,7 @@ tags: ['GPS', 'innovation', 'actionable', 'sharing']
 
 Great ideas, technologies and companies do not catalyze in a vacuum. They happen almost at random because of collaboration, sharing and cooperation among many parties. I think the story of how two scientists discovered GPS is one from which we can learn, and which we can emulate within our teams, organizations and companies to achieve valuable things/goals.
 
-The global positioning system, or GPS as we know it today, started off as a side-project. 
+The global positioning system, or GPS as we know it today, started off as a side-project.
 
 On October 7th, 1957, Will Guier and George Weiffenbach, two students at the Johns Hopkins Applied Physics Lab (APL) were having lunch discussing the day’s most popular news: Sputnik’s launch into orbit three days prior. The two became rather excitable when they agreed it was likely that you could listen to Sputnik via the microwaves it was emanating. After discussing with classmates and professors, they quickly realized that nobody at APL had tried this yet.
 
@@ -31,17 +31,17 @@ As you can imagine, this discovery made the entire APL buzz, and soon enough a l
 
 About 6 months later, Frank McClure, the director of the APL, asked the two young men if they could flip the equation: If you could use the static position of the receiver and the doppler effect to map something in space. Could you then find the exact position of something on the ground knowing the exact orbit of a satellite in space?
 
-To make a long story short, the answer is yes, you can. And, unbeknownst to them, Will and George had created the technology that would allow the US to track their nuclear submarines. 
+To make a long story short, the answer is yes, you can. And, unbeknownst to them, Will and George had created the technology that would allow the US to track their nuclear submarines.
 
 Fast forward to today… the technology, now commonly known as GPS, has been made a public utility by Ronald Reagan. It is estimated that if GPS was shutoff, the economy would immediately lose ~$100bn.
 
-This story is both remarkable and admirable, as well as offers us a unique lens through which to view raw innovation: a 60 year journey from listening to Sputnik, to ubiquitous GPS. 
+This story is both remarkable and admirable, as well as offers us a unique lens through which to view raw innovation: a 60 year journey from listening to Sputnik, to ubiquitous GPS.
 
 ## Questions
 
 How can we implement themes from this story to spur innovation at every level in an enterprise?
 
-Maybe more realistically, what are the kinds of tools companies need to catalyze the next GPS? 
+Maybe more realistically, what are the kinds of tools companies need to catalyze the next GPS?
 
 How can we structure and instill organizations with the kind of culture that first led Will and George to explore an idea together, then coalesced a group of other scientists to bring the discovery from side-project to real breakthrough?
 

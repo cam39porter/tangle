@@ -59,7 +59,7 @@ const IndexPage = () => (
         </div>
       </div>
       
-      {/* Message Button */}
+      {/* Math + Message */}
       <div className={`dtc mb5 absolute bottom-2-ns bottom-0 tc w-100`}>
         <MathJax.Context>
             <div className={`mw-1 pa4-ns pa2 tracked navy ttu`}>
@@ -71,7 +71,10 @@ const IndexPage = () => (
               </div>
             </div>
         </MathJax.Context>
-        <a href='mailto:info@hex.ventures?subject=Hello%20Hex!' target='_top' className={`mw-1 dim-ns bg-navy pa3  shadow-5 f6-ns f7 tracked white no-underline ttu`}>message</a>
+        {/* Message */}
+        <a href='mailto:info@hex.ventures?subject=Hello Hex!' target='_top' className={`mw-1 dim-ns navy pa3 f6-ns f7 tracked white no-underline ttu`}>email</a>
+        {/* Apply */}
+        <a href='mailto:careers@hex.ventures?subject=Hello Hex!&body=Question: What would knowledge management look like if it were easy? Let us know who you are and how you think you can contribute to building the answer to that question.' target='_top' className={`mw-1 dim-ns bg-navy white shadow-5 pa3 f6-ns f7 tracked no-underline ttu`}>apply</a>
       </div>
     </div>
   </div>

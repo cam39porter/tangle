@@ -24,8 +24,8 @@ const NotFoundPage = () => (
     />
 
     {/* 404 */}
-    <div className={`dt w-100`} key={blogPost.node.frontmatter.path}>
-      <h1 to={blogPost.node.frontmatter.path} className={`dtc w-50 vh-25 bg-navy white pa4 v-mid tr dim no-underline`}>
+    <div className={`dt w-100`}>
+      <h1 className={`dtc w-50 vh-25 bg-navy white pa4 v-mid tr dim no-underline`}>
         <h1 className={`f2-ns f3`}>
           Oh No
         </h1>

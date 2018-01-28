@@ -47,4 +47,4 @@ How can we structure and instill organizations with the kind of culture that fir
 
 How do we make these interactions and repetitive and commonplace?
 
-**These are the kinds of questions we at Hex Ventures think about daily. Check out part 2 to learn some insights we came up with!**
+**These are the kinds of questions we at Hex Ventures think about daily. Check out [part 2](https://hex-ventures.github.io/hex-ventures/blog/non-actionable-to-actionable-part-2) to learn some insights we came up with!**

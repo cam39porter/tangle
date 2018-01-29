@@ -63,6 +63,12 @@ const BlogPage = ({ data }) => (
         </div>
       )
     })}
+
+  {/* Footer */}
+  <Particles 
+    className={`vh-25 w-100`}
+    params={particlesConfig}
+  />
   </div>
 )
 

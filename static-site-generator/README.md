@@ -49,7 +49,8 @@ tags: ['xxxx', 'yyyy', 'zzzz', 'nnnn']
 * First, make sure you have saved your .md file
 * **Enter:** `git add ./static-site-generator/blog/mm-dd-yy[name-of-blog]` or simply `git add .` to stage all the new or modified documents in your current directory. If you are in anyway confused by that, just use the former syntax and ask someone for clarification.
 * **Enter:** `git commit -m 'message'` see the contribution guidelines [README](https://github.com/hex-ventures/hex-ventures/blob/master/CONTRIBUTING.md) for more information on syntax. 
-* **Enter:** `git push` too add it to the repo.
+* **Enter:** `git push`
+* You will be prompted to then use a `git push` command in your terminal to complete the push. Simply copy and paste the entire command and press enter.
 * Then, go to the github repo in your browser and create a pull request.
 * Once a teammember has reviewed, the post you created on the new branch you created will be merged with the master branch.
 

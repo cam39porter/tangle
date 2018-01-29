@@ -1,5 +1,5 @@
 ---
-path: '/blog/capturing-micro-insights
+path: '/blog/capturing-micro-insights'
 date: '2018-01-29'
 title: 'The Power of Thoughts'
 subtitle: 'The Case for Capturing Micro-Insights'

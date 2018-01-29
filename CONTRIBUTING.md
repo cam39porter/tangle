@@ -25,6 +25,5 @@ If you've made the change to a React component, use the components name, such as
 
 ```sh
 
-git commit -m 'fix(server): broken get handler
-
+git commit -m 'fix(server): broken get handler'
 ```

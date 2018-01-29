@@ -3,7 +3,7 @@ path: '/blog/capturing-micro-insights'
 date: '2018-01-29'
 title: 'The Power of Thoughts'
 subtitle: 'The Case for Capturing Micro-Insights'
-author: 'Julian Griggs'
+author: 'Cameron Porter'
 tags: ['insight', 'thoughts', 'brain', 'storage']
 ---
 
@@ -27,4 +27,4 @@ There are two obvious questions that arise:
 
 2. Even if we somehow managed to record them, how would we draw meaningful connections from a sea of randomness?
 
-Leveraging intelligent technology to answer these two questions is what Hex Ventures is all about — and we certainly have some good ideas. 
+**Leveraging intelligent technology to answer these two questions is what Hex Ventures is all about — and we certainly have some good ideas.** 

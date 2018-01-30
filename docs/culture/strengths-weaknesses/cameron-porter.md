@@ -82,4 +82,4 @@
 
 * **Optimism**: I am often times overly optimistic and think that somethings that cannot (or cannot reasonably) be done can be. I think that this in part stems from the fact that I can create persuasive arguments about why something will happen or can be achieved. When I am analyzing things rationally and assigning probabilities to outcomes, I always need to be cognizant of this bias. Even more helpful is being around people who question my overly optimistic assessments.
 
-* **Unemotional**: There are times when make statements or explain how I think about decisions that ignore their emotional nature. I think that this make me seem arrogant.
+* **Unemotional**: I have a way of analyzing decision in an overly economical way. This often leads to others thinking I am callous, unemotional or arrogant.

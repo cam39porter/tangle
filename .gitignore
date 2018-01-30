@@ -40,3 +40,7 @@ Thumbs.db
 ######################
 *.iml
 .idea
+
+# Cloud Functions #
+######################
+cloud-functions/graphql-server/node_modules

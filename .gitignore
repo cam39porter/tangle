@@ -43,4 +43,4 @@ Thumbs.db
 
 # Cloud Functions #
 ######################
-cloud-functions/graphql-server/node_modules
+node_modules/

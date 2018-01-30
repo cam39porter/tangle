@@ -4,11 +4,11 @@
 
 ## Deploying
 
-> There are three types of Cloud Functions that can deployed. These are Cloud Functions triggered by HTTP, Cloud Pub/Sub, and Cloud Storage. Each of these has similar deployment pattern. They are summarized below.
+> There are three types of Cloud Functions that can deployed. These are Cloud Functions triggered by HTTP, Cloud Pub/Sub, and Cloud Storage. Each of these has similar deployment pattern. They are summarized below. In general you can reference this [guide](https://cloud.google.com/functions/docs/deploying/repo) for how to deploy from source control.
 
 ### HTTP Triggers
 
-> This section will go through deploying a Cloud Function with an HTTP trigger. In order to achieve this we will be using the `hello-http` as example an example.
+> This section will go through deploying a Cloud Function with an HTTP trigger. In order to achieve this we will be using the `hello-http` as example an example. For a more detailed reference, refer to this [guide](https://cloud.google.com/functions/docs/calling/http).
 
 1. Create a Cloud Function with an HTTP trigger.
 
@@ -25,9 +25,12 @@ e-aliases/master/paths/cloud-functions/hello-world --trigger-http
 4. Your function is now deployed. You can check for it on GCP console and use the url outputted to test hitting the function.
 
 ### Cloud Pub/Sub Triggers
+> [Guide](https://cloud.google.com/functions/docs/calling/pubsub)
 
 [TODO]
 
 ### Cloud Storage Trigger
+
+> [Guide](https://cloud.google.com/functions/docs/calling/storage)
 
 [TODO]

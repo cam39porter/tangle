@@ -3,11 +3,11 @@ path: '/blog/boost-performance'
 date: '2018-01-30'
 title: 'Professional Growth'
 subtitle: 'Three Easy Steps to Boost Performance'
-author: 'Cameron Porter'
+author: 'Myles McGinely'
 tags: ['Performance', 'Growth']
 ---
 
-A close friend who is now a senior developer at a large social network platform in Silicon Valley recently shared with me some some of the things that she feels have been the biggest contributors to her early success. She shared them with me, so I, with you. 
+A close friend who is now a senior developer at a large social network platform in Silicon Valley recently shared with me some some of the things that she feels have been the biggest contributors to her early success. I thought I would pass these along.
 
 ### Take ownership of the uncomfortable
 
@@ -17,7 +17,7 @@ The more you jump at taking ownership of bigger, scarier projects, the more high
 
 ### Don’t hide weakness
 
-While unbelievable now, my friend had a   sense of imposter syndrome when first starting. As a fresh new college grad, she felt that her skills were not up to par, and worried that others (including the boss) would track her knowledge gaps and use them against her. This ended up being miles from the truth. 
+While unbelievable now, my friend had a sense of imposter syndrome when first starting. As a fresh new college grad, she felt that her skills were not up to par, and worried that others (including the boss) would track her knowledge gaps and use them against her. This ended up being miles from the truth. 
 
 Nobody cares. In fact, most colleauges want to see you succeed! 
 
@@ -25,7 +25,7 @@ Feeling scared and anxious about what you don't know actually hinders your abili
 
 ### Sleep
 
-Getting enough sleep is an obvious boon to critical thinking and mood, but is often neglected by fledgling 20 somethings in every industry. She stressed that getting enough sleep improved her performance on the job and she felt she was able to  learn faster than some of her fatigued colleauges that had either stayed late to finish work or hit the bars in the Mission. She stressed that you of course need to have fun, but it was clear that some of her colleagues who came from better schools and had stronger backgrounds were not doing as well because they were simply tyring to do too much. 
+Getting enough sleep is an obvious boon to critical thinking and mood, but is often neglected by fledgling 20 somethings in every industry. She stressed that getting enough sleep improved her performance on the job and she felt she was able to learn faster than some of her fatigued colleauges that had either stayed late to finish work or hit the bars in the Mission. She stressed that you of course need to have fun, but it was clear that some of her colleagues who came from better schools and had stronger backgrounds were not doing as well because they were simply tyring to do too much. 
 
 Sleep is your friend.
 

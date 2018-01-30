@@ -34,4 +34,4 @@ Tools and internal practices that spur collaboration, empower failure, and creat
 
 Much has been written about how the design of a space can help foster an environment in which great ideas are formed. Homebrew Computing Club, Freud’s Wednesday salon and English coffeehouses during the industrial revolution are just a few of these. Perhaps doing away with the high-walled cubicles in favor of open space that invites rather than dissuades collaboration.
 
-Lastly, company culture is ultimatley derived from the how the people in charge interact with others in the organization. Setting a standard of open communication, support and encouragement will make it easier for valuable ideas to come alive and become actionable.
+Lastly, company culture is ultimately derived from the how the people in charge interact with others in the organization. Setting a standard of open communication, support and encouragement will make it easier for valuable ideas to come alive and become actionable.

@@ -10,7 +10,7 @@
 
 * **Honest**: Seeking to be transparent in all dealings.
 
-* **Communicative**: Seeking to keep all interested parties informed.
+* **Communicative**: Seeking to keep all interested informed.
 
 * **Adaptive**: Able to handle change gracefully.
 

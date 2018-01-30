@@ -2,6 +2,32 @@
 
 > This directory contains all of our Google Cloud Platform (GCP) Cloud Functions. Each subdirectory contains a single Cloud Function that is deployed separately from all other Cloud Functions.
 
+**Make sure you are using Node version `6.11.5`.** This can be set up with `nvm`.
+
+## Local Emulator
+
+> The Cloud Functions Emulator allows you deploy, run, and debug Cloud Functions locally before deploying them. In general you can reference this [guide](https://cloud.google.com/functions/docs/emulator)
+
+### Installation
+
+Before running the following commands, make sure you are using the correct version of Node.
+
+```sh
+npm install -g @google-cloud/functions-emulator
+```
+
+You should now have a global `functions-emulator` command.
+
+### Using
+
+1. Run `functions-emulator start` to start the emulator.
+
+2. Deploy your function by navigating to its directory and running `functions-emulator deploy [NAME] [TRIGGER]`
+
+3. Call the function using `functions-emulator call [NAME] --data='{"message":"hello world"}`
+
+4. Stop the emulator by running `functions-emulator stop`
+
 ## Deploying
 
 > There are three types of Cloud Functions that can deployed. These are Cloud Functions triggered by HTTP, Cloud Pub/Sub, and Cloud Storage. Each of these has similar deployment pattern. They are summarized below. In general you can reference this [guide](https://cloud.google.com/functions/docs/deploying/repo) for how to deploy from source control.
@@ -14,7 +40,7 @@
 
 2. Once you are ready to deploy this function, push your branch and put in a pull request to `master`.
 
-3. Once your branch has been merged with `master`, deploy your branch to our organization `hex-ventures` and our project `opit` in GCP using the following command.
+3. Once your branch has been merged with `master`, deploy your Cloud Function to our organization `hex-ventures` and our project `opit` in GCP using the following command.
 
 ```sh
 gcloud beta functions deploy helloHttp --source h

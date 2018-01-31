@@ -76,10 +76,20 @@
 
 > Describe some character weaknesses that you have, that would potentially hinder a business (fewer and deeper answers)
 
-* **Empathy**: I often times have trouble communicating with other in an empathetic way when they are struggling with something I feel that there is a clear solution to. This is especially true when I feel as though they are avoiding learning or growing in some way that would enable them to solve it.
+* **Empathy**: I often times have trouble communicating with others in an empathetic way when they are struggling with something I feel that there is a clear solution to. This is especially true when I feel as though they are avoiding learning or growing in some way that would enable them to solve it.
 
 * **Introverted Learner**: Instead of asking for help when I could use it or it would save time, I often would rather go out on my own and bang my head against a wall until I figure it out. I think part of this is a desire to seem like I am self sufficient, prove my worth, or cover up things I struggle with personally.
 
 * **Optimism**: I am often times overly optimistic and think that somethings that cannot (or cannot reasonably) be done can be. I think that this in part stems from the fact that I can create persuasive arguments about why something will happen or can be achieved. When I am analyzing things rationally and assigning probabilities to outcomes, I always need to be cognizant of this bias. Even more helpful is being around people who question my overly optimistic assessments.
 
 * **Unemotional**: I have a way of analyzing decisions in an overly economical way. This often leads to others thinking I am callous, unemotional, or arrogant.
+
+## Core Motivations
+
+> Describe some of the reasons why you want to start a company (fewer and deeper answers)
+
+* **Shaping**: I want to take an idea or vision and turn into an elegant reality that shapes the way we live. I am never satisfied building out the visions of others. I want to work with talented people to make a shared vision a shared reality.
+
+* **Giving Back**: Growing up, my grandparents always drilled into us that the more talented you are, the more resources you have at your disposal, the greater your responsibility to give back (like Spiderman, *with great power comes great responsibility*). I do not mean this in a purely charitable sense, but in the sense that the endeavors that we pursue should positively touch the lives of others in proportion to what we are capable of. I think that I and those close to me are incredibly fortunate in an incredible number of ways. It is my hope that given all that we can truly create some positive change.
+
+* **Meaningful Relationships**: I want to spend the short time I have in this life surrounded by people I love and am excited to engage with each day. Since we spend a lot of our time working, I want to make sure I spend that time surrounded by people that are inspiring, challenging, funny, and ultimately seeking the same type of meaningful relationships in their work life. This also goes back to my internal motto of *work hard, have fun*.

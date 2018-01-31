@@ -23,9 +23,9 @@ const executableSchema = makeExecutableSchema({
  })
 
 /*!
- * Export the GraphQL Express Server
+ * Export the GraphQL
  */
 
 module.exports = graphqlExpress({ 
   schema: executableSchema
- })
+})

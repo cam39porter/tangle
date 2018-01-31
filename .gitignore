@@ -41,6 +41,6 @@ Thumbs.db
 *.iml
 .idea
 
-# Cloud Functions #
+# Node #
 ######################
 node_modules/

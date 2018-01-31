@@ -73,3 +73,13 @@
 **jack of all trades**: For all the same reasons why this is a strength, it can also be considered a weakness. I am good at a lot of things and have had exposure to plenty of different areas, but do not necessarily have a technical skill set that I am incredibly deep in. The jack of all trades but master of none saying.
 
 **over trust**: I am susceptible to "over trust" people and because of that, I am can sometimes relinquish responsibility of thinking critically  about an issue or decision. There have been instances in the past where if instead of just trusting others to make the right decision, I could have added my two sense, and the outcome would have been more positive. 
+
+## Core Motivations
+
+> Describe some of the reasons why you want to start a company (fewer and deeper answers)
+
+**I want to feel uncomfortable**: My entire life I have been comfortable. I have plenty of friends. I have never wanted for anything that I could not buy. I have always been able to play at the highest level. I have never *really* struggled in class (except for in calc 103, but at the time I thought I was going to try to go pro right after freshman year... didn't happen). So, I have always stepped up to the plate because I have always been comfortable doing so. Time to get out of that comfort zone.
+
+**To provide**: I like to provide. I want to be in a position to shape a company; one that provides for its employees. I want to be in a position to shape a product; one that provides for its users. I want to be in a position to provide for my family, while there are obviously more than one way to be financially succesful, starting a company is a good one. Providing is the ultimate high for me.
+
+**I want to work with the smartest people**: an offshoot of my first bullet, but working with the best, who are also sprinting at something, all together - and are most importantly my friends - is important to me and sounds amazingly fun and rewarding. This group provides that.

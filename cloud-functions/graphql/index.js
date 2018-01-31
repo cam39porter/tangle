@@ -5,4 +5,4 @@
  * @param {Object} res Cloud Function response context.
  */
 
-exports.graphql = require('../../server').graphql
+exports.graphql = require('@hex-ventures/server').graphql

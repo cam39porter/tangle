@@ -5,7 +5,7 @@
 import React from 'react'
 import Link from 'gatsby-link'
 
-import Profile from '../components/profile'
+import Subscribe from '../components/subscribe'
 
 import Particles from 'react-particles-js'
 import particlesConfig from '../../config/particles'
@@ -30,6 +30,9 @@ const BlogPage = ({ data }) => (
       className={`vh-25 w-100`}
       params={particlesConfig}
     />
+
+    {/* Subscribe */}
+    <Subscribe />
 
     {/* List of Blog Posts */}
     {data.allMarkdownRemark.edges.map((blogPost) =>{

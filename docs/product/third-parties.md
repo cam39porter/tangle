@@ -18,7 +18,7 @@ Third parties address these issues in the following ways:
 
 * **Unbiased**: A third party is not biased as to how the products or services of the various parties relate / compare to one another.
 
-Ultimately third parties provides unified, unbiased, **discoverability**. Third parties can make decisions about what should be surfaced and when in a way that is optimal for the consumer instead of for the producing parties.
+Ultimately third parties provide unified, unbiased, **discoverability**. Third parties can make decisions about what should be surfaced and when in a way that is optimal for the consumer instead of for the producing parties.
 
 Examples of valuable third parties include the following:
 
@@ -28,7 +28,7 @@ Examples of valuable third parties include the following:
 
 * **Google**: The website industry is fragmented with many parties making websites. Each of these parties is biased about the relative quality of their website. Google unifies all websites into a single entity. Google is unbiased as to who the website provider is. Google provides unified, unbiased, discoverability.
 
-## Why Are Collective Knowledge Bases Needed
+## Why Collective Knowledge Bases Are Needed
 
 > This section treats the firm as a market where individuals (employees) are the parties in the in the market providing the service of surfacing their knowledge on pertinent matters to the firm as a whole. We will look at how traditional knowledge management systems create the conditions where third parties are needed and then how a collective knowledge base can act as a third party and provide a valuable service.
 
@@ -48,10 +48,10 @@ The exacerbation of these conditions means that individuals establish thresholds
 
 A collective knowledge base would address these issues in the following ways:
 
-* **Unification**: As individuals leverage the various integrations (and API) to capture insights and knowledge within there preexisting workflows, they know that they have a single search bar where they can find the firms collective insights and knowledge.
+* **Unification**: As individuals leverage the various integrations (and API) to capture insights and knowledge within their preexisting workflows, they know that they have a single search bar where they can find the firms collective insights and knowledge.
 
 * **Unbiased**: When individuals have an insight or generate new knowledge, they no longer make decisions about where or how that should be captured. They capture the insight or knowledge in the context of where it was created and the system handles relating / comparing it to other insights and knowledge produced by others within the firm.
 
-The eliminating fragmentation and biases with the collective knowledge base system, individuals establish no longer create thresholds upon which capturing new insights or knowledge is worthwhile given the overhead of determine where it should go and if it will even be used.
+By eliminating fragmentation and biases with a collective knowledge base system, individuals no longer create thresholds upon which capturing new insights or knowledge is worthwhile given the overhead of determining where it should go and if it will even be used.
 
 **A collective knowledge base provides the service of unified, unbiased knowledge storage and discoverability. Collective Knowledge Bases can make decisions about what should be surfaced and when in a way that is optimal for the consumer instead of for the producing parties.**

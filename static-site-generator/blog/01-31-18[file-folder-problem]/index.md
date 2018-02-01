@@ -55,7 +55,7 @@ It's been ten minutes already and Dave has finally decided on a naming conventio
 
 Both options make sense, but when searching a company database, the naming convention can make all the difference between watching the computer's wheels spin or finding your document when you need to.
 
-## An Anecdote on Corporate KMS
+## Knowledge Management IRL
 
 Dave always makes me reflect on my own experiences. He is great at that. 
 

@@ -52,6 +52,6 @@ A collective knowledge base would address these issues in the following ways:
 
 * **Unbiased**: When individuals have an insight or generate new knowledge, they no longer make decisions about where or how that should be captured. They capture the insight or knowledge in the context of where it was created and the system handles relating / comparing it to other insights and knowledge produced by others within the firm.
 
-By eliminating fragmentation and biases with a collective knowledge base system, individuals no longer create thresholds upon which capturing new insights or knowledge is worthwhile given the overhead of determining where it should go and if it will even be used.
+By eliminating fragmentation and biases with a collective knowledge base system, individuals no longer establish thresholds upon which capturing new insights or knowledge is worthwhile given the overhead of determining where it should go and if it will even be used.
 
 **A collective knowledge base provides the service of unified, unbiased knowledge storage and discoverability. Collective Knowledge Bases can make decisions about what should be surfaced and when in a way that is optimal for the consumer instead of for the producing parties.**

@@ -31,11 +31,7 @@ At surface level, it would seem that this is not that big a deal...just spend a 
 
 > What did I do with that file? Hmmm
 
-Sound familiar?
-
-This happens all too often and is really just such a bore!
-
-Now, think about the KMS for massive companies that have hundreds or thousands of employees. 
+Sound familiar? This happens all too often and is really just such a bore! Now, think about the KMS for massive companies that have hundreds or thousands of employees. 
 
 Over time, thousands of folders have given birth to thousands of sub-folders - all pregnant with documents in all shapes, sizes and formats. 
 
@@ -59,7 +55,7 @@ It's been ten minutes already and Dave has finally decided on a naming conventio
 
 Both options make sense, but when searching a company database, the naming convention can make all the difference between watching the computer's wheels spin or finding your document when you need to.
 
-## A personal anecdote on corporate KMS
+## An Anecdote on Corporate KMS
 
 Dave always makes me reflect on my own experiences. He is great at that. 
 

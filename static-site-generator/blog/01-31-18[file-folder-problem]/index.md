@@ -59,7 +59,7 @@ Both options make sense, but when searching a company database, the naming conve
 
 Dave always makes me reflect on my own experiences. He is great at that. 
 
-When I was an investment banking analyst, we had an absolutley massive amount of folders and files. It was my job to keep all these documents organized and retrieve the ones we needed whenever anyone asked. 
+When I was an investment banking analyst, we had an absolutely massive amount of folders and files. It was my job to keep all these documents organized and retrieve the ones we needed whenever anyone asked. 
 
 Yeah, fat chance.
 
@@ -67,7 +67,7 @@ There were sometimes hundreds of versions of the same document in a folder. Othe
 
 This particular issue was especially bad on one project I was given because the previous analyst who worked on it completely threw out any inkling of organization when he found out he got an offer at a private equity shop. The next few months of working at the bank now did not matter to this young man, and neither did proper KM etiquette. 
 
-The project I am refering to had died for a while, but randomly rescusitated (as far too many zombie projects do) and I had to scramble to find the files my team needed. It took me so long that they asked me to reorganize the entire behemoth of that was the folder. It took me all night. 
+The project I am referring to had died for a while, but randomly resuscitated (as far too many zombie projects do) and I had to scramble to find the files my team needed. It took me so long that they asked me to reorganize the entire behemoth of that was the folder. It took me all night. 
 
 I will never forgive you previous analyst!  
 

@@ -32,6 +32,8 @@ You should now have a global `functions-emulator` command.
 
 > There are three types of Cloud Functions that can deployed. These are Cloud Functions triggered by HTTP, Cloud Pub/Sub, and Cloud Storage. Each of these has similar deployment pattern. They are summarized below. In general you can reference this [guide](https://cloud.google.com/functions/docs/deploying/repo) for how to deploy from source control.
 
+* Always make sure that if the Cloud Function uses one of our private Hex Venture's modules that you are using and up to date version of that module.
+
 ### HTTP Triggers
 
 > This section will go through deploying a Cloud Function with an HTTP trigger. In order to achieve this we will be using the `hello-http` as example an example. For a more detailed reference, refer to this [guide](https://cloud.google.com/functions/docs/calling/http).

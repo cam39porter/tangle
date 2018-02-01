@@ -48,9 +48,19 @@
 
 8. Now that a new version of the module has been published, update any other services that depend on that module, like a Cloud Function. After updating these, test and deploy them.
 
+### Contributions
+
+> For more information on how to contribute to this repository see the [`CONTRIBUTIONS.md`](https://github.com/hex-ventures/hex-ventures/blob/master/CONTRIBUTING.md) file in this repository.
+
 ## Directories
 
 > This section provides a brief description of each directory in this repository to help you understand where to look for what you need and where to add things that you create.
+
+### [VS Code](https://github.com/hex-ventures/hex-ventures/tree/master/.vscode)
+
+> This directory contains workspace setting for the VS Code IDE.
+
+* You can install Visual Studio [here](https://www.visualstudio.com/vs/).
 
 ### [Chrome Extension](https://github.com/hex-ventures/hex-ventures/tree/master/chrome-extension)
 

@@ -1,3 +1,12 @@
+---
+path: '/blog/I-Hate-Files-and-Folders'
+date: '2018-01-31'
+title: 'Files and Folders'
+subtitle: 'Why we wa'
+author: 'Myles McGinely'
+tags: ['Management', 'Knowledge','Files','Folders','Organization']
+---
+
 ## I Hate Files and Folders
 
 > The Human Condition
@@ -6,21 +15,21 @@ We humans forget, are lazy and lose more information than we retain. This is not
 
 As consumers, we must *pay* attention, attention being a scarce resource, to all sorts of different content - both online and off. The more information we consume, the more it seems we lose. Surely there is a way to keep more of this information, turning it into knowledge rather than waste.
 
-> Enter Knowledge Systems
+> Enter Knowledge Management Systems
 
 Drum roll...
 
-oohs and ahs.
+*oohs and ahs.*
 
 Knowledge management systems, or KMS for short, are what we humans use to store our stuff. We take it from the internet and save it, or we write it up and save it. We save stuff constantly, both work-related and non-work related. 
 
 KMS should make it super easy for us to do what the acronym stands for,manage knowledge, or keep track of the information that we have written or pulled from the internet, and saved.
 
-But KMS really stinks.
+But KMS as we know it really stinks.
 
  When saving personal documents, either you are one of the 1% jedi humans who maintain perfect naming convention discipline and folder structure. Or, you are like the other 99% of us that and just hit command+ S and forget about it. 
  
- Insert gif of dog typing on keyboard
+*Insert gif of dog typing on keyboard*
  
  At surface level, it would seem that this is not that big a deal... just spend a couple minutes searching your PC or MAC and you will most likely find the folder, file and information you are looking for (I bet Google would have been easier, though). 
 
@@ -74,4 +83,6 @@ I will never forgive you previous analyst!
 
 Files and folder do not work because there are inherent biases in any kind of shared curation. Imagine if instead of Google, it was Bank of America that supplied the search technology for consumers looking for retail banking products. That wouldn't work, would it?
 
-Obviously not. The same kind of biases happen in file saving and curation. In my opinion, it is unfortunately too much for humans to handle, and actually creates serious issues that can severely hurt the internal operations of a firm.
+Obviously not. The same kind of biases happen in file saving and curation. It is unfortunately too much for humans to handle and actually creates serious issues that can severely hurt the internal operations of a firm.
+
+We at HV are working to helping people pay more attention by spending less time.

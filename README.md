@@ -56,12 +56,6 @@
 
 > This section provides a brief description of each directory in this repository to help you understand where to look for what you need and where to add things that you create.
 
-### [VS Code](https://github.com/hex-ventures/hex-ventures/tree/master/.vscode)
-
-> This directory contains workspace setting for the VS Code IDE.
-
-* You can install Visual Studio [here](https://www.visualstudio.com/vs/).
-
 ### [Chrome Extension](https://github.com/hex-ventures/hex-ventures/tree/master/chrome-extension)
 
 > This directory contains our Chrome extension built with `React` and `Tachyons`.
@@ -87,3 +81,9 @@
 ### [Static Site Generator](https://github.com/hex-ventures/hex-ventures/tree/master/static-site-generator)
 
 > This directory contains the static site generator that produces our company website hosted from the `gh-pages` branch of this repository. This generator is implemented with [GatsbyJS](https://www.gatsbyjs.org/).
+
+### [VS Code](https://github.com/hex-ventures/hex-ventures/tree/master/.vscode)
+
+> This directory contains workspace setting for the VS Code IDE.
+
+* You can install Visual Studio [here](https://www.visualstudio.com/vs/).

@@ -27,8 +27,6 @@ But KMS as we know it really stinks.
 
 When saving personal documents, either you are one of the 1% jedi humans who maintain perfect naming convention discipline and folder structure. Or, you are like the other 99% of us that and just hit `command + s` and forget about it. 
  
-*Insert gif of dog typing on keyboard*
- 
 At surface level, it would seem that this is not that big a deal...just spend a couple minutes searching your PC or Mac and you will most likely find the folder, file, and information you are looking for (I bet Google would have been easier, though). 
 
 > What did I do with that file? Hmmm
@@ -48,8 +46,6 @@ Maybe the "adtech" folder.
 Maybe the "market_research" folder.
 
 Dave might be a desktop kind of guy. The KMS is Dave's oyster.
-
-This is Dave
 
 Dave also has a lof of different ideas on what to call the file. 
 

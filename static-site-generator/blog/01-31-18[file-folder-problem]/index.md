@@ -43,7 +43,7 @@ Maybe the "market_research" folder.
 
 Dave might be a desktop kind of guy. The KMS is Dave's oyster.
 
-Dave also has a lof of different ideas on what to call the file. 
+Dave also has a lot of different ideas on what to call the file. 
 
 Propsectus-adtech-jan-2018
 
@@ -67,7 +67,7 @@ There were sometimes hundreds of versions of the same document in a folder. Othe
 
 This particular issue was especially bad on one project I was given because the previous analyst who worked on it completely threw out any inkling of organization when he found out he got an offer at a private equity shop. The next few months of working at the bank now did not matter to this young man, and neither did proper KM etiquette. 
 
-The project I am referring to had died for a while, but randomly resuscitated (as far too many zombie projects do) and I had to scramble to find the files my team needed. It took me so long that they asked me to reorganize the entire behemoth of that was the folder. It took me all night. 
+The project I am referring to had died for a while, but randomly resuscitated (as far too many zombie projects do) and I had to scramble to find the files my team needed. It took me so long that they asked me to reorganize the entire behemoth that was the folder. It took me all night. 
 
 I will never forgive you previous analyst!  
 

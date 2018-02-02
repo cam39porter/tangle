@@ -5,7 +5,8 @@
 import React from 'react'
 import Link from 'gatsby-link'
 
-import Profile from '../components/profile'
+import Subscribe from '../components/subscribe'
+
 
 import Particles from 'react-particles-js'
 import particlesConfig from '../../config/particles'
@@ -78,6 +79,8 @@ export default function Template({ data }) {
         />
 
       </div>
+
+      <Subscribe />
 
       {/* Footer Particles */}
       <Particles 

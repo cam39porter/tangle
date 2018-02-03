@@ -1,5 +1,7 @@
 # Graph Database
 
+## [Helm Chart](https://github.com/kubernetes/charts/tree/master/stable/neo4j)
+
 ## Setup
 
 > This section describes setting up a Kubernetes Engine Cluster with Neo4j graph database using Helm.
@@ -38,7 +40,7 @@ helm-v2.6.2-linux-amd64.tar.gz 100%[============================================
 2018-02-02 15:32:08 (65.0 MB/s) - ‘helm-v2.6.2-linux-amd64.tar.gz’ saved [16320359/16320359]
 ```
 
-2. Extract the file 1tar zxfv helm-v2.6.2-linux-amd64.tar.gz && cp linux-amd64/helm .`
+2. Extract the file `tar zxfv helm-v2.6.2-linux-amd64.tar.gz && cp linux-amd64/helm `
 
 ```sh
 linux-amd64/
@@ -77,7 +79,7 @@ NAME            VERSION DESCRIPTION
 stable/neo4j    0.5.0   Neo4j is the worlds leading graph database
 ```
 
-6. We are now going to deploy our Neo4j cluster with auth disabled for development by running `./helm install stable/neo4j --name neo-helm --wait --set authEnabled=false`
+6. We are now going to deploy our Neo4j cluster with auth disabled for development by running `./helm install stable/neo4j --name neo4j-helm --wait --set authEnabled=false`
 
 ```sh
 NAME:   neo-helm
@@ -132,7 +134,7 @@ deployment "neo-helm-neo4j-replica" scaled`
 deployment "neo-helm-neo4j-replica" scaled
 ```
 
-8. We can check if the scaling worked by running `kubectl exec neo-helm-neo4j-core-0 -- bin/cypher-shell --format verbose "CALL dbms.cluster.overview() YIELD id, role RETURN id, role"`
+8. We can check if the scaling worked by running `kubectl exec neo4j-helm-neo4j-core-0 -- bin/cypher-shell --format verbose "CALL dbms.cluster.overview() YIELD id, role RETURN id, role"`
 
 ```sh
 +---------------------------------------------------------+
@@ -148,17 +150,30 @@ deployment "neo-helm-neo4j-replica" scaled
 6 rows available after 472 ms, consumed after another 30 ms
 ```
 
-9. We can put something test data to make sure it is working by running `kubectl exec neo-helm-neo4j-core-0 -- bin/cypher-shell "UNWIND range(0, 1000) AS id CREATE (:Person {id: id}) RETURN COUNT(*)"`
+9. We can put something test data to make sure it is working by running `kubectl exec neo4j-helm-neo4j-core-0 -- bin/cypher-shell "UNWIND range(0, 1000) AS id CREATE (:Person {id: id}) RETURN COUNT(*)"`
 
 ```sh
 COUNT(*)
 1001
 ```
 
-10. We can check that this command reached the other cluster members by running `kubectl exec neo-helm-neo4j-core-2 -- bin/cypher-shell "MATCH (:Person) RETURN COUNT(*)"`
+10. We can check that this command reached the other cluster members by running `kubectl exec neo4j-helm-neo4j-core-2 -- bin/cypher-shell "MATCH (:Person) RETURN COUNT(*)"`
 
 ```sh
 COUNT(*)
 1001
 ```
 
+## [Local Connection](https://github.com/neo4j-contrib/kubernetes-neo4j)
+
+1. Install `gcloud` sdk.
+
+2. Install `kubectl` by running `gcloud components install kubectl`.
+
+3. Check for graph database cluster `gcloud container clusters list`
+
+4. Authenticate with the cluster `gcloud container clusters get-credentials graph-database --zone us-east1-c && gcloud auth application-default login`
+
+5. Forward your local ports to the kubernetes cluster `kubectl port-forward neo-4j-helm-neo4j-core-0 8474:7447 8687:7687`
+
+6. Open `http://localhost:8474` and type `:server connect` if it doesn’t do it automatically. We then need to update the Host field to be `bolt://localhost:8687` and fill in a username and password if applicable.

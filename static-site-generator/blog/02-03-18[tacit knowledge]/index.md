@@ -19,7 +19,7 @@ Let's start with the brain.
 
 ### The Neocortex is pretty great 
 
-The lovely people at [Waitbutwhy](https://waitbutwhy.com/2017/04/neuralink.html) wrote a fantastic summary on how the world was shaped over hundreds of millions of years and how humanity became the collosus it is today. It is a great read and I recommend it to anyone who has forty five minutes to invest in themself.
+Tim Urban at [Waitbutwhy](https://waitbutwhy.com/2017/04/neuralink.html) wrote a fantastic summary on how the world was shaped over hundreds of millions of years and how humanity became the collosus it is today. It is a great read and I recommend it to anyone who has forty five minutes to invest in themself.
 
 The development of the Neocortex allowed humans to share what they had learned. When the Neocortex advanced to the point that humans could symbolically refer to a thing with a sound, it opened up a whole new world of possibilities.
 
@@ -45,7 +45,7 @@ Tacit knowledge, on the other hand, is hard to formalize and capture. It is know
 
 We at Hex believe that while many tools have been developed to help capture explicit knowledge - Microsoft Office, Evernote, etc - the way we organize and share that explicit knowledge can still be made much more efficient. Optimizing the ability for a group of people to share what they know will allow them to learn and progress as a collective much faster.
 
-Tacit knowledge has for the most part been viewed as uncapturable. We do not necessarily disagree, but where we see opportunity is to provide a place for people to save what I call "the little things".
+Tacit knowledge has for the most part been viewed as uncapturable. We do not necessarily disagree, but where we see opportunity is to provide a place for people to save "the little things".
 
 Insights, tid bits of knowledge and experiences that do not necessarily belong in documents could potentially be stored another way. 
 

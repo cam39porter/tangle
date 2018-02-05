@@ -6,5 +6,9 @@
     "default_popup": "index.html",
     "default_title": "Opit"
   },
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
   "version": "1.0"
 }

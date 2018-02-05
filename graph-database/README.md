@@ -1,6 +1,10 @@
 # Graph Database
 
+> This document describes how to set up and use our graph database that is implemented using Neo4j.
+
 ## [Helm Chart](https://github.com/kubernetes/charts/tree/master/stable/neo4j)
+
+> This section describes the Helm chart used to configure the Neo4j Kubernetes cluster.
 
 ## Setup
 

@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: neo4j-load-balancer
+spec:
+  selector:
+    app: neo4j
+  ports:
+  - name: http
+    protocol: TCP
+    port: 7474
+  - name: https
+    protocol: TCP
+    port: 7473
+  - name: bolt
+    protocol: TCP
+    port: 7687
+  type: LoadBalancer
+  

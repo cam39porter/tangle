@@ -3,7 +3,7 @@ path: '/blog/boost-performance'
 date: '2018-01-30'
 title: 'Professional Growth'
 subtitle: 'Three Easy Steps to Boost Performance'
-author: 'Myles McGinely'
+author: 'Myles McGinley'
 tags: ['Performance', 'Growth']
 ---
 

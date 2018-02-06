@@ -3,7 +3,7 @@ path: '/blog/hate-files-and-folders'
 date: '2018-02-01'
 title: 'The Sad State of KMS'
 subtitle: 'Why I Hate Files and Folders'
-author: 'Myles McGinely'
+author: 'Myles McGinley'
 tags: ['Management', 'Knowledge','Files','Folders','Organization']
 ---
 

@@ -16,11 +16,11 @@ In push based ideation, the individual that generates the insight feels societal
 
 **Pull** based ideation has the following characteristics:
 
-* **Capturing**: An individual thinks of an insights and does not decide whether to broadcast it, but instead just captures that insight in a way that others can find it later if relevant.
+* **Capturing**: An individual thinks of an insight and does not decide whether to broadcast it, but instead just captures that insight in a way that others can find it later if relevant.
 
 * **Discovery**: Another individual is in need of an insight relating to a certain topic or domain, they discover the previously generated insight.
 
-In pull based ideation, the individual that generates the insight does not feel societal pressure to decide whether or not capture it since they know it will only be discovered if another individual searches for (pulls) that insight given its topical relevance. *In this way individuals are incentivized to capture as many insights as possible as they no longer have to use internal heuristics to decide whether they are worthwhile as they will only be discovered if others are interested in them.*
+In pull based ideation, the individual that generates the insight does not feel external pressure to decide whether or not to capture it since they know it will only be discovered if another individual searches for, or *pulls* that insight given its topical relevance. *In this way individuals are incentivized to capture as many insights as possible – they no longer have to use internal heuristics to decide whether they are worthwhile as they will only be discovered if others are interested in them.*
 
 ## Why Knowledge Bases Facilitate Pull
 
@@ -36,8 +36,8 @@ Traditional KMS promote the characteristics of push based ideation. In this way 
 
 **Our knowledge bases** promote pull based ideation in the following ways:
 
-* **Capturing**: Our integrations mean that wherever an individual's workflows take them, there is a means to seamlessly capture the insights they are generating. Our backend systems mean that once captures, the insight and its context are connected to related content in the system.
+* **Capturing**: Our integrations mean that wherever an individual's workflows take them, there is a means to seamlessly capture the insights they are generating. Our backend systems mean that once captured, the insight and its context are connected to related content in the system.
 
 * **Discovery**: Another individual is interested in a given topic or domain that is related to the insight that was previously generated. They simply query our knowledge base through a search bar and are presented with the relevant insight, discovering the insight when it is most pertinent.
 
-Our knowledge bases promote the characteristics of pull based ideation. In this way they incentivize individuals to capture all insights whether or not they believe someone will use them. **This means that all potentially high value insights worth capturing are captured and thus have the potential to add value when individuals search (pull) and discover them**
+Our knowledge bases promote the characteristics of *pull* based ideation. In this way they incentivize individuals to capture all insights whether or not they believe someone will use them. **This means that all potentially high value insights worth capturing are captured and thus have the potential to add value when individuals *pull* and discover them**

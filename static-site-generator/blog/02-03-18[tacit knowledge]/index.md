@@ -2,7 +2,7 @@
 path: '/blog/tacit-vs-explicit'
 date: '2018-02-08'
 title: 'The Brothers Knowledge'
-subtitle: 'Tacit vs. Explicit'
+subtitle: 'Tacit and Explicit'
 author: 'Myles McGinley'
 tags: ['Tacit', 'Explicit','Knowledge','Connect','Capture']
 ---

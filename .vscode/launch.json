@@ -3,12 +3,8 @@
     "configurations": [
         {
       "name": "Chrome",
-      "type": "chrome",
+      "type": "node",
       "request": "launch",
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceRoot}/src",
-      "sourceMapPathOverrides": {
-        "webpack:///src/*": "${webRoot}/*"
-      }
+      "program": "${workspaceFolder}/client-api/index.js"
     }]
   }

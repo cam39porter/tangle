@@ -6,10 +6,16 @@ module.exports = `
 
 schema {
   query: Query
+  mutation: Mutation
 }
 
 type Query {
   testString: String
 }
+
+type Mutation {
+  testString(s: String!): String
+}
+
 
 `

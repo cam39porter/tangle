@@ -7,6 +7,10 @@ This directory contains a Node server implemented using the [Express](https://ex
 > npm i <br>
 > npm start
 
+#### Hot reload all the things!
+
+> npm run start:dev
+
 ## Hitting the server
 
 Via curl:

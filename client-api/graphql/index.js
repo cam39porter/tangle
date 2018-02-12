@@ -26,4 +26,4 @@ const executableSchema = makeExecutableSchema({
  app.use('/graphql', bodyParser.json(), graphqlExpress({ schema: executableSchema }));
  app.get('/graphiql', graphiqlExpress({ endpointURL: '/graphql' })); // if you want GraphiQL enabled
  
- app.listen(PORT);
+ app.listen(PORT, () => console.log('Api listening on port ' + PORT));

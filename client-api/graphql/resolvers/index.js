@@ -1,4 +1,4 @@
-var str = "this also works";
+var str = "running so quick";
 
 const resolvers = {
     Query: {

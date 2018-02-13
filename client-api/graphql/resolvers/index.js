@@ -1,4 +1,4 @@
-var str = "running so quick";
+var str = "testing commit to master!";
 
 const resolvers = {
     Query: {

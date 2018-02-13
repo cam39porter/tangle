@@ -10,23 +10,25 @@ I do not expect the initial list of terms and definitions to be final. For that 
 
 ## General Definitions
 
-* **Insight**: A thought that connects multiple ideas.
+* **Tangle**: The visual manifestation of a user's captures, as related via our application's technology. A user's tangle can be shared or permissioned to combine with other Tangles.
 
-* **Non-actionable**: Something that cannot be used or acted upon, even though you have it.
+* **Capture**: A note, idea, thought, or any information that is *dropped* into a Tangle via our application.
 
-* **Actionable**: Something that can be used or acted upon to achieve a goal.
+* **Drop**: The act of saving a piece of information, which could be in any format via our application.
 
-* **Personal Knowledge Base**: The remembered experiences, learnings, ideas, know-how, and insights that can be used at any point.
+* **Surface**: The act of our application bringing to light insights or connections that may not have been obvious previously.
 
-* **Collective Knowledge Base**: The remembered experiences, learnings, ideas, know-how, and insights a group, which can be used at any point.
+* **Insight**: A piece of information that is surfaced via our application, which adds value to you in some way.
 
-* **Note taking (noting)**: The act of writing, typing or copying insights / memory triggers from one you are studying onto a seperate document. 
+* **Non-actionable**: Knoweldge or information that cannot be used or acted upon, even though you have it.
+
+* **Actionable**: Knowledge or information that can be used or acted upon to achieve a goal.
 
 * **Protocol**: A standard procedure or set of steps, in this case, to store user knowledge and insights in way that is usable.
 
-* **Innovation**: a new, and importantly valuable, method, idea or product.
+* **Innovation**: A new valuable method, idea, or product.
 
-* **Collaboration**: The sharing and coordination of ideas, tasks, and processes between peers that lead to a desired outcome.
+* **Collaboration**: The sharing and coordination of ideas, tasks, and processes between peers with a shared goal in mind.
 
 ## Graph DB Definitions
 

@@ -3,6 +3,21 @@ In order to run this electron app locally, run:
 ```
 npm run dev
 ```
+If in development you get an error about port 5000 already being in use, run:
+```
+lsof -i tcp:5000
+```
+and then:
+```
+kill -9 <pid>
+```
+
+In order to help you inspect, monitor, and debug use [Devtron](https://github.com/electron/devtron)
+In the developer window, run:
+```
+require('devtron').install()
+```
+
 
 # Create React App
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).

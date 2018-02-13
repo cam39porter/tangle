@@ -22,9 +22,9 @@ I do not expect the initial list of terms and definitions to be final. For that 
 
 * **Tangle**: A network of captures related through people, tags, entities, time, and sentiment. Each user has their own Tangle.
 
-**Group Tangle**: A user can share captures with other users or groups via mentions (@group or @user). In doing so, the user creates group Tangles. These Tangles are intersections of the individual group members' Tangles.
+* **Group Tangle**: A user can share captures with other users or groups via mentions (@group or @user). In doing so, the user creates group Tangles. These Tangles are intersections of the individual group members' Tangles.
 
-**Global Tangle**: A user can share captures with all users via @Global. In doing so, connects part of their Tangle with all other users Tangles that have shared a capture globally. This creates the Global Tangle.
+* **Global Tangle**: A user can share captures with all users via @Global. In doing so, connects part of their Tangle with all other users Tangles that have shared a capture globally. This creates the Global Tangle.
 
 * **Surface**: The act of retrieving captures and insights stored in a Tangle.
 

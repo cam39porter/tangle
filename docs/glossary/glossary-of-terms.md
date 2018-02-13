@@ -10,13 +10,21 @@ I do not expect the initial list of terms and definitions to be final. For that 
 
 ## General Definitions
 
+* **Thought**: Any data that a user wishes to capture with our system
+
+* **Tag**: A phrase with no spaces and beginning with `#` that user annotates a thought with
+
+* **Mention**: A phrase with no spaces and beginning with `@` that shares a capture with one or more other users.
+
+* **Context**: The enviroment where a thought was generated
+
+* **Capture**: A thought or a thougth and context stored in a Tangle.
+
 * **Tangle**: A network of captures related through people, tags, entities, time, and sentiment. Each user has their own Tangle.
 
 **Group Tangle**: A user can share captures with other users or groups via mentions (@group or @user). In doing so, the user creates group Tangles. These Tangles are intersections of the individual group members' Tangles.
 
 **Global Tangle**: A user can share captures with all users via @Global. In doing so, connects part of their Tangle with all other users Tangles that have shared a capture globally. This creates the Global Tangle.
-
-* **Capture**: A thought, context, and or annotation stored in a Tangle.
 
 * **Surface**: The act of retrieving captures and insights stored in a Tangle.
 
@@ -36,7 +44,7 @@ I do not expect the initial list of terms and definitions to be final. For that 
 
 * **Node**: a data point in a graph
 
-* **Edge**: a connector between nodes
+* **Edge**: a relationship between nodes
 
 * **Directed Edge**: You can only go between nodes in one way and not the other
 
@@ -50,4 +58,4 @@ I do not expect the initial list of terms and definitions to be final. For that 
 
 * **Betweeness Centrality**: How critical a node is to a network as a connection point. How many times does the node act as a bridge
 
-* **Prestige Centrality**: Highly connected nodes count more than those wit ha lower degree of connectivity (page rank)
+* **Prestige Centrality**: Highly connected nodes count more than those with a lower degree of connectivity (page rank)

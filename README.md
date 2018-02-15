@@ -1,4 +1,4 @@
-# Hex Ventures
+# Hex Ventures Read Me
 
 > We are building the next generation of knowledge management systems. This guide explains how we code and where we put things.
 

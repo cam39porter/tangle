@@ -18,7 +18,7 @@ I do not expect the initial list of terms and definitions to be final. For that 
 
 * **Context**: The enviroment where a thought was generated
 
-* **Capture**: A thought or a thougth and context stored in a Tangle.
+* **Capture**: A thought or a thought and context stored in a Tangle.
 
 * **Tangle**: A network of captures related through people, tags, entities, time, and sentiment. Each user has their own Tangle.
 

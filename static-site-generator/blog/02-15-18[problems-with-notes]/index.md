@@ -4,7 +4,7 @@ date: '2018-02-15'
 title: 'The Problem Series'
 subtitle: 'Note Taking'
 author: 'Myles McGinley'
-tags: ['Push', 'Pull','Share','Innovation']
+tags: ['Notes', 'Problem','Knowledge']
 ---
 
 ### A foreword on the Problem Series

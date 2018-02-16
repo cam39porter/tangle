@@ -1,0 +1,31 @@
+Building our shared consciousness 
+
+Vision: Internet of Thoughts — Let’s be the real IoT.
+
+On our marketing site we could actually put up examples of our thought networks so that people can come on and play with it and see what we are thinking. @Cameron
+
+It all makes sense now.. .A mission is something that you do and a vision is something that you see. That is why a mission is the action to get you to the vision. @Cameron
+
+Today Cole got on the floor and kicked himself in the head. 
+
+@minshew mentioned we should read the bezos letters to shareholders. 
+
+@nodio A great question to ask users for feedback is to ask people, “What nearly kept you from joining?” The idea is that people who don’t join don’t care enough to give you feedback but the people who joined do, and whatever almost kept them from joining probably is keeping other people from joining. 
+
+Need to remember to take useful materials from Course Hero before leaving. This includes interview questions, process documentation, playbook outline, etc.
+
+Talking with VP candidates is great. Always put things in perspective. It’s about delivering a product that furthers the business and making sure people are happy while doing it. 
+
+Being able to recognize which decisions are worth investing lots of discussion in is a skill all by itself. 
+
+Trying to work on 3 different development tasks at once is challenging. With Nodio I will have to be disciplined about spec’ing out tasks and banging through them. 
+
+Matt Dolan has a habit of pushing code that breaks things in development. But he’s a great engineer. I think he optimizes for releasing code quickly and accepts the risk that things will break. I wonder if this is deliberate and where this approach comes from.
+
+Need to do aggressive user research / interviews to validate our product offering. 
+
+A targeted set of questions to validate our hypotheses — which problem are we solving?
+
+I wonder why some people have strong workout motivations early in the morning and others find it harder. #exercise
+
+@Cameron defaulted to using the notes app on his phone as opposed to pulling out his computer. Shoes the importance of ease of use and availability. #nodio

@@ -74,7 +74,7 @@
 
 ### [Server](https://github.com/hex-ventures/hex-ventures/tree/master/server)
 
-> This directory contains a Node server implemented using the [Express](https://expressjs.com/) framework. Core components include a [GrapqhQL](http://graphql.org/) function.
+> This directory contains a Node server implemented using the [Express](https://expressjs.com/) framework. Core components include a [GraphQL](http://graphql.org/) function.
 
 * You must use Node version `6.11.5`. This allows this server to be used with Cloud Functions.
 

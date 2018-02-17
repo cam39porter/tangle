@@ -18,7 +18,7 @@
 
 > This section describes the core facets of the product. Each facet of the product has a feeling that it is designed to provoke in the user or that motivates us to design it. Each facet also corresponds to a set features. These features are implemented with a set of technologies.
 
-Before diving into the various facets we must design two words corresponding the state of the product:
+Before diving into the various facets we must define two terms corresponding the state of the product:
 
 * **Prototype**: The version of the product we are happy using ourselves and giving to a controlled group of outside users.
 

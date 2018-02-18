@@ -1,19 +1,21 @@
-import * as React from 'react';
-import './App.css';
+import * as React from "react";
+import "tachyons";
+import "./App.css";
 
-const logo = require('./logo.svg');
+import Sidebar from "./sidebar";
+import SearchPanel from "./searchPanel";
+import CapturePanel from "./capturePanel";
+import Topbar from "./topbar";
 
-class App extends React.Component {
+export interface Props {}
+class App extends React.Component<Props, object> {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+      <div className="App vh-100">
+        <Topbar />
+        <Sidebar />
+        <SearchPanel />
+        <CapturePanel />
       </div>
     );
   }

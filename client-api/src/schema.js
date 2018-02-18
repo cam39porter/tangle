@@ -4,18 +4,21 @@
 
 module.exports = `
 
+type Capture {
+  body: String!
+}
+
 schema {
   query: Query
   mutation: Mutation
 }
 
 type Query {
-  testString: String
+  Capture: Capture!
 }
 
 type Mutation {
-  testString(s: String!): String
+  createCapture(body: String!): Capture!
 }
 
-
-`
+`;

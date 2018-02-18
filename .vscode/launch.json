@@ -1,10 +1,12 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-      "name": "Chrome",
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug client-api express server",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/client-api/index.js"
-    }]
-  }
+      "program": "${workspaceFolder}/client-api/.compiled/index.js",
+      "outFiles": ["${workspaceRoot}/.compiled/**/*.js"]
+    }
+  ]
+}

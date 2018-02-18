@@ -5,4 +5,4 @@
  * @param {Object} res Express response context.
  */
 
-exports.graphql = require('./graphql')
+exports.graphql = require("./src");

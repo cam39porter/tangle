@@ -1,12 +1,12 @@
-const capture = require("./capture-resolver");
+const { getCapture, createCapture } = require("./capture-resolver");
 
-export const resolvers = {
+export default {
   Query: {
-    Capture: () => capture.getCapture()
+    Capture: () => getCapture()
   },
   Mutation: {
     createCapture: (_, { body }, context) => {
-      return capture.createCapture(body);
+      return createCapture(body);
     }
   }
 };

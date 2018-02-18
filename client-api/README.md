@@ -9,21 +9,26 @@ This directory contains a Node server implemented using the [Express](https://ex
 
 #### Hot reload all the things!
 
+In two terminal windows:
+
+> npm run compile
 > npm run start:dev
 
 ## Hitting the server
 
 Via curl:
-> curl -v "http://localhost:3000/graphql?query=\{testString\}"
+
+> curl -v "http://localhost:3000/graphql?query..."
 
 Via graphical
-> http://localhost:3000/graphiql
-<br>
-query { 
-  testString
-}
+
+> http://localhost:3000/graphiql > <br>
+> query {
+> ...
+> }
 
 ## Debugging
 
-In vscode, hit F5. (Must not be running the server elsewhere, or set up a different port) Set breakpoints as desired and hit the app in a way defined above.
+> npm run compile
 
+In vscode, hit F5. (Must not be running the server elsewhere, or set up a different port) Set breakpoints as desired and hit the app in a way defined above.

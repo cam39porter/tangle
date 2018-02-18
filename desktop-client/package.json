@@ -4,9 +4,12 @@
   "description": "A desktop client for empowering people to capture and connect thoughts to create big ideas",
   "private": true,
   "dependencies": {
+    "@types/react-redux": "^5.0.15",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-redux": "^5.0.7",
     "react-scripts-ts": "2.13.0",
+    "redux": "^3.7.2",
     "tachyons": "^4.9.1"
   },
   "homepage": "./",

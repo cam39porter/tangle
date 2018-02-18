@@ -104,7 +104,7 @@ Before diving into the components we must define two terms corresponding to the 
 
   * **Prototype**
 
-    * Ability to generate reminder and report (visualization and counts) of thoughts captured each day
+    * Ability to generate reminder and report (visualization and counts as email digest) of thoughts captured each day
 
     * Ability to perform basic curation and contextualization of thoughts
 
@@ -159,9 +159,9 @@ Before diving into the components we must define two terms corresponding to the 
   * [Tachyons](http://tachyons.io/)
 
   * [React D3](http://www.reactd3.org/)
-  
+
   * [Apollo](https://www.apollographql.com/)
-  
+
   * [Redux](https://redux.js.org/)
 
   * [TypeScript](https://www.typescriptlang.org/)

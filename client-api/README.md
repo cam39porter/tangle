@@ -7,13 +7,6 @@ This directory contains a Node server implemented using the [Express](https://ex
 > npm i <br>
 > npm start
 
-#### Hot reload all the things!
-
-In two terminal windows:
-
-> npm run compile
-> npm run start:dev
-
 ## Hitting the server
 
 Via curl:
@@ -28,6 +21,8 @@ Via graphical
 > }
 
 ## Debugging
+
+You can auto-compile with the following command so that all you need to do is refresh
 
 > npm run compile
 

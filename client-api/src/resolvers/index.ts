@@ -5,7 +5,7 @@ export default {
     Capture: () => getCapture()
   },
   Mutation: {
-    createCapture: (_, { body }, context) => {
+    createCapture: (_, { body }, context): object => {
       return createCapture(body);
     }
   }

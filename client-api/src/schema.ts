@@ -2,7 +2,7 @@
  * Type definitions (typeDefs) that are turned into the schema
  */
 
-module.exports = `
+export default `
 
 type Capture {
   body: String!

@@ -1,13 +1,12 @@
 /*!
  * GraphQL Express Server
  */
-import express from "express";
-import bodyParser from "body-parser";
+import * as express from "express";
+import * as bodyParser from "body-parser";
 import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
 import { makeExecutableSchema, addMockFunctionsToSchema } from "graphql-tools";
 
-import schema from "./schema.js";
-import mocks from "./test/mocks";
+import schema from "./schema";
 import resolvers from "./resolvers";
 
 /*!

@@ -14,11 +14,11 @@ class Capture extends React.Component<Props, CaptureState> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event: React.FormEvent<HTMLTextAreaElement>) {
+  handleChange(event: React.FormEvent<HTMLTextAreaElement>): void {
     this.setState({ value: event.currentTarget.value });
   }
 
-  handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     alert("Check out your capture:" + this.state.value);
     event.preventDefault();
   }

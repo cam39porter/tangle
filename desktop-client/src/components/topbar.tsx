@@ -1,5 +1,5 @@
 import * as React from "react";
-const logo = require("./logo.svg") as string;
+const logo = require("../logo.svg") as string;
 
 export interface Props {}
 function Topbar(props: Props) {

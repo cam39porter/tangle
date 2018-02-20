@@ -4,7 +4,7 @@
 
 ## Individual
 
-> This section describes the role of tags in an individuals Tangle. 
+> This section describes the role of tags in an individual's Tangle. 
 
 Each person has a Tangle. This Tangle is yours. A Tangle is a network of connected **captures**. Captures in a Tangle can contain tags. Take the following capture with two tags:
 

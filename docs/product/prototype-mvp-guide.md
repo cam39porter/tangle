@@ -126,7 +126,7 @@ Before diving into the components we must define two terms corresponding to the 
 
   * **Prototype**
 
-    * Ability to manually create and push and analysis/visualizations to users
+    * Ability to manually create and push an analysis/visualizations to users
 
     * Ability to visualize entire Tangle of thoughts and view clusters
 

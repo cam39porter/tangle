@@ -94,7 +94,7 @@ Before diving into the components we must define two terms corresponding to the 
 
     * Ability to share thoughts with the Universal Tangle (realized that global was planet limiting)
 
-### [Mental Hygiene]
+### Metnal Reflection
 
 > The act of reflecting on, curating, and connecting the dots between thoughts at the end of the day.
 

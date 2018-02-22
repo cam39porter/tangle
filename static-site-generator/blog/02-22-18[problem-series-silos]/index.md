@@ -4,7 +4,7 @@ date: '2018-02-22'
 title: 'The Problem Series'
 subtitle: 'Linear Thought Silos'
 author: 'Myles McGinley'
-tags: ['Notes', 'Problem','Silos', 'Apps']
+tags: ['Notes', 'Problem', 'Silos', 'Apps']
 ---
 
 In our first [Problem Series](https://hex-ventures.github.io/hex-ventures/blog/problem-series-notes) post, we used Cameron-types and Myles-types as foils to discuss the three core issues with the state of note-taking today:
@@ -36,7 +36,7 @@ I digress... The point is, people capture thoughts with a lot of different tools
 
 ### Linear thought silos
 
-All of these tools become what we call: linear thought silos. 
+All these tools become what we call: linear thought silos.
 
 > These silos keep your thoughts trapped.
 
@@ -46,7 +46,7 @@ Silos are often *linear* because they bias the most recent thoughts you capture 
 
 ### Connecting captures
 
-The act of capturing thoughts is useful, but connecting the dots between them is what allows for reflection, provides clarity, calayzes ideation and helps people frame their thinking.
+The act of capturing thoughts is useful but connecting the dots between them is what allows for reflection, provides clarity, catalyzes ideation and helps people frame their thinking.
 
 > Connecting your thought-captures when you go back through your writings provides immense value.
 

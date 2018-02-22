@@ -16,7 +16,7 @@ We will be sharing our answers very soon...
 
 ## The Problem with Note-Taking
 
-Note-taking can be an incredibly valuable exercises for anyone. Students look back at their notes to study, writers look back at their notes for inspiration, and professionals look back at their notes to just make sure they have the facts right. Everyone ought to take notes, even on the little things like their ideas and what they are thinking about. Doing that exercise can often lead to powerful insights and connections that might have slipped through the cracks otherwise.
+Note-taking can be an incredibly valuable exercise for anyone. Students look back at their notes to study, writers look back at their notes for inspiration, and professionals look back at their notes to just make sure they have the facts right. Everyone ought to take notes, even on the little things like their ideas and what they are thinking about. Doing that exercise can often lead to powerful insights and connections that might have slipped through the cracks otherwise.
 
 To frame the problem, however, we have to start with the types of people in the world. Broadly, you can think of them as the Myles-type and the Cameron-type.
 
@@ -45,4 +45,3 @@ These two types of people inform how we think about the problems in current pers
    The practice of going back through your notes, re-reading, and digesting things again is great mental hygiene and helps to frame your thoughts. To complete this exercise though, you first have to remember to do it, and then you have to do it. Those two steps are work. Shouldn't our note-taking technology help us to remember and surface our path of thinking?
 
 #### These are the kinds of questions the group at Hex is thinking about. Just one part of the larger knowledge management equation.
-

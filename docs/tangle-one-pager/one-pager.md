@@ -2,9 +2,7 @@
 
 *Building our shared consciousness*
 
-___
-
-#### We ask everyone two questions:
+## We ask everyone two questions:
 
 1. Where do you capture your thoughts?
 
@@ -16,15 +14,16 @@ ___
 
 That's why we created **Tangle.**
 
-#### How it works:
-___
+## How it works:
 
 **Capture:** Have you ever had that sense of relief when you get that idea out of your head and onto paper?
 
 > Get that feeling when you easily drop thoughts into your Tangle with our suite of tools:
 
 * **Text:** Desktop keyboard shortcuts, mobile keyboard extension, highlighting, and annotation
+
 * **Audio:** Native speech to text integrations
+
 * **Image:** Screenshot and photo store
 
 **Surface:** Have you ever had that feeling of delight when you don’t know what to search, but find exactly what you want?
@@ -32,6 +31,7 @@ ___
 > Get that feeling when you pull the ideas you want from your Tangle
 
 * Query a simple search bar
+
 * Visually explore your network of thoughts
 
 **Tangle:** Have you ever had that feeling of excitement when you realize you and a friend are thinking about the same thing?
@@ -46,13 +46,17 @@ ___
 > Live in that moment and develop the habit of active ideation
 
 * Receive a daily digest based on your captures
+
 * Revisit previous captures to help you contextualize and formalize your thoughts
+
 * Hone the skill of reflection and creative thinking
 
 **Inspire:** Have you ever had that *a ha!* moment in the middle of the night when the pieces all fall together?
 
-> You'll get that * a ha!* every time you receive valuable analysis on your Tangle
+> Receive valuable analysis on your Tangle
 
 * Visually explore clusters of thoughts 
+
 * See the path of thoughts that lead to an idea
+
 * Surface old thoughts related to new thinking

@@ -42,7 +42,7 @@ These two types of people inform how we think about the problems in current pers
 
 3. **Connecting the dots is work**
 
-   The practice of going back through your notes, re-reading, and digesting things again is great mental hygiene and helps to frame your thoughts. To complete this exercise though, you first have to remember to do it, and then you have to do it. Those two steps are work. Shouldn't our note-taking technology help us to remember and surface our path of thinking?
+   The practice of going back through your notes,re-reading, and digesting things again is great mental hygiene and helps to frame your thoughts. To complete this exercise though, you first have to remember to do it, and then you have to do it. Those two steps are work. Shouldn't our note-taking technology help us to remember and surface our path of thinking?
 
 #### These are the kinds of questions the group at Hex is thinking about. Just one part of the larger knowledge management equation.
 

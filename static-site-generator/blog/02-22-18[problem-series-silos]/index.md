@@ -40,7 +40,7 @@ All these tools become what we call: linear thought silos.
 
 > These silos keep your thoughts trapped.
 
-We call them _thought_ silos because a note is simply that, a thought, captured as some form of data: text, image, audio, video etc. A thought alone is not particularly useful, but connected to other thoughts, can become a powerful network of ideas.
+We call them _thought_ silos because a note is simply that, a thought, captured as some form of data: text, image, audio, video etc. A thought is not useful on its own, but requires context and connections.
 
 Silos are often _linear_ because they bias the most recent thoughts you capture based on recency. When you open Evernote for example, the most recent file in which you you took notes is at the top of your notebook folder. Of course, you are able to search some of these tools, but from my experience, search features are only average or poor.
 

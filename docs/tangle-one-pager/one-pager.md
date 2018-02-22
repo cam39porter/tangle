@@ -55,8 +55,8 @@ That's why we created **Tangle.**
 
 > Receive valuable analysis on your Tangle
 
-* Visually explore clusters of thoughts 
+* Find new connections between clusters of thoughts
 
-* See the path of thoughts that lead to an idea
+* Discover the path of thoughts that lead to an idea
 
-* Surface old thoughts related to new thinking
+* Resurface old thoughts related to new thinking

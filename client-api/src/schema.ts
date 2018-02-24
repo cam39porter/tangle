@@ -5,6 +5,7 @@
 export default `
 
 type Capture {
+  id: String!
   body: String!
 }
 
@@ -14,7 +15,8 @@ schema {
 }
 
 type Query {
-  getCapture: Capture!
+  getCapture(id: String!): Capture!,
+  getCaptures: [Capture!]!
 }
 
 type Mutation {

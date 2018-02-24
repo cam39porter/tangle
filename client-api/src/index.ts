@@ -29,5 +29,6 @@ app.use(
   graphqlExpress({ schema: executableSchema })
 );
 app.get("/graphiql", graphiqlExpress({ endpointURL: "/graphql" })); // if you want GraphiQL enabled
-
-app.listen(PORT, () => console.log("Api listening on port " + PORT));
+app.listen(PORT, () => {
+  console.log("Api listening on port " + PORT);
+});

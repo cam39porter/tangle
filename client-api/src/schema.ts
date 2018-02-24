@@ -14,7 +14,7 @@ schema {
 }
 
 type Query {
-  Capture: Capture!
+  getCapture: Capture!
 }
 
 type Mutation {

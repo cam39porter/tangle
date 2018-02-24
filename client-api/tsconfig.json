@@ -4,7 +4,9 @@
     "module": "commonjs",
     "outDir": "./.compiled",
     "lib": ["es6", "dom", "esnext"],
-    "sourceMap": true
+    "sourceMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]

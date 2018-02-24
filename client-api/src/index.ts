@@ -4,16 +4,17 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
-import { makeExecutableSchema, addMockFunctionsToSchema } from "graphql-tools";
+import { makeExecutableSchema } from "graphql-tools";
 
 import schema from "./schema";
-import resolvers from "./resolvers";
+import resolvers from "./resolvers/capture";
+import { GraphQLSchema } from "graphql";
 
 /*!
  * Make the schema executable
  */
 
-const executableSchema = makeExecutableSchema({
+const executableSchema: GraphQLSchema = makeExecutableSchema({
   typeDefs: schema,
   resolvers: resolvers
 });

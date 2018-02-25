@@ -1,12 +1,21 @@
 import * as React from "react";
-const logo = require("../logo.svg") as string;
 
 export interface Props {}
 function Topbar(props: Props) {
   return (
-    <div className={`fl w-100 h3 ba`}>
-      <img src={logo} className="fl App-logo h3" alt="logo" />
-      <h1 className="fl w-80 tc">Welcome to Capture!</h1>
+    <div className={`w-100`}>
+      <p className={`w-25 h1 tc dib pointer bg-animate hover-bg-near-white`}>
+        profile
+      </p>
+      <p className={`w-25 h1 tc dib pointer bg-animate hover-bg-near-white`}>
+        reflect
+      </p>
+      <p className={`w-25 h1 tc dib pointer bg-animate hover-bg-near-white`}>
+        tangle
+      </p>
+      <p className={`w-25 h1 tc dib pointer bg-animate hover-bg-near-white`}>
+        inspire
+      </p>
     </div>
   );
 }

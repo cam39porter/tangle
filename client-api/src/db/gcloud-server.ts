@@ -4,10 +4,17 @@ import { Capture } from "../models/capture";
 const config = {
   user: sqlcfg.MYSQL_USER,
   password: sqlcfg.MYSQL_PASSWORD,
-  database: sqlcfg.DATABASE
+  database: sqlcfg.DATABASE,
+  socketPath: null
 };
 
-// const knex = connect();
+if (
+  process.env.INSTANCE_CONNECTION_NAME &&
+  process.env.NODE_ENV === "production"
+) {
+  config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
+}
+
 let knex = require("knex")({
   client: "mysql",
   connection: config

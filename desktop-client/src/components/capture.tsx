@@ -6,6 +6,7 @@ export interface CaptureState {
 class Capture extends React.Component<Props, CaptureState> {
   constructor(props: Props) {
     super(props);
+
     this.state = {
       value: ""
     };
@@ -25,19 +26,33 @@ class Capture extends React.Component<Props, CaptureState> {
 
   render() {
     return (
-      <div className="Capture">
+      <div className={`mt7`}>
+        {/* Capture and Surface Bar */}
         <form className={`pa4 black-80`} onSubmit={this.handleSubmit}>
-          <label className={`f6 b db mb2`}>Capture</label>
-          <textarea
-            id="comment"
-            name="comment"
-            className={`db border-box hover-black w-100 measure ba b--black-20 pa2 br2 mb2`}
-            placeholder="Enter thoughts here"
-            aria-describedby="comment-desc"
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
-          <input type="submit" value="Submit" />
+          <div className={`pa2`}>
+            {/* Capture and Surface Text Area */}
+            <textarea
+              id="comment"
+              name="comment"
+              className="db v-mid center shadow-hover border-box w-100 measure ba b--black-20 br2 mb2 f6"
+              aria-describedby="comment-desc"
+              value={this.state.value}
+              onChange={this.handleChange}
+            />
+            {/* Capture and Surface Buttons */}
+            <div className={`db f6 tc`}>
+              <input
+                type="submit"
+                value="capture"
+                className={`dib ma2 pa2 br2 b bg-light-gray gray`}
+              />
+              <input
+                type="submit"
+                value="surface"
+                className={`dib ma2 pa2 br2 b bg-light-gray gray`}
+              />
+            </div>
+          </div>
         </form>
       </div>
     );

@@ -1,17 +1,14 @@
 import Knex from "knex";
-import sqlcfg from "../cfg/sql";
+import devcfg from "../cfg/devcfg";
 import { Capture } from "../models/capture";
 const config = {
-  user: sqlcfg.MYSQL_USER,
-  password: sqlcfg.MYSQL_PASSWORD,
-  database: sqlcfg.DATABASE,
+  user: process.env.MYSQL_USER || devcfg.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD || devcfg.MYSQL_PASSWORD,
+  database: process.env.DATABASE || devcfg.DATABASE,
   socketPath: null
 };
 
-if (
-  process.env.INSTANCE_CONNECTION_NAME &&
-  process.env.NODE_ENV === "production"
-) {
+if (process.env.NODE_ENV === "production") {
   config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
 }
 

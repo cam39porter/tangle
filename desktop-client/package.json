@@ -1,7 +1,8 @@
 {
   "name": "desktop-client",
   "version": "0.1.0",
-  "description": "A desktop client for empowering people to capture and connect thoughts to create big ideas",
+  "description":
+    "A desktop client for empowering people to capture and connect thoughts to create big ideas",
   "private": true,
   "dependencies": {
     "@types/react-redux": "^5.0.15",
@@ -10,7 +11,6 @@
     "react-quill": "1.2.6",
     "react-redux": "^5.0.7",
     "react-scripts-ts": "2.13.0",
-    "redux": "^3.7.2",
     "tachyons": "^4.9.1"
   },
   "homepage": "./",

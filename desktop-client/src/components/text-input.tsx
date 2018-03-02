@@ -1,41 +1,48 @@
 import * as React from "react";
 
-import Quill from "react-quill";
-import "react-quill/dist/quill.core.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
-export interface Props {}
+export interface Props {
+  handleChange?: (value: string) => void;
+}
 
 export interface TextInputState {
-  value: string;
+  editorHtml: string;
+  mountedEditor: boolean;
 }
 
 class TextInput extends React.Component<Props, TextInputState> {
+  reactQuillRef: ReactQuill | null = null;
+  modules: Object;
+
   constructor(props: Props) {
     super(props);
 
-    this.state = {
-      value: ""
-    };
-
+    this.state = { editorHtml: "", mountedEditor: false };
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(value: string): void {
-    this.setState({ value });
-  }
+  handleChange(html: string): void {
+    if (this.props.handleChange && this.reactQuillRef !== null) {
+      this.props.handleChange(this.reactQuillRef.getEditor().getText());
+    }
 
-  handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
-    event.preventDefault();
+    this.setState({ editorHtml: html });
   }
 
   render() {
     return (
-      <div className={`w-100 vh-50 center dt bb measure-narrow`}>
-        <div className={`dtc vh-50 v-btm`}>
-          <Quill value={this.state.value} onChange={this.handleChange} />
-        </div>
-      </div>
+      <ReactQuill
+        ref={el => {
+          this.reactQuillRef = el;
+        }}
+        onChange={this.handleChange}
+        theme={"snow"}
+        modules={{
+          toolbar: false
+        }}
+      />
     );
   }
 }

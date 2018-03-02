@@ -11,7 +11,7 @@ You can use the following verbs as part of your commit messages/PR titles.
 * `fix`: For when you have fixed a bug.
 
 * `feat`: For when you have added a new feature.
-chore: For when you've done a small chore on the repository such as updating a script in package.json or changing your code based on feedback from the linter.
+  chore: For when you've done a small chore on the repository such as updating a script in package.json or changing your code based on feedback from the linter.
 
 * `docs`: For when you've added documentation.
 
@@ -24,6 +24,5 @@ If you've made the change to a React component, use the components name, such as
 > What should the final commit message look like?
 
 ```sh
-
 git commit -m 'fix(server): broken get handler'
 ```

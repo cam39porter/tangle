@@ -5,6 +5,7 @@ import "react-quill/dist/quill.snow.css";
 
 export interface Props {
   handleChange?: (value: string) => void;
+  handleEnterKeyUp?: () => void;
 }
 
 export interface TextInputState {
@@ -21,6 +22,11 @@ class TextInput extends React.Component<Props, TextInputState> {
 
     this.state = { editorHtml: "", mountedEditor: false };
     this.handleChange = this.handleChange.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    // alert(nextProps);
   }
 
   handleChange(html: string): void {
@@ -31,17 +37,29 @@ class TextInput extends React.Component<Props, TextInputState> {
     this.setState({ editorHtml: html });
   }
 
+  handleKeyUp(e: React.KeyboardEvent<KeyUsage>) {
+    if (e.key === "Enter") {
+      if (this.props.handleEnterKeyUp) {
+        this.props.handleEnterKeyUp();
+        if (this.reactQuillRef !== null) {
+          this.reactQuillRef.getEditor().setText("");
+        }
+      }
+    }
+  }
+
   render() {
     return (
       <ReactQuill
         ref={el => {
           this.reactQuillRef = el;
         }}
-        onChange={this.handleChange}
         theme={"snow"}
         modules={{
           toolbar: false
         }}
+        onChange={this.handleChange}
+        onKeyDown={this.handleKeyUp}
       />
     );
   }

@@ -9,7 +9,7 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloProvider } from "react-apollo";
 
 const httpLink = createHttpLink({
-  uri: "https://opit-193719.appspot.com/graphql"
+  uri: process.env.REACT_APP_GRAPHQL_URI
 });
 
 const client = new ApolloClient({

@@ -6,6 +6,8 @@ import "react-quill/dist/quill.snow.css";
 export interface Props {
   handleChange?: (value: string) => void;
   handleEnterKeyUp?: () => void;
+  clearValue?: boolean;
+  updateClearValue?: (newClearValue: boolean) => void;
 }
 
 export interface TextInputState {
@@ -26,7 +28,18 @@ class TextInput extends React.Component<Props, TextInputState> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    // alert(nextProps);
+    if (nextProps.clearValue) {
+      this.handleClearValue();
+    }
+  }
+
+  handleClearValue() {
+    if (this.reactQuillRef !== null) {
+      this.reactQuillRef.getEditor().setText("");
+    }
+    if (this.props.updateClearValue) {
+      this.props.updateClearValue(false);
+    }
   }
 
   handleChange(html: string): void {
@@ -41,9 +54,6 @@ class TextInput extends React.Component<Props, TextInputState> {
     if (e.key === "Enter") {
       if (this.props.handleEnterKeyUp) {
         this.props.handleEnterKeyUp();
-        if (this.reactQuillRef !== null) {
-          this.reactQuillRef.getEditor().setText("");
-        }
       }
     }
   }

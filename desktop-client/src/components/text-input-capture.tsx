@@ -15,6 +15,7 @@ export interface Props {
 }
 export interface TextInputCaptureState {
   value: string;
+  clearValue: boolean;
 }
 
 class TextInputCapture extends React.Component<Props, TextInputCaptureState> {
@@ -22,11 +23,19 @@ class TextInputCapture extends React.Component<Props, TextInputCaptureState> {
     super(props);
 
     this.state = {
-      value: ""
+      value: "",
+      clearValue: false
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleCapture = this.handleCapture.bind(this);
+    this.updateClearValue = this.updateClearValue.bind(this);
+  }
+
+  updateClearValue(newClearValue: boolean) {
+    this.setState({
+      clearValue: newClearValue
+    });
   }
 
   handleChange(value: string): void {
@@ -36,6 +45,9 @@ class TextInputCapture extends React.Component<Props, TextInputCaptureState> {
   }
 
   handleCapture() {
+    this.setState({
+      clearValue: true
+    });
     this.props.mutate({
       variables: { body: this.state.value }
     });
@@ -49,6 +61,8 @@ class TextInputCapture extends React.Component<Props, TextInputCaptureState> {
             <TextInput
               handleChange={this.handleChange}
               handleEnterKeyUp={this.handleCapture}
+              clearValue={this.state.clearValue}
+              updateClearValue={this.updateClearValue}
             />
           </div>
         </div>

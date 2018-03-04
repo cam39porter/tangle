@@ -5,7 +5,7 @@ import "react-quill/dist/quill.snow.css";
 
 export interface Props {
   handleChange?: (value: string) => void;
-  handleEnterKeyUp?: () => void;
+  handleEnterKeyDown?: () => void;
   clearValue?: boolean;
   updateClearValue?: (newClearValue: boolean) => void;
 }
@@ -24,7 +24,7 @@ class TextInput extends React.Component<Props, TextInputState> {
 
     this.state = { editorHtml: "", mountedEditor: false };
     this.handleChange = this.handleChange.bind(this);
-    this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -50,10 +50,10 @@ class TextInput extends React.Component<Props, TextInputState> {
     this.setState({ editorHtml: html });
   }
 
-  handleKeyUp(e: React.KeyboardEvent<KeyUsage>) {
+  handleKeyDown(e: React.KeyboardEvent<KeyUsage>) {
     if (e.key === "Enter") {
-      if (this.props.handleEnterKeyUp) {
-        this.props.handleEnterKeyUp();
+      if (this.props.handleEnterKeyDown) {
+        this.props.handleEnterKeyDown();
       }
     }
   }
@@ -69,7 +69,7 @@ class TextInput extends React.Component<Props, TextInputState> {
           toolbar: false
         }}
         onChange={this.handleChange}
-        onKeyDown={this.handleKeyUp}
+        onKeyDown={this.handleKeyDown}
       />
     );
   }

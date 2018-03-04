@@ -60,7 +60,7 @@ class TextInputCapture extends React.Component<Props, TextInputCaptureState> {
           <div className={`dtc v-btm bb`}>
             <TextInput
               handleChange={this.handleChange}
-              handleEnterKeyUp={this.handleCapture}
+              handleEnterKeyDown={this.handleCapture}
               clearValue={this.state.clearValue}
               updateClearValue={this.updateClearValue}
             />

@@ -3,6 +3,7 @@
  */
 import * as express from "express";
 import * as bodyParser from "body-parser";
+import * as cors from "cors";
 import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
 import { makeExecutableSchema } from "graphql-tools";
 
@@ -21,6 +22,16 @@ const executableSchema: GraphQLSchema = makeExecutableSchema({
 
 const PORT = 8080;
 const app = express();
+
+// Add CORS for local development
+if (process.env.NODE_ENV === "development") {
+  const corsOptions = {
+    origin: "http://localhost:3000/",
+    methods: ["GET", "POST"],
+    optionsSuccessStatus: 200
+  };
+  app.use(cors(corsOptions));
+}
 
 // bodyParser is needed just for POST.
 app.use(

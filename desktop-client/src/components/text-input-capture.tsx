@@ -49,7 +49,7 @@ class TextInputCapture extends React.Component<Props, TextInputCaptureState> {
       clearValue: true
     });
     this.props.mutate({
-      variables: { body: this.state.value }
+      variables: { body: this.state.value.replace(/\n/g, "") }
     });
   }
 
@@ -60,9 +60,10 @@ class TextInputCapture extends React.Component<Props, TextInputCaptureState> {
           <div className={`dtc v-btm bb`}>
             <TextInput
               handleChange={this.handleChange}
-              handleEnterKeyDown={this.handleCapture}
+              handleEnterKey={this.handleCapture}
               clearValue={this.state.clearValue}
               updateClearValue={this.updateClearValue}
+              placeholder={"Let's Tangle..."}
             />
           </div>
         </div>

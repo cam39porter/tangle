@@ -5,26 +5,40 @@ import "react-quill/dist/quill.snow.css";
 
 export interface Props {
   handleChange?: (value: string) => void;
-  handleEnterKeyDown?: () => void;
+  handleEnterKey?: () => void;
   clearValue?: boolean;
   updateClearValue?: (newClearValue: boolean) => void;
+  placeholder?: string;
 }
 
 export interface TextInputState {
   editorHtml: string;
   mountedEditor: boolean;
+  modules: Object;
 }
 
 class TextInput extends React.Component<Props, TextInputState> {
   reactQuillRef: ReactQuill | null = null;
-  modules: Object;
 
   constructor(props: Props) {
     super(props);
 
-    this.state = { editorHtml: "", mountedEditor: false };
+    this.state = {
+      editorHtml: "",
+      mountedEditor: false,
+      modules: {
+        toolbar: false
+      }
+    };
+
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.reactQuillRef) {
+      this.reactQuillRef.getEditor().focus();
+    }
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -52,8 +66,8 @@ class TextInput extends React.Component<Props, TextInputState> {
 
   handleKeyDown(e: React.KeyboardEvent<KeyUsage>) {
     if (e.key === "Enter") {
-      if (this.props.handleEnterKeyDown) {
-        this.props.handleEnterKeyDown();
+      if (this.props.handleEnterKey) {
+        this.props.handleEnterKey();
       }
     }
   }
@@ -64,10 +78,9 @@ class TextInput extends React.Component<Props, TextInputState> {
         ref={el => {
           this.reactQuillRef = el;
         }}
+        placeholder={this.props.placeholder ? this.props.placeholder : ""}
         theme={"snow"}
-        modules={{
-          toolbar: false
-        }}
+        modules={this.state.modules}
         onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}
       />

@@ -14,7 +14,8 @@
     "react-dom": "^16.2.0",
     "react-quill": "1.2.6",
     "react-scripts-ts": "2.13.0",
-    "tachyons": "^4.9.1"
+    "tachyons": "^4.9.1",
+    "underscore": "1.8.3"
   },
   "homepage": "./",
   "main": "src/electron-starter.js",

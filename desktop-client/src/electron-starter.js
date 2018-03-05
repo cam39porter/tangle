@@ -3,6 +3,9 @@ const electron = require("electron");
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
+// Module to control global keyboard shortcuts
+const globalShortcut = electron.globalShortcut;
+const CAPTURE_SHORTCUT = "CommandOrControl+Shift+C";
 
 const path = require("path");
 const url = require("url");
@@ -56,7 +59,23 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+app.on("ready", () => {
+  createWindow();
+
+  // Register global capture shortcut
+  const reg = globalShortcut.register(CAPTURE_SHORTCUT, () => {
+    console.log("Capture shortcut pressed");
+    createWindow();
+  });
+
+  // check if registration failed (shortcut already mapped by OS)
+  if (!reg) {
+    console.log("Capture shortcut registration failed");
+  }
+
+  // Check whether the shortcut is register
+  console.log(globalShortcut.isRegistered(CAPTURE_SHORTCUT));
+});
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function() {
@@ -79,21 +98,30 @@ app.on("activate", function() {
 // will-attach-webview event on the hosting webContents.
 // Use the event to prevent the creation of WebViews with possibly
 // insecure options.
-app.on("web-contents-created", (event, contents) => {
-  contents.on("will-attach-webview", (event, webPreferences, params) => {
-    // Strip away preload scripts if unused or verify their location is legitimate
-    delete webPreferences.preload;
-    delete webPreferences.preloadURL;
+// app.on("web-contents-created", (event, contents) => {
+//   contents.on("will-attach-webview", (event, webPreferences, params) => {
+//     // Strip away preload scripts if unused or verify their location is legitimate
+//     delete webPreferences.preload;
+//     delete webPreferences.preloadURL;
 
-    // Disable Node.js integration
-    webPreferences.nodeIntegration = false;
+//     // Disable Node.js integration
+//     webPreferences.nodeIntegration = false;
 
-    // Verify URL being loaded
-    if (!params.src.startsWith("https://yourapp.com/")) {
-      event.preventDefault();
-    }
-  });
-});
+//     // Verify URL being loaded
+//     if (!params.src.startsWith("https://yourapp.com/")) {
+//       event.preventDefault();
+//     }
+//   });
+// });
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+// When the app will quit unregister the global shortcuts
+app.on("will-quit", () => {
+  // Unregister a shortcut.
+  globalShortcut.unregister(CAPTURE_SHORTCUT);
+
+  // Unregister all shortcuts.
+  globalShortcut.unregisterAll();
+});

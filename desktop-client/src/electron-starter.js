@@ -21,7 +21,7 @@ let mainWindow;
 
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600 });
+  mainWindow = new BrowserWindow({ width: 800, height: 600, show: false });
 
   // ESLint will warn about any use of eval(), even this one
   // eslint-disable-next-line
@@ -46,6 +46,12 @@ function createWindow() {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  // Show window only after the renderer process has rendered the page
+  // for the first time
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.show();
+  });
 
   // Emitted when the window is closed.
   mainWindow.on("closed", function() {

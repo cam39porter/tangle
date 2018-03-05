@@ -13,6 +13,7 @@ import { graphql, MutationFunc } from "react-apollo";
 export interface Props {
   mutate: MutationFunc<CreateCaptureMutation, CreateCaptureMutationVariables>;
 }
+
 export interface TextInputCaptureState {
   value: string;
   clearValue: boolean;
@@ -45,18 +46,23 @@ class TextInputCapture extends React.Component<Props, TextInputCaptureState> {
   }
 
   handleCapture() {
+    const capture = this.state.value.replace(/\n/g, "");
     this.setState({
       clearValue: true
     });
+    if (capture === "") {
+      return;
+    }
     this.props.mutate({
       // strip new lines from the value entered
-      variables: { body: this.state.value.replace(/\n/g, "") }
+      variables: { body: capture }
     });
   }
 
   render() {
     return (
       <div>
+        {/* Text Bar */}
         <div className={`pa3 w-100 vh-50 center dt measure-narrow`}>
           <div className={`dtc v-btm bb`}>
             <TextInput
@@ -68,6 +74,7 @@ class TextInputCapture extends React.Component<Props, TextInputCaptureState> {
             />
           </div>
         </div>
+        {/* Capture Button */}
         <div className={`tc pa3`}>
           <Button title="capture" onClick={this.handleCapture} />
         </div>

@@ -20,6 +20,12 @@ function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({ width: 800, height: 600 });
 
+  // ESLint will warn about any use of eval(), even this one
+  // eslint-disable-next-line
+  mainWindow.eval = global.eval = function() {
+    throw new Error(`Sorry, this app does not support window.eval().`);
+  };
+
   // and load the index.html of the app.
   const startUrl =
     process.env.ELECTRON_START_URL ||
@@ -67,6 +73,26 @@ app.on("activate", function() {
   if (mainWindow === null) {
     createWindow();
   }
+});
+
+// Before a <WebView> tag is attached, Electron will fire the
+// will-attach-webview event on the hosting webContents.
+// Use the event to prevent the creation of WebViews with possibly
+// insecure options.
+app.on("web-contents-created", (event, contents) => {
+  contents.on("will-attach-webview", (event, webPreferences, params) => {
+    // Strip away preload scripts if unused or verify their location is legitimate
+    delete webPreferences.preload;
+    delete webPreferences.preloadURL;
+
+    // Disable Node.js integration
+    webPreferences.nodeIntegration = false;
+
+    // Verify URL being loaded
+    if (!params.src.startsWith("https://yourapp.com/")) {
+      event.preventDefault();
+    }
+  });
 });
 
 // In this file you can include the rest of your app's specific main process

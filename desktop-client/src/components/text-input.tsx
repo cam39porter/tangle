@@ -13,11 +13,11 @@ export interface Props {
 
 export interface TextInputState {
   editorHtml: string;
-  mountedEditor: boolean;
   modules: Object;
 }
 
 class TextInput extends React.Component<Props, TextInputState> {
+  // reference to quill element
   reactQuillRef: ReactQuill | null = null;
 
   constructor(props: Props) {
@@ -25,7 +25,6 @@ class TextInput extends React.Component<Props, TextInputState> {
 
     this.state = {
       editorHtml: "",
-      mountedEditor: false,
       modules: {
         toolbar: false
       }
@@ -53,6 +52,7 @@ class TextInput extends React.Component<Props, TextInputState> {
     if (this.reactQuillRef !== null) {
       this.reactQuillRef.getEditor().setText("");
     }
+    // inform parent that editor has been cleared
     if (this.props.updateClearValue) {
       this.props.updateClearValue(false);
     }

@@ -49,6 +49,7 @@ class TextInputCapture extends React.Component<Props, TextInputCaptureState> {
       clearValue: true
     });
     this.props.mutate({
+      // strip new lines from the value entered
       variables: { body: this.state.value.replace(/\n/g, "") }
     });
   }

@@ -36,12 +36,14 @@ class TextInput extends React.Component<Props, TextInputState> {
   }
 
   componentDidMount() {
+    // focus on editor on load
     if (this.reactQuillRef) {
       this.reactQuillRef.getEditor().focus();
     }
   }
 
   componentWillReceiveProps(nextProps: Props) {
+    // clear value if directed by parent
     if (nextProps.clearValue) {
       this.handleClearValue();
     }
@@ -65,6 +67,7 @@ class TextInput extends React.Component<Props, TextInputState> {
   }
 
   handleKeyDown(e: React.KeyboardEvent<KeyUsage>) {
+    // Map the enter to key to anther action provided by parent
     if (e.key === "Enter") {
       if (this.props.handleEnterKey) {
         this.props.handleEnterKey();

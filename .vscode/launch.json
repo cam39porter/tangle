@@ -7,6 +7,19 @@
       "request": "launch",
       "program": "${workspaceFolder}/client-api/.compiled/index.js",
       "sourceMaps": true
+    },
+    {
+      "name": "Debug desktop-client main process",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}/desktop-client/",
+      "runtimeExecutable":
+        "${workspaceRoot}/desktop-client/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable":
+          "${workspaceRoot}/desktop-client/node_modules/.bin/electron.cmd"
+      },
+      "args": ["."]
     }
   ]
 }

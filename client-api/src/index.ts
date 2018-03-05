@@ -26,7 +26,7 @@ const app = express();
 // Add CORS for local development
 if (process.env.NODE_ENV === "development") {
   const corsOptions = {
-    origin: "http://localhost:3000/",
+    origin: ["http://localhost:3000/", "http://localhost:5000"],
     methods: ["GET", "POST"],
     optionsSuccessStatus: 200
   };

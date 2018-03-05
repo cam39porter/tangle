@@ -19,9 +19,15 @@ const {
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
-function createWindow() {
+function createMainWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600, show: false });
+  mainWindow = new BrowserWindow({
+    width: 1600,
+    minWidth: 400,
+    height: 1200,
+    minHeight: 300,
+    backgroundColor: "#FFFFFF"
+  });
 
   // ESLint will warn about any use of eval(), even this one
   // eslint-disable-next-line
@@ -47,12 +53,6 @@ function createWindow() {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
-  // Show window only after the renderer process has rendered the page
-  // for the first time
-  mainWindow.once("ready-to-show", () => {
-    mainWindow.show();
-  });
-
   // Emitted when the window is closed.
   mainWindow.on("closed", function() {
     // Dereference the window object, usually you would store windows
@@ -66,12 +66,12 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", () => {
-  createWindow();
+  createMainWindow();
 
   // Register global capture shortcut
   const reg = globalShortcut.register(CAPTURE_SHORTCUT, () => {
     console.log("Capture shortcut pressed");
-    createWindow();
+    createMainWindow();
   });
 
   // check if registration failed (shortcut already mapped by OS)
@@ -96,7 +96,7 @@ app.on("activate", function() {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
-    createWindow();
+    createMainWindow();
   }
 });
 

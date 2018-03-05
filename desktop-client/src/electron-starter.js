@@ -70,8 +70,12 @@ app.on("ready", () => {
 
   // Register global capture shortcut
   const reg = globalShortcut.register(CAPTURE_SHORTCUT, () => {
-    console.log("Capture shortcut pressed");
-    createMainWindow();
+    if (keyboardShortcutWindowCreated) {
+      keyboardShortcutWindowCreated = false;
+      keyboardShortcutWindow.close();
+      return;
+    }
+    createKeyboardShortcutWindow();
   });
 
   // check if registration failed (shortcut already mapped by OS)
@@ -100,26 +104,6 @@ app.on("activate", function() {
   }
 });
 
-// Before a <WebView> tag is attached, Electron will fire the
-// will-attach-webview event on the hosting webContents.
-// Use the event to prevent the creation of WebViews with possibly
-// insecure options.
-// app.on("web-contents-created", (event, contents) => {
-//   contents.on("will-attach-webview", (event, webPreferences, params) => {
-//     // Strip away preload scripts if unused or verify their location is legitimate
-//     delete webPreferences.preload;
-//     delete webPreferences.preloadURL;
-
-//     // Disable Node.js integration
-//     webPreferences.nodeIntegration = false;
-
-//     // Verify URL being loaded
-//     if (!params.src.startsWith("https://yourapp.com/")) {
-//       event.preventDefault();
-//     }
-//   });
-// });
-
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
@@ -131,3 +115,59 @@ app.on("will-quit", () => {
   // Unregister all shortcuts.
   globalShortcut.unregisterAll();
 });
+
+// Keyboard shortcut window
+let keyboardShortcutWindow;
+let keyboardShortcutWindowCreated = false;
+
+function createKeyboardShortcutWindow() {
+  if (keyboardShortcutWindowCreated) {
+    return;
+  }
+
+  keyboardShortcutWindowCreated = true;
+
+  // Create the browser window.
+  keyboardShortcutWindow = new BrowserWindow({
+    width: 400,
+    minWidth: 400,
+    height: 300,
+    minHeight: 300,
+    backgroundColor: "#FFFFFF",
+    frame: false,
+    opacity: 0.9
+  });
+
+  // ESLint will warn about any use of eval(), even this one
+  // eslint-disable-next-line
+  keyboardShortcutWindow.eval = global.eval = function() {
+    throw new Error(`Sorry, this app does not support window.eval().`);
+  };
+
+  // and load the index.html of the app.
+  const startUrl =
+    process.env.ELECTRON_START_URL ||
+    url.format({
+      pathname: path.join(__dirname, "/../build/index.html"),
+      protocol: "file:",
+      slashes: true
+    });
+
+  keyboardShortcutWindow.loadURL(startUrl);
+
+  // Install DevTools extenions
+  // installExtension(REACT_DEVELOPER_TOOLS)
+  //   .then(name => console.log(`Added Extension:  ${name}`))
+  //   .catch(err => console.log("An error occurred: ", err));
+
+  // Open the DevTools.
+  // keyboardShortcutWindow.webContents.openDevTools();
+
+  // Emitted when the window is closed.
+  keyboardShortcutWindow.on("closed", function() {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    keyboardShortcutWindow = null;
+  });
+}

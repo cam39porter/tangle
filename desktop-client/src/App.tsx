@@ -9,7 +9,9 @@ class App extends React.Component<Props, object> {
   render() {
     return (
       <div className={`vh-100 w-100 avenir`}>
-        <NavigationBar />
+        <div className={`clip-s`}>
+          <NavigationBar />
+        </div>
         <Capture />
       </div>
     );

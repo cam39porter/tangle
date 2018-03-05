@@ -63,8 +63,8 @@ class TextInputCapture extends React.Component<Props, TextInputCaptureState> {
     return (
       <div>
         {/* Text Bar */}
-        <div className={`pa3 w-100 vh-50 center dt measure-narrow`}>
-          <div className={`dtc v-btm bb`}>
+        <div className={`pa3 w-100 vh-100 vh-50-ns center dt measure-narrow`}>
+          <div className={`dtc asf v-btm bb`}>
             <TextInput
               handleChange={this.handleChange}
               handleEnterKey={this.handleCapture}
@@ -75,7 +75,7 @@ class TextInputCapture extends React.Component<Props, TextInputCaptureState> {
           </div>
         </div>
         {/* Capture Button */}
-        <div className={`tc pa3`}>
+        <div className={`tc pa3 clip-s`}>
           <Button title="capture" onClick={this.handleCapture} />
         </div>
       </div>

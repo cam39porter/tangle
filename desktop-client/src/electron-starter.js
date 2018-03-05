@@ -129,13 +129,15 @@ function createKeyboardShortcutWindow() {
 
   // Create the browser window.
   keyboardShortcutWindow = new BrowserWindow({
-    width: 400,
-    minWidth: 400,
-    height: 300,
-    minHeight: 300,
+    width: 350,
+    minWidth: 350,
+    maxWidth: 350,
+    height: 200,
+    minHeight: 75,
     backgroundColor: "#FFFFFF",
     frame: false,
-    opacity: 0.9
+    hasShadow: true,
+    opacity: 1
   });
 
   // ESLint will warn about any use of eval(), even this one
@@ -154,14 +156,6 @@ function createKeyboardShortcutWindow() {
     });
 
   keyboardShortcutWindow.loadURL(startUrl);
-
-  // Install DevTools extenions
-  // installExtension(REACT_DEVELOPER_TOOLS)
-  //   .then(name => console.log(`Added Extension:  ${name}`))
-  //   .catch(err => console.log("An error occurred: ", err));
-
-  // Open the DevTools.
-  // keyboardShortcutWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   keyboardShortcutWindow.on("closed", function() {

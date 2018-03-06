@@ -7,6 +7,7 @@ import NavigationBar from "./components/navigation-bar";
 import Capture from "./views/capture";
 
 export interface Props {}
+
 class App extends React.Component<Props, object> {
   render() {
     return (

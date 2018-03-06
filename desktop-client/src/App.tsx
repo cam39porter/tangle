@@ -6,6 +6,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import NavigationBar from "./components/navigation-bar";
 import Capture from "./views/capture";
 import Surface from "./views/surface";
+import SurfaceResults from "./views/surface-results";
 
 export interface Props {}
 
@@ -14,15 +15,20 @@ class App extends React.Component<Props, object> {
     return (
       <div className={`vh-100 w-100 avenir`}>
         {/* Navigation Bar */}
-        <div className={`clip-s`}>
+        <div className={`clip-s z-max`}>
           <NavigationBar />
         </div>
 
         {/* Navigation */}
         <Switch>
           <Redirect exact={true} from="/" to="/capture" />
-          <Route path="/capture" component={Capture} />
-          <Route path="/surface" component={Surface} />
+          <Route exact={true} path="/capture" component={Capture} />
+          <Route exact={true} path="/surface" component={Surface} />
+          <Route
+            exact={true}
+            path="/surface/:query"
+            component={SurfaceResults}
+          />
         </Switch>
       </div>
     );

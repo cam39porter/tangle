@@ -6,3 +6,11 @@
     clip: rect(1px, 1px, 1px, 1px);
   }
 }
+
+.fill-height-or-more > div {
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}

@@ -3,6 +3,8 @@ import * as React from "react";
 import TextInput from "./text-input";
 import Button from "../components/button";
 
+import config from "../cfg";
+
 import {
   CreateCaptureMutation,
   CreateCaptureMutationVariables
@@ -64,19 +66,24 @@ class TextInputCapture extends React.Component<Props, TextInputCaptureState> {
       <div>
         {/* Text Bar */}
         <div className={`pa3 w-100 vh-100 vh-50-ns center dt measure-narrow`}>
-          <div className={`dtc asf v-btm bb`}>
+          <div className={`dtc asf v-btm bb b--${config.captureAccentColor}`}>
             <TextInput
               handleChange={this.handleChange}
               handleEnterKey={this.handleCapture}
               clearValue={this.state.clearValue}
               updateClearValue={this.updateClearValue}
-              placeholder={"Let's Tangle..."}
+              placeholder={"What's on your mind..."}
+              accentColor={config.captureAccentColor}
             />
           </div>
         </div>
         {/* Capture Button */}
         <div className={`tc pa3 clip-s`}>
-          <Button title="capture" onClick={this.handleCapture} />
+          <Button
+            title="capture"
+            onClick={this.handleCapture}
+            accentColor={config.captureAccentColor}
+          />
         </div>
       </div>
     );

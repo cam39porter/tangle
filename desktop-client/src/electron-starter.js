@@ -22,10 +22,10 @@ let mainWindow;
 function createMainWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1600,
-    minWidth: 400,
-    height: 1200,
-    minHeight: 300,
+    width: 1000,
+    minWidth: 800,
+    height: 750,
+    minHeight: 600,
     backgroundColor: "#FFFFFF"
   });
 

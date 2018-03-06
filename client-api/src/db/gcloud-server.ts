@@ -56,10 +56,7 @@ function getCapture(id: string) {
  * @returns {Promise}
  */
 function getCaptures() {
-  return knex
-    .select("body", "id")
-    .from("capture")
-    .limit(10);
+  return knex.select("body", "id").from("capture");
 }
 
 export { insertCapture, getCapture, getCaptures };

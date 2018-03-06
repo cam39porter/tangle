@@ -1,7 +1,8 @@
 {
   "name": "desktop-client",
   "version": "0.1.0",
-  "description": "A desktop client for empowering people to capture and connect thoughts to create big ideas",
+  "description":
+    "A desktop client for empowering people to capture and connect thoughts to create big ideas",
   "private": true,
   "dependencies": {
     "apollo-cache-inmemory": "1.1.9",
@@ -29,6 +30,7 @@
     "dev": "nodemon --watch ./src --ignore ./src/components --ignore ./src/components --ignore ./src/views --ignore ./src/App.tsx --ignore ./src/index.tsx --ignore ./src/queries.ts  --exec 'nf start'",
     "schema": "apollo-codegen introspect-schema https://opit-193719.appspot.com/graphql --output ./src/schema.json",
     "types": "apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts"
+
   },
   "devDependencies": {
     "@types/graphql": "0.12.4",

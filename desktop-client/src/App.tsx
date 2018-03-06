@@ -5,6 +5,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 
 import NavigationBar from "./components/navigation-bar";
 import Capture from "./views/capture";
+import Surface from "./views/surface";
 
 export interface Props {}
 
@@ -21,6 +22,7 @@ class App extends React.Component<Props, object> {
         <Switch>
           <Redirect exact={true} from="/" to="/capture" />
           <Route path="/capture" component={Capture} />
+          <Route path="/surface" component={Surface} />
         </Switch>
       </div>
     );

@@ -1,5 +1,6 @@
 {
   "name": "desktop-client",
+  "productName": "Tangle",
   "version": "0.1.0",
   "description":
     "A desktop client for empowering people to capture and connect thoughts to create big ideas",
@@ -32,7 +33,9 @@
     "schema":
       "apollo-codegen introspect-schema https://opit-193719.appspot.com/graphql --output ./src/schema.json",
     "types":
-      "apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts"
+      "apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
+    "package-mac":
+      "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds"
   },
   "devDependencies": {
     "@types/graphql": "0.12.4",
@@ -46,6 +49,7 @@
     "apollo-codegen": "0.19.0",
     "electron": "^1.8.2",
     "electron-devtools-installer": "2.2.3",
+    "electron-packager": "^11.1.0",
     "foreman": "^2.0.0",
     "nodemon": "1.17.1",
     "typescript": "^2.7.2"

@@ -21,7 +21,7 @@ class App extends React.Component<Props, object> {
 
         {/* Navigation */}
         <Switch>
-          <Route exact={true} path="/" component={Capture} />
+          <Route path="/" component={Capture} />
           <Route exact={true} path="/capture" component={Capture} />
           <Route exact={true} path="/surface" component={Surface} />
           <Route

@@ -28,7 +28,7 @@ class NavigationBarTab extends React.Component<Props, NavigationBarTabState> {
   isMatch() {
     return (
       this.props.location.pathname === `/${this.props.title}` ||
-      (this.props.title === "capture" && this.props.location.pathname === "/")
+      (this.props.title === "capture" && this.props.location.pathname !== "")
     );
   }
 

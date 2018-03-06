@@ -24,7 +24,7 @@ let knex = require("knex")({
  * @param {object} capture The visit record to insert.
  * @returns {Promise}
  */
-function insertCapture(capture: Capture): Capture {
+function insertCapture(capture: Capture): Promise<Capture> {
   return knex("capture")
     .insert(capture)
     .returning("id")

@@ -11,6 +11,8 @@ import schema from "./schema";
 import resolvers from "./resolvers/capture";
 import { GraphQLSchema } from "graphql";
 
+import { createSMSCapture } from "./controllers/sms";
+
 /*!
  * Make the schema executable
  */
@@ -39,7 +41,13 @@ app.use(
   bodyParser.json(),
   graphqlExpress({ schema: executableSchema })
 );
+
 app.get("/graphiql", graphiqlExpress({ endpointURL: "/graphql" })); // if you want GraphiQL enabled
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.post("/sms", createSMSCapture);
+
 app.listen(PORT, () => {
   console.log("Api listening on port " + PORT);
 });

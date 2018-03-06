@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import "react-quill/dist/quill.bubble.css";
 
 export interface Props {
   handleChange?: (value: string) => void;
@@ -9,6 +9,7 @@ export interface Props {
   clearValue?: boolean;
   updateClearValue?: (newClearValue: boolean) => void;
   placeholder?: string;
+  accentColor: string;
 }
 
 export interface TextInputState {
@@ -26,7 +27,7 @@ class TextInput extends React.Component<Props, TextInputState> {
     this.state = {
       editorHtml: "",
       modules: {
-        toolbar: false
+        toolbar: false // ["link", "code"]
       }
     };
 
@@ -35,9 +36,10 @@ class TextInput extends React.Component<Props, TextInputState> {
   }
 
   componentDidMount() {
-    // focus on editor on load
+    // focus on editor on load and register functionality
     if (this.reactQuillRef) {
-      this.reactQuillRef.getEditor().focus();
+      const editor = this.reactQuillRef.getEditor();
+      editor.focus();
     }
   }
 
@@ -82,7 +84,7 @@ class TextInput extends React.Component<Props, TextInputState> {
           this.reactQuillRef = el;
         }}
         placeholder={this.props.placeholder ? this.props.placeholder : ""}
-        theme={"snow"}
+        theme={"bubble"}
         modules={this.state.modules}
         onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}

@@ -1,8 +1,10 @@
 import * as React from "react";
 
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export interface Props {
+import { withRouter, RouteComponentProps } from "react-router";
+
+export interface Props extends RouteComponentProps<Object> {
   title: string;
   isActiveBackgroundColor: string;
   isActiveColor: string;
@@ -16,54 +18,44 @@ class NavigationBarTab extends React.Component<Props, NavigationBarTabState> {
   constructor(props: Props) {
     super(props);
 
+    this.isMatch = this.isMatch.bind(this);
+
     this.state = {
       isActive: false
     };
   }
 
+  isMatch() {
+    return (
+      this.props.location.pathname === `/${this.props.title}` ||
+      (this.props.title === "capture" && this.props.location.pathname === "/")
+    );
+  }
+
   render() {
     return (
-      <NavLink
+      <Link
         to={`/${this.props.title}`}
         style={{
           textDecoration: "none"
         }}
-        isActive={(match, location) => {
-          if (match) {
-            if (!this.state.isActive) {
-              this.setState({
-                isActive: true
-              });
-            }
-            return true;
-          }
-
-          if (this.state.isActive) {
-            this.setState({
-              isActive: false
-            });
-          }
-          return false;
-        }}
       >
         <div
           className={`tc pointer pa3 ttl ${
-            this.state.isActive
+            this.isMatch()
               ? "bg-" + this.props.isActiveBackgroundColor
               : "bg-light-gray"
           }`}
         >
           <span
-            className={`${
-              this.state.isActive ? this.props.isActiveColor : "gray"
-            }`}
+            className={`${this.isMatch() ? this.props.isActiveColor : "gray"}`}
           >
             {this.props.title}
           </span>
         </div>
-      </NavLink>
+      </Link>
     );
   }
 }
 
-export default NavigationBarTab;
+export default withRouter(NavigationBarTab);

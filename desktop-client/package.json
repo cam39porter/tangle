@@ -35,7 +35,7 @@
     "types":
       "apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
     "package-mac":
-      "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds"
+      "yarn build && electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds"
   },
   "devDependencies": {
     "@types/graphql": "0.12.4",

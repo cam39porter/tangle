@@ -1,7 +1,7 @@
 import * as React from "react";
 import "tachyons";
 
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 import NavigationBar from "./components/navigation-bar";
 import Capture from "./views/capture";
@@ -19,7 +19,7 @@ class App extends React.Component<Props, object> {
 
         {/* Navigation */}
         <Switch>
-          <Route path="/" component={Capture} />
+          <Redirect exact={true} from="/" to="/capture" />
           <Route path="/capture" component={Capture} />
         </Switch>
       </div>

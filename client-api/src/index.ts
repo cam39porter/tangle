@@ -25,14 +25,28 @@ const executableSchema: GraphQLSchema = makeExecutableSchema({
 const PORT = 8080;
 const app = express();
 
-// Add CORS for local development
 if (process.env.NODE_ENV === "development") {
-  const corsOptions = {
-    origin: ["http://localhost:3000/", "http://localhost:5000"],
-    methods: ["GET", "POST"],
-    optionsSuccessStatus: 200
-  };
-  app.use(cors(corsOptions));
+  app.use(
+    cors({
+      origin: [
+        "http://localhost:3000/",
+        "http://localhost:5000/",
+        "https://desktop-client-dot-opit-193719.appspot.com/"
+      ],
+      methods: ["GET", "POST"],
+      optionsSuccessStatus: 200
+    })
+  );
+}
+
+if (process.env.NODE_ENV === "production") {
+  app.use(
+    cors({
+      origin: ["https://desktop-client-dot-opit-193719.appspot.com/"],
+      methods: ["GET", "POST"],
+      optionsSuccessStatus: 200
+    })
+  );
 }
 
 // bodyParser is needed just for POST.

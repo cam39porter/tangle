@@ -2,6 +2,7 @@
   "name": "desktop-client",
   "productName": "Tangle",
   "version": "0.1.0",
+  "engine": "8.9.4",
   "description":
     "A desktop client for empowering people to capture and connect thoughts to create big ideas",
   "private": true,
@@ -35,7 +36,8 @@
     "types":
       "apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
     "package-mac":
-      "yarn build && electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds"
+      "yarn build && electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
+    "deploy": "NODE_ENV=production yarn build && gcloud app deploy ./app.yaml"
   },
   "devDependencies": {
     "@types/graphql": "0.12.4",

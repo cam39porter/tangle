@@ -28,11 +28,7 @@ const app = express();
 if (process.env.NODE_ENV === "development") {
   app.use(
     cors({
-      origin: [
-        "http://localhost:3000/",
-        "http://localhost:5000/",
-        "https://desktop-client-dot-opit-193719.appspot.com/"
-      ],
+      origin: ["http://localhost:3000/", "http://localhost:5000/"],
       methods: ["GET", "POST"],
       optionsSuccessStatus: 200
     })

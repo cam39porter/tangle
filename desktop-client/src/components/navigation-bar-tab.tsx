@@ -26,7 +26,7 @@ class NavigationBarTab extends React.Component<Props, NavigationBarTabState> {
   }
 
   isMatch() {
-    if (this.props.location.pathname === `/${this.props.title}`) {
+    if (this.props.location.pathname.startsWith(`/${this.props.title}`)) {
       return true;
     }
     if (

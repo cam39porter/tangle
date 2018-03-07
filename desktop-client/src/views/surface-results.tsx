@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import NavigationBar from "../components/navigation-bar";
+
 import { GetCapturesQuery } from "../__generated__/types";
 import { GetCaptures as QUERY } from "../queries";
 import { graphql, QueryProps } from "react-apollo";
@@ -19,16 +21,22 @@ export interface Props {
 class SurfaceResults extends React.Component<Props, object> {
   render() {
     return (
-      <div className={`w-100`}>
-        <div className={`flex-column self-stretch measure-narrow  `}>
+      <div className={`w-100 vh-100 flex-parent`}>
+        {/* Navigation Bar */}
+        <div className={`clip-s flex-item`}>
+          <NavigationBar />
+        </div>
+        <div className={`flex-item flex-grow measure-narrow shadow-1`}>
           <div
-            className={`h4 measure-narrow bg-${
+            className={`flex-item drawer h4 measure-narrow bg-${
               config.surfaceBaseColor
-            } shadow-5`}
+            }`}
           >
             {null}
           </div>
-          <div className={`measure-narrow bg-light-gray shadow-5`}>{null}</div>
+          <div className={`flex-item flex-grow measure-narrow bg-light-gray`}>
+            {null}
+          </div>
         </div>
       </div>
     );

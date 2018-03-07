@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { Redirect } from "react-router-dom";
 
+import NavigationBar from "../components/navigation-bar";
 import TextInput from "../components/text-input";
 import Button from "../components/button";
 
@@ -57,7 +58,11 @@ class Surface extends React.Component<Props, SurfaceState> {
 
   render() {
     return (
-      <div>
+      <div className={`w-100 vh-100`}>
+        {/* Navigation Bar */}
+        <div className={`clip-s z-max`}>
+          <NavigationBar />
+        </div>
         {/* Text Bar */}
         <div className={`pa3 w-100 vh-100 vh-50-ns center dt measure-narrow`}>
           <div className={`dtc asf v-btm bb b--${config.surfaceAccentColor}`}>

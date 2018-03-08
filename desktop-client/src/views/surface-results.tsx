@@ -1,13 +1,12 @@
 import * as React from "react";
 
-import NavigationBar from "../components/navigation-bar";
-
 import { GetCapturesQuery } from "../__generated__/types";
 import { GetCaptures as QUERY } from "../queries";
 import { graphql, QueryProps } from "react-apollo";
 
-import { match } from "react-router";
+import { RouteComponentProps } from "react-router";
 import TextInput from "../components/text-input";
+import NavigationBar from "../components/navigation-bar";
 
 import config from "../cfg";
 
@@ -15,9 +14,8 @@ interface Params {
   query: string;
 }
 
-export interface Props {
+export interface Props extends RouteComponentProps<Params> {
   data: QueryProps<GetCapturesQuery>;
-  match: match<Params>;
 }
 
 export interface SurfaceResultsState {
@@ -43,10 +41,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   handleSurface() {
-    const surface = this.state.value;
-    if (surface === "") {
-      return;
-    }
+    this.props.history.push(`/surface/${this.state.value}`);
   }
 
   render() {
@@ -56,6 +51,8 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
         <div className={`clip-s flex-item`}>
           <NavigationBar />
         </div>
+
+        {/* Sidebar */}
         <div className={`flex-item flex-grow measure-narrow shadow-1`}>
           <div
             className={`flex-item drawer h4 measure-narrow bg-${
@@ -73,6 +70,8 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
               </div>
             </div>
           </div>
+
+          {/* Results */}
           <div className={`flex-item flex-grow measure-narrow bg-light-gray`}>
             {null}
           </div>

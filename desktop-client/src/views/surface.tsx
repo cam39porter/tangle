@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { Redirect } from "react-router-dom";
 
+import NavigationBar from "../components/navigation-bar";
 import TextInput from "../components/text-input";
 import Button from "../components/button";
 
@@ -11,7 +12,6 @@ export interface Props {}
 
 export interface SurfaceState {
   value: string;
-  clearValue: boolean;
   showResults: boolean;
 }
 
@@ -21,19 +21,11 @@ class Surface extends React.Component<Props, SurfaceState> {
 
     this.state = {
       value: "",
-      clearValue: false,
       showResults: false
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSurface = this.handleSurface.bind(this);
-    this.updateClearValue = this.updateClearValue.bind(this);
-  }
-
-  updateClearValue(newClearValue: boolean) {
-    this.setState({
-      clearValue: newClearValue
-    });
   }
 
   handleChange(value: string): void {
@@ -43,11 +35,8 @@ class Surface extends React.Component<Props, SurfaceState> {
   }
 
   handleSurface() {
-    const capture = this.state.value.replace(/\n/g, "");
-    this.setState({
-      clearValue: true
-    });
-    if (capture === "") {
+    const surface = this.state.value;
+    if (surface === "") {
       return;
     }
     this.setState({
@@ -57,17 +46,18 @@ class Surface extends React.Component<Props, SurfaceState> {
 
   render() {
     return (
-      <div>
+      <div className={`w-100 vh-100`}>
+        {/* Navigation Bar */}
+        <div className={`clip-s z-max`}>
+          <NavigationBar />
+        </div>
         {/* Text Bar */}
         <div className={`pa3 w-100 vh-100 vh-50-ns center dt measure-narrow`}>
           <div className={`dtc asf v-btm bb b--${config.surfaceAccentColor}`}>
             <TextInput
               handleChange={this.handleChange}
               handleEnterKey={this.handleSurface}
-              clearValue={this.state.clearValue}
-              updateClearValue={this.updateClearValue}
               placeholder={"What are you looking for..."}
-              accentColor={config.surfaceAccentColor}
             />
           </div>
         </div>

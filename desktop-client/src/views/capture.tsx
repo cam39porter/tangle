@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import NavigationBar from "../components/navigation-bar";
 import TextInput from "../components/text-input";
 import Button from "../components/button";
 
@@ -48,7 +49,7 @@ class Capture extends React.Component<Props, CaptureState> {
   }
 
   handleCapture() {
-    const capture = this.state.value.replace(/\n/g, "");
+    const capture = this.state.value;
     this.setState({
       clearValue: true
     });
@@ -63,7 +64,12 @@ class Capture extends React.Component<Props, CaptureState> {
 
   render() {
     return (
-      <div>
+      <div className={`w-100 vh-100`}>
+        {/* Navigation Bar */}
+        <div className={`clip-s z-max`}>
+          <NavigationBar />
+        </div>
+
         {/* Text Bar */}
         <div className={`pa3 w-100 vh-100 vh-50-ns center dt measure-narrow`}>
           <div className={`dtc asf v-btm bb b--${config.captureAccentColor}`}>
@@ -73,7 +79,6 @@ class Capture extends React.Component<Props, CaptureState> {
               clearValue={this.state.clearValue}
               updateClearValue={this.updateClearValue}
               placeholder={"What's on your mind..."}
-              accentColor={config.captureAccentColor}
             />
           </div>
         </div>

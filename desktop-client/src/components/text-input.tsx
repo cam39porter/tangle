@@ -3,6 +3,8 @@ import * as React from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 
+import * as _ from "underscore";
+
 export interface Props {
   handleChange?: (value: string) => void;
   handleEnterKey?: () => void;
@@ -24,15 +26,33 @@ class TextInput extends React.Component<Props, TextInputState> {
   constructor(props: Props) {
     super(props);
 
+    let modules = {
+      toolbar: false
+    };
+
+    if (this.props.handleEnterKey) {
+      modules = _.extend(
+        {},
+        {
+          keyboard: {
+            bindings: {
+              tab: false,
+              handleEnter: {
+                key: "Enter",
+                handler: this.props.handleEnterKey
+              }
+            }
+          }
+        }
+      );
+    }
+
     this.state = {
       editorHtml: "",
-      modules: {
-        toolbar: false // ["link", "code"]
-      }
+      modules
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount() {
@@ -66,26 +86,11 @@ class TextInput extends React.Component<Props, TextInputState> {
   }
 
   handleChange(html: string): void {
-    const editorHtml = html.replace(/\n/g, "");
     if (this.props.handleChange && this.reactQuillRef !== null) {
-      this.props.handleChange(
-        this.reactQuillRef
-          .getEditor()
-          .getText()
-          .replace(/\n/g, "")
-      );
+      this.props.handleChange(this.reactQuillRef.getEditor().getText());
     }
 
-    this.setState({ editorHtml });
-  }
-
-  handleKeyDown(e: React.KeyboardEvent<KeyUsage>) {
-    // Map the enter to key to anther action provided by parent
-    if (e.key === "Enter") {
-      if (this.props.handleEnterKey) {
-        this.props.handleEnterKey();
-      }
-    }
+    this.setState({ editorHtml: html });
   }
 
   render() {
@@ -98,7 +103,6 @@ class TextInput extends React.Component<Props, TextInputState> {
         theme={"bubble"}
         modules={this.state.modules}
         onChange={this.handleChange}
-        onKeyDown={this.handleKeyDown}
       />
     );
   }

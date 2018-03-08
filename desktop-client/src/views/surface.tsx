@@ -51,6 +51,7 @@ class Surface extends React.Component<Props, SurfaceState> {
         <div className={`clip-s z-max`}>
           <NavigationBar />
         </div>
+
         {/* Text Bar */}
         <div className={`pa3 w-100 vh-100 vh-50-ns center dt measure-narrow`}>
           <div className={`dtc asf v-btm bb b--${config.surfaceAccentColor}`}>
@@ -61,6 +62,7 @@ class Surface extends React.Component<Props, SurfaceState> {
             />
           </div>
         </div>
+
         {/* Surface Button */}
         <div className={`tc pa3 clip-s`}>
           <Button

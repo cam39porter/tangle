@@ -20,3 +20,7 @@
 .flex-grow {
   flex: 1;
 }
+
+body {
+  overflow: hidden;
+}

@@ -82,6 +82,7 @@ class Capture extends React.Component<Props, CaptureState> {
             />
           </div>
         </div>
+
         {/* Capture Button */}
         <div className={`tc pa3 clip-s`}>
           <Button

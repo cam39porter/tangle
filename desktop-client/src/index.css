@@ -16,14 +16,13 @@ body {
 /* [END] Collapse navigation for keyboard shortcut */
 
 /* [START] Create a column that fills the page vertically */
-.flex-parent {
+.flex-column {
   display: flex;
   flex-direction: column;
 }
 
-.flex-item {
-  display: flex;
-  flex-direction: column;
+.flex-no-shrink {
+  flex-shrink: 1 0 auto;
 }
 
 .flex-grow {

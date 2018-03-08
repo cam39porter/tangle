@@ -31,20 +31,17 @@ class TextInput extends React.Component<Props, TextInputState> {
     };
 
     if (this.props.handleEnterKey) {
-      modules = _.assign(
-        {},
-        {
-          keyboard: {
-            bindings: {
-              tab: false,
-              handleEnter: {
-                key: "Enter",
-                handler: () => null
-              }
+      modules = _.assign(modules, {
+        keyboard: {
+          bindings: {
+            tab: false,
+            handleEnter: {
+              key: "Enter",
+              handler: () => null
             }
           }
         }
-      );
+      });
     }
 
     this.state = {

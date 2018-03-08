@@ -88,7 +88,9 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
             }`}
           >
             {/* Search Bar */}
-            <div className={`center w-90 ma3 h2 bg-white dt`}>
+            <div
+              className={`center w-90 ma3 pa3 h2 bg-white dt br1 b--light-gray shadow-1`}
+            >
               <div className={`w-100 dtc v-mid tc`}>
                 <input
                   className={`f6 roboto w-80`}

@@ -135,16 +135,18 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
                         formatter: "{b}"
                       }
                     },
-                    draggable: true,
+                    draggable: false,
+                    roam: false,
                     data: this.props.data.getCaptures,
-                    categories: ["a", "b", "c"],
+                    categories: [],
                     force: {
                       initLayout: "circular",
                       edgeLength: 5,
                       repulsion: 75,
                       gravity: 0.2
                     },
-                    edges: [] // [{ source: 1, target: 2 }]
+                    edges: [], // [{ source: 1, target: 2 }],
+                    tooltip: {}
                   }
                 ]
               }}

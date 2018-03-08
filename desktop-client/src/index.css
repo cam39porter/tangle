@@ -1,3 +1,10 @@
+body {
+  /* [START] Prevent scrolling on body */
+  overflow: hidden;
+  /* [END] Prevent scrolling on body */
+}
+
+/* [START] Collapse navigation for keyboard shortcut */
 @media screen and (min-width: 0em) and (max-width: 30em) {
   .clip-s {
     position: fixed !important;
@@ -6,7 +13,9 @@
     clip: rect(1px, 1px, 1px, 1px);
   }
 }
+/* [END] Collapse navigation for keyboard shortcut */
 
+/* [START] Create a column that fills the page vertically */
 .flex-parent {
   display: flex;
   flex-direction: column;
@@ -20,7 +29,12 @@
 .flex-grow {
   flex: 1;
 }
+/* [END] Create a column that fills the page vertically */
 
-body {
-  overflow: hidden;
+/* [START] Remove borders from inputs and text areas */
+textarea,
+input {
+  outline: none;
+  border: none;
 }
+/* [END] Remove borders from inputs and text areas */

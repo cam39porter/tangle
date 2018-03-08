@@ -5,8 +5,8 @@ import { GetCaptures as QUERY } from "../queries";
 import { graphql, QueryProps } from "react-apollo";
 
 import { RouteComponentProps } from "react-router";
-// import TextInput from "../components/text-input";
 import NavigationBar from "../components/navigation-bar";
+import ListItem from "../components/list-item";
 
 import config from "../cfg";
 
@@ -14,8 +14,10 @@ interface Params {
   query: string;
 }
 
+interface Data extends QueryProps<GetCapturesQuery>, GetCapturesQuery {}
+
 export interface Props extends RouteComponentProps<Params> {
-  data: QueryProps<GetCapturesQuery>;
+  data: Data;
 }
 
 export interface SurfaceResultsState {
@@ -33,6 +35,8 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.handleSurface = this.handleSurface.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+
+    this.renderResults = this.renderResults.bind(this);
   }
 
   handleChange(e: React.FormEvent<HTMLInputElement>): void {
@@ -51,6 +55,22 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.props.history.push(`/surface/${this.state.value}`);
   }
 
+  renderResults() {
+    return this.props.data.getCaptures.map(capture => {
+      return (
+        <ListItem
+          body={capture.body}
+          onClick={() => {
+            //
+            return;
+          }}
+          accentColor={config.surfaceAccentColor}
+          key={capture.id}
+        />
+      );
+    });
+  }
+
   render() {
     return (
       <div className={`w-100 vh-100 flex-parent`}>
@@ -60,9 +80,10 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
         </div>
 
         {/* Sidebar */}
-        <div className={`flex-item flex-grow measure-narrow shadow-1`}>
+        <div className={`flex-item flex-grow measure shadow-1`}>
+          {/* Header */}
           <div
-            className={`flex-item drawer h4 measure-narrow bg-${
+            className={`flex-item drawer h4 measure bg-${
               config.surfaceBaseColor
             }`}
           >
@@ -80,8 +101,13 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
           </div>
 
           {/* Results */}
-          <div className={`flex-item flex-grow measure-narrow bg-light-gray`}>
-            {null}
+          <div
+            className={`flex-item flex-grow measure bg-light-gray overflow-auto`}
+          >
+            {this.props.data.loading === false &&
+            this.props.data.error === undefined
+              ? this.renderResults()
+              : null}
           </div>
         </div>
       </div>

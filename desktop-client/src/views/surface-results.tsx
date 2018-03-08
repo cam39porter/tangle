@@ -5,10 +5,8 @@ import { GetCaptures as QUERY } from "../queries";
 import { graphql, QueryProps } from "react-apollo";
 
 import { RouteComponentProps } from "react-router";
-import TextInput from "../components/text-input";
+// import TextInput from "../components/text-input";
 import NavigationBar from "../components/navigation-bar";
-
-import * as _ from "lodash";
 
 import config from "../cfg";
 
@@ -34,12 +32,19 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 
     this.handleSurface = this.handleSurface.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
-  handleChange(value: string): void {
+  handleChange(e: React.FormEvent<HTMLInputElement>): void {
     this.setState({
-      value: _.trim(value)
+      value: e.currentTarget.value
     });
+  }
+
+  handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      this.handleSurface();
+    }
   }
 
   handleSurface() {
@@ -63,11 +68,12 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
           >
             {/* Search Bar */}
             <div className={`center w-90 ma3 h2 bg-white dt`}>
-              <div className={`w-100 dtc v-mid`}>
-                <TextInput
-                  startingValue={this.state.value}
-                  handleEnterKey={this.handleSurface}
-                  handleChange={this.handleChange}
+              <div className={`w-100 dtc v-mid tc`}>
+                <input
+                  className={`f6 roboto w-80`}
+                  value={this.state.value}
+                  onChange={this.handleChange}
+                  onKeyPress={this.handleKeyPress}
                 />
               </div>
             </div>

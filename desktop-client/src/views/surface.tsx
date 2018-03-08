@@ -8,6 +8,8 @@ import Button from "../components/button";
 
 import config from "../cfg";
 
+import * as _ from "lodash";
+
 export interface Props {}
 
 export interface SurfaceState {
@@ -30,7 +32,7 @@ class Surface extends React.Component<Props, SurfaceState> {
 
   handleChange(value: string): void {
     this.setState({
-      value
+      value: _.trim(value)
     });
   }
 

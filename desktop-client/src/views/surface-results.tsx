@@ -8,6 +8,8 @@ import { RouteComponentProps } from "react-router";
 import TextInput from "../components/text-input";
 import NavigationBar from "../components/navigation-bar";
 
+import * as _ from "lodash";
+
 import config from "../cfg";
 
 interface Params {
@@ -36,7 +38,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 
   handleChange(value: string): void {
     this.setState({
-      value
+      value: _.trim(value)
     });
   }
 

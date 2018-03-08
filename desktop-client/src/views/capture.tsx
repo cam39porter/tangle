@@ -4,6 +4,8 @@ import NavigationBar from "../components/navigation-bar";
 import TextInput from "../components/text-input";
 import Button from "../components/button";
 
+import * as _ from "lodash";
+
 import config from "../cfg";
 
 import {
@@ -43,8 +45,9 @@ class Capture extends React.Component<Props, CaptureState> {
   }
 
   handleChange(value: string): void {
+    // Trim whitespace (like newlines) from input
     this.setState({
-      value
+      value: _.trimEnd(value)
     });
   }
 

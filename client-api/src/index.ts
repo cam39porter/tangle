@@ -28,7 +28,11 @@ const app = express();
 if (process.env.NODE_ENV === "development") {
   app.use(
     cors({
-      origin: ["http://localhost:3000/", "http://localhost:5000/"],
+      origin: [
+        "http://localhost:3000/",
+        "http://localhost:5000/",
+        "https://desktop-client-dot-opit-193719.appspot.com"
+      ],
       methods: ["GET", "POST"],
       optionsSuccessStatus: 200
     })
@@ -38,7 +42,7 @@ if (process.env.NODE_ENV === "development") {
 if (process.env.NODE_ENV === "production") {
   app.use(
     cors({
-      origin: ["https://desktop-client-dot-opit-193719.appspot.com/"],
+      origin: ["https://desktop-client-dot-opit-193719.appspot.com"],
       methods: ["GET", "POST"],
       optionsSuccessStatus: 200
     })

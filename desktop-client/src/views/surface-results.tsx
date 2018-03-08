@@ -7,6 +7,7 @@ import { GetCaptures as QUERY } from "../queries";
 import { graphql, QueryProps } from "react-apollo";
 
 import { match } from "react-router";
+import TextInput from "../components/text-input";
 
 import config from "../cfg";
 
@@ -18,7 +19,36 @@ export interface Props {
   data: QueryProps<GetCapturesQuery>;
   match: match<Params>;
 }
-class SurfaceResults extends React.Component<Props, object> {
+
+export interface SurfaceResultsState {
+  value: string;
+}
+
+class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      value: this.props.match.params.query
+    };
+
+    this.handleSurface = this.handleSurface.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(value: string): void {
+    this.setState({
+      value
+    });
+  }
+
+  handleSurface() {
+    const surface = this.state.value;
+    if (surface === "") {
+      return;
+    }
+  }
+
   render() {
     return (
       <div className={`w-100 vh-100 flex-parent`}>
@@ -32,7 +62,16 @@ class SurfaceResults extends React.Component<Props, object> {
               config.surfaceBaseColor
             }`}
           >
-            {null}
+            {/* Search Bar */}
+            <div className={`center w-90 ma3 h2 bg-white dt`}>
+              <div className={`w-100 dtc v-mid`}>
+                <TextInput
+                  startingValue={this.state.value}
+                  handleEnterKey={this.handleSurface}
+                  handleChange={this.handleChange}
+                />
+              </div>
+            </div>
           </div>
           <div className={`flex-item flex-grow measure-narrow bg-light-gray`}>
             {null}

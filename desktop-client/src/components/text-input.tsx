@@ -8,8 +8,8 @@ export interface Props {
   handleEnterKey?: () => void;
   clearValue?: boolean;
   updateClearValue?: (newClearValue: boolean) => void;
+  startingValue?: string;
   placeholder?: string;
-  accentColor: string;
 }
 
 export interface TextInputState {
@@ -40,6 +40,11 @@ class TextInput extends React.Component<Props, TextInputState> {
     if (this.reactQuillRef) {
       const editor = this.reactQuillRef.getEditor();
       editor.focus();
+
+      if (this.props.startingValue) {
+        editor.setText(this.props.startingValue);
+        editor.blur();
+      }
     }
   }
 
@@ -61,11 +66,17 @@ class TextInput extends React.Component<Props, TextInputState> {
   }
 
   handleChange(html: string): void {
+    const editorHtml = html.replace(/\n/g, "");
     if (this.props.handleChange && this.reactQuillRef !== null) {
-      this.props.handleChange(this.reactQuillRef.getEditor().getText());
+      this.props.handleChange(
+        this.reactQuillRef
+          .getEditor()
+          .getText()
+          .replace(/\n/g, "")
+      );
     }
 
-    this.setState({ editorHtml: html });
+    this.setState({ editorHtml });
   }
 
   handleKeyDown(e: React.KeyboardEvent<KeyUsage>) {

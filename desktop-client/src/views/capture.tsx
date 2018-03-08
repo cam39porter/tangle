@@ -49,7 +49,7 @@ class Capture extends React.Component<Props, CaptureState> {
   }
 
   handleCapture() {
-    const capture = this.state.value.replace(/\n/g, "");
+    const capture = this.state.value;
     this.setState({
       clearValue: true
     });
@@ -79,7 +79,6 @@ class Capture extends React.Component<Props, CaptureState> {
               clearValue={this.state.clearValue}
               updateClearValue={this.updateClearValue}
               placeholder={"What's on your mind..."}
-              accentColor={config.captureAccentColor}
             />
           </div>
         </div>

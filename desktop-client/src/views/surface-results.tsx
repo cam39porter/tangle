@@ -8,6 +8,8 @@ import { RouteComponentProps } from "react-router";
 import NavigationBar from "../components/navigation-bar";
 import ListItem from "../components/list-item";
 
+import ReactECharts from "echarts-for-react";
+
 import config from "../cfg";
 
 interface Params {
@@ -73,43 +75,80 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 
   render() {
     return (
-      <div className={`w-100 vh-100 flex-parent`}>
+      <div className={`w-100 vh-100 flex-column`}>
         {/* Navigation Bar */}
-        <div className={`clip-s flex-item`}>
+        <div className={`clip-s flex-column db`}>
           <NavigationBar />
         </div>
 
-        {/* Sidebar */}
-        <div className={`flex-item flex-grow measure shadow-1`}>
-          {/* Header */}
-          <div
-            className={`flex-item drawer h4 measure bg-${
-              config.surfaceBaseColor
-            }`}
-          >
-            {/* Search Bar */}
+        <div className={`flex flex-grow`}>
+          {/* Sidebar */}
+          <div className={`flex-column flex-grow  measure shadow-1`}>
+            {/* Header */}
             <div
-              className={`center w-90 ma3 pa3 h2 bg-white dt br1 b--light-gray shadow-1`}
+              className={`flex-column drawer h4 measure bg-${
+                config.surfaceBaseColor
+              }`}
             >
-              <div className={`w-100 dtc v-mid tc`}>
-                <input
-                  className={`f6 roboto w-80`}
-                  value={this.state.value}
-                  onChange={this.handleChange}
-                  onKeyPress={this.handleKeyPress}
-                />
+              {/* Search Bar */}
+              <div
+                className={`center w-90 ma3 pa3 h2 bg-white dt br1 b--light-gray shadow-1`}
+              >
+                <div className={`w-100 dtc v-mid tc`}>
+                  <input
+                    className={`f6 w-80`}
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                    onKeyPress={this.handleKeyPress}
+                  />
+                </div>
               </div>
+            </div>
+
+            {/* Results */}
+            <div
+              className={`flex-column flex-grow measure bg-light-gray overflow-auto`}
+            >
+              {this.props.data.loading === false &&
+              this.props.data.error === undefined
+                ? this.renderResults()
+                : null}
             </div>
           </div>
 
-          {/* Results */}
-          <div
-            className={`flex-item flex-grow measure bg-light-gray overflow-auto`}
-          >
-            {this.props.data.loading === false &&
-            this.props.data.error === undefined
-              ? this.renderResults()
-              : null}
+          {/* Graph Visualization */}
+          <div className={`flex-column flex-grow`}>
+            <ReactECharts
+              style={{ height: "100%", width: "100%" }}
+              option={{
+                legend: {},
+                series: [
+                  {
+                    type: "graph",
+                    layout: "force",
+                    animation: true,
+                    animationDuration: 4000,
+                    animationEasingUpdate: "quinticInOut",
+                    label: {
+                      normal: {
+                        position: "right",
+                        formatter: "{b}"
+                      }
+                    },
+                    draggable: true,
+                    data: this.props.data.getCaptures,
+                    categories: ["a", "b", "c"],
+                    force: {
+                      initLayout: "circular",
+                      edgeLength: 5,
+                      repulsion: 75,
+                      gravity: 0.2
+                    },
+                    edges: [] // [{ source: 1, target: 2 }]
+                  }
+                ]
+              }}
+            />
           </div>
         </div>
       </div>

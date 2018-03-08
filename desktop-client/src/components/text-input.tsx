@@ -3,7 +3,7 @@ import * as React from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 
-import * as _ from "underscore";
+import * as _ from "lodash";
 
 export interface Props {
   handleChange?: (value: string) => void;
@@ -26,12 +26,12 @@ class TextInput extends React.Component<Props, TextInputState> {
   constructor(props: Props) {
     super(props);
 
-    let modules = {
+    let modules: Object = {
       toolbar: false
     };
 
     if (this.props.handleEnterKey) {
-      modules = _.extend(
+      modules = _.assign(
         {},
         {
           keyboard: {
@@ -39,7 +39,7 @@ class TextInput extends React.Component<Props, TextInputState> {
               tab: false,
               handleEnter: {
                 key: "Enter",
-                handler: this.props.handleEnterKey
+                handler: () => null
               }
             }
           }
@@ -53,6 +53,7 @@ class TextInput extends React.Component<Props, TextInputState> {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount() {
@@ -93,6 +94,14 @@ class TextInput extends React.Component<Props, TextInputState> {
     this.setState({ editorHtml: html });
   }
 
+  handleKeyDown(e: React.KeyboardEvent<KeyUsage>) {
+    // Map the enter to key to anther action provided by parent
+    if (e.key === "Enter") {
+      if (this.props.handleEnterKey) {
+        this.props.handleEnterKey();
+      }
+    }
+  }
   render() {
     return (
       <ReactQuill
@@ -103,6 +112,7 @@ class TextInput extends React.Component<Props, TextInputState> {
         theme={"bubble"}
         modules={this.state.modules}
         onChange={this.handleChange}
+        onKeyDown={this.handleKeyDown}
       />
     );
   }

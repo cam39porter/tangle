@@ -18,15 +18,11 @@ class App extends React.Component<Props, object> {
         {/* Navigation */}
         <Switch>
           <Route exact={true} path="/" component={Capture} />
-          <Route exact={true} path="/capture" component={Capture} />
-          <Route exact={true} path="/surface" component={Surface} />
-          <Route
-            exact={true}
-            path="/surface/:query"
-            component={SurfaceResults}
-          />
-          <Route exact={true} path="/tangle" component={Tangle} />
-          <Route exact={true} path="/reflect" component={Reflect} />
+          <Route path="/capture" component={Capture} />
+          <Route path="/surface/:query" component={SurfaceResults} />
+          <Route path="/surface" component={Surface} />
+          <Route path="/tangle" component={Tangle} />
+          <Route path="/reflect" component={Reflect} />
         </Switch>
       </div>
     );

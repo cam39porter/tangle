@@ -39,6 +39,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.handleKeyPress = this.handleKeyPress.bind(this);
 
     this.renderResults = this.renderResults.bind(this);
+    this.renderNetwork = this.renderNetwork.bind(this);
   }
 
   handleChange(e: React.FormEvent<HTMLInputElement>): void {
@@ -71,6 +72,90 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
         />
       );
     });
+  }
+
+  renderNetwork() {
+    return (
+      <ReactECharts
+        style={{ height: "100%", width: "100%" }}
+        option={{
+          title: {
+            text: ""
+          },
+          legend: {
+            x: "center",
+            show: false
+          },
+          toolbox: {
+            show: false
+          },
+          tooltip: {
+            show: true,
+            showContent: true,
+            backgroundColor: "#EEEEEE",
+            extraCssText: "box-shadow: 0px 0px 4px 2px rgba( 0, 0, 0, 0.2 );",
+            textStyle: {
+              color: "#000"
+            }
+          },
+          series: [
+            {
+              type: "graph",
+              layout: "force",
+              animation: true,
+              animationDuration: 4000,
+              animationEasingUpdate: "quinticInOut",
+              symbolSize: 32,
+              focusNodeAdjacency: true,
+              label: {
+                normal: {
+                  show: false,
+                  position: "right",
+                  formatter: "{b}"
+                },
+                emphasis: {
+                  show: false
+                }
+              },
+              draggable: false,
+              roam: false,
+              data: this.props.data.getCaptures.map(capture => {
+                let node: { id: string; name: string; category: string } = {
+                  id: capture.id,
+                  name: capture.body,
+                  category: "capture"
+                };
+                return node;
+              }),
+              categories: [
+                {
+                  name: "capture",
+                  itemStyle: {
+                    normal: {
+                      color: "#4592FF"
+                    }
+                  }
+                }
+              ],
+              force: {
+                initLayout: "circular",
+                edgeLength: 5,
+                repulsion: 100,
+                gravity: 0.2
+              },
+              edges: [], // [{ source: 1, target: 2 }],
+              lineStyle: {
+                normal: {
+                  opacity: 0.9,
+                  width: 1,
+                  curveness: 0
+                }
+              }
+            }
+          ]
+        }}
+      />
+    );
   }
 
   render() {
@@ -118,39 +203,10 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 
           {/* Graph Visualization */}
           <div className={`flex-column flex-grow`}>
-            <ReactECharts
-              style={{ height: "100%", width: "100%" }}
-              option={{
-                legend: {},
-                series: [
-                  {
-                    type: "graph",
-                    layout: "force",
-                    animation: true,
-                    animationDuration: 4000,
-                    animationEasingUpdate: "quinticInOut",
-                    label: {
-                      normal: {
-                        position: "right",
-                        formatter: "{b}"
-                      }
-                    },
-                    draggable: false,
-                    roam: false,
-                    data: this.props.data.getCaptures,
-                    categories: [],
-                    force: {
-                      initLayout: "circular",
-                      edgeLength: 5,
-                      repulsion: 75,
-                      gravity: 0.2
-                    },
-                    edges: [], // [{ source: 1, target: 2 }],
-                    tooltip: {}
-                  }
-                ]
-              }}
-            />
+            {this.props.data.loading === false &&
+            this.props.data.error === undefined
+              ? this.renderNetwork()
+              : null}
           </div>
         </div>
       </div>

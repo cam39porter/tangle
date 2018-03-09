@@ -1,19 +1,19 @@
 ---
 path: '/blog/vannevar-bush-memex'
-date: '2018-03-08'
-title: 'Information Overload'
-subtitle: 'The Case for the Memex 70 Years Later'
+date: '2018-03-09'
+title: 'Blazing Trails'
+subtitle: 'The Memex 70 Years Later'
 author: 'Myles McGinley'
-tags: ['Memex', 'Memory', 'Tool']
+tags: ['Memex', 'Memory', 'Trails']
 ---
 
 ## Vannevar's Predictions
 
 ... were oddly prescient. In a 1945 article published in the Atlantic called ["As We May Think"](https://www.theatlantic.com/magazine/archive/1945/07/as-we-may-think/303881/), the then Director of the Office of Scientific Research and Development, Vannevar Bush, outlined the first version of Google Glass, a more advanced encyclopedia that we might now call Wikipedia, as well as something he coined the Memex: "a device in which an individual stores all his books, records, and communications, and which is mechanized so that it may be consulted with exceeding speed and flexibility."
 
-These predictions were born from Bush's concern with the changing relationship between humanity and the sum of our knowledge. He hoped that these imaginary inventions would help solve the information overload problem that he felt even in 1945. 
+These predictions were born from Bush's concern with the changing relationship between humanity and the sum of our knowledge. He hoped that these imaginary inventions would help solve the information overload problem that he felt even in 1945.
 
-Bush lamented that our ability to distill valuable insight from "the record" was falling well behind the growth of published content. During the mid 20th century, developments in data storage were all the rage, but Bush saw another side to the equation: the need to place equal emphasis on how we *access* information now stored on tiin. He writes:
+Bush lamented that our ability to distill valuable insight from "the record" was falling well behind the growth of published content. During the mid 20th century, developments in data storage were all the rage, but Bush saw another side to the equation: the need to place equal emphasis on how we *access* information now stored on tiny discs. He writes:
 
 > Mere compression [...] is not enough; one needs not only to make and store a record but also be able to consult it, and this aspect of the matter comes later. Even the modern great library is not generally consulted; it is nibbled at by a few.
 [...]
@@ -31,7 +31,7 @@ Bush came up with a contraption he coined, "Memex," which would theoretically pr
 
 > Wholly new forms of encyclopedias will appear, ready made with a mesh of associative trails running through them, ready to be dropped into the memex and there amplified. The lawyer has at his touch the associated opinions and decisions of his whole experience, and of the experience of friends and authorities. The patent attorney has on call the millions of issued patents, with familiar trails to every point of his client’s interest. The physician, puzzled by a patient’s reactions, strikes the trail established in studying an earlier similar case, and runs rapidly through analogous case histories, with side references to the classics for the pertinent anatomy and histology. The chemist, struggling with the synthesis of an organic compound, has all the chemical literature before him in his laboratory, with trails following the analogies of compounds, and side trails to their physical and chemical behavior.
 
-When you think about it, memories, knowledge, and wisdom really are like trails, or branches, always growing and relating to each other in different ways as new information is captured, distilled, and stored.
+I really like how Vannevar thinks about memories, knowledge, and wisdom. He sees them as trails, or branches, always growing and relating to each other in different ways as new information is captured, distilled, and stored.
 
 It reminds me of a tangle of vines through a trellis. As the vines grow, they wrap around each other to create a big, tangled mess. However, if you were to pull one stem out from the knot carefully, you'd be able to inspect it, discover from where it sprouted, and know what other branches it had touched. You might even find something hidden from sight where the untangled vine used to rest.
 
@@ -45,7 +45,7 @@ I have tried to find a product or thing, that fits the Memex description Vanneva
 
 People should enjoy traveling back through their trails. We should feel delighted to discover *how* we came to know something or someone - especially when there is so much information being flung at us everyday.
 
-Lawyers ought to be able to easily connect two cases at a deeper level than just precedent citation. Chemists should to be able to explore how they reached a formula for a new compound. Regular shmos like us should be able to wander our lives' trails to reflect on what we know and how we came to know it.
+Lawyers ought to be able to easily connect two cases at a deeper level than just precedent citation. Chemists should be able to explore how they reached a formula for a new compound. Not only the elite, but regular shmos too should be able to reflect on what we know and how we came to know it by having a wander down our trails.
 
 To conlcude, I will leave you with one last Vannevar quote:
 

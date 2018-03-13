@@ -8,12 +8,14 @@ export function createSMSCapture(req, res) {
 
   const capture = new Capture(null, body);
   insertCapture(capture)
-    .then(retCapture =>
-      twiml.message(`Successfully saved capture with id ${retCapture.id}`)
-    )
-    .catch(err =>
-      twiml.message(`Failed to save capture. Error message: ${err}`)
-    )
+    .then(retCapture => {
+      twiml.message(`Successfully saved capture with id ${retCapture.id}`);
+    })
+    .catch(err => {
+      const message = `Failed to save capture. Error message: ${err}`;
+      console.log(message);
+      twiml.message(message);
+    })
     .then(message => {
       res.writeHead(200, { "Content-Type": "text/xml" });
       res.end(twiml.toString());

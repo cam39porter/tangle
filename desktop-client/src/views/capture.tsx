@@ -1,8 +1,6 @@
 import * as React from "react";
 
-import NavigationBar from "../components/navigation-bar";
 import TextInput from "../components/text-input";
-import Button from "../components/button";
 
 import * as _ from "lodash";
 
@@ -68,13 +66,8 @@ class Capture extends React.Component<Props, CaptureState> {
   render() {
     return (
       <div className={`w-100 vh-100`}>
-        {/* Navigation Bar */}
-        <div className={`clip-s z-max`}>
-          <NavigationBar />
-        </div>
-
         {/* Text Bar */}
-        <div className={`pa3 w-100 vh-100 vh-50-ns center dt measure-narrow`}>
+        <div className={`pa3 w-100 vh-100 center dt measure-narrow`}>
           <div className={`dtc asf v-btm bb b--${config.captureAccentColor}`}>
             <TextInput
               handleChange={this.handleChange}
@@ -84,15 +77,6 @@ class Capture extends React.Component<Props, CaptureState> {
               placeholder={"What's on your mind..."}
             />
           </div>
-        </div>
-
-        {/* Capture Button */}
-        <div className={`tc pa3 clip-s`}>
-          <Button
-            title="capture"
-            onClick={this.handleCapture}
-            accentColor={config.captureAccentColor}
-          />
         </div>
       </div>
     );

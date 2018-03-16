@@ -162,7 +162,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     return (
       <div className={`w-100 vh-100 flex-column`}>
         {/* Navigation Bar */}
-        <div className={`clip-s flex-column db`}>
+        <div className={`db`}>
           <NavigationBar />
         </div>
 

@@ -37,3 +37,9 @@ input {
   border: none;
 }
 /* [END] Remove borders from inputs and text areas */
+
+/* [START] Set minimum width of element to measure */
+.min-measure {
+  min-width: 30em;
+}
+/* [END] Set minimum width of element to measure */

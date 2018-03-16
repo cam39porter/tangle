@@ -9,7 +9,7 @@ export interface Props {
 class ListItem extends React.Component<Props, object> {
   render() {
     return (
-      <div className={`measure bg-white bb b--light-gray`}>
+      <div className={`min-measure bg-white bb b--light-gray`}>
         <p
           className={`ma3 h3 measure-narrow f6 overflow-hidden overflow-scroll overflow-x-hidden`}
         >

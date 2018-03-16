@@ -107,3 +107,17 @@ This value can be seen to manifest itself in the following ways:
 * Spending time each week playing soccer.
 
 * Sleeping an appropriate amount each night.
+
+### Generous / Humble
+
+* Seek out helping other succeed
+
+* How do I make the team better not myself
+
+### First Principle Orientation
+
+* Process only when it makes sense
+
+### Responsible
+
+* taking ownwership

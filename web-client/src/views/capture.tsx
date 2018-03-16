@@ -69,12 +69,12 @@ class Capture extends React.Component<Props, CaptureState> {
     return (
       <div className={`w-100 vh-100`}>
         {/* Navigation Bar */}
-        <div className={`clip-s z-max`}>
+        <div className={`z-max`}>
           <NavigationBar />
         </div>
 
         {/* Text Bar */}
-        <div className={`pa3 w-100 vh-100 vh-50-ns center dt measure-narrow`}>
+        <div className={`pa3 w-100 vh-50 center dt measure-narrow`}>
           <div className={`dtc asf v-btm bb b--${config.captureAccentColor}`}>
             <TextInput
               handleChange={this.handleChange}
@@ -87,7 +87,7 @@ class Capture extends React.Component<Props, CaptureState> {
         </div>
 
         {/* Capture Button */}
-        <div className={`tc pa3 clip-s`}>
+        <div className={`tc pa3`}>
           <Button
             title="capture"
             onClick={this.handleCapture}

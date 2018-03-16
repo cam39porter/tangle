@@ -9,7 +9,7 @@ class Reflect extends React.Component<Props, object> {
     return (
       <div className={`vh-100 w-100`}>
         {/* Navigation Bar */}
-        <div className={`clip-s z-max`}>
+        <div className={`z-max`}>
           <NavigationBar />
         </div>
       </div>

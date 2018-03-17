@@ -61,8 +61,12 @@ So, it would be really cool if I could control my digital identity and data. I w
 
 Ok, so I really did not explain any technology specifically here, but that is on purpose. Many others are working on, or have explained this concept much better than I can, and in far more detail than I have time to describe. If you would like to know more about self-sovereign identity, check out the links below.
 
-https://www.coindesk.com/path-self-sovereign-identity/
-https://www.computerworld.com/article/3244128/security/how-blockchain-makes-self-sovereign-identities-possible.html
-https://whitepaper.uport.me/uPort_whitepaper_DRAFT20170221.pdf
-https://blockstack.org/posts/blockchain-identity
-https://bitsonblocks.net/2017/05/17/a-gentle-introduction-to-self-sovereign-identity/
+* https://www.coindesk.com/path-self-sovereign-identity/
+
+* https://www.computerworld.com/article/3244128/security/how-blockchain-makes-self-sovereign-identities-possible.html
+
+* https://whitepaper.uport.me/uPort_whitepaper_DRAFT20170221.pdf
+
+* https://blockstack.org/posts/blockchain-identity
+
+* https://bitsonblocks.net/2017/05/17/a-gentle-introduction-to-self-sovereign-identity/

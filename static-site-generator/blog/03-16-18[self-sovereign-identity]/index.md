@@ -1,10 +1,10 @@
 ---
-path: '/blog/vannevar-bush-memex'
-date: '2018-03-09'
-title: 'Blazing Trails'
-subtitle: 'The Memex 70 Years Later'
+path: '/blog/identity'
+date: '2018-03-17'
+title: 'It Would Be Cool If'
+subtitle: 'I Controlled My Digital Identity'
 author: 'Myles McGinley'
-tags: ['Memex', 'Memory', 'Trails']
+tags: ['self-sovereign, identity, blockchain']
 ---
 
 ## The It Would Be Cool If Series

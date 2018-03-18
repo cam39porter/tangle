@@ -2,8 +2,9 @@ import { insertCapture } from "../db/gcloud-server";
 import { Capture } from "../models/capture";
 
 export function createSMSCapture(req, res) {
-  const MessagingResponse = require("twilio").twiml.MessagingResponse;
-  const twiml = new MessagingResponse();
+  const twilio = require("twilio");
+
+  const twiml = new twilio.TwimlResponse();
   const body = req.body.Body;
 
   const capture = new Capture(null, body);

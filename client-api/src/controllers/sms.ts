@@ -7,12 +7,10 @@ export function createSMSCapture(req, res) {
   const twiml = new twilio.TwimlResponse();
   const body = req.body.Body;
 
-  const capture = new Capture(null, body);
+  const capture = new Capture({ body });
   insertCapture(capture)
-    .then(retCapture => {
-      return twiml.message(
-        `Successfully saved capture with id ${retCapture.id}`
-      );
+    .then(id => {
+      return twiml.message(`Successfully saved capture with id ${id}`);
     })
     .catch(err => {
       const message = `Failed to save capture. Error message: ${err}`;

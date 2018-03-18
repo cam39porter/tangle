@@ -24,11 +24,13 @@ let knex = require("knex")({
  * @param {object} capture The visit record to insert.
  * @returns {Promise}
  */
-function insertCapture(capture: Capture): Promise<Capture> {
+function insertCapture(capture: Capture): Promise<string> {
   return knex("capture")
     .insert(capture)
     .returning("ID")
-    .then(id => getCapture(id));
+    .then(idArr => {
+      return idArr[0];
+    });
 }
 
 /**

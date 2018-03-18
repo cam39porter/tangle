@@ -1,4 +1,4 @@
-import { Capture } from "../models";
+import { PageInfo, Capture, CaptureCollection } from "../models";
 import {
   getCaptures,
   getCapture,
@@ -20,14 +20,27 @@ export default {
     },
     search(_, params, context): Promise<Capture> {
       return search(params.rawQuery).then(captures => {
-        return captures.map(captureDAO => new Capture(captureDAO));
+        const captureArr: Capture[] = captures.map(
+          captureDAO => new Capture(captureDAO)
+        );
+        const collection: CaptureCollection = new CaptureCollection(
+          // TODO cole move paging to mysql
+          captureArr.slice(params.start, params.start + params.count),
+          new PageInfo(params.start, params.count, captureArr.length)
+        );
+        return collection;
       });
     }
   },
   Mutation: {
     createCapture(_, params, context): Promise<Capture> {
       const capture = new Capture(params);
-      return insertCapture(capture);
+      return insertCapture(capture).then(id =>
+        // TODO cmccrack extract to capture service
+        getCapture(id).then(captureDAO => {
+          return new Capture(captureDAO);
+        })
+      );
     }
   }
 };

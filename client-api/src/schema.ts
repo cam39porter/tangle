@@ -4,10 +4,21 @@
 
 export default `
 
+type CaptureCollection {
+  results: [Capture!]!
+  pageInfo: PageInfo
+}
+
 type Capture {
   id: String!
   body: String!
   created: String!
+}
+
+type PageInfo {
+  start: Int!
+  count: Int!
+  total: Int!
 }
 
 schema {
@@ -18,7 +29,7 @@ schema {
 type Query {
   getCapture(id: String!): Capture!,
   getCaptures: [Capture!]!
-  search(rawQuery: String!): [Capture!]!
+  search(rawQuery: String!, start: Int = 0, count: Int = 10): CaptureCollection!
 }
 
 type Mutation {

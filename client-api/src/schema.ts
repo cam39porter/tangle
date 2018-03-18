@@ -7,6 +7,7 @@ export default `
 type Capture {
   id: String!
   body: String!
+  created: String!
 }
 
 schema {

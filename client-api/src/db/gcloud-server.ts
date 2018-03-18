@@ -27,11 +27,8 @@ let knex = require("knex")({
 function insertCapture(capture: Capture): Promise<Capture> {
   return knex("capture")
     .insert(capture)
-    .returning("id")
-    .then(id => {
-      capture.id = id[0];
-      return capture;
-    });
+    .returning("ID")
+    .then(id => getCapture(id));
 }
 
 /**
@@ -43,9 +40,9 @@ function insertCapture(capture: Capture): Promise<Capture> {
  */
 function getCapture(id: string) {
   return knex
-    .select("body", "id")
+    .select()
     .from("capture")
-    .where("id", id)
+    .where("ID", id)
     .then(arr => arr[0]);
 }
 
@@ -56,13 +53,16 @@ function getCapture(id: string) {
  * @returns {Promise}
  */
 function getCaptures() {
-  return knex.select("body", "id").from("capture");
+  return knex
+    .select()
+    .from("capture")
+    .orderBy("created", "desc");
 }
 
 function search(rawQuery: string) {
   return knex
     .raw(
-      `SELECT body, id FROM capture WHERE MATCH(body) AGAINST('${rawQuery}' IN NATURAL LANGUAGE MODE)`
+      `SELECT * FROM capture WHERE MATCH(body) AGAINST('${rawQuery}' IN NATURAL LANGUAGE MODE) ORDER BY created DESC`
     )
     .then(arr => arr[0]);
 }

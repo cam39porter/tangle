@@ -64,10 +64,7 @@ function search(rawQuery: string) {
     .raw(
       `SELECT body, id FROM capture WHERE MATCH(body) AGAINST('${rawQuery}' IN NATURAL LANGUAGE MODE)`
     )
-    .then(arr => {
-      console.log("here");
-      return arr[0];
-    });
+    .then(arr => arr[0]);
 }
 
 export { insertCapture, getCapture, getCaptures, search };

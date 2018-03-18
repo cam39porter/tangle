@@ -50,7 +50,7 @@ function getCapture(id: string) {
 }
 
 /**
- * Retrieve the latest 10 visit records from the database.
+ * Retrieve all captures
  *
  * @param {object} knex The Knex connection object.
  * @returns {Promise}
@@ -59,4 +59,15 @@ function getCaptures() {
   return knex.select("body", "id").from("capture");
 }
 
-export { insertCapture, getCapture, getCaptures };
+function search(rawQuery: string) {
+  return knex
+    .raw(
+      `SELECT body, id FROM capture WHERE MATCH(body) AGAINST('${rawQuery}' IN NATURAL LANGUAGE MODE)`
+    )
+    .then(arr => {
+      console.log("here");
+      return arr[0];
+    });
+}
+
+export { insertCapture, getCapture, getCaptures, search };

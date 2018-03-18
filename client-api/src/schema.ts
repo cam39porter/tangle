@@ -17,6 +17,7 @@ schema {
 type Query {
   getCapture(id: String!): Capture!,
   getCaptures: [Capture!]!
+  search(rawQuery: String!): [Capture!]!
 }
 
 type Mutation {

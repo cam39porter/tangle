@@ -1,5 +1,10 @@
 import { Capture } from "../models";
-import { getCaptures, getCapture, insertCapture } from "../db/gcloud-server";
+import {
+  getCaptures,
+  getCapture,
+  insertCapture,
+  search
+} from "../db/gcloud-server";
 
 export default {
   Query: {
@@ -11,6 +16,11 @@ export default {
     getCapture(_, params, context): Promise<Capture> {
       return getCapture(params.id).then(captureDAO => {
         return new Capture(captureDAO.id, captureDAO.body);
+      });
+    },
+    search(_, params, context): Promise<Capture> {
+      return search(params.rawQuery).then(captures => {
+        return captures.map(capture => new Capture(capture.id, capture.body));
       });
     }
   },

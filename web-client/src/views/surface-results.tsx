@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { GetCapturesQuery } from "../__generated__/types";
-import { GetCaptures as QUERY } from "../queries";
+import { SearchQuery } from "../__generated__/types";
+import { Search as QUERY } from "../queries";
 import { graphql, QueryProps } from "react-apollo";
 
 import { RouteComponentProps } from "react-router";
@@ -16,7 +16,7 @@ interface Params {
   query: string;
 }
 
-interface Data extends QueryProps<GetCapturesQuery>, GetCapturesQuery {}
+interface Data extends QueryProps<SearchQuery>, SearchQuery {}
 
 export interface Props extends RouteComponentProps<Params> {
   data: Data;
@@ -59,7 +59,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   renderResults() {
-    return this.props.data.getCaptures.map(capture => {
+    return this.props.data.search.results.map(capture => {
       return (
         <ListItem
           body={capture.body}
@@ -119,7 +119,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
               },
               draggable: false,
               roam: false,
-              data: this.props.data.getCaptures.map(capture => {
+              data: this.props.data.search.results.map(capture => {
                 let node: { id: string; name: string; category: string } = {
                   id: capture.id,
                   name: capture.body,
@@ -214,4 +214,12 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 }
 
-export default graphql(QUERY)(SurfaceResults);
+const SurfaceResultsWithData = graphql(QUERY, {
+  options: ownProps => ({
+    variables: {
+      query: "test" // ownProps.params.query doesnt compile??
+    }
+  })
+})(SurfaceResults);
+
+export default SurfaceResultsWithData;

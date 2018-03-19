@@ -3,12 +3,14 @@
 # dependencies
 /node_modules
 
+# generated 
+/src/__generated__
+
 # testing
 /coverage
 
 # production
 /build
-/release-builds
 
 # misc
 .DS_Store

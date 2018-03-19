@@ -47,3 +47,4 @@ Thumbs.db
 node_modules/
 dist/
 release-builds/
+__generated__/

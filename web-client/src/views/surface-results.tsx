@@ -215,9 +215,9 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 }
 
 const SurfaceResultsWithData = graphql(QUERY, {
-  options: ownProps => ({
+  options: (ownProps: Props) => ({
     variables: {
-      query: "test" // ownProps.params.query doesnt compile??
+      query: ownProps.match.params.query
     }
   })
 })(SurfaceResults);

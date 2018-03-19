@@ -2,19 +2,20 @@ import { insertCapture } from "../db/gcloud-server";
 import { Capture } from "../models/capture";
 
 export function createSMSCapture(req, res) {
-  const MessagingResponse = require("twilio").twiml.MessagingResponse;
-  const twiml = new MessagingResponse();
+  const twilio = require("twilio");
+
+  const twiml = new twilio.TwimlResponse();
   const body = req.body.Body;
 
-  const capture = new Capture(null, body);
+  const capture = new Capture({ body });
   insertCapture(capture)
-    .then(retCapture => {
-      twiml.message(`Successfully saved capture with id ${retCapture.id}`);
+    .then(id => {
+      return twiml.message(`Successfully saved capture with id ${id}`);
     })
     .catch(err => {
       const message = `Failed to save capture. Error message: ${err}`;
       console.log(message);
-      twiml.message(message);
+      return twiml.message(message);
     })
     .then(message => {
       res.writeHead(200, { "Content-Type": "text/xml" });

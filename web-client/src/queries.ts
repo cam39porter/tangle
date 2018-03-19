@@ -19,3 +19,15 @@ export const GetCaptures = gql`
     }
   }
 `;
+
+// Search for captures
+export const Search = gql`
+  query Search($query: String!) {
+    search(rawQuery: $query) {
+      results {
+        body
+        id
+      }
+    }
+  }
+`;

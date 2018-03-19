@@ -24,13 +24,12 @@ let knex = require("knex")({
  * @param {object} capture The visit record to insert.
  * @returns {Promise}
  */
-function insertCapture(capture: Capture): Promise<Capture> {
+function insertCapture(capture: Capture): Promise<string> {
   return knex("capture")
     .insert(capture)
-    .returning("id")
-    .then(id => {
-      capture.id = id[0];
-      return capture;
+    .returning("ID")
+    .then(idArr => {
+      return idArr[0];
     });
 }
 
@@ -43,20 +42,31 @@ function insertCapture(capture: Capture): Promise<Capture> {
  */
 function getCapture(id: string) {
   return knex
-    .select("body", "id")
+    .select()
     .from("capture")
-    .where("id", id)
+    .where("ID", id)
     .then(arr => arr[0]);
 }
 
 /**
- * Retrieve the latest 10 visit records from the database.
+ * Retrieve all captures
  *
  * @param {object} knex The Knex connection object.
  * @returns {Promise}
  */
 function getCaptures() {
-  return knex.select("body", "id").from("capture");
+  return knex
+    .select()
+    .from("capture")
+    .orderBy("created", "desc");
 }
 
-export { insertCapture, getCapture, getCaptures };
+function search(rawQuery: string) {
+  return knex
+    .raw(
+      `SELECT * FROM capture WHERE MATCH(body) AGAINST('${rawQuery}' IN NATURAL LANGUAGE MODE) ORDER BY created DESC`
+    )
+    .then(arr => arr[0]);
+}
+
+export { insertCapture, getCapture, getCaptures, search };

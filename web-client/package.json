@@ -31,7 +31,7 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "schema":
-      "apollo-codegen introspect-schema https://opit-193719.appspot.com/graphql --output ./src/schema.json",
+      "apollo-codegen introspect-schema https://client-api-dot-opit-193719.appspot.com/graphql --output ./src/schema.json",
     "types":
       "apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
     "deploy": "NODE_ENV=production yarn build && gcloud app deploy ./app.yaml"

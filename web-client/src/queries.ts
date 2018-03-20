@@ -22,11 +22,16 @@ export const GetCaptures = gql`
 
 // Search for captures
 export const Search = gql`
-  query Search($query: String!) {
-    search(rawQuery: $query) {
+  query Search($query: String!, $start: Int, $count: Int) {
+    search(rawQuery: $query, start: $start, count: $count) {
       results {
         body
         id
+      }
+      pageInfo {
+        start
+        count
+        total
       }
     }
   }

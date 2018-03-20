@@ -1,6 +1,6 @@
 # [START runtime]
-runtime: python27
-threadsafe: true
+runtime: nodejs
+env: flex
 service: web-client
 
 manual_scaling:
@@ -14,24 +14,11 @@ resources:
 beta_settings:
 
 env_variables:
+  NODE_ENV: "production"
 # [END runtime]
-
-# [START handlers]
-handlers:
- - url: /
-   static_files: build/index.html
-   upload: build/index.html
-
- - url: /(.*)
-   static_files: build/\1
-   upload: build/(.*)
-# [END handlers]
 
 # [START skip files]
 skip_files:
-- src/
-- release-builds/
-- public/
 - node_modules/
 # [END skip files]
 

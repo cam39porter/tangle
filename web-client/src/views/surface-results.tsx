@@ -10,7 +10,17 @@ import ListItem from "../components/list-item";
 
 import ReactECharts from "echarts-for-react";
 
+import { ChevronRight, ChevronLeft } from "react-feather";
+
 import config from "../cfg";
+
+const COUNT = 20; // number of results to return
+
+interface Node {
+  id: string;
+  name: string;
+  category: string;
+}
 
 interface Params {
   query: string;
@@ -24,6 +34,8 @@ export interface Props extends RouteComponentProps<Params> {
 
 export interface SurfaceResultsState {
   value: string;
+  startResultIndex: number;
+  totalResults: number;
 }
 
 class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
@@ -31,15 +43,33 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     super(props);
 
     this.state = {
-      value: this.props.match.params.query
+      value: this.props.match.params.query,
+      startResultIndex: 0,
+      totalResults: 0
     };
 
     this.handleSurface = this.handleSurface.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handlePageDown = this.handlePageDown.bind(this);
+    this.handlePageUp = this.handlePageUp.bind(this);
 
+    this.getNodeData = this.getNodeData.bind(this);
+
+    this.renderPageDown = this.renderPageDown.bind(this);
+    this.renderPageUp = this.renderPageUp.bind(this);
     this.renderResults = this.renderResults.bind(this);
     this.renderNetwork = this.renderNetwork.bind(this);
+  }
+
+  componentWillReceiveProps(newProps: Props) {
+    if (this.props.data.search) {
+      if (this.props.data.search.pageInfo) {
+        this.setState({
+          totalResults: this.props.data.search.pageInfo.total
+        });
+      }
+    }
   }
 
   handleChange(e: React.FormEvent<HTMLInputElement>): void {
@@ -58,13 +88,94 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.props.history.push(`/surface/${this.state.value}`);
   }
 
+  handlePageDown() {
+    const startResultIndex = this.state.startResultIndex;
+
+    if (startResultIndex === 0) {
+      return;
+    }
+
+    this.setState({
+      startResultIndex: startResultIndex - COUNT
+    });
+  }
+
+  handlePageUp() {
+    const startResultIndex = this.state.startResultIndex;
+
+    if (this.state.totalResults < this.state.startResultIndex + COUNT) {
+      return;
+    }
+
+    this.setState({
+      startResultIndex: startResultIndex + COUNT
+    });
+  }
+
+  getNodeData() {
+    const focusResults = this.props.data.search.results;
+    let focusResultsNodes: Array<Node> = focusResults.map(capture => {
+      let node: Node = {
+        id: capture.id,
+        name: capture.body,
+        category: "focusResult"
+      };
+      return node;
+    });
+
+    // let blurResults = [];
+    let blurResultsNodes: Array<Node> = [];
+    if (this.props.data.search.pageInfo) {
+      for (
+        let i = focusResults.length;
+        i < this.props.data.search.pageInfo.total - 1;
+        i++
+      ) {
+        let node: Node = {
+          id: i.toString(),
+          name: "TODO",
+          category: "blurResult"
+        };
+        blurResultsNodes = blurResultsNodes.concat(node);
+      }
+    }
+
+    return focusResultsNodes.concat(blurResultsNodes);
+  }
+
+  renderPageDown() {
+    let isActive = this.state.startResultIndex > 0;
+
+    return (
+      <div
+        className={`f6 dtc v-mid ${isActive ? "gray pointer" : "light-gray"}`}
+        onClick={this.handlePageDown}
+      >
+        <ChevronLeft />
+      </div>
+    );
+  }
+
+  renderPageUp() {
+    let isActive =
+      this.state.totalResults > this.state.startResultIndex + COUNT;
+    alert(this.state.totalResults);
+    return (
+      <div
+        className={`f6 dtc v-mid ${isActive ? "gray pointer" : "light-gray"}`}
+        onClick={this.handlePageUp}
+      >
+        <ChevronRight />
+      </div>
+    );
+  }
+
   renderResults() {
     return this.props.data.search.results.map(capture => {
       return (
         <ListItem
           body={capture.body}
           onClick={() => {
-            //
             return;
           }}
           accentColor={config.surfaceAccentColor}
@@ -119,20 +230,21 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
               },
               draggable: false,
               roam: false,
-              data: this.props.data.search.results.map(capture => {
-                let node: { id: string; name: string; category: string } = {
-                  id: capture.id,
-                  name: capture.body,
-                  category: "capture"
-                };
-                return node;
-              }),
+              data: this.getNodeData(),
               categories: [
                 {
-                  name: "capture",
+                  name: "focusResult",
                   itemStyle: {
                     normal: {
                       color: "#4592FF"
+                    }
+                  }
+                },
+                {
+                  name: "blurResult",
+                  itemStyle: {
+                    normal: {
+                      color: "#CCCCCC"
                     }
                   }
                 }
@@ -169,7 +281,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
         <div className={`flex flex-grow`}>
           {/* Sidebar */}
           <div className={`flex-column flex-grow  measure shadow-1`}>
-            {/* Header */}
+            {/* Search Header */}
             <div
               className={`flex-column drawer h4 measure bg-${
                 config.surfaceBaseColor
@@ -199,6 +311,22 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
                 ? this.renderResults()
                 : null}
             </div>
+
+            {/* Pagination Footer */}
+            <div
+              className={`flex-column drawer h3 measure bg-white bt b--light-gray`}
+            >
+              <div className={`w-100`}>
+                <div className={`fr pa3 dt`}>
+                  <div className={`tr f6 gray dtc v-mid`}>
+                    {`Showing results ${this.state.startResultIndex +
+                      1} - ${this.state.startResultIndex + COUNT}`}
+                  </div>
+                  {this.renderPageDown()}
+                  {this.renderPageUp()}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Graph Visualization */}
@@ -217,7 +345,8 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 const SurfaceResultsWithData = graphql(QUERY, {
   options: (ownProps: Props) => ({
     variables: {
-      query: ownProps.match.params.query
+      query: ownProps.match.params.query,
+      count: COUNT
     }
   })
 })(SurfaceResults);

@@ -35,7 +35,6 @@ export interface Props extends RouteComponentProps<Params> {
 export interface SurfaceResultsState {
   value: string;
   startResultIndex: number;
-  totalResults: number;
 }
 
 class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
@@ -44,8 +43,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 
     this.state = {
       value: this.props.match.params.query,
-      startResultIndex: 0,
-      totalResults: 0
+      startResultIndex: 0
     };
 
     this.handleSurface = this.handleSurface.bind(this);
@@ -54,22 +52,13 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.handlePageDown = this.handlePageDown.bind(this);
     this.handlePageUp = this.handlePageUp.bind(this);
 
+    this.getTotalResults = this.getTotalResults.bind(this);
     this.getNodeData = this.getNodeData.bind(this);
 
     this.renderPageDown = this.renderPageDown.bind(this);
     this.renderPageUp = this.renderPageUp.bind(this);
     this.renderResults = this.renderResults.bind(this);
     this.renderNetwork = this.renderNetwork.bind(this);
-  }
-
-  componentWillReceiveProps(newProps: Props) {
-    if (this.props.data.search) {
-      if (this.props.data.search.pageInfo) {
-        this.setState({
-          totalResults: this.props.data.search.pageInfo.total
-        });
-      }
-    }
   }
 
   handleChange(e: React.FormEvent<HTMLInputElement>): void {
@@ -102,14 +91,25 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 
   handlePageUp() {
     const startResultIndex = this.state.startResultIndex;
+    const totalResults = this.getTotalResults();
 
-    if (this.state.totalResults < this.state.startResultIndex + COUNT) {
+    if (totalResults < this.state.startResultIndex + COUNT) {
       return;
     }
 
     this.setState({
       startResultIndex: startResultIndex + COUNT
     });
+  }
+
+  getTotalResults() {
+    if (this.props.data.search) {
+      if (this.props.data.search.pageInfo) {
+        return this.props.data.search.pageInfo.total;
+      }
+    }
+
+    return 0;
   }
 
   getNodeData() {
@@ -157,8 +157,9 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   renderPageUp() {
-    let isActive =
-      this.state.totalResults > this.state.startResultIndex + COUNT;
+    const totalResults = this.getTotalResults();
+
+    let isActive = totalResults > this.state.startResultIndex + COUNT;
 
     return (
       <div

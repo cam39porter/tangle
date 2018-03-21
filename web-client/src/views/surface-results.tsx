@@ -53,6 +53,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.handlePageDown = this.handlePageDown.bind(this);
     this.handlePageUp = this.handlePageUp.bind(this);
 
+    this.isFocusResult = this.isFocusResult.bind(this);
     this.getTotalResults = this.getTotalResults.bind(this);
     this.getNodeData = this.getNodeData.bind(this);
 
@@ -103,6 +104,13 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     });
   }
 
+  isFocusResult(index: number) {
+    return (
+      index >= this.state.startResultIndex &&
+      index < this.state.startResultIndex + PAGE_COUNT
+    );
+  }
+
   getTotalResults() {
     if (this.props.data.search) {
       if (this.props.data.search.pageInfo) {
@@ -116,17 +124,10 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   getNodeData() {
     const results = this.props.data.search.results;
 
-    let isFocus = index => {
-      return (
-        index > this.state.startResultIndex &&
-        index < this.state.startResultIndex + PAGE_COUNT
-      );
-    };
-
     let focusResultsNodes: Array<Node> = results
       .filter((_, index) => {
         // filter to focus on only the results on the current page
-        return isFocus(index);
+        return this.isFocusResult(index);
       })
       .map(capture => {
         return {
@@ -139,7 +140,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     let blurResultsNodes: Array<Node> = results
       .filter((_, index) => {
         // filter to focus on only the results not on the current page
-        return !isFocus(index);
+        return !this.isFocusResult(index);
       })
       .map(capture => {
         return {
@@ -181,18 +182,22 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   renderResults() {
-    return this.props.data.search.results.map(capture => {
-      return (
-        <ListItem
-          body={capture.body}
-          onClick={() => {
-            return;
-          }}
-          accentColor={config.surfaceAccentColor}
-          key={capture.id}
-        />
-      );
-    });
+    return this.props.data.search.results
+      .filter((_, index) => {
+        return this.isFocusResult(index);
+      })
+      .map(capture => {
+        return (
+          <ListItem
+            body={capture.body}
+            onClick={() => {
+              return;
+            }}
+            accentColor={config.surfaceAccentColor}
+            key={capture.id}
+          />
+        );
+      });
   }
 
   renderNetwork() {

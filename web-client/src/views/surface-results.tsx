@@ -14,7 +14,8 @@ import { ChevronRight, ChevronLeft } from "react-feather";
 
 import config from "../cfg";
 
-const COUNT = 20; // number of results to return
+const COUNT = 100; // number of results to return
+const PAGE_COUNT = 20; // number of results per page
 
 interface Node {
   id: string;
@@ -85,7 +86,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     }
 
     this.setState({
-      startResultIndex: startResultIndex - COUNT
+      startResultIndex: startResultIndex - PAGE_COUNT
     });
   }
 
@@ -93,12 +94,12 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     const startResultIndex = this.state.startResultIndex;
     const totalResults = this.getTotalResults();
 
-    if (totalResults < this.state.startResultIndex + COUNT) {
+    if (totalResults < this.state.startResultIndex + PAGE_COUNT) {
       return;
     }
 
     this.setState({
-      startResultIndex: startResultIndex + COUNT
+      startResultIndex: startResultIndex + PAGE_COUNT
     });
   }
 
@@ -113,32 +114,40 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   getNodeData() {
-    const focusResults = this.props.data.search.results;
-    let focusResultsNodes: Array<Node> = focusResults.map(capture => {
-      let node: Node = {
-        id: capture.id,
-        name: capture.body,
-        category: "focusResult"
-      };
-      return node;
-    });
+    const results = this.props.data.search.results;
 
-    // let blurResults = [];
-    let blurResultsNodes: Array<Node> = [];
-    if (this.props.data.search.pageInfo) {
-      for (
-        let i = focusResults.length;
-        i < this.props.data.search.pageInfo.total - 1;
-        i++
-      ) {
-        let node: Node = {
-          id: i.toString(),
-          name: "TODO",
+    let isFocus = index => {
+      return (
+        index > this.state.startResultIndex &&
+        index < this.state.startResultIndex + PAGE_COUNT
+      );
+    };
+
+    let focusResultsNodes: Array<Node> = results
+      .filter((_, index) => {
+        // filter to focus on only the results on the current page
+        return isFocus(index);
+      })
+      .map(capture => {
+        return {
+          id: capture.id,
+          name: capture.body,
+          category: "focusResult"
+        };
+      });
+
+    let blurResultsNodes: Array<Node> = results
+      .filter((_, index) => {
+        // filter to focus on only the results not on the current page
+        return !isFocus(index);
+      })
+      .map(capture => {
+        return {
+          id: capture.id,
+          name: capture.body,
           category: "blurResult"
         };
-        blurResultsNodes = blurResultsNodes.concat(node);
-      }
-    }
+      });
 
     return focusResultsNodes.concat(blurResultsNodes);
   }
@@ -159,7 +168,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   renderPageUp() {
     const totalResults = this.getTotalResults();
 
-    let isActive = totalResults > this.state.startResultIndex + COUNT;
+    let isActive = totalResults > this.state.startResultIndex + PAGE_COUNT;
 
     return (
       <div
@@ -320,8 +329,12 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
               <div className={`w-100`}>
                 <div className={`fr pa3 dt`}>
                   <div className={`tr f6 gray dtc v-mid`}>
-                    {`Showing results ${this.state.startResultIndex +
-                      1} - ${this.state.startResultIndex + COUNT}`}
+                    {`Showing results ${this.state.startResultIndex + 1} - ${
+                      this.getTotalResults() <
+                      this.state.startResultIndex + PAGE_COUNT
+                        ? this.getTotalResults()
+                        : this.state.startResultIndex + PAGE_COUNT
+                    }`}
                   </div>
                   {this.renderPageDown()}
                   {this.renderPageUp()}

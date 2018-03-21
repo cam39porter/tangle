@@ -12,6 +12,8 @@ import ReactECharts from "echarts-for-react";
 
 import { ChevronRight, ChevronLeft } from "react-feather";
 
+import { shuffle } from "lodash";
+
 import config from "../cfg";
 
 const COUNT = 100; // number of results to return
@@ -150,7 +152,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
         };
       });
 
-    return focusResultsNodes.concat(blurResultsNodes);
+    return shuffle(focusResultsNodes.concat(blurResultsNodes));
   }
 
   renderPageDown() {
@@ -332,18 +334,24 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
               className={`flex-column drawer h3 measure bg-white bt b--light-gray`}
             >
               <div className={`w-100`}>
-                <div className={`fr pa3 dt`}>
-                  <div className={`tr f6 gray dtc v-mid`}>
-                    {`Showing results ${this.state.startResultIndex + 1} - ${
-                      this.getTotalResults() <
-                      this.state.startResultIndex + PAGE_COUNT
-                        ? this.getTotalResults()
-                        : this.state.startResultIndex + PAGE_COUNT
-                    }`}
+                {this.getTotalResults() > 0 ? (
+                  <div className={`fr pa3 dt`}>
+                    <div className={`tr f6 gray dtc v-mid`}>
+                      {`Showing results ${this.state.startResultIndex + 1} - ${
+                        this.getTotalResults() <
+                        this.state.startResultIndex + PAGE_COUNT
+                          ? this.getTotalResults()
+                          : this.state.startResultIndex + PAGE_COUNT
+                      }`}
+                    </div>
+                    {this.renderPageDown()}
+                    {this.renderPageUp()}
                   </div>
-                  {this.renderPageDown()}
-                  {this.renderPageUp()}
-                </div>
+                ) : (
+                  <div className={`fr pa3 dt`}>
+                    <div className={`tr f6 gray dtc v-mid`}>No results</div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

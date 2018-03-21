@@ -3,7 +3,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-import registerServiceWorker from "./registerServiceWorker";
+import { unregister as unregisterServiceWorker } from "./registerServiceWorker";
 
 // Apollo
 import { ApolloClient } from "apollo-client";
@@ -38,4 +38,5 @@ class ApolloWrappedApp extends React.Component<object, object> {
 ReactDOM.render(<ApolloWrappedApp />, document.getElementById(
   "root"
 ) as HTMLElement);
-registerServiceWorker();
+
+unregisterServiceWorker();

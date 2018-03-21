@@ -159,7 +159,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   renderPageUp() {
     let isActive =
       this.state.totalResults > this.state.startResultIndex + COUNT;
-    alert(this.state.totalResults);
+
     return (
       <div
         className={`f6 dtc v-mid ${isActive ? "gray pointer" : "light-gray"}`}

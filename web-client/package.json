@@ -3,8 +3,7 @@
   "productName": "Tangle",
   "version": "0.1.0",
   "engine": "8.9.4",
-  "description":
-    "A web client for empowering people to capture and connect thoughts to create big ideas",
+  "description": "A web client for empowering people to capture and connect thoughts to create big ideas",
   "private": true,
   "dependencies": {
     "apollo-cache-inmemory": "1.1.9",
@@ -15,6 +14,7 @@
     "graphql": "0.13.0",
     "graphql-tag": "2.8.0",
     "lodash": "^4.17.5",
+    "query-string": "^6.0.0",
     "react": "^16.2.0",
     "react-apollo": "2.0.4",
     "react-dom": "^16.2.0",
@@ -31,10 +31,8 @@
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "schema":
-      "apollo-codegen introspect-schema https://client-api-dot-opit-193719.appspot.com/graphql --output ./src/schema.json",
-    "types":
-      "apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
+    "schema": "apollo-codegen introspect-schema https://client-api-dot-opit-193719.appspot.com/graphql --output ./src/schema.json",
+    "types": "apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
     "deploy": "yarn build && gcloud app deploy ./app.yaml"
   },
   "devDependencies": {

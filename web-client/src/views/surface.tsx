@@ -79,7 +79,7 @@ class Surface extends React.Component<Props, SurfaceState> {
           <Redirect
             exact={true}
             push={true}
-            to={`/surface/${this.state.value}`}
+            to={`/surface/search?query=${this.state.value}`}
           />
         ) : null}
       </div>

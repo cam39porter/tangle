@@ -14,6 +14,8 @@ import { ChevronRight, ChevronLeft } from "react-feather";
 
 import { shuffle } from "lodash";
 
+import * as qs from "query-string";
+
 import config from "../cfg";
 
 const COUNT = 100; // number of results to return
@@ -45,7 +47,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     super(props);
 
     this.state = {
-      value: this.props.match.params.query,
+      value: qs.parse(this.props.location.search).query,
       startResultIndex: 0
     };
 
@@ -78,7 +80,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   handleSurface() {
-    this.props.history.push(`/surface/${this.state.value}`);
+    this.props.history.push(`/surface/search?query=${this.state.value}`);
   }
 
   handlePageDown() {
@@ -372,7 +374,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 const SurfaceResultsWithData = graphql(QUERY, {
   options: (ownProps: Props) => ({
     variables: {
-      query: ownProps.match.params.query,
+      query: qs.parse(ownProps.location.search).query,
       count: COUNT
     }
   })

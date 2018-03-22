@@ -22,7 +22,10 @@
     "react-quill": "1.2.6",
     "react-router-dom": "^4.2.2",
     "react-scripts-ts": "2.13.0",
-    "tachyons": "^4.9.1"
+    "tachyons": "^4.9.1",
+    "tinycolor": "^0.0.1",
+    "tinycolor2": "^1.4.1",
+    "tinygradient": "^0.3.1"
   },
   "homepage": "./",
   "main": "server.js",
@@ -32,7 +35,7 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "schema": "apollo-codegen introspect-schema https://client-api-dot-opit-193719.appspot.com/graphql --output ./src/schema.json",
-    "types": "apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
+    "types": "rm -rf ./src/__generated__ && mkdir ./src/__generated__ && apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
     "deploy": "yarn build && gcloud app deploy ./app.yaml"
   },
   "devDependencies": {

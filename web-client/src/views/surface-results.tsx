@@ -16,10 +16,17 @@ import { shuffle } from "lodash";
 
 import * as qs from "query-string";
 
+import tinycolor from "tinycolor2";
+import tinygradient from "tinygradient";
+
 import config from "../cfg";
 
 const COUNT = 100; // number of results to return
 const PAGE_COUNT = 20; // number of results per page
+
+const BLUR_COLOR = "#CCCCCC";
+const FOCUS_COLOR_1 = tinycolor("#006AFF");
+const FOCUS_COLOR_2 = tinycolor("#CBE0FF");
 
 interface Node {
   id: string;
@@ -59,7 +66,9 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 
     this.isFocusResult = this.isFocusResult.bind(this);
     this.getTotalResults = this.getTotalResults.bind(this);
+    this.getCategoryData = this.getCategoryData.bind(this);
     this.getNodeData = this.getNodeData.bind(this);
+    this.getResultsGradient = this.getResultsGradient.bind(this);
 
     this.renderPageDown = this.renderPageDown.bind(this);
     this.renderPageUp = this.renderPageUp.bind(this);
@@ -133,11 +142,11 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
         // filter to focus on only the results on the current page
         return this.isFocusResult(index);
       })
-      .map(capture => {
+      .map((capture, index) => {
         return {
           id: capture.id,
           name: capture.body,
-          category: "focusResult"
+          category: `${index}focusResult`
         };
       });
 
@@ -155,6 +164,36 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
       });
 
     return shuffle(focusResultsNodes.concat(blurResultsNodes));
+  }
+
+  getCategoryData() {
+    const gradient = this.getResultsGradient();
+
+    return gradient
+      .map((color, index) => {
+        return {
+          name: `${index}focusResult`,
+          itemStyle: {
+            normal: {
+              color: color.toHexString()
+            }
+          }
+        };
+      })
+      .concat({
+        name: "blurResult",
+        itemStyle: {
+          normal: {
+            color: BLUR_COLOR
+          }
+        }
+      });
+  }
+
+  getResultsGradient() {
+    const totalResults = this.getTotalResults();
+    let gradientNumber = 2 > totalResults ? 2 : totalResults;
+    return tinygradient(FOCUS_COLOR_1, FOCUS_COLOR_2).rgb(gradientNumber);
   }
 
   renderPageDown() {
@@ -186,18 +225,20 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   renderResults() {
+    let gradient = this.getResultsGradient();
+
     return this.props.data.search.results
       .filter((_, index) => {
         return this.isFocusResult(index);
       })
-      .map(capture => {
+      .map((capture, index) => {
         return (
           <ListItem
             body={capture.body}
             onClick={() => {
               return;
             }}
-            accentColor={config.surfaceAccentColor}
+            accentColor={gradient[index].toHexString()}
             key={capture.id}
           />
         );
@@ -250,28 +291,11 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
               draggable: false,
               roam: false,
               data: this.getNodeData(),
-              categories: [
-                {
-                  name: "focusResult",
-                  itemStyle: {
-                    normal: {
-                      color: "#4592FF"
-                    }
-                  }
-                },
-                {
-                  name: "blurResult",
-                  itemStyle: {
-                    normal: {
-                      color: "#CCCCCC"
-                    }
-                  }
-                }
-              ],
+              categories: this.getCategoryData(),
               force: {
                 initLayout: "circular",
                 edgeLength: 5,
-                repulsion: 100,
+                repulsion: 300,
                 gravity: 0.2
               },
               edges: [], // [{ source: 1, target: 2 }],

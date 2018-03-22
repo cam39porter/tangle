@@ -10,7 +10,7 @@ We have three primary goals when seeking user feedback:
 
 * Reveal our path to revenue by discovering what our users would pay for
 
-We believe that there is a core truth at the center of every business. **Our core truth is that our thoughts have value; the more we can capture and connect them, the more of that value we can realize from them**. For every truth, there is a search space of possible products and solutions that a business could be built around to satisfy the given truth. As a startup, it is our job to explore this search space as efficiently as possible to discover the pockets of revenue and profitability. We believe these coffee chat feedback sessions can serve as a compass we use to navigate our chosen search space.
+We believe that there is a core truth at the center of every business. **Our core truth is that our thoughts have value; the more we can capture and connect them, the more of that value we can realize from them**. For every truth, there is a search space of possible products and solutions that a business could be built around to satisfy the given truth. As a startup, it is our job to explore this search space as efficiently as possible to discover the pockets of revenue and profitability. We believe these coffee chat feedback sessions can serve as a compass to navigate our chosen search space.
 
 ## Framing
 
@@ -28,7 +28,7 @@ We have three core components to how we frame a coffee chat:
 
 ## Questions
 
-> These coffee chat are not an interview, they are a conversation. This section is meant to provide some guidance on the type of questions one could ask. Ultimately, the questions we ask will be a function of the unique collaboration that occurs with the given user.
+> These coffee chats are not interviews, they are conversations. This section is meant to provide some guidance on the type of questions one could ask. Ultimately, the questions we ask will be a function of the unique collaboration that occurs with the given user.
 
 We use three primary types of questions to garner value feedback:
 
@@ -48,7 +48,7 @@ These types of questions should occur naturally over the course of the conversat
 
 ## Post-Mortem
 
-> A post-mortem is an analysis or discussion of an event held soon after it has occurred to determine why it was a failure. We call our feedback analysis a post-mortem because we believe that these chats reveal how our current thinking and version of the product is failing our users in some capacity. As such, we generate a post-mortem that identifies why it is failing and how can move to a state of greater success in our exploration.
+> A post-mortem is an analysis or discussion of an event held soon after it has occurred to determine why it was a failure. We call our feedback analysis a post-mortem because we believe that these chats reveal how our current thinking and version of the product is failing our users in some capacity. As such, we generate a post-mortem that identifies why it is failing and how we can move to a state of greater success in our exploration.
 
 The post-mortem seeks to answer three primary questions for anyone reading it, regardless of whether they were a part of the coffee chat or not:
 

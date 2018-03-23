@@ -10,7 +10,7 @@ Knowledge workers will continue to make up a higher percentage of the global wor
 
 Creating knowledge is not an easy task for knowledge workers for a few reasons.
 
-1.  The modern knowledge worker does not have time for long-form note-taking. Throughout the day, the knowledge worker is doing something: she is reading, writing, creating documents in the Office suite, discussing, and collaborating. She then cooks or orders seamless, perhaps has a date, sees a friend and then goes to sleep.
+1.  The modern knowledge worker does not have time for long-form note-taking. Throughout the day, the knowledge worker is doing something: she is reading, writing, creating documents in the Office suite, discussing, and collaborating.
 
 2.  The modern knowledge worker is flummoxed by the paradox of choice when taking a note. Where should I write the note? In what file do I put this note? How should I organize it? She finds it difficult to decide where to capture a thought or take a note and does not often have the time to organize or find the notes already produced.
 

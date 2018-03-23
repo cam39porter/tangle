@@ -72,6 +72,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.getNodeData = this.getNodeData.bind(this);
     this.getResultsGradient = this.getResultsGradient.bind(this);
 
+    this.renderResultPagingText = this.renderResultPagingText.bind(this);
     this.renderPageDown = this.renderPageDown.bind(this);
     this.renderPageUp = this.renderPageUp.bind(this);
     this.renderResults = this.renderResults.bind(this);
@@ -196,6 +197,16 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     const totalResults = this.getTotalResults();
     let gradientNumber = 2 > totalResults ? 2 : totalResults;
     return tinygradient(FOCUS_COLOR_1, FOCUS_COLOR_2).rgb(gradientNumber);
+  }
+
+  renderResultPagingText() {
+    const totalResults = this.getTotalResults();
+
+    return `Showing results ${this.state.startResultIndex + 1} - ${
+      totalResults < this.state.startResultIndex + PAGE_COUNT
+        ? totalResults
+        : this.state.startResultIndex + PAGE_COUNT
+    }`;
   }
 
   renderPageDown() {
@@ -362,15 +373,11 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
               className={`flex-column drawer h3 measure bg-white bt b--light-gray`}
             >
               <div className={`w-100`}>
+                {/* Results Pagination Text */}
                 {this.getTotalResults() > 0 ? (
                   <div className={`fr pa3 dt`}>
                     <div className={`tr f6 gray dtc v-mid`}>
-                      {`Showing results ${this.state.startResultIndex + 1} - ${
-                        this.getTotalResults() <
-                        this.state.startResultIndex + PAGE_COUNT
-                          ? this.getTotalResults()
-                          : this.state.startResultIndex + PAGE_COUNT
-                      }`}
+                      {this.renderResultPagingText()}
                     </div>
                     {this.renderPageDown()}
                     {this.renderPageUp()}

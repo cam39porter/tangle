@@ -4,7 +4,7 @@ date: '2018-03-17'
 title: 'It Would Be Cool If'
 subtitle: 'I Controlled My Digital Identity'
 author: 'Myles McGinley'
-tags: ['self-sovereign, identity, blockchain']
+tags: ['self-sovereign, 'identity', 'blockchain']
 ---
 
 ## The It Would Be Cool If Series

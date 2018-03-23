@@ -34,15 +34,15 @@ We use three primary types of questions to garner value feedback:
 
 * Assumption oriented questions ask the user, "when was the last time you did X, and how did you do it?"
 
-* "What would prevent you from using our product?"
+  * "What would prevent you from using our product?"
 
 * Task-oriented questions ask the user, "if you wanted to do X, how would you do it?"
 
-* "If you wanted to do X, how would you do it now without our product?"
+  * "If you wanted to do X, how would you do it now without our product?"
 
 * Revenue oriented questions ask the user, "if a product or service were able to do X, would you pay for it?"
 
-* "What products or services do you pay for now and why?"
+  * "What products or services do you pay for now and why?"
 
 These types of questions should occur naturally over the course of the conversation. **It is our job to hone our skills to know when is the right time to ask each type to gain the most value and guidance from the user.**
 

@@ -14,7 +14,7 @@ import { ChevronRight, ChevronLeft } from "react-feather";
 
 import { shuffle } from "lodash";
 
-import * as qs from "query-string";
+import qs from "qs";
 
 import tinycolor from "tinycolor2";
 import tinygradient from "tinygradient";
@@ -54,7 +54,9 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     super(props);
 
     this.state = {
-      value: qs.parse(this.props.location.search).query,
+      value: qs.parse(this.props.location.search, {
+        ignoreQueryPrefix: true
+      }).query,
       startResultIndex: 0
     };
 
@@ -398,9 +400,12 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 const SurfaceResultsWithData = graphql(QUERY, {
   options: (ownProps: Props) => ({
     variables: {
-      query: qs.parse(ownProps.location.search).query,
+      query: qs.parse(ownProps.location.search, {
+        ignoreQueryPrefix: true
+      }).query,
       count: COUNT
-    }
+    },
+    fetchPolicy: "network-only"
   })
 })(SurfaceResults);
 

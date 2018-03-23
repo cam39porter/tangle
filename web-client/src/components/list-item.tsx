@@ -15,7 +15,10 @@ class ListItem extends React.Component<Props, object> {
         >
           {this.props.body}
         </p>
-        <div className={`dtc fr ma3 h2 w2 br-100 bg-light-blue`} />
+        <div
+          className={`dtc fr ma3 h2 w2 br-100`}
+          style={{ backgroundColor: this.props.accentColor }}
+        />
       </div>
     );
   }

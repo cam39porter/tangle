@@ -7,7 +7,6 @@ import Tangle from "./views/tangle";
 import Capture from "./views/capture";
 import Surface from "./views/surface";
 import SurfaceResults from "./views/surface-results";
-import Reflect from "./views/reflect";
 
 export interface Props {}
 
@@ -22,7 +21,6 @@ class App extends React.Component<Props, object> {
           <Route path="/surface/search" component={SurfaceResults} />
           <Route path="/surface" component={Surface} />
           <Route path="/tangle" component={Tangle} />
-          <Route path="/reflect" component={Reflect} />
         </Switch>
       </div>
     );

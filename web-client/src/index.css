@@ -4,17 +4,6 @@ body {
   /* [END] Prevent scrolling on body */
 }
 
-/* [START] Collapse navigation for keyboard shortcut */
-@media screen and (min-width: 0em) and (max-width: 30em) {
-  .clip-s {
-    position: fixed !important;
-    position: absolute !important;
-    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
-    clip: rect(1px, 1px, 1px, 1px);
-  }
-}
-/* [END] Collapse navigation for keyboard shortcut */
-
 /* [START] Create a column that fills the page vertically */
 .flex-column {
   display: flex;
@@ -37,17 +26,3 @@ input {
   border: none;
 }
 /* [END] Remove borders from inputs and text areas */
-
-/* [START] Set minimum width of element to measure */
-.min-measure {
-  min-width: 30em;
-}
-
-.min-measure-narrow {
-  min-width: 20em;
-}
-/* [END] Set minimum width of element to measure */
-
-.vertical-center {
-  top: 50%;
-}

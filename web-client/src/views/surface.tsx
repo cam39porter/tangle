@@ -56,11 +56,12 @@ class Surface extends React.Component<Props, SurfaceState> {
 
         {/* Surface Box */}
         <div
-          className={`absolute pa3 min-measure-narrow shadow-1 br3`}
+          className={`absolute pa3 shadow-1 br3`}
           style={{
             top: "50%",
             left: "50%",
-            transform: "translate(-50%, -50%)"
+            transform: "translate(-50%, -50%)",
+            minWidth: "20em"
           }}
         >
           {/* Text Bar */}

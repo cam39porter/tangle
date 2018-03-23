@@ -7,8 +7,7 @@ import { graphql, QueryProps } from "react-apollo";
 import { RouteComponentProps } from "react-router";
 import NavigationBar from "../components/navigation-bar";
 import ListItem from "../components/list-item";
-
-import ReactECharts from "echarts-for-react";
+import Network from "../components/network";
 
 import { ChevronRight, ChevronLeft } from "react-feather";
 
@@ -67,16 +66,18 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.handlePageUp = this.handlePageUp.bind(this);
 
     this.isFocusResult = this.isFocusResult.bind(this);
+    this.isLoadedWithoutError = this.isLoadedWithoutError.bind(this);
+
     this.getTotalResults = this.getTotalResults.bind(this);
     this.getCategoryData = this.getCategoryData.bind(this);
     this.getNodeData = this.getNodeData.bind(this);
     this.getResultsGradient = this.getResultsGradient.bind(this);
 
+    this.renderResultsPagination = this.renderResultsPagination.bind(this);
     this.renderResultPagingText = this.renderResultPagingText.bind(this);
     this.renderPageDown = this.renderPageDown.bind(this);
     this.renderPageUp = this.renderPageUp.bind(this);
     this.renderResults = this.renderResults.bind(this);
-    this.renderNetwork = this.renderNetwork.bind(this);
   }
 
   handleChange(e: React.FormEvent<HTMLInputElement>): void {
@@ -118,6 +119,12 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.setState({
       startResultIndex: startResultIndex + PAGE_COUNT
     });
+  }
+
+  isLoadedWithoutError() {
+    return (
+      this.props.data.loading === false && this.props.data.error === undefined
+    );
   }
 
   isFocusResult(index: number) {
@@ -199,6 +206,27 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     return tinygradient(FOCUS_COLOR_1, FOCUS_COLOR_2).rgb(gradientNumber);
   }
 
+  renderResultsPagination() {
+    return (
+      <div className={`w-100`}>
+        {/* Results Pagination Text */}
+        {this.getTotalResults() > 0 ? (
+          <div className={`fr pa3 dt`}>
+            <div className={`tr f6 gray dtc v-mid`}>
+              {this.renderResultPagingText()}
+            </div>
+            {this.renderPageDown()}
+            {this.renderPageUp()}
+          </div>
+        ) : (
+          <div className={`fr pa3 dt`}>
+            <div className={`tr f6 gray dtc v-mid`}>No results</div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   renderResultPagingText() {
     const totalResults = this.getTotalResults();
 
@@ -258,74 +286,6 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
       });
   }
 
-  renderNetwork() {
-    return (
-      <ReactECharts
-        style={{ height: "100%", width: "100%" }}
-        option={{
-          title: {
-            text: ""
-          },
-          legend: {
-            x: "center",
-            show: false
-          },
-          toolbox: {
-            show: false
-          },
-          tooltip: {
-            show: true,
-            showContent: true,
-            backgroundColor: "#EEEEEE",
-            extraCssText: "box-shadow: 0px 0px 4px 2px rgba( 0, 0, 0, 0.2 );",
-            textStyle: {
-              color: "#000"
-            }
-          },
-          series: [
-            {
-              type: "graph",
-              layout: "force",
-              animation: true,
-              animationDuration: 4000,
-              animationEasingUpdate: "quinticInOut",
-              symbolSize: 32,
-              focusNodeAdjacency: true,
-              label: {
-                normal: {
-                  show: false,
-                  position: "right",
-                  formatter: "{b}"
-                },
-                emphasis: {
-                  show: false
-                }
-              },
-              draggable: false,
-              roam: false,
-              data: this.getNodeData(),
-              categories: this.getCategoryData(),
-              force: {
-                initLayout: "circular",
-                edgeLength: 5,
-                repulsion: 300,
-                gravity: 0.2
-              },
-              edges: [], // [{ source: 1, target: 2 }],
-              lineStyle: {
-                normal: {
-                  opacity: 0.9,
-                  width: 1,
-                  curveness: 0
-                }
-              }
-            }
-          ]
-        }}
-      />
-    );
-  }
-
   render() {
     return (
       <div className={`w-100 vh-100 flex-column`}>
@@ -362,41 +322,27 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
             <div
               className={`flex-column flex-grow measure bg-light-gray overflow-auto`}
             >
-              {this.props.data.loading === false &&
-              this.props.data.error === undefined
-                ? this.renderResults()
-                : null}
+              {this.isLoadedWithoutError() ? this.renderResults() : null}
             </div>
 
             {/* Pagination Footer */}
             <div
               className={`flex-column drawer h3 measure bg-white bt b--light-gray`}
             >
-              <div className={`w-100`}>
-                {/* Results Pagination Text */}
-                {this.getTotalResults() > 0 ? (
-                  <div className={`fr pa3 dt`}>
-                    <div className={`tr f6 gray dtc v-mid`}>
-                      {this.renderResultPagingText()}
-                    </div>
-                    {this.renderPageDown()}
-                    {this.renderPageUp()}
-                  </div>
-                ) : (
-                  <div className={`fr pa3 dt`}>
-                    <div className={`tr f6 gray dtc v-mid`}>No results</div>
-                  </div>
-                )}
-              </div>
+              {this.isLoadedWithoutError()
+                ? this.renderResultsPagination()
+                : null}
             </div>
           </div>
 
           {/* Graph Visualization */}
           <div className={`flex-column flex-grow`}>
-            {this.props.data.loading === false &&
-            this.props.data.error === undefined
-              ? this.renderNetwork()
-              : null}
+            {this.isLoadedWithoutError() ? (
+              <Network
+                nodeData={this.getNodeData()}
+                categoryData={this.getCategoryData()}
+              />
+            ) : null}
           </div>
         </div>
       </div>

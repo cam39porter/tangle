@@ -4,7 +4,7 @@ date: '2018-03-24'
 title: 'The Problem Series'
 subtitle: 'The Knowledge Worker's Dilemma'
 author: 'Myles McGinley'
-tags: ['self-sovereign', 'identity', 'blockchain']
+tags: ['knowledge', 'worker', 'problems']
 ---
 
 ## The Knowledge Worker’s Dilemma

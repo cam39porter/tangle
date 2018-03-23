@@ -56,7 +56,7 @@ class Surface extends React.Component<Props, SurfaceState> {
 
         {/* Surface Box */}
         <div
-          className={`absolute pa3 shadow-1 br3`}
+          className={`absolute measure-narrow pa3 shadow-1 br3`}
           style={{
             top: "50%",
             left: "50%",

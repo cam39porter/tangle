@@ -42,4 +42,12 @@ input {
 .min-measure {
   min-width: 30em;
 }
+
+.min-measure-narrow {
+  min-width: 20em;
+}
 /* [END] Set minimum width of element to measure */
+
+.vertical-center {
+  top: 50%;
+}

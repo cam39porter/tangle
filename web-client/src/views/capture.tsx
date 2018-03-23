@@ -67,32 +67,42 @@ class Capture extends React.Component<Props, CaptureState> {
 
   render() {
     return (
-      <div className={`w-100 vh-100`}>
+      <div className={`w-100 vh-100 relative`}>
         {/* Navigation Bar */}
         <div className={`z-max`}>
           <NavigationBar />
         </div>
 
-        {/* Text Bar */}
-        <div className={`pa3 w-100 vh-50 center dt measure-narrow`}>
-          <div className={`dtc asf v-btm bb b--${config.captureAccentColor}`}>
-            <TextInput
-              handleChange={this.handleChange}
-              handleEnterKey={this.handleCapture}
-              clearValue={this.state.clearValue}
-              updateClearValue={this.updateClearValue}
-              placeholder={"What's on your mind..."}
+        {/* Capture Box */}
+        <div
+          className={`absolute pa3 min-measure-narrow shadow-1 br3`}
+          style={{
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)"
+          }}
+        >
+          {/* Text Bar */}
+          <div className={`h5 w-100 dt pb3`}>
+            <div className={`v-btm dtc bb b--${config.captureAccentColor}`}>
+              <TextInput
+                handleChange={this.handleChange}
+                handleEnterKey={this.handleCapture}
+                clearValue={this.state.clearValue}
+                updateClearValue={this.updateClearValue}
+                placeholder={"What's on your mind..."}
+              />
+            </div>
+          </div>
+
+          {/* Capture Button */}
+          <div className={`tc pa3`}>
+            <Button
+              title="capture"
+              onClick={this.handleCapture}
+              accentColor={config.captureAccentColor}
             />
           </div>
-        </div>
-
-        {/* Capture Button */}
-        <div className={`tc pa3`}>
-          <Button
-            title="capture"
-            onClick={this.handleCapture}
-            accentColor={config.captureAccentColor}
-          />
         </div>
       </div>
     );

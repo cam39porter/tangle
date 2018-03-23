@@ -54,24 +54,34 @@ class Surface extends React.Component<Props, SurfaceState> {
           <NavigationBar />
         </div>
 
-        {/* Text Bar */}
-        <div className={`pa3 w-100 vh-50 center dt measure-narrow`}>
-          <div className={`dtc asf v-btm bb b--${config.surfaceAccentColor}`}>
-            <TextInput
-              handleChange={this.handleChange}
-              handleEnterKey={this.handleSurface}
-              placeholder={"What are you looking for..."}
+        {/* Surface Box */}
+        <div
+          className={`absolute pa3 min-measure-narrow shadow-1 br3`}
+          style={{
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)"
+          }}
+        >
+          {/* Text Bar */}
+          <div className={`h5 w-100 dt pb3`}>
+            <div className={`v-btm dtc bb b--${config.surfaceAccentColor}`}>
+              <TextInput
+                handleChange={this.handleChange}
+                handleEnterKey={this.handleSurface}
+                placeholder={"What are you looking for..."}
+              />
+            </div>
+          </div>
+
+          {/* Surface Button */}
+          <div className={`tc pa3`}>
+            <Button
+              title="surface"
+              onClick={this.handleSurface}
+              accentColor={config.surfaceAccentColor}
             />
           </div>
-        </div>
-
-        {/* Surface Button */}
-        <div className={`tc pa3`}>
-          <Button
-            title="surface"
-            onClick={this.handleSurface}
-            accentColor={config.surfaceAccentColor}
-          />
         </div>
 
         {/* If Show Results then redirect to SurfaceResults view */}

@@ -2,7 +2,7 @@
 path: '/blog/problem-series-knowledge-worker'
 date: '2018-03-24'
 title: 'The Problem Series'
-subtitle: 'The Knowledge Worker's Dilemma'
+subtitle: 'Note Taking'
 author: 'Myles McGinley'
 tags: ['knowledge', 'worker', 'problems']
 ---
@@ -15,11 +15,11 @@ Knowledge workers, defined as professionals whose main capital is their knowledg
 
 Creating knowledge is not an easy task for knowledge workers for a few reasons.
 
-1.  The modern knowledge worker does not have time for long-form note-taking. Throughout the day, the knowledge worker is doing something: she is reading, writing, creating documents in the Office suite, discussing, and collaborating.
+1. The modern knowledge worker does not have time for long-form note-taking. Throughout the day, the knowledge worker is doing something: she is reading, writing, creating documents in the Office suite, discussing, and collaborating.
 
-2.  The modern knowledge worker is flummoxed by the paradox of choice when taking a note. Where should I write the note? In what file do I put this note? How should I organize it? She finds it difficult to decide where to capture a thought or take a note and does not often have the time to organize or find the notes already produced.
+2. The modern knowledge worker is flummoxed by the paradox of choice when taking a note. Where should I write the note? In what file do I put this note? How should I organize it? She finds it difficult to decide where to capture a thought or take a note and does not often have the time to organize or find the notes already produced.
 
-3.  When knowledge workers do capture their thoughts in a note, the notes they take and store are not dynamic. Digital note-taking applications today mimic the traditional pen-and-paper with the added benefit of text editing tools. There is no connective tissue between the things one writes. There has been recent activity from Evernote, in particular, to use AI to recommend tasks based on the user’s writings automatically. Evernote's usage of AI is interesting, but does not tackle the more significant problem: how to make it easy for knowledge workers (or anyone) to make connections between their trails of thoughts to inspire and surface new ideas.
+3. When knowledge workers do capture their thoughts in a note, the notes they take and store are not dynamic. Digital note-taking applications today mimic the traditional pen-and-paper with the added benefit of text editing tools. There is no connective tissue between the things one writes. There has been recent activity from Evernote, in particular, to use AI to recommend tasks based on the user’s writings automatically. Evernote's usage of AI is interesting, but does not tackle the more significant problem: how to make it easy for knowledge workers (or anyone) to make connections between their trails of thoughts to inspire and surface new ideas.
 
 The very act that reinforces and creates knowledge (reminder: a knowledge workers most valuable asset) takes time and is difficult to do: reflect on previous thoughts, ideas, and knowledge. The reason why this is hard is a function of problems 1-3, but providing a solution to promote reflection is another problem altogether.
 

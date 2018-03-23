@@ -2,7 +2,7 @@
 path: '/blog/problem-series-knowledge-worker'
 date: '2018-03-24'
 title: 'The Problem Series'
-subtitle: 'The Knowledge Worker's Dilemma'
+subtitle: 'The Knowledge Workers Dilemma'
 author: 'Myles McGinley'
 tags: ['knowledge', 'worker', 'problems']
 ---

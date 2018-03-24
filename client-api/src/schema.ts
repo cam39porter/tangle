@@ -28,7 +28,7 @@ schema {
 
 type Query {
   getCapture(id: String!): Capture!,
-  getCaptures: [Capture!]!
+  getCaptures(start: Int = 0, count: Int = 10): CaptureCollection!
   search(rawQuery: String!, start: Int = 0, count: Int = 10): CaptureCollection!
 }
 

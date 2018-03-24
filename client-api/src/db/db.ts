@@ -13,9 +13,9 @@ if (process.env.NODE_ENV === "production") {
   config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
 }
 
-let knex = require("knex")({
+let db = require("knex")({
   client: "mysql",
   connection: config
 });
 
-export { knex };
+export { db };

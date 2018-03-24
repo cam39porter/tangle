@@ -1,5 +1,5 @@
 import { PageInfo, Capture, CaptureCollection } from "../models";
-import { knex } from "../db/db";
+import { db } from "../db/db";
 
 const table = "capture";
 
@@ -28,14 +28,14 @@ export default {
 };
 
 function insert(capture: Capture): Promise<string> {
-  return knex(table)
+  return db(table)
     .insert(capture)
     .returning("ID")
     .then(idArr => idArr[0]);
 }
 
 function get(id: string): Promise<Capture> {
-  return knex
+  return db
     .select()
     .from(table)
     .where("ID", id)
@@ -43,7 +43,7 @@ function get(id: string): Promise<Capture> {
 }
 
 function getAll(): Promise<[Capture]> {
-  return knex
+  return db
     .select()
     .from(table)
     .orderBy("created", "desc")
@@ -51,7 +51,7 @@ function getAll(): Promise<[Capture]> {
 }
 
 function search(rawQuery: string): Promise<[Capture]> {
-  return knex
+  return db
     .raw(
       `SELECT * FROM capture WHERE MATCH(body) AGAINST('${rawQuery}' IN NATURAL LANGUAGE MODE) ORDER BY created DESC`
     )

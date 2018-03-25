@@ -2,8 +2,6 @@ import * as React from "react";
 
 import ReactECharts from "echarts-for-react";
 
-import { isEqual } from "lodash";
-
 interface Node {
   id: string;
   name: string;
@@ -11,13 +9,18 @@ interface Node {
 }
 
 export interface Props {
+  focusStartIndex?: number;
+  focusEndIndex?: number;
   nodeData: Array<Node>;
   categoryData: Array<Object>;
 }
 
 class Network extends React.Component<Props, object> {
   shouldComponentUpdate(nextProps: Props) {
-    return isEqual(this.props, nextProps);
+    return (
+      this.props.focusStartIndex !== nextProps.focusStartIndex ||
+      this.props.focusEndIndex !== nextProps.focusEndIndex
+    );
   }
 
   render() {

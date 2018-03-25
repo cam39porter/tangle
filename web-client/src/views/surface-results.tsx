@@ -45,19 +45,12 @@ export interface Props extends RouteComponentProps<Params> {
 
 export interface SurfaceResultsState {
   value: string;
-  startResultIndex: number;
+  focusStartIndex: number;
 }
 
 class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   constructor(props: Props) {
     super(props);
-
-    this.state = {
-      value: qs.parse(this.props.location.search, {
-        ignoreQueryPrefix: true
-      }).query,
-      startResultIndex: 0
-    };
 
     this.handleSurface = this.handleSurface.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -68,6 +61,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.isFocusResult = this.isFocusResult.bind(this);
     this.isLoadedWithoutError = this.isLoadedWithoutError.bind(this);
 
+    this.getFocusEndIndex = this.getFocusEndIndex.bind(this);
     this.getTotalResults = this.getTotalResults.bind(this);
     this.getCategoryData = this.getCategoryData.bind(this);
     this.getNodeData = this.getNodeData.bind(this);
@@ -78,6 +72,13 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.renderPageDown = this.renderPageDown.bind(this);
     this.renderPageUp = this.renderPageUp.bind(this);
     this.renderResults = this.renderResults.bind(this);
+
+    this.state = {
+      value: qs.parse(this.props.location.search, {
+        ignoreQueryPrefix: true
+      }).query,
+      focusStartIndex: 0
+    };
   }
 
   handleChange(e: React.FormEvent<HTMLInputElement>): void {
@@ -97,27 +98,27 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   handlePageDown() {
-    const startResultIndex = this.state.startResultIndex;
+    const startResultIndex = this.state.focusStartIndex;
 
     if (startResultIndex === 0) {
       return;
     }
 
     this.setState({
-      startResultIndex: startResultIndex - PAGE_COUNT
+      focusStartIndex: startResultIndex - PAGE_COUNT
     });
   }
 
   handlePageUp() {
-    const startResultIndex = this.state.startResultIndex;
+    const startResultIndex = this.state.focusStartIndex;
     const totalResults = this.getTotalResults();
 
-    if (totalResults < this.state.startResultIndex + PAGE_COUNT) {
+    if (totalResults < this.state.focusStartIndex + PAGE_COUNT) {
       return;
     }
 
     this.setState({
-      startResultIndex: startResultIndex + PAGE_COUNT
+      focusStartIndex: startResultIndex + PAGE_COUNT
     });
   }
 
@@ -129,9 +130,17 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 
   isFocusResult(index: number) {
     return (
-      index >= this.state.startResultIndex &&
-      index < this.state.startResultIndex + PAGE_COUNT
+      index >= this.state.focusStartIndex &&
+      index < this.state.focusStartIndex + PAGE_COUNT
     );
+  }
+
+  getFocusEndIndex() {
+    const totalResults = this.getTotalResults();
+
+    return totalResults < this.state.focusStartIndex + PAGE_COUNT
+      ? totalResults
+      : this.state.focusStartIndex + PAGE_COUNT;
   }
 
   getTotalResults() {
@@ -228,17 +237,12 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   renderResultPagingText() {
-    const totalResults = this.getTotalResults();
-
-    return `Showing results ${this.state.startResultIndex + 1} - ${
-      totalResults < this.state.startResultIndex + PAGE_COUNT
-        ? totalResults
-        : this.state.startResultIndex + PAGE_COUNT
-    }`;
+    return `Showing results ${this.state.focusStartIndex +
+      1} - ${this.getFocusEndIndex()}`;
   }
 
   renderPageDown() {
-    let isActive = this.state.startResultIndex > 0;
+    let isActive = this.state.focusStartIndex > 0;
 
     return (
       <div
@@ -253,7 +257,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   renderPageUp() {
     const totalResults = this.getTotalResults();
 
-    let isActive = totalResults > this.state.startResultIndex + PAGE_COUNT;
+    let isActive = totalResults > this.state.focusStartIndex + PAGE_COUNT;
 
     return (
       <div
@@ -339,6 +343,8 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
           <div className={`flex-column flex-grow`}>
             {this.isLoadedWithoutError() ? (
               <Network
+                focusStartIndex={this.state.focusStartIndex}
+                focusEndIndex={this.getFocusEndIndex()}
                 nodeData={this.getNodeData()}
                 categoryData={this.getCategoryData()}
               />

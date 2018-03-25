@@ -1,5 +1,4 @@
-import { insertCapture } from "../db/gcloud-server";
-import { Capture } from "../models/capture";
+import resolver from "../resolvers/capture";
 
 export function createSMSCapture(req, res) {
   const twilio = require("twilio");
@@ -7,8 +6,7 @@ export function createSMSCapture(req, res) {
   const twiml = new twilio.TwimlResponse();
   const body = req.body.Body;
 
-  const capture = new Capture({ body });
-  insertCapture(capture)
+  resolver.Mutation.createCapture(null, { body: body }, null)
     .then(id => {
       return twiml.message(`Successfully saved capture with id ${id}`);
     })

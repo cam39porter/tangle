@@ -6,7 +6,7 @@ import { graphql, QueryProps } from "react-apollo";
 
 import { RouteComponentProps } from "react-router";
 import NavigationBar from "../components/navigation-bar";
-import ListItem from "../components/list-item";
+import ResultListItem from "../components/result-list-item";
 import Network from "../components/network";
 
 import { ChevronRight, ChevronLeft } from "react-feather";
@@ -296,8 +296,9 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
       })
       .map((capture, index) => {
         return (
-          <ListItem
+          <ResultListItem
             body={capture.body}
+            tags={capture.tags}
             onClick={() => {
               return;
             }}

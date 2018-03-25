@@ -10,16 +10,6 @@ export const CreateCapture = gql`
   }
 `;
 
-// Get all captures
-export const GetCaptures = gql`
-  query GetCaptures {
-    getCaptures {
-      body
-      id
-    }
-  }
-`;
-
 // Search for captures
 export const Search = gql`
   query Search($query: String!, $start: Int, $count: Int) {
@@ -27,6 +17,9 @@ export const Search = gql`
       results {
         body
         id
+        tags {
+          name
+        }
       }
       pageInfo {
         start

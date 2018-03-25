@@ -1,4 +1,4 @@
-import { PageInfo, Capture, CaptureCollection } from "../models";
+import { PageInfo, Capture, CaptureCollection, Tag } from "../models";
 import { db } from "../db/db";
 
 const table = "capture";
@@ -21,15 +21,14 @@ export default {
   },
   Mutation: {
     createCapture(_, params, context): Promise<Capture> {
-      const capture = new Capture(params);
-      return insert(capture).then(get);
+      return insert(params.body).then(get);
     }
   }
 };
 
-function insert(capture: Capture): Promise<string> {
+function insert(body: string): Promise<string> {
   return db(table)
-    .insert(capture)
+    .insert({ body })
     .returning("ID")
     .then(idArr => idArr[0]);
 }

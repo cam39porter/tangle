@@ -9,10 +9,14 @@ type CaptureCollection {
   pageInfo: PageInfo
 }
 
+type Tag {
+  name: String!
+}
 type Capture {
   id: String!
   body: String!
   created: String!
+  tags: [Tag!]!
 }
 
 type PageInfo {

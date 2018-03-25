@@ -81,6 +81,23 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     };
   }
 
+  componentWillReceiveProps(nextProps: Props) {
+    const query = qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true
+    }).query;
+
+    const nextQuery = qs.parse(nextProps.location.search, {
+      ignoreQueryPrefix: true
+    }).query;
+
+    if (nextQuery !== query) {
+      this.setState({
+        value: nextQuery,
+        focusStartIndex: 0
+      });
+    }
+  }
+
   handleChange(e: React.FormEvent<HTMLInputElement>): void {
     this.setState({
       value: e.currentTarget.value
@@ -210,8 +227,9 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   getResultsGradient() {
-    const totalResults = this.getTotalResults();
-    let gradientNumber = 2 > totalResults ? 2 : totalResults;
+    const totalFocusResults =
+      this.getFocusEndIndex() - this.state.focusStartIndex;
+    let gradientNumber = 2 > totalFocusResults ? 2 : totalFocusResults;
     return tinygradient(FOCUS_COLOR_1, FOCUS_COLOR_2).rgb(gradientNumber);
   }
 

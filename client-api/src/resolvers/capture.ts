@@ -52,7 +52,7 @@ function getAll(): Promise<[Capture]> {
 function search(rawQuery: string): Promise<[Capture]> {
   return db
     .raw(
-      `SELECT * FROM capture WHERE MATCH(body) AGAINST('${rawQuery}' IN NATURAL LANGUAGE MODE) ORDER BY created DESC`
+      `SELECT * FROM capture WHERE MATCH(body) AGAINST('${rawQuery}' IN NATURAL LANGUAGE MODE)`
     )
     .then(arr => arr[0])
     .then(formatAll);

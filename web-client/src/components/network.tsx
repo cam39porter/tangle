@@ -13,6 +13,7 @@ interface DataItemParams {
 }
 
 export interface Props {
+  refEChart?: (eChart: ReactECharts) => void;
   focusStartIndex?: number;
   focusEndIndex?: number;
   nodeData: Array<Node>;
@@ -20,7 +21,7 @@ export interface Props {
 }
 
 class Network extends React.Component<Props, object> {
-  eChartsReact: ReactECharts | null = null;
+  eChart: ReactECharts | null = null;
 
   constructor(props: Props) {
     super(props);
@@ -132,9 +133,7 @@ class Network extends React.Component<Props, object> {
   render() {
     return (
       <ReactECharts
-        ref={e => {
-          this.eChartsReact = e;
-        }}
+        ref={this.props.refEChart}
         style={{ height: "100%", width: "100%" }}
         option={this.getOption()}
         opts={{ renderer: "svg" }} // use svg to render the chart.

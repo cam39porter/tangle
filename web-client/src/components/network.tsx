@@ -54,10 +54,14 @@ class Network extends React.Component<Props, object> {
         trigger: "item",
         showContent: true,
         confine: true,
+        position: "top",
         formatter: "{b}",
         backgroundColor: "#EEEEEE",
         padding: 8,
-        extraCssText: "box-shadow: 0px 0px 4px 2px rgba( 0, 0, 0, 0.2 );",
+        extraCssText: `box-shadow: 0px 0px 4px 2px rgba( 0, 0, 0, 0.2 ); 
+           max-width: 30em;
+           overflow: hidden;
+          `,
         textStyle: {
           color: "#000"
         }

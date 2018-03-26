@@ -273,9 +273,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   renderPageUp() {
-    const totalResults = this.getTotalResults();
-
-    let isActive = totalResults > this.state.focusStartIndex + PAGE_COUNT;
+    const isActive = COUNT > this.getFocusEndIndex();
 
     return (
       <div

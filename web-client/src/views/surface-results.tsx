@@ -20,8 +20,8 @@ import tinygradient from "tinygradient";
 
 import config from "../cfg";
 
-const COUNT = 100; // number of results to return
-const PAGE_COUNT = 20; // number of results per page
+const COUNT = 40; // number of results to return
+const PAGE_COUNT = 10; // number of results per page
 
 const BLUR_COLOR = "#CCCCCC";
 const FOCUS_COLOR_1 = tinycolor("#006AFF");

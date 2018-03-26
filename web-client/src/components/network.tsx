@@ -8,6 +8,10 @@ interface Node {
   category: string;
 }
 
+interface DataItemParams {
+  data: Node;
+}
+
 export interface Props {
   focusStartIndex?: number;
   focusEndIndex?: number;
@@ -86,8 +90,8 @@ class Network extends React.Component<Props, object> {
           nodeScaleRation: 0.6,
           draggable: false,
           symbol: "circle",
-          symbolSize: (value, params: Node) => {
-            return 32;
+          symbolSize: (value, params: DataItemParams) => {
+            return params.data.category === "blurResult" ? 24 : 32;
           },
           symbolRotate: false,
           symbolKeepAspect: false,
@@ -113,7 +117,7 @@ class Network extends React.Component<Props, object> {
           categories: this.props.categoryData,
           nodes: this.props.nodeData,
           edges: [],
-          animation: true,
+          animation: false,
           animationDuration: 4000,
           animationEasingUpdate: "quinticInOut"
         }

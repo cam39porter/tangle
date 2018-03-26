@@ -11,8 +11,6 @@ import Network from "../components/network";
 
 import { ChevronRight, ChevronLeft } from "react-feather";
 
-import { shuffle } from "lodash";
-
 import qs from "qs";
 
 import tinycolor from "tinycolor2";
@@ -49,6 +47,8 @@ export interface SurfaceResultsState {
 }
 
 class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
+  eChart;
+
   constructor(props: Props) {
     super(props);
 
@@ -204,7 +204,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
         };
       });
 
-    return shuffle(focusResultsNodes.concat(blurResultsNodes));
+    return focusResultsNodes.concat(blurResultsNodes);
   }
 
   getCategoryData() {
@@ -299,15 +299,37 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
       })
       .map((capture, index) => {
         return (
-          <ResultListItem
-            body={capture.body}
-            tags={capture.tags}
-            onClick={() => {
-              return;
-            }}
-            accentColor={gradient[index].toHexString()}
+          <div
             key={capture.id}
-          />
+            onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+              if (this.eChart) {
+                const eChartInstance = this.eChart.getEchartsInstance();
+
+                eChartInstance.dispatchAction({
+                  type: "focusNodeAdjacency",
+                  dataIndex: index
+                });
+              }
+            }}
+            onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+              if (this.eChart) {
+                const eChartInstance = this.eChart.getEchartsInstance();
+
+                eChartInstance.dispatchAction({
+                  type: "unfocusNodeAdjacency"
+                });
+              }
+            }}
+          >
+            <ResultListItem
+              body={capture.body}
+              tags={capture.tags}
+              onClick={() => {
+                return;
+              }}
+              accentColor={gradient[index].toHexString()}
+            />
+          </div>
         );
       });
   }
@@ -365,6 +387,9 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
           <div className={`flex-column flex-grow`}>
             {this.isLoadedWithoutError() ? (
               <Network
+                refEChart={e => {
+                  this.eChart = e;
+                }}
                 focusStartIndex={this.state.focusStartIndex}
                 focusEndIndex={this.getFocusEndIndex()}
                 nodeData={this.getNodeData()}

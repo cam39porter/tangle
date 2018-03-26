@@ -58,6 +58,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.handlePageDown = this.handlePageDown.bind(this);
     this.handlePageUp = this.handlePageUp.bind(this);
 
+    this.isActivePageUp = this.isActivePageUp.bind(this);
     this.isFocusResult = this.isFocusResult.bind(this);
     this.isLoadedWithoutError = this.isLoadedWithoutError.bind(this);
 
@@ -127,16 +128,20 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   handlePageUp() {
-    const startResultIndex = this.state.focusStartIndex;
-    const totalResults = this.getTotalResults();
-
-    if (totalResults < this.state.focusStartIndex + PAGE_COUNT) {
+    if (!this.isActivePageUp()) {
       return;
     }
 
     this.setState({
-      focusStartIndex: startResultIndex + PAGE_COUNT
+      focusStartIndex: this.state.focusStartIndex + PAGE_COUNT
     });
+  }
+
+  isActivePageUp() {
+    return (
+      COUNT > this.getFocusEndIndex() &&
+      this.getTotalResults() > this.getFocusEndIndex()
+    );
   }
 
   isLoadedWithoutError() {
@@ -273,11 +278,11 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   renderPageUp() {
-    const isActive = COUNT > this.getFocusEndIndex();
-
     return (
       <div
-        className={`f6 dtc v-mid ${isActive ? "gray pointer" : "light-gray"}`}
+        className={`f6 dtc v-mid ${
+          this.isActivePageUp() ? "gray pointer" : "light-gray"
+        }`}
         onClick={this.handlePageUp}
       >
         <ChevronRight />

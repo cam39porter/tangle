@@ -370,6 +370,12 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
               onKeyPress={this.handleKeyPress}
               placeholder={"What are you looking for..."}
               autoFocus={true}
+              onFocus={(e) => {
+                // focus on the end value in the input
+                var tempValue = e.target.value;
+                e.target.value = "";
+                e.target.value = tempValue;
+              }}
             />
           </div>
         </div>

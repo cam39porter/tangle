@@ -57,12 +57,8 @@ class TextInput extends React.Component<Props, TextInputState> {
     // focus on editor on load and register functionality
     if (this.reactQuillRef) {
       const editor = this.reactQuillRef.getEditor();
+      editor.setText(this.props.startingValue || "");
       editor.focus();
-
-      if (this.props.startingValue) {
-        editor.setText(this.props.startingValue);
-        editor.blur();
-      }
     }
   }
 

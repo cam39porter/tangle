@@ -6,7 +6,6 @@ import { Route, Switch } from "react-router-dom";
 import Tangle from "./views/tangle";
 import Capture from "./views/capture";
 import Surface from "./views/surface";
-import SurfaceResults from "./views/surface-results";
 
 export interface Props {}
 
@@ -18,7 +17,6 @@ class App extends React.Component<Props, object> {
         <Switch>
           <Route exact={true} path="/" component={Capture} />
           <Route path="/capture" component={Capture} />
-          <Route path="/surface/search" component={SurfaceResults} />
           <Route path="/surface" component={Surface} />
           <Route path="/tangle" component={Tangle} />
         </Switch>

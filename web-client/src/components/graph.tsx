@@ -18,9 +18,10 @@ export interface Props {
   focusEndIndex?: number;
   nodeData: Array<Node>;
   categoryData: Array<Object>;
+  layout?: "circular" | "force";
 }
 
-class Network extends React.Component<Props, object> {
+class Graph extends React.Component<Props, object> {
   eChart: ReactECharts | null = null;
 
   constructor(props: Props) {
@@ -80,7 +81,7 @@ class Network extends React.Component<Props, object> {
           geoIndex: 0,
           calendarIndex: 0,
           hoverAnimation: false,
-          layout: "force",
+          layout: this.props.layout || "force",
           circular: {
             rotateLabel: false
           },
@@ -142,4 +143,4 @@ class Network extends React.Component<Props, object> {
   }
 }
 
-export default Network;
+export default Graph;

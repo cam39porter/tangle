@@ -92,8 +92,8 @@ class Graph extends React.Component<Props, object> {
             gravity: 0.2,
             layoutAnimation: true
           },
-          roam: false,
-          nodeScaleRation: 0.6,
+          roam: true,
+          nodeScaleRation: 0.5,
           draggable: false,
           symbol: "circle",
           symbolSize: (value, params: DataItemParams) => {

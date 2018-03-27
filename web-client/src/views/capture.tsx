@@ -75,7 +75,7 @@ class Capture extends React.Component<Props, CaptureState> {
 
         {/* Capture Box */}
         <div
-          className={`absolute measure-narrow pa3 shadow-1 br3`}
+          className={`absolute measure-narrow pa3 shadow-1 br1`}
           style={{
             top: "50%",
             left: "50%",
@@ -85,7 +85,7 @@ class Capture extends React.Component<Props, CaptureState> {
         >
           {/* Text Bar */}
           <div className={`h5 w-100 dt pb3`}>
-            <div className={`v-btm dtc bb b--${config.captureAccentColor}`}>
+            <div className={`v-btm dtc bb bw1 b--${config.captureAccentColor}`}>
               <TextInput
                 handleChange={this.handleChange}
                 handleEnterKey={this.handleCapture}

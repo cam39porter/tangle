@@ -7,7 +7,7 @@ import { graphql, QueryProps } from "react-apollo";
 import { RouteComponentProps } from "react-router";
 import NavigationBar from "../components/navigation-bar";
 import ResultListItem from "../components/result-list-item";
-import Network from "../components/network";
+import Graph from "../components/graph";
 
 import { ChevronRight, ChevronLeft } from "react-feather";
 
@@ -47,6 +47,7 @@ export interface SurfaceResultsState {
 }
 
 class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
+  // eChart instance ref for dispatching events
   eChart;
 
   constructor(props: Props) {
@@ -386,10 +387,11 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
           {/* Graph Visualization */}
           <div className={`flex-column flex-grow`}>
             {this.isLoadedWithoutError() ? (
-              <Network
+              <Graph
                 refEChart={e => {
                   this.eChart = e;
                 }}
+                layout={"force"}
                 focusStartIndex={this.state.focusStartIndex}
                 focusEndIndex={this.getFocusEndIndex()}
                 nodeData={this.getNodeData()}

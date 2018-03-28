@@ -12,7 +12,7 @@ export const CreateCapture = gql`
 
 // Search for captures
 export const Search = gql`
-  query Search($query: String!, $start: Int, $count: Int) {
+  query Search($query: String!, $start: Int, $count: Int, $surfaceCount: Int) {
     search(rawQuery: $query, start: $start, count: $count) {
       results {
         body
@@ -25,6 +25,15 @@ export const Search = gql`
         start
         count
         total
+      }
+    }
+    getCaptures(count: $surfaceCount) {
+      results {
+        body
+        id
+        tags {
+          name
+        }
       }
     }
   }

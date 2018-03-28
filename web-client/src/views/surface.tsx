@@ -13,6 +13,8 @@ import { ChevronRight, ChevronLeft } from "react-feather";
 
 import qs from "qs";
 
+import { shuffle } from "lodash";
+
 import tinycolor from "tinycolor2";
 import tinygradient from "tinygradient";
 
@@ -20,6 +22,7 @@ import config from "../cfg";
 
 const COUNT = 40; // number of results to return
 const PAGE_COUNT = 10; // number of results per page
+const SURFACE_COUNT = 200; // number of results to show on home surface page
 
 const BLUR_COLOR = "#CCCCCC";
 const FOCUS_COLOR_1 = tinycolor("#006AFF");
@@ -66,9 +69,11 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 
     this.getFocusEndIndex = this.getFocusEndIndex.bind(this);
     this.getTotalResults = this.getTotalResults.bind(this);
-    this.getCategoryData = this.getCategoryData.bind(this);
-    this.getNodeData = this.getNodeData.bind(this);
-    this.getResultsGradient = this.getResultsGradient.bind(this);
+    this.getSurfaceNodeData = this.getSurfaceNodeData.bind(this);
+    this.getSurfaceCategoryData = this.getSurfaceCategoryData.bind(this);
+    this.getResultsCategoryData = this.getResultsCategoryData.bind(this);
+    this.getResultsNodeData = this.getResultsNodeData.bind(this);
+    this.getGradient = this.getGradient.bind(this);
 
     this.renderResultsPagination = this.renderResultsPagination.bind(this);
     this.renderResultPagingText = this.renderResultPagingText.bind(this);
@@ -191,7 +196,36 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     return 0;
   }
 
-  getNodeData() {
+  getSurfaceNodeData() {
+    const results = this.props.data.getCaptures.results;
+
+    return shuffle(
+      results.map((capture, index) => {
+        return {
+          id: capture.id,
+          name: capture.body,
+          category: `${index}surfaceResult`
+        };
+      })
+    );
+  }
+
+  getSurfaceCategoryData() {
+    const gradient = this.getGradient(SURFACE_COUNT);
+
+    return gradient.map((color, index) => {
+      return {
+        name: `${index}surfaceResult`,
+        itemStyle: {
+          normal: {
+            color: color.toHexString()
+          }
+        }
+      };
+    });
+  }
+
+  getResultsNodeData() {
     const results = this.props.data.search.results;
 
     let focusResultsNodes: Array<Node> = results
@@ -223,8 +257,11 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     return focusResultsNodes.concat(blurResultsNodes);
   }
 
-  getCategoryData() {
-    const gradient = this.getResultsGradient();
+  getResultsCategoryData() {
+    const totalFocusResults =
+      this.getFocusEndIndex() - this.state.focusStartIndex;
+    const gradientNumber = 2 > totalFocusResults ? 2 : totalFocusResults;
+    const gradient = this.getGradient(gradientNumber);
 
     return gradient
       .map((color, index) => {
@@ -247,10 +284,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
       });
   }
 
-  getResultsGradient() {
-    const totalFocusResults =
-      this.getFocusEndIndex() - this.state.focusStartIndex;
-    let gradientNumber = 2 > totalFocusResults ? 2 : totalFocusResults;
+  getGradient(gradientNumber: number) {
     return tinygradient(FOCUS_COLOR_1, FOCUS_COLOR_2).rgb(gradientNumber);
   }
 
@@ -307,7 +341,10 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   renderResults() {
-    let gradient = this.getResultsGradient();
+    const totalFocusResults =
+      this.getFocusEndIndex() - this.state.focusStartIndex;
+    const gradientNumber = 2 > totalFocusResults ? 2 : totalFocusResults;
+    let gradient = this.getGradient(gradientNumber);
 
     return this.props.data.search.results
       .filter((_, index) => {
@@ -353,7 +390,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   renderSearchBar() {
     return (
       <div
-        className={`flex-column drawer h4 measure ${
+        className={`drawer h4 measure absolute z-max ${
           this.state.isSearch ? `bg-light-gray` : ""
         }`}
         style={{ minWidth: "30em" }}
@@ -408,20 +445,38 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   }
 
   renderGraph() {
+    if (!this.isLoadedWithoutError()) {
+      return null;
+    }
+
+    const nodeData = this.state.isSearch
+      ? this.getResultsNodeData()
+      : this.getSurfaceNodeData();
+
+    const categoryData = this.state.isSearch
+      ? this.getResultsCategoryData()
+      : this.getSurfaceCategoryData();
+
+    const focusStartIndex = this.state.isSearch
+      ? this.state.focusStartIndex
+      : undefined;
+
+    const focusEndIndex = this.state.isSearch
+      ? this.getFocusEndIndex()
+      : undefined;
+
     return (
       <div className={`flex-column flex-grow`}>
-        {this.isLoadedWithoutError() ? (
-          <Graph
-            refEChart={e => {
-              this.eChart = e;
-            }}
-            layout={"force"}
-            focusStartIndex={this.state.focusStartIndex}
-            focusEndIndex={this.getFocusEndIndex()}
-            nodeData={this.getNodeData()}
-            categoryData={this.getCategoryData()}
-          />
-        ) : null}
+        <Graph
+          refEChart={e => {
+            this.eChart = e;
+          }}
+          layout={"force"}
+          focusStartIndex={focusStartIndex}
+          focusEndIndex={focusEndIndex}
+          nodeData={nodeData}
+          categoryData={categoryData}
+        />
       </div>
     );
   }
@@ -433,7 +488,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
           <NavigationBar />
         </div>
 
-        <div className={`flex flex-grow`}>
+        <div className={`flex flex-grow relative`}>
           {this.state.isSearch ? this.renderSideBar() : this.renderSearchBar()}
           {this.renderGraph()}
         </div>
@@ -448,8 +503,9 @@ const SurfaceResultsWithData = graphql(QUERY, {
       query:
         qs.parse(ownProps.location.search, {
           ignoreQueryPrefix: true
-        }).query || "tangle app", // TODO: update this query to return full network
-      count: COUNT
+        }).query || "",
+      count: COUNT,
+      surfaceCount: SURFACE_COUNT
     },
     fetchPolicy: "network-only"
   })

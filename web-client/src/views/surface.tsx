@@ -343,7 +343,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   renderResults() {
     const totalFocusResults =
       this.getFocusEndIndex() - this.state.focusStartIndex;
-    const gradientNumber = 2 > totalFocusResults ? 2 : totalFocusResults;
+    const gradientNumber = totalFocusResults < 2 ? 2 : totalFocusResults;
     let gradient = this.getGradient(gradientNumber);
 
     return this.props.data.search.results
@@ -431,6 +431,9 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
         <div
           className={`flex-column flex-grow measure bg-light-gray overflow-auto`}
         >
+          {/* Padding to ensure results start below the search bar */}
+          <div className={`h4 measure`} />
+          {/* Results List */}
           {this.isLoadedWithoutError() ? this.renderResults() : null}
         </div>
 

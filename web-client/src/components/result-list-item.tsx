@@ -11,7 +11,7 @@ class ListItem extends React.Component<Props, object> {
   render() {
     return (
       <div
-        className={`min-measure bg-white bb b--light-gray dt pointer dim`}
+        className={`min-measure bg-white bb b--light-gray dt pointer bg-animate hover-bg-near-white`}
         style={{ minWidth: "30em" }}
       >
         <div className={`dt-row ma2 w-100`}>

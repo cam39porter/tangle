@@ -22,7 +22,7 @@ function NavigationBar(props: Props) {
           isActiveBackgroundColor={"white"}
         />
       </div>
-      <div className={`w-one-third dtc`}>
+      <div className={`w-one-third dtc `}>
         <NavigationBarTab
           title="surface"
           isActiveColor={config.surfaceAccentColor}

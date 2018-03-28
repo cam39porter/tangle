@@ -10,7 +10,7 @@ class Button extends React.Component<Props, object> {
   render() {
     return (
       <span
-        className={`pa2 tc pointer ttu ba b--${this.props.accentColor} ${
+        className={`pa2 tc pointer ttu br1 ba b--${this.props.accentColor} ${
           this.props.accentColor
         }`}
         onClick={this.props.onClick}

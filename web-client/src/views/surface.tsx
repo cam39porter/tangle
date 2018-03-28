@@ -8,6 +8,7 @@ import { RouteComponentProps } from "react-router";
 import NavigationBar from "../components/navigation-bar";
 import ResultListItem from "../components/result-list-item";
 import Graph from "../components/graph";
+import CaptureDialogue from "../components/capture-dialogue";
 
 import { ChevronRight, ChevronLeft } from "react-feather";
 
@@ -48,6 +49,7 @@ export interface SurfaceResultsState {
   query: string;
   focusStartIndex: number;
   isSearch: boolean;
+  isCapturing: boolean;
 }
 
 class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
@@ -57,6 +59,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
   constructor(props: Props) {
     super(props);
 
+    this.handleIsCapturing = this.handleIsCapturing.bind(this);
     this.handleSurface = this.handleSurface.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -92,7 +95,8 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.state = {
       query,
       focusStartIndex: 0,
-      isSearch: !!query
+      isSearch: !!query,
+      isCapturing: false
     };
   }
 
@@ -112,6 +116,12 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
         isSearch: !!nextQuery
       });
     }
+  }
+
+  handleIsCapturing() {
+    this.setState({
+      isCapturing: !this.state.isCapturing
+    });
   }
 
   handleChange(e: React.FormEvent<HTMLInputElement>): void {
@@ -423,7 +433,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 
   renderSideBar() {
     return (
-      <div className={`flex-column flex-grow  measure shadow-3`}>
+      <div className={`flex-column flex-grow z-max measure shadow-3`}>
         {/* Search Bar */}
         {this.renderSearchBar()}
 
@@ -484,15 +494,39 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     );
   }
 
+  renderFloatingButtons() {
+    return (
+      <div className={`bottom-2 right-2 absolute z-999`}>
+        {this.state.isCapturing ? (
+          <CaptureDialogue />
+        ) : (
+          <div
+            className={`dt h3 w3 white br1 bg-${
+              config.captureAccentColor
+            } shadow-1 pointer`}
+            onClick={this.handleIsCapturing}
+          >
+            <div className={`dtc tc v-mid f3`}>+</div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className={`w-100 vh-100 flex-column`}>
+        {/* Navigation */}
         <div className={`db`}>
           <NavigationBar />
         </div>
 
         <div className={`flex flex-grow relative`}>
+          {/* Floating Buttons */}
+          {this.renderFloatingButtons()}
+          {/* Search */}
           {this.state.isSearch ? this.renderSideBar() : this.renderSearchBar()}
+          {/* Graph */}
           {this.renderGraph()}
         </div>
       </div>

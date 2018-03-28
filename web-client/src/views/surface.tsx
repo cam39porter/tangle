@@ -77,6 +77,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     this.renderResults = this.renderResults.bind(this);
     this.renderSearchBar = this.renderSearchBar.bind(this);
     this.renderSideBar = this.renderSideBar.bind(this);
+    this.renderGraph = this.renderGraph.bind(this);
 
     const query =
       qs.parse(this.props.location.search, {
@@ -353,7 +354,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     return (
       <div
         className={`flex-column drawer h4 measure ${
-          this.state.isSearch ? `bg-${config.surfaceBaseColor}` : ""
+          this.state.isSearch ? `bg-light-gray` : ""
         }`}
         style={{ minWidth: "30em" }}
       >
@@ -370,7 +371,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
               onKeyPress={this.handleKeyPress}
               placeholder={"What are you looking for..."}
               autoFocus={true}
-              onFocus={(e) => {
+              onFocus={e => {
                 // focus on the end value in the input
                 var tempValue = e.target.value;
                 e.target.value = "";
@@ -385,7 +386,7 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
 
   renderSideBar() {
     return (
-      <div className={`flex-column flex-grow  measure shadow-1`}>
+      <div className={`flex-column flex-grow  measure shadow-3`}>
         {/* Search Bar */}
         {this.renderSearchBar()}
 
@@ -406,32 +407,35 @@ class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
     );
   }
 
+  renderGraph() {
+    return (
+      <div className={`flex-column flex-grow`}>
+        {this.isLoadedWithoutError() ? (
+          <Graph
+            refEChart={e => {
+              this.eChart = e;
+            }}
+            layout={"force"}
+            focusStartIndex={this.state.focusStartIndex}
+            focusEndIndex={this.getFocusEndIndex()}
+            nodeData={this.getNodeData()}
+            categoryData={this.getCategoryData()}
+          />
+        ) : null}
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className={`w-100 vh-100 flex-column`}>
-        {/* Navigation Bar */}
         <div className={`db`}>
           <NavigationBar />
         </div>
 
         <div className={`flex flex-grow`}>
           {this.state.isSearch ? this.renderSideBar() : this.renderSearchBar()}
-
-          {/* Graph Visualization */}
-          <div className={`flex-column flex-grow`}>
-            {this.isLoadedWithoutError() ? (
-              <Graph
-                refEChart={e => {
-                  this.eChart = e;
-                }}
-                layout={"force"}
-                focusStartIndex={this.state.focusStartIndex}
-                focusEndIndex={this.getFocusEndIndex()}
-                nodeData={this.getNodeData()}
-                categoryData={this.getCategoryData()}
-              />
-            ) : null}
-          </div>
+          {this.renderGraph()}
         </div>
       </div>
     );
@@ -444,7 +448,7 @@ const SurfaceResultsWithData = graphql(QUERY, {
       query:
         qs.parse(ownProps.location.search, {
           ignoreQueryPrefix: true
-        }).query || "",
+        }).query || "tangle app", // TODO: update this query to return full network
       count: COUNT
     },
     fetchPolicy: "network-only"

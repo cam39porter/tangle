@@ -7,26 +7,26 @@ interface Props {}
 
 function NavigationBar(props: Props) {
   return (
-    <div className={`w-100 f6 dt`}>
-      <div className={`w-one-third dtc`}>
+    <div className={`w-100 f6 dt shadow-1`}>
+      <div className={`w-one-third dtc dim`}>
         <NavigationBarTab
           title="tangle"
-          isActiveColor={config.tangleAccentColor}
-          isActiveBackgroundColor={"white"}
+          isActiveColor={"white"}
+          isActiveBackgroundColor={config.tangleAccentColor}
         />
       </div>
-      <div className={`w-one-third dtc`}>
+      <div className={`w-one-third dtc dim`}>
         <NavigationBarTab
           title="capture"
-          isActiveColor={config.captureAccentColor}
-          isActiveBackgroundColor={"white"}
+          isActiveColor={"white"}
+          isActiveBackgroundColor={config.captureAccentColor}
         />
       </div>
-      <div className={`w-one-third dtc `}>
+      <div className={`w-one-third dtc dim`}>
         <NavigationBarTab
           title="surface"
-          isActiveColor={config.surfaceAccentColor}
-          isActiveBackgroundColor={"white"}
+          isActiveColor={"white"}
+          isActiveBackgroundColor={config.surfaceAccentColor}
         />
       </div>
     </div>

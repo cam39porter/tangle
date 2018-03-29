@@ -54,14 +54,16 @@ class Graph extends React.Component<Props, object> {
         confine: true,
         position: "top",
         formatter: "{b}",
-        backgroundColor: "#EEEEEE",
-        padding: 8,
+        backgroundColor: "#FFFFFF",
         extraCssText: `box-shadow: 0px 0px 4px 2px rgba( 0, 0, 0, 0.2 ); 
            max-width: 30em;
            overflow: hidden;
+           text-align: center;
+           padding: 1em;
+           vertical-align: middle;
           `,
         textStyle: {
-          color: "#000"
+          color: "#777777"
         }
       },
       series: [

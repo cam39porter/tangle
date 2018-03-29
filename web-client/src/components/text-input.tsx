@@ -5,7 +5,7 @@ import "react-quill/dist/quill.bubble.css";
 
 import * as _ from "lodash";
 
-export interface Props {
+interface Props {
   handleChange?: (value: string) => void;
   handleEnterKey?: () => void;
   clearValue?: boolean;
@@ -14,12 +14,12 @@ export interface Props {
   placeholder?: string;
 }
 
-export interface TextInputState {
+interface State {
   editorHtml: string;
   modules: Object;
 }
 
-class TextInput extends React.Component<Props, TextInputState> {
+class TextInput extends React.Component<Props, State> {
   // reference to quill element
   reactQuillRef: ReactQuill | null = null;
 

@@ -12,7 +12,7 @@ interface DataItemParams {
   data: Node;
 }
 
-export interface Props {
+interface Props {
   refEChart?: (eChart: ReactECharts) => void;
   focusStartIndex?: number;
   focusEndIndex?: number;

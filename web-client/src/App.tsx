@@ -7,7 +7,7 @@ import Tangle from "./views/tangle";
 import Capture from "./views/capture";
 import Surface from "./views/surface";
 
-export interface Props {}
+interface Props {}
 
 class App extends React.Component<Props, object> {
   render() {

@@ -41,18 +41,18 @@ interface Params {
 
 interface Data extends QueryProps<SearchQuery>, SearchQuery {}
 
-export interface Props extends RouteComponentProps<Params> {
+interface Props extends RouteComponentProps<Params> {
   data: Data;
 }
 
-export interface SurfaceResultsState {
+interface State {
   query: string;
   focusStartIndex: number;
   isSearch: boolean;
   isCapturing: boolean;
 }
 
-class SurfaceResults extends React.Component<Props, SurfaceResultsState> {
+class SurfaceResults extends React.Component<Props, State> {
   // eChart instance ref for dispatching events
   eChart;
 

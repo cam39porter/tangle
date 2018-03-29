@@ -2,7 +2,7 @@ import * as React from "react";
 
 import NavigationBar from "../components/navigation-bar";
 
-export interface Props {}
+interface Props {}
 
 class Tangle extends React.Component<Props, object> {
   render() {

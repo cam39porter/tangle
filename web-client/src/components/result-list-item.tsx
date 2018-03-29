@@ -1,6 +1,6 @@
 import * as React from "react";
 
-export interface Props {
+interface Props {
   body: string;
   tags: Array<{ name: string }>;
   onClick: () => void;

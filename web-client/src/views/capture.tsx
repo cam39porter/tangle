@@ -3,11 +3,11 @@ import * as React from "react";
 import NavigationBar from "../components/navigation-bar";
 import CaptureDialogue from "../components/capture-dialogue";
 
-export interface Props {}
+interface Props {}
 
-export interface CaptureState {}
+interface State {}
 
-class Capture extends React.Component<Props, CaptureState> {
+class Capture extends React.Component<Props, State> {
   render() {
     return (
       <div className={`w-100 vh-100 relative`}>

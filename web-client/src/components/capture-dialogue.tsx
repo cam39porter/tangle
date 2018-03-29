@@ -13,16 +13,16 @@ import {
 import { CreateCapture as MUTATION } from "../queries";
 import { graphql, MutationFunc } from "react-apollo";
 
-export interface Props {
+interface Props {
   mutate: MutationFunc<CreateCaptureMutation, CreateCaptureMutationVariables>;
 }
 
-export interface CaptureState {
+interface State {
   value: string;
   clearValue: boolean;
 }
 
-class Capture extends React.Component<Props, CaptureState> {
+class CaptureDialogue extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -33,7 +33,10 @@ class Capture extends React.Component<Props, CaptureState> {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleCapture = this.handleCapture.bind(this);
+
     this.updateClearValue = this.updateClearValue.bind(this);
+
+    this.renderMinimizeButton = this.renderMinimizeButton.bind(this);
   }
 
   updateClearValue(newClearValue: boolean) {
@@ -63,6 +66,18 @@ class Capture extends React.Component<Props, CaptureState> {
     });
   }
 
+  renderMinimizeButton() {
+    return (
+      <div
+        className={`absolute dt h2 w2 f3 b top-1 right-1 pointer z-999 ba br1 bw1 ${
+          config.captureAccentColor
+        }`}
+      >
+        <div className={`dtc tc v-mid`}>-</div>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -71,13 +86,9 @@ class Capture extends React.Component<Props, CaptureState> {
           className={`measure-narrow relative pa3 shadow-1 br1 bg-white`}
           style={{ minWidth: "20em" }}
         >
-          <div
-            className={`absolute dt h2 w2 f3 b top-1 right-1 pointer z-999 ba br1 bw1 ${
-              config.captureAccentColor
-            }`}
-          >
-            <div className={`dtc tc v-mid`}>-</div>
-          </div>
+          {/* Mimimize Button */}
+          {this.renderMinimizeButton()}
+
           {/* Text Bar */}
           <div className={`h5 w-100 dt pb3`}>
             <div className={`v-btm dtc bb bw1 b--${config.captureAccentColor}`}>
@@ -105,4 +116,4 @@ class Capture extends React.Component<Props, CaptureState> {
   }
 }
 
-export default graphql(MUTATION)(Capture);
+export default graphql(MUTATION)(CaptureDialogue);

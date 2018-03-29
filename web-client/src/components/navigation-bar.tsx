@@ -3,7 +3,7 @@ import config from "../cfg";
 
 import NavigationBarTab from "./navigation-bar-tab";
 
-export interface Props {}
+interface Props {}
 
 function NavigationBar(props: Props) {
   return (

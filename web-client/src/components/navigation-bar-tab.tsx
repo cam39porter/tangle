@@ -4,17 +4,17 @@ import { Link } from "react-router-dom";
 
 import { withRouter, RouteComponentProps } from "react-router";
 
-export interface Props extends RouteComponentProps<Object> {
+interface Props extends RouteComponentProps<Object> {
   title: string;
   isActiveBackgroundColor: string;
   isActiveColor: string;
 }
 
-export interface NavigationBarTabState {
+interface State {
   isActive: boolean;
 }
 
-class NavigationBarTab extends React.Component<Props, NavigationBarTabState> {
+class NavigationBarTab extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 

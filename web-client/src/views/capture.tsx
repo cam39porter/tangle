@@ -25,7 +25,11 @@ class Capture extends React.Component<Props, State> {
             minWidth: "20em"
           }}
         >
-          <CaptureDialogue />
+          <CaptureDialogue
+            handleMinimize={() => {
+              return;
+            }}
+          />
         </div>
       </div>
     );

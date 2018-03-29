@@ -2,14 +2,10 @@ import * as React from "react";
 
 import ReactECharts from "echarts-for-react";
 
-interface Node {
+export interface Node {
   id: string;
   name: string;
   category: string;
-}
-
-interface DataItemParams {
-  data: Node;
 }
 
 interface Props {
@@ -96,7 +92,7 @@ class Graph extends React.Component<Props, object> {
           nodeScaleRation: 0.5,
           draggable: false,
           symbol: "circle",
-          symbolSize: (value, params: DataItemParams) => {
+          symbolSize: (value, params: { data: Node }) => {
             return params.data.category === "blurResult" ? 24 : 32;
           },
           symbolRotate: false,

@@ -1,13 +1,14 @@
 import * as React from "react";
 
-import { SearchQuery } from "../__generated__/types";
+import { SearchQuery as Response } from "../__generated__/types";
 import { Search as QUERY } from "../queries";
-import { graphql, QueryProps } from "react-apollo";
+import { graphql, ChildProps } from "react-apollo";
 
 import { RouteComponentProps } from "react-router";
 import NavigationBar from "../components/navigation-bar";
 import ResultListItem from "../components/result-list-item";
 import Graph from "../components/graph";
+import { Node } from "../components/graph";
 import CaptureDialogue from "../components/capture-dialogue";
 
 import { ChevronRight, ChevronLeft } from "react-feather";
@@ -29,21 +30,13 @@ const BLUR_COLOR = "#CCCCCC";
 const FOCUS_COLOR_1 = tinycolor("#006AFF");
 const FOCUS_COLOR_2 = tinycolor("#CBE0FF");
 
-interface Node {
-  id: string;
-  name: string;
-  category: string;
-}
-
-interface Params {
+interface InputProps {
   query: string;
 }
 
-interface Data extends QueryProps<SearchQuery>, SearchQuery {}
+interface RouteProps extends RouteComponentProps<InputProps> {}
 
-interface Props extends RouteComponentProps<Params> {
-  data: Data;
-}
+interface Props extends RouteProps, ChildProps<InputProps, Response> {}
 
 interface State {
   query: string;
@@ -177,7 +170,9 @@ class SurfaceResults extends React.Component<Props, State> {
 
   isLoadedWithoutError() {
     return (
-      this.props.data.loading === false && this.props.data.error === undefined
+      this.props.data &&
+      this.props.data.loading === false &&
+      this.props.data.error === undefined
     );
   }
 
@@ -197,18 +192,30 @@ class SurfaceResults extends React.Component<Props, State> {
   }
 
   getTotalResults() {
-    if (this.props.data.search) {
-      if (this.props.data.search.pageInfo) {
-        return this.props.data.search.pageInfo.total;
-      }
+    if (
+      !(
+        this.props.data &&
+        this.props.data.search &&
+        this.props.data.search.pageInfo
+      )
+    ) {
+      return 0;
     }
-
-    return 0;
+    return this.props.data.search.pageInfo.total;
   }
 
   getSurfaceNodeData() {
-    const results = this.props.data.getCaptures.results;
+    if (
+      !(
+        this.props.data &&
+        this.props.data.search &&
+        this.props.data.getCaptures
+      )
+    ) {
+      return [];
+    }
 
+    const results = this.props.data.getCaptures.results;
     return shuffle(
       results.map((capture, index) => {
         return {
@@ -236,6 +243,10 @@ class SurfaceResults extends React.Component<Props, State> {
   }
 
   getResultsNodeData() {
+    if (!(this.props.data && this.props.data.search)) {
+      return [];
+    }
+
     const results = this.props.data.search.results;
 
     let focusResultsNodes: Array<Node> = results
@@ -351,6 +362,10 @@ class SurfaceResults extends React.Component<Props, State> {
   }
 
   renderResults() {
+    if (!(this.props.data && this.props.data.search)) {
+      return;
+    }
+
     const totalFocusResults =
       this.getFocusEndIndex() - this.state.focusStartIndex;
     const gradientNumber = totalFocusResults < 2 ? 2 : totalFocusResults;
@@ -498,7 +513,7 @@ class SurfaceResults extends React.Component<Props, State> {
     return (
       <div className={`bottom-2 right-2 absolute z-999`}>
         {this.state.isCapturing ? (
-          <CaptureDialogue />
+          <CaptureDialogue handleMinimize={this.handleIsCapturing} />
         ) : (
           <div
             className={`dt h3 w3 white br1 bg-${
@@ -534,7 +549,7 @@ class SurfaceResults extends React.Component<Props, State> {
   }
 }
 
-const SurfaceResultsWithData = graphql(QUERY, {
+const SurfaceResultsWithData = graphql<Response, Props>(QUERY, {
   options: (ownProps: Props) => ({
     variables: {
       query:

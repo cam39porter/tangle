@@ -7,7 +7,7 @@ import { withRouter, RouteComponentProps } from "react-router";
 interface Props extends RouteComponentProps<Object> {
   title: string;
   isActiveBackgroundColor: string;
-  isActiveColor: string;
+  isInactiveColor: string;
 }
 
 interface State {
@@ -40,26 +40,28 @@ class NavigationBarTab extends React.Component<Props, State> {
 
   render() {
     return (
-      <Link
-        to={`/${this.props.title}`}
-        style={{
-          textDecoration: "none"
-        }}
-      >
-        <div
-          className={`tc pointer pa3 ttl ${
-            this.isMatch()
-              ? "bg-" + this.props.isActiveBackgroundColor
-              : "bg-light-gray"
-          }`}
+      <div className={`dtc`}>
+        <Link
+          to={`/${this.props.title}`}
+          style={{
+            textDecoration: "none"
+          }}
         >
-          <span
-            className={`${this.isMatch() ? this.props.isActiveColor : "gray"}`}
+          <div
+            className={`dt tc pointer w-100 h2 pa3 bw1 b--${
+              this.props.isActiveBackgroundColor
+            } ttl ${this.isMatch() ? "bb" : ""}`}
           >
-            {this.props.title}
-          </span>
-        </div>
-      </Link>
+            <span
+              className={`dtc v-mid ${
+                this.isMatch() ? this.props.isInactiveColor : "gray"
+              }`}
+            >
+              {this.props.title}
+            </span>
+          </div>
+        </Link>
+      </div>
     );
   }
 }

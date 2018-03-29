@@ -6,15 +6,12 @@ import * as _ from "lodash";
 
 import config from "../cfg";
 
-import {
-  CreateCaptureMutation,
-  CreateCaptureMutationVariables
-} from "../__generated__/types";
+import { CreateCaptureMutation as Response } from "../__generated__/types";
 import { CreateCapture as MUTATION } from "../queries";
-import { graphql, MutationFunc } from "react-apollo";
+import { graphql, ChildProps } from "react-apollo";
 
-interface Props {
-  mutate: MutationFunc<CreateCaptureMutation, CreateCaptureMutationVariables>;
+interface Props extends ChildProps<{}, Response> {
+  handleMinimize: () => void;
 }
 
 interface State {
@@ -53,6 +50,10 @@ class CaptureDialogue extends React.Component<Props, State> {
   }
 
   handleCapture() {
+    if (!this.props.mutate) {
+      return;
+    }
+
     const capture = this.state.value;
     this.setState({
       clearValue: true
@@ -72,6 +73,7 @@ class CaptureDialogue extends React.Component<Props, State> {
         className={`absolute dt h2 w2 f3 b top-1 right-1 pointer z-999 ba br1 bw1 ${
           config.captureAccentColor
         }`}
+        onClick={this.props.handleMinimize}
       >
         <div className={`dtc tc v-mid`}>-</div>
       </div>
@@ -101,19 +103,10 @@ class CaptureDialogue extends React.Component<Props, State> {
               />
             </div>
           </div>
-
-          {/* Capture Button */}
-          {/* <div className={`tc pa3`}>
-            <Button
-              title="capture"
-              onClick={this.handleCapture}
-              accentColor={config.captureAccentColor}
-            />
-          </div> */}
         </div>
       </div>
     );
   }
 }
 
-export default graphql(MUTATION)(CaptureDialogue);
+export default graphql<Response, Props>(MUTATION)(CaptureDialogue);

@@ -136,7 +136,9 @@ class SurfaceResults extends React.Component<Props, State> {
   }
 
   handleSurface() {
-    this.props.history.push(`/surface/search?query=${this.state.query}`);
+    this.props.history.push(
+      `/surface/search?query=${encodeURIComponent(this.state.query)}`
+    );
   }
 
   handlePageDown() {

@@ -5,7 +5,6 @@ import { Search as QUERY } from "../queries";
 import { graphql, ChildProps } from "react-apollo";
 
 import { RouteComponentProps } from "react-router";
-import NavigationBar from "../components/navigation-bar";
 import ResultListItem from "../components/result-list-item";
 import Graph from "../components/graph";
 import { Node } from "../components/graph";
@@ -533,11 +532,6 @@ class SurfaceResults extends React.Component<Props, State> {
   render() {
     return (
       <div className={`w-100 vh-100 flex-column`}>
-        {/* Navigation */}
-        <div className={`db`}>
-          <NavigationBar />
-        </div>
-
         <div className={`flex flex-grow relative`}>
           {/* Floating Buttons */}
           {this.renderFloatingButtons()}

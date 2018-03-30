@@ -1,18 +1,43 @@
 module.exports = {
   siteMetadata: {
-    title: 'Hex Ventures',
+    title: "Hex Ventures"
   },
-  pathPrefix: '/hex-ventures',
+  pathPrefix: "/hex-ventures",
   plugins: [
     {
-      resolve: 'gatsby-source-filesystem',
+      resolve: "gatsby-source-filesystem",
       options: {
-        path: './blog',
-        name: 'blog-pages'    
-      },
+        path: `${__dirname}/src/blog`,
+        name: "pages"
+      }
     },
+    `gatsby-transformer-sharp`,
+    `gatsby-plugin-sharp`,
     {
-      resolve: 'gatsby-transformer-remark'
+      resolve: `gatsby-transformer-remark`,
+      options: {
+        excerpt_separator: `<!-- end -->`,
+        plugins: [
+          {
+            resolve: "gatsby-remark-copy-linked-files",
+            options: {
+              ignoreFileExtensions: []
+            }
+          },
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 590
+            }
+          },
+          {
+            resolve: `gatsby-remark-responsive-iframe`,
+            options: {
+              wrapperStyle: `margin-bottom: 1.0725rem`
+            }
+          }
+        ]
+      }
     },
     {
       resolve: `gatsby-plugin-favicon`,
@@ -33,5 +58,4 @@ module.exports = {
       }
     }
   ]
-}
- 
+};

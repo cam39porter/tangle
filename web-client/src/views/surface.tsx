@@ -26,8 +26,8 @@ const PAGE_COUNT = 10; // number of results per page
 const SURFACE_COUNT = 200; // number of results to show on home surface page
 
 const BLUR_COLOR = "#CCCCCC";
-const FOCUS_COLOR_1 = tinycolor("#006AFF");
-const FOCUS_COLOR_2 = tinycolor("#CBE0FF");
+const FOCUS_COLOR_1 = tinycolor("#357EDD");
+const FOCUS_COLOR_2 = tinycolor("#CDECFF");
 
 interface InputProps {
   query: string;
@@ -44,7 +44,7 @@ interface State {
   isCapturing: boolean;
 }
 
-class SurfaceResults extends React.Component<Props, State> {
+class Surface extends React.Component<Props, State> {
   // eChart instance ref for dispatching events
   eChart;
 
@@ -406,7 +406,8 @@ class SurfaceResults extends React.Component<Props, State> {
               onClick={() => {
                 return;
               }}
-              accentColor={gradient[index].toHexString()}
+              nodeColor={gradient[index].toHexString()}
+              accentColor={config.surfaceAccentColor}
             />
           </div>
         );
@@ -557,6 +558,6 @@ const SurfaceResultsWithData = graphql<Response, Props>(QUERY, {
     },
     fetchPolicy: "network-only"
   })
-})(SurfaceResults);
+})(Surface);
 
 export default SurfaceResultsWithData;

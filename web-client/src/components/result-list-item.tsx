@@ -5,6 +5,7 @@ interface Props {
   tags: Array<{ name: string }>;
   onClick: () => void;
   accentColor: string;
+  nodeColor: string;
 }
 
 class ListItem extends React.Component<Props, object> {
@@ -23,7 +24,7 @@ class ListItem extends React.Component<Props, object> {
           <div className={`dtc fr ma3`}>
             <p
               className={`v-mid fr h2 w2 br-100`}
-              style={{ backgroundColor: this.props.accentColor }}
+              style={{ backgroundColor: this.props.nodeColor }}
             />
           </div>
         </div>
@@ -33,7 +34,7 @@ class ListItem extends React.Component<Props, object> {
             return (
               <span
                 key={`${index}-${name}`}
-                className={`f6 ma3 light-blue fw5`}
+                className={`f6 ma3 ${this.props.accentColor} fw5`}
               >
                 {`#${name}`}
               </span>

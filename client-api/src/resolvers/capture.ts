@@ -1,14 +1,26 @@
-import { PageInfo, Capture, CaptureCollection, Tag } from "../models";
+import {
+  PageInfo,
+  Capture,
+  CaptureCollection,
+  Tag,
+  NLPResponse
+} from "../models";
 import { db } from "../db/db";
+import { getNLPResponse } from "../services/nlp";
 
 const table = "capture";
+
+let nlp;
 
 export default {
   Query: {
     getCaptures(_, params, context): Promise<CaptureCollection> {
-      return getAll().then(captures =>
-        page(captures, params.start, params.count)
-      );
+      return getAll().then(captures => {
+        if (!nlp) {
+          getNLPFromCaptures(captures).then(nlpResp => (nlp = nlpResp));
+        }
+        return page(captures, params.start, params.count);
+      });
     },
     getCapture(_, params, context): Promise<Capture> {
       return get(params.id);
@@ -21,10 +33,16 @@ export default {
   },
   Mutation: {
     createCapture(_, params, context): Promise<Capture> {
+      nlp = undefined;
       return insert(params.body).then(get);
     }
   }
 };
+
+function getNLPFromCaptures(captures: [Capture]): Promise<NLPResponse> {
+  const joinedCapture = captures.map(capture => capture.body).join("\n");
+  return getNLPResponse(joinedCapture);
+}
 
 function insert(body: string): Promise<string> {
   return db(table)

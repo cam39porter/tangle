@@ -8,7 +8,7 @@ module.exports = {
       resolve: "gatsby-source-filesystem",
       options: {
         path: `${__dirname}/src/blog`,
-        name: "pages"
+        name: "blog"
       }
     },
     `gatsby-transformer-sharp`,
@@ -18,12 +18,6 @@ module.exports = {
       options: {
         excerpt_separator: `<!-- end -->`,
         plugins: [
-          {
-            resolve: "gatsby-remark-copy-linked-files",
-            options: {
-              ignoreFileExtensions: []
-            }
-          },
           {
             resolve: `gatsby-remark-images`,
             options: {

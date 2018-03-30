@@ -6,12 +6,10 @@ export class NLPResponse {
 }
 
 export class NLPEntity {
-  id: string;
   name: string;
   type: string;
   metadata: NLPMetadata;
   constructor(data) {
-    this.id = data.ID;
     this.name = data.name;
     this.type = data.type;
     this.metadata = data.metadata ? new NLPMetadata(data.metadata) : null;

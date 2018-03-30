@@ -13,7 +13,6 @@ function getNLPResponse(body: string): Promise<NLPResponse> {
     .then(results => {
       let resp = new NLPResponse();
       results[0].entities.forEach(element => {
-        element.id = Math.random();
         const entity = new NLPEntity(element);
         resp.entities.push(entity);
       });

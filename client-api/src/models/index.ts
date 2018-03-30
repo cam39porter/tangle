@@ -3,3 +3,7 @@ export * from "./page-info";
 export * from "./capture-collection";
 export * from "./tag";
 export * from "./nlp";
+export * from "./entity";
+export * from "./graph-edge";
+export * from "./graph";
+export * from "./search-results";

@@ -3,24 +3,27 @@ import {
   Capture,
   CaptureCollection,
   Tag,
-  NLPResponse
+  NLPResponse,
+  SearchResults,
+  Entity,
+  Graph,
+  GraphEdge
 } from "../models";
 import { db } from "../db/db";
 import { getNLPResponse } from "../services/nlp";
 
 const table = "capture";
 
-let nlp;
+let cachedNLP;
 
 export default {
   Query: {
     getCaptures(_, params, context): Promise<CaptureCollection> {
-      return getAll().then(captures => {
-        if (!nlp) {
-          getNLPFromCaptures(captures).then(nlpResp => (nlp = nlpResp));
-        }
-        return page(captures, params.start, params.count);
-      });
+      return getAll()
+        .then(warmNLPCache)
+        .then(captures => {
+          return page(captures, params.start, params.count);
+        });
     },
     getCapture(_, params, context): Promise<Capture> {
       return get(params.id);
@@ -29,19 +32,73 @@ export default {
       return search(params.rawQuery).then(captures =>
         page(captures, params.start, params.count)
       );
+    },
+    searchv2(_, params, context): Promise<SearchResults> {
+      return search(params.rawQuery)
+        .then(warmNLPCache)
+        .then(captures => {
+          return new SearchResults({ graph: buildGraph(captures, cachedNLP) });
+        });
     }
   },
   Mutation: {
     createCapture(_, params, context): Promise<Capture> {
-      nlp = undefined;
+      cachedNLP = undefined;
       return insert(params.body).then(get);
     }
   }
 };
 
-function getNLPFromCaptures(captures: [Capture]): Promise<NLPResponse> {
-  const joinedCapture = captures.map(capture => capture.body).join("\n");
-  return getNLPResponse(joinedCapture);
+function buildGraph(captures: Capture[], nlp: NLPResponse): Graph {
+  const joinedCaptures = captures.map(capture => capture.body).join("/n");
+  const dedupe = require("dedupe");
+  const entities: Entity[] = nlp.entities
+    .filter(entity => joinedCaptures.includes(entity.name))
+    .map(
+      nlpEntity =>
+        new Entity({
+          id: `${nlpEntity.name};${nlpEntity.type}`,
+          name: nlpEntity.name,
+          type: nlpEntity.type
+        })
+    );
+  const dedupedEntites: Entity[] = dedupe(entities, entity => entity.id);
+  const edges: GraphEdge[][] = dedupedEntites.map(entity => {
+    let localEdges: GraphEdge[] = [];
+    captures.forEach(capture => {
+      if (capture.body.includes(entity.name)) {
+        localEdges.push(
+          new GraphEdge({
+            source: capture.id,
+            destination: entity.id
+          })
+        );
+      }
+    });
+    return localEdges;
+  });
+
+  return new Graph({
+    captures: captures,
+    entities: dedupedEntites,
+    edges: [].concat(...edges)
+  });
+}
+
+function warmNLPCache(ret) {
+  if (!cachedNLP) {
+    return buildNLP()
+      .then(nlpResp => (cachedNLP = nlpResp))
+      .then(nll => ret);
+  } else {
+    return ret;
+  }
+}
+
+function buildNLP(): Promise<NLPResponse> {
+  return getAll()
+    .then(captures => captures.map(capture => capture.body).join("\n"))
+    .then(joinedCapture => getNLPResponse(joinedCapture));
 }
 
 function insert(body: string): Promise<string> {

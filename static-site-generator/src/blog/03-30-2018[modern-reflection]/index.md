@@ -11,7 +11,7 @@ tags: ['reflection', 'machine-learning']
 
 The bedrock of my day is an exercise called [morning pages](https://tim.blog/2015/01/15/morning-pages/) – a free-flow cup of coffee with myself, where I put pen (or, in this case, pencil) to paper and jot whatever comes to mind. Some days these are a stream of consciousness reflection on inspiration I’ve recently come across; other days a physical reservoir for project ideas that jump to mind. Though this has been a liberating habit of self-expression, it has the potential to be so much more…
 
-![Morning Paper](morning-paper.png)
+![Morning Paper](https://storage.googleapis.com/hex-blog-assets/morning-paper.png)
 
 First thing in the morning is when you are the most raw, intellectual version of yourself, brimming with micro-insights waiting to be captured! Wouldn’t it be nice if this collection of ruminations could be integrated over time and made sense of? And, even more, if all of this were automated? Vis-à-vis: the technical ability to finally do so _(cue exit: thought silos)_!
 
@@ -37,9 +37,9 @@ Be it FaceBook generating deeply-targeted (though, often unwanted) ads pertinent
 
 Within this realm, a personal favorite of mine is natural language processing (NLP), which derives understanding from unstructured text. In the ML paradigm, a computer is trained by being fed a set of documents with hand annotated rules, such as the part of speech of each word in a given sentence. The training data is analyzed and a model is generated that probabilistically infers the part of speech for a word in a sentence based on the word, the surrounding words, and the part of speech of the surrounding words. Just as we get better with practice, given enough training data, a computer will achieve high predictive accuracy at tagging new text. Moreover, this exercise can be extended to segment other features such as tense, named entities, topics, and even [sentiment](https://en.wikipedia.org/wiki/Sentiment_analysis).
 
-![Sentence 1](syntax-1.png)
+![Sentence 1](https://storage.googleapis.com/hex-blog-assets/syntax-1.png)
 
-![Sentance 2](syntax-2.png)
+![Sentance 2](https://storage.googleapis.com/hex-blog-assets/syntax-2.png)
 
 So, when are you going to tie this back to morning pages?
 

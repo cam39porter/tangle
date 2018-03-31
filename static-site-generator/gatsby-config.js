@@ -12,7 +12,6 @@ module.exports = {
       }
     },
     `gatsby-transformer-sharp`,
-    `gatsby-plugin-sharp`,
     {
       resolve: `gatsby-transformer-remark`,
       options: {
@@ -33,6 +32,7 @@ module.exports = {
         ]
       }
     },
+    `gatsby-plugin-sharp`,
     {
       resolve: `gatsby-plugin-favicon`,
       options: {

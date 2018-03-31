@@ -2,7 +2,7 @@ module.exports = {
   siteMetadata: {
     title: "Hex Ventures"
   },
-  pathPrefix: "/hex-ventures",
+  pathPrefix: "/hex-ventures/",
   plugins: [
     {
       resolve: "gatsby-source-filesystem",

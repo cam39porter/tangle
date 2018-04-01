@@ -16,7 +16,7 @@ type Graph {
   edges: [Edge!]!
 }
 
-type Capture{
+type Capture {
   id: String!
   body: String!
   created: String!
@@ -62,7 +62,7 @@ type Query {
 }
 
 type Mutation {
-  createCapture(body: String!): Capture!
+  createCapture(body: String!): Graph!
 }
 
 `;

@@ -7,8 +7,8 @@ export function createSMSCapture(req, res) {
   const body = req.body.Body;
 
   resolver.Mutation.createCapture(null, { body: body }, null)
-    .then(capture => {
-      return twiml.message(`Successfully saved capture with id ${capture.id}`);
+    .then(graph => {
+      return twiml.message(`Successfully saved capture`);
     })
     .catch(err => {
       const message = `Failed to save capture. Error message: ${err}`;

@@ -42,9 +42,14 @@ export default {
     }
   },
   Mutation: {
-    createCapture(_, params, context): Promise<Capture> {
-      cachedNLP = undefined;
-      return insert(params.body).then(get);
+    createCapture(_, params, context): Promise<Graph> {
+      return insert(params.body).then(id =>
+        getAll().then(captures => {
+          const graph = buildGraph(captures, cachedNLP);
+          cachedNLP = undefined;
+          return graph;
+        })
+      );
     }
   }
 };

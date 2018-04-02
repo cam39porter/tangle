@@ -23,8 +23,8 @@ handlers:
    upload: build/index.html
 
  - url: /(.*)
-   static_files: build/\1
-   upload: build/(.*)
+   static_files: build/index.html
+   upload: build/index.html
 # [END handlers]
 
 # [START skip files]

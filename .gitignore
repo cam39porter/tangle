@@ -49,3 +49,7 @@ dist/
 release-builds/
 build/
 __generated__/
+
+# Env # 
+######################
+env.local

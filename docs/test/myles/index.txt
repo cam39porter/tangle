@@ -61,6 +61,13 @@ come prepared with an option budget to a vc negotiation
 
 4/3 
 #privacy knowledge is private unless permissioned, we need to ensure we have the right security infrastructure
-monetization should be designed to place a value on the 
+category creation means we can create a new pricing benchmark #monetization
+Need to figure out what terms related to knowledge management are most searched
+Our business model should be evilly brilliant
+Slack made customer feedback the center of its go to market strategy
+traditional public relations and media were also very important to Slack's launch
+Product training was also a big lever for Slack
+We should have an @help or @feedback Tangle that users can submit feedback to. Perhaps gamify it if we need to as well.
+
 
 

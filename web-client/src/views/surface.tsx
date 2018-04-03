@@ -14,7 +14,7 @@ import { ChevronRight, ChevronLeft } from "react-feather";
 
 import qs from "qs";
 
-import { shuffle } from "lodash";
+import { split, toLower } from "lodash";
 
 import tinycolor from "tinycolor2";
 import tinygradient from "tinygradient";
@@ -23,7 +23,7 @@ import config from "../cfg";
 
 const COUNT = 40; // number of results to return
 const PAGE_COUNT = 10; // number of results per page
-const SURFACE_COUNT = 200; // number of results to show on home surface page
+const SURFACE_COUNT = 500; // number of results to show on home surface page
 
 const BLUR_COLOR = "#CCCCCC";
 const FOCUS_COLOR_1 = tinycolor("#357EDD");
@@ -163,10 +163,7 @@ class Surface extends React.Component<Props, State> {
   }
 
   isActivePageUp() {
-    return (
-      COUNT > this.getFocusEndIndex() &&
-      this.getTotalResults() > this.getFocusEndIndex()
-    );
+    return this.getTotalResults() > this.getFocusEndIndex();
   }
 
   isLoadedWithoutError() {
@@ -193,23 +190,17 @@ class Surface extends React.Component<Props, State> {
   }
 
   getTotalResults() {
-    if (
-      !(
-        this.props.data &&
-        this.props.data.search &&
-        this.props.data.search.pageInfo
-      )
-    ) {
+    if (!(this.props.data && this.props.data.searchv2)) {
       return 0;
     }
-    return this.props.data.search.pageInfo.total;
+    return this.props.data.searchv2.graph.captures.length;
   }
 
   getSurfaceNodeData() {
     if (
       !(
         this.props.data &&
-        this.props.data.search &&
+        this.props.data.searchv2 &&
         this.props.data.getCaptures
       )
     ) {
@@ -217,15 +208,19 @@ class Surface extends React.Component<Props, State> {
     }
 
     const results = this.props.data.getCaptures.results;
-    return shuffle(
-      results.map((capture, index) => {
-        return {
-          id: capture.id,
-          name: capture.body,
-          category: `${index}surfaceResult`
-        };
-      })
-    );
+    return results.map((capture, index) => {
+      return {
+        id: capture.id,
+        name: capture.body,
+        category: `${index}surfaceResult`,
+        label: {
+          show: false,
+          emphasis: {
+            show: false
+          }
+        }
+      };
+    });
   }
 
   getSurfaceCategoryData() {
@@ -244,13 +239,13 @@ class Surface extends React.Component<Props, State> {
   }
 
   getResultsNodeData() {
-    if (!(this.props.data && this.props.data.search)) {
+    if (!(this.props.data && this.props.data.searchv2)) {
       return [];
     }
 
-    const results = this.props.data.search.results;
+    const graph = this.props.data.searchv2.graph;
 
-    let focusResultsNodes: Array<Node> = results
+    let focusCaptureNodes: Array<Node> = graph.captures
       .filter((_, index) => {
         // filter to focus on only the results on the current page
         return this.isFocusResult(index);
@@ -259,11 +254,18 @@ class Surface extends React.Component<Props, State> {
         return {
           id: capture.id,
           name: capture.body,
-          category: `${index}focusResult`
+          category: `${index}focusResult`,
+          symbolSize: 24,
+          label: {
+            show: false,
+            emphasis: {
+              show: false
+            }
+          }
         };
       });
 
-    let blurResultsNodes: Array<Node> = results
+    let blurCaptureNodes: Array<Node> = graph.captures
       .filter((_, index) => {
         // filter to focus on only the results not on the current page
         return !this.isFocusResult(index);
@@ -272,11 +274,70 @@ class Surface extends React.Component<Props, State> {
         return {
           id: capture.id,
           name: capture.body,
-          category: "blurResult"
+          category: "blurResult",
+          symbolSize: 16,
+          label: {
+            show: false,
+            emphasis: {
+              show: false
+            }
+          }
         };
       });
 
-    return focusResultsNodes.concat(blurResultsNodes);
+    const queryTerms = split(
+      qs.parse(this.props.location.search, {
+        ignoreQueryPrefix: true
+      }).query,
+      " "
+    );
+
+    let entityNodes: Array<Node> = graph.entities
+      .filter(entity => {
+        const isQueryTerm = queryTerms.reduce((isTerm, term) => {
+          return isTerm || toLower(term) === toLower(entity.name);
+        }, false);
+
+        return !isQueryTerm && entity.name.length > 2 && entity.name !== "thi";
+      })
+      .map(entity => {
+        return {
+          id: entity.id,
+          name: entity.name,
+          category: "entity",
+          symbolSize: 12,
+          label: {
+            show: true,
+            color: "#777777",
+            emphasis: {
+              show: true
+            }
+          }
+        };
+      });
+
+    return focusCaptureNodes.concat(blurCaptureNodes).concat(entityNodes);
+  }
+
+  getResultsEdgeData() {
+    if (!(this.props.data && this.props.data.searchv2)) {
+      return [];
+    }
+
+    const edges = this.props.data.searchv2.graph.edges;
+
+    return edges.map(edge => {
+      return {
+        source: edge.source,
+        target: edge.destination,
+        label: {
+          show: false,
+          emphasis: {
+            show: false
+          }
+        }
+      };
+    });
   }
 
   getResultsCategoryData() {
@@ -301,6 +362,14 @@ class Surface extends React.Component<Props, State> {
         itemStyle: {
           normal: {
             color: BLUR_COLOR
+          }
+        }
+      })
+      .concat({
+        name: "entity",
+        itemStyle: {
+          normal: {
+            color: "#FFFFFF"
           }
         }
       });
@@ -363,7 +432,7 @@ class Surface extends React.Component<Props, State> {
   }
 
   renderResults() {
-    if (!(this.props.data && this.props.data.search)) {
+    if (!(this.props.data && this.props.data.searchv2)) {
       return;
     }
 
@@ -372,7 +441,7 @@ class Surface extends React.Component<Props, State> {
     const gradientNumber = totalFocusResults < 2 ? 2 : totalFocusResults;
     let gradient = this.getGradient(gradientNumber);
 
-    return this.props.data.search.results
+    return this.props.data.searchv2.graph.captures
       .filter((_, index) => {
         return this.isFocusResult(index);
       })
@@ -483,6 +552,8 @@ class Surface extends React.Component<Props, State> {
       ? this.getResultsNodeData()
       : this.getSurfaceNodeData();
 
+    const edgeData = this.state.isSearch ? this.getResultsEdgeData() : [];
+
     const categoryData = this.state.isSearch
       ? this.getResultsCategoryData()
       : this.getSurfaceCategoryData();
@@ -505,6 +576,7 @@ class Surface extends React.Component<Props, State> {
           focusStartIndex={focusStartIndex}
           focusEndIndex={focusEndIndex}
           nodeData={nodeData}
+          edgeData={edgeData}
           categoryData={categoryData}
         />
       </div>

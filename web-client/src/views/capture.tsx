@@ -7,12 +7,9 @@ import { graphql, ChildProps } from "react-apollo";
 import { RouteComponentProps } from "react-router";
 import ResultListItem from "../components/result-list-item";
 import Graph from "../components/graph";
-import { Node } from "../components/graph";
 import CaptureDialogue from "../components/capture-dialogue";
 
 import { ChevronRight, ChevronLeft } from "react-feather";
-
-import { shuffle } from "lodash";
 
 import tinycolor from "tinycolor2";
 import tinygradient from "tinygradient";
@@ -62,7 +59,6 @@ class Capture extends React.Component<Props, State> {
     this.getSurfaceNodeData = this.getSurfaceNodeData.bind(this);
     this.getSurfaceCategoryData = this.getSurfaceCategoryData.bind(this);
     this.getResultsCategoryData = this.getResultsCategoryData.bind(this);
-    this.getResultsNodeData = this.getResultsNodeData.bind(this);
     this.getGradient = this.getGradient.bind(this);
 
     this.renderResultsPagination = this.renderResultsPagination.bind(this);
@@ -146,23 +142,17 @@ class Capture extends React.Component<Props, State> {
   }
 
   getTotalResults() {
-    if (
-      !(
-        this.props.data &&
-        this.props.data.search &&
-        this.props.data.search.pageInfo
-      )
-    ) {
+    if (!(this.props.data && this.props.data.searchv2)) {
       return 0;
     }
-    return this.props.data.search.pageInfo.total;
+    return this.props.data.searchv2.graph.captures.length;
   }
 
   getSurfaceNodeData() {
     if (
       !(
         this.props.data &&
-        this.props.data.search &&
+        this.props.data.searchv2 &&
         this.props.data.getCaptures
       )
     ) {
@@ -170,15 +160,19 @@ class Capture extends React.Component<Props, State> {
     }
 
     const results = this.props.data.getCaptures.results;
-    return shuffle(
-      results.map((capture, index) => {
-        return {
-          id: capture.id,
-          name: capture.body,
-          category: `${index}surfaceResult`
-        };
-      })
-    );
+    return results.map((capture, index) => {
+      return {
+        id: capture.id,
+        name: capture.body,
+        category: `${index}surfaceResult`,
+        label: {
+          show: false,
+          emphasis: {
+            show: false
+          }
+        }
+      };
+    });
   }
 
   getSurfaceCategoryData() {
@@ -194,42 +188,6 @@ class Capture extends React.Component<Props, State> {
         }
       };
     });
-  }
-
-  getResultsNodeData() {
-    if (!(this.props.data && this.props.data.search)) {
-      return [];
-    }
-
-    const results = this.props.data.search.results;
-
-    let focusResultsNodes: Array<Node> = results
-      .filter((_, index) => {
-        // filter to focus on only the results on the current page
-        return this.isFocusResult(index);
-      })
-      .map((capture, index) => {
-        return {
-          id: capture.id,
-          name: capture.body,
-          category: `${index}focusResult`
-        };
-      });
-
-    let blurResultsNodes: Array<Node> = results
-      .filter((_, index) => {
-        // filter to focus on only the results not on the current page
-        return !this.isFocusResult(index);
-      })
-      .map(capture => {
-        return {
-          id: capture.id,
-          name: capture.body,
-          category: "blurResult"
-        };
-      });
-
-    return focusResultsNodes.concat(blurResultsNodes);
   }
 
   getResultsCategoryData() {
@@ -316,7 +274,7 @@ class Capture extends React.Component<Props, State> {
   }
 
   renderResults() {
-    if (!(this.props.data && this.props.data.search)) {
+    if (!(this.props.data && this.props.data.searchv2)) {
       return;
     }
 
@@ -325,7 +283,7 @@ class Capture extends React.Component<Props, State> {
     const gradientNumber = totalFocusResults < 2 ? 2 : totalFocusResults;
     let gradient = this.getGradient(gradientNumber);
 
-    return this.props.data.search.results
+    return this.props.data.searchv2.graph.captures
       .filter((_, index) => {
         return this.isFocusResult(index);
       })
@@ -424,9 +382,7 @@ class Capture extends React.Component<Props, State> {
       return null;
     }
 
-    const nodeData = this.state.isSearch
-      ? this.getResultsNodeData()
-      : this.getSurfaceNodeData();
+    const nodeData = this.state.isSearch ? [] : this.getSurfaceNodeData();
 
     const categoryData = this.state.isSearch
       ? this.getResultsCategoryData()
@@ -449,6 +405,7 @@ class Capture extends React.Component<Props, State> {
           layout={"force"}
           focusStartIndex={focusStartIndex}
           focusEndIndex={focusEndIndex}
+          edgeData={[]}
           nodeData={nodeData}
           categoryData={categoryData}
         />

@@ -8,11 +8,17 @@ export interface Node {
   category: string;
 }
 
+export interface Edge {
+  source: string;
+  target: string;
+}
+
 interface Props {
   refEChart?: (eChart: ReactECharts) => void;
   focusStartIndex?: number;
   focusEndIndex?: number;
   nodeData: Array<Node>;
+  edgeData: Array<Edge>;
   categoryData: Array<Object>;
   layout?: "circular" | "force";
 }
@@ -44,16 +50,20 @@ class Graph extends React.Component<Props, object> {
       toolbox: {
         show: false
       },
-      label: {
-        show: false
-      },
       tooltip: {
         show: true,
         trigger: "item",
         showContent: true,
         confine: true,
         position: "top",
-        formatter: "{b}",
+        formatter: (params: { dataType: string; name: string }) => {
+          switch (params.dataType) {
+            case "node":
+              return params.name;
+            default:
+              return "";
+          }
+        },
         backgroundColor: "#FFFFFF",
         extraCssText: `box-shadow: 0px 0px 4px 2px rgba( 0, 0, 0, 0.2 ); 
            max-width: 30em;
@@ -84,46 +94,26 @@ class Graph extends React.Component<Props, object> {
             rotateLabel: false
           },
           force: {
-            initLayout: "circular",
-            edgeLength: 8,
-            repulsion: 300,
+            edgeLength: 24,
+            repulsion: 256,
             gravity: 0.2,
             layoutAnimation: true
           },
           roam: true,
           nodeScaleRation: 0.5,
           draggable: false,
-          symbol: "circle",
-          symbolSize: (value, params: { data: Node }) => {
-            return params.data.category === "blurResult" ? 24 : 32;
-          },
-          symbolRotate: false,
-          symbolKeepAspect: false,
           focusNodeAdjacency: true,
-          symbolOffset: [0, 0],
-          edgeSymbol: ["none", "none"],
-          edgeSymbolSize: 10,
           cursor: "pointer",
-          itemStyle: {},
-          lineStyle: {},
-          label: {
-            show: false,
-            emphasis: {
-              show: false
-            }
-          },
-          edgeLabel: {
-            show: false,
-            emphasis: {
-              show: false
-            }
+          lineStyle: {
+            curveness: 0.3,
+            opacity: 0.1,
+            type: "solid"
           },
           categories: this.props.categoryData,
           nodes: this.props.nodeData,
-          edges: [],
+          edges: this.props.edgeData,
           animation: false,
-          animationDuration: 4000,
-          animationEasingUpdate: "quinticInOut"
+          notMerge: false
         }
       ]
     };
@@ -135,7 +125,7 @@ class Graph extends React.Component<Props, object> {
         ref={this.props.refEChart}
         style={{ height: "100%", width: "100%" }}
         option={this.getOption()}
-        opts={{ renderer: "svg" }} // use svg to render the chart.
+        opts={{ renderer: "canvas" }}
       />
     );
   }

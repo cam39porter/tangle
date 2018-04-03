@@ -18,7 +18,7 @@ Talking with VP candidates is great. Always put things in perspective. It’s ab
 
 Being able to recognize which decisions are worth investing lots of discussion in is a skill all by itself. 
 
-Trying to work on 3 different development tasks at once is challenging. With Nodio I will have to be disciplined about spec’ing out tasks and banging through them. 
+Trying to work on 3 different development tasks at once is challenging. With tangle I will have to be disciplined about spec’ing out tasks and banging through them. 
 
 Matt Dolan has a habit of pushing code that breaks things in development. But he’s a great engineer. I think he optimizes for releasing code quickly and accepts the risk that things will break. I wonder if this is deliberate and where this approach comes from.
 

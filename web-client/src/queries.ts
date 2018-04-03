@@ -12,6 +12,15 @@ export const CreateCapture = gql`
           name
         }
       }
+      entities {
+        id
+        name
+        type
+      }
+      edges {
+        source
+        destination
+      }
     }
   }
 `;
@@ -19,12 +28,24 @@ export const CreateCapture = gql`
 // Search for captures
 export const Search = gql`
   query Search($query: String!, $start: Int, $count: Int, $surfaceCount: Int) {
-    search(rawQuery: $query, start: $start, count: $count) {
-      results {
-        body
-        id
-        tags {
+    searchv2(rawQuery: $query, start: $start, count: $count) {
+      graph {
+        captures {
+          id
+          body
+          created
+          tags {
+            name
+          }
+        }
+        entities {
+          id
           name
+          type
+        }
+        edges {
+          source
+          destination
         }
       }
       pageInfo {

@@ -28,4 +28,24 @@ A targeted set of questions to validate our hypotheses — which problem are we 
 
 I wonder why some people have strong workout motivations early in the morning and others find it harder. #exercise
 
-@Cameron defaulted to using the notes app on his phone as opposed to pulling out his computer. Shoes the importance of ease of use and availability. #nodio
+@Cameron defaulted to using the notes app on his phone as opposed to pulling out his computer. Shoes the importance of ease of use and availability. #tangle
+
+Related to yesterday, there is no point wasting time debating meaningless decisions like Java or JavaScript on the backend. Either will work just fine
+
+We should look into incorporating research about how to take notes onto our site. 
+
+I wasn’t imagining this as a service for sharing long form notes but maybe that will just work by default. Probably will require us to actually store the document so that it can be retrieved from our service. We can probably get pretty far by just dropping into S3 
+
+Do we want our primary focus to be on thoughts generated from reading text, or misc thoughts. I’m thinking BOTH is the answer. 
+
+Top student in a class might want to monetize by sharing their thoughts — interesting relationship to #CourseHero. 
+
+@tangle could be a marketplace for following thought leaders. Thought leaders would probably want to allow this access for free — but maybe not. Could be a powerful way to monetize. 
+
+We have all been using the term “cool” when describing things. “Cool” is good but “valuable” is great. 
+
+When talking to nontechnical people, we might want to avoid using the term graph. I would guess most people think bar chart or line chart when they here “graph”. Maybe “network” is better
+
+@myles indicated that manual thought connection was a bad thing, but is that true? I wonder if there is value in actually spending time sifting through. 
+
+Insight Generation is a new term for knowledge management. 

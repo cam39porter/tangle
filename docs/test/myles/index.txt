@@ -1,0 +1,66 @@
+@Cameron Myles and Cameron types to describe the way we think and approach note taking - not organized vs organized
+Anonomic nerve system is the one that creates an orgasm
+@prescott there is a difference between non actionable and actionable thoughts - they look very different
+Curveo
+@tangle qualitative model for growth includes linear and scalable inputs
+@tangle #growth have a qualitative and quantitative model
+@tangle #growth There are two kidns of loops, acquistion and retention
+#growth all about hypothesis testing
+#growth #task need to come up with retention and acquisition loops for tangle mvp
+#growth start with non-scalable hacks
+#growth key question is to come up with our key output metric - represents the full funnel: acquisition, activation, retention, and referral
+#growth our output metric is most likely daily users
+#growth potential drill down into capture, surface and analytics
+#growth acquistion loop idea: invite friends on signup
+#growth retention loop idea: tangle with friends / groups
+#growth most likely our output metric would be similar to Slack's
+#growth might want to have an initial survey asking how a user heard about our product to refine our activation loops
+#growth the reforge course is not for a fledgling product
+#growth need to fully memorialize the product before defining growth framework
+#growth embedding retention loops and acquisition loops into product is crucial
+#growth growth model should be to discuss the possible scenarios to understand how to reach a goal
+@tangle need to do naming workshop over the weekend
+would like to sync with @josh on the recordings
+#growth models are never write, but some are useful - George Box
+#growth How does one cohort of users lead to another cohort of users?
+#growth 4 steps to acquisition A new user/customer (our input) leads to...
+A series of actions/steps that leads to...
+Some output that directly leads to...
+Step one, more users or customers.
+#growth feed the acquistion loops with linear ones. Linear just mean non-compounding
+#growth there are 4 categories
+There are four primary acquisition loops that companies use to create this type of self-fortifying growth:
+@team we should be using index
+@team Calendar for meeting prep would be great tempo ao
+Screen capture that resurfaces at the end
+#formula Our expected value from what we write down is less than the time cost of capturing...
+
+We should suggest putting this on  homescrenn Viral Loops Content Loops Paid Marketing Loops Sales Loops
+Growth: Viral loops: When new people sign up, some of them invite their friends to use your product.
+Some of the people who are invited sign up as new users.
+Those new users invite their friends, and the cycle starts again
+Slack has an easily identifiable viral loop
+#Growth We could invite people to tangle immediatley when we are ready to go viral
+#growth Content loops (UGC) which is what Platt was talking about: New users sign up for a product after viewing some kind of user-generated content found through a search engine.
+Some percentage of those users create unique content of their own.
+Their content gets indexed and ranked by search engines.
+People search keywords that return that content to the search results and then view the content—and the loop starts all over.
+Yelp is a good example as they allow people to create reviws which then can be searched.
+#growth ugc loops could be implemented viapublishg your tangle to places like Linkedin, Instagram or Facebook so people can be proud of their aha moments. We can even do this as a goup to start
+#growth B2B loop  being used by Toptal very well
+Can do an influencer based cquisition strategy
+Grammarly:
+freemum model is used o build a larg consumer basewhen the marginal cost o producing extra units is low.
+
+@tangle #vc While lawyers usually bill by the hour, many lawyers experienced with VC investments will cap their fees in advance of the deal. As of this writing in 2012, a very early stage financing can be done for between $5,000 and $15,000 and a typical financing can be completed for between $25,000 and $40,000. Lawyers in large cities tend to charge more, and if your company has any items to clean up from your past, your costs will increase.
+@tangle  focus on a length of time you want to fund your company to get to the next meaningful milestone.
+If your first interaction was a face-to-face meeting either at a conference, at a coffee shop, or in an elevator, if a VC is interested he'll often say something like “Can you send me an executive summary?”
+Recognize your audience and tune your presentation to them. Realize also that the deck you email as an overview can be different from the one you present, even if you are covering similar material.
+In this case, form matters a great deal—it's amazing how much more positive a response is to well-designed and well-organized slides, especially if you have a consumer-facing product where user experience will matter a lot for its success.
+come prepared with an option budget to a vc negotiation
+
+4/3 
+#privacy knowledge is private unless permissioned, we need to ensure we have the right security infrastructure
+monetization should be designed to place a value on the 
+
+

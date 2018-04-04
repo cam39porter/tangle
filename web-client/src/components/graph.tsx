@@ -56,14 +56,34 @@ class Graph extends React.Component<Props, object> {
         showContent: true,
         confine: true,
         position: "top",
-        formatter: (params: { dataType: string; name: string }) => {
+        formatter: (params: {
+          dataType: string;
+          name: string;
+          data: { category: string };
+        }) => {
           switch (params.dataType) {
             case "node":
+              if (params.data.category === "entity") {
+                return "";
+              }
+
+              let lines = params.name.match(/.{1,40}/g);
+
+              if (!lines) {
+                lines = [params.name];
+              }
+
+              let label = lines.reduce((currentLabel, line) => {
+                return `
+                  ${currentLabel}
+                  <div class="f6 avenir br1 measure" id="node-label">
+                    ${line}
+                  </div>`;
+              }, "");
+
               return `
-              <div class="f6 avenir h2 pa1 shadow-1 br1 marquee-container">
-                  <p class="marquee">
-                    ${params.name}
-                  </p>
+              <div class="pa2 shadow-1 br1">
+                ${label}
               </div>`;
             default:
               return "";

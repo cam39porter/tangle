@@ -136,7 +136,7 @@ class Surface extends React.Component<Props, State> {
 
   handleSurface() {
     this.props.history.push(
-      `/surface?query=${encodeURIComponent(this.state.query)}`
+      `/surface?query=${encodeURIComponent(this.state.query || "")}`
     );
   }
 

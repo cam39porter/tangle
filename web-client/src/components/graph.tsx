@@ -59,19 +59,17 @@ class Graph extends React.Component<Props, object> {
         formatter: (params: { dataType: string; name: string }) => {
           switch (params.dataType) {
             case "node":
-              return params.name;
+              return `
+              <div class="f6 avenir h2 pa1 shadow-1 br1 marquee-container">
+                  <p class="marquee">
+                    ${params.name}
+                  </p>
+              </div>`;
             default:
               return "";
           }
         },
         backgroundColor: "#FFFFFF",
-        extraCssText: `box-shadow: 0px 0px 4px 2px rgba( 0, 0, 0, 0.2 ); 
-           max-width: 30em;
-           overflow: hidden;
-           text-align: center;
-           padding: 1em;
-           vertical-align: middle;
-          `,
         textStyle: {
           color: "#777777"
         }

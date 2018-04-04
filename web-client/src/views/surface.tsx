@@ -298,7 +298,7 @@ class Surface extends React.Component<Props, State> {
           return isTerm || toLower(term) === toLower(entity.name);
         }, false);
 
-        return !isQueryTerm && entity.name.length > 2 && entity.name !== "thi";
+        return !isQueryTerm && entity.name.length > 4 && entity.name !== "thi";
       })
       .map(entity => {
         return {

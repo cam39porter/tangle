@@ -55,7 +55,7 @@ class Graph extends React.Component<Props, object> {
         trigger: "item",
         showContent: true,
         confine: true,
-        position: "top",
+        position: ["2.5%", "95%"], // "top"
         formatter: (params: {
           dataType: string;
           name: string;

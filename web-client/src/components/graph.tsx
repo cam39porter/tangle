@@ -21,6 +21,7 @@ interface Props {
   edgeData: Array<Edge>;
   categoryData: Array<Object>;
   layout?: "circular" | "force";
+  tooltipPosition?: Array<String> | String;
 }
 
 class Graph extends React.Component<Props, object> {
@@ -55,7 +56,9 @@ class Graph extends React.Component<Props, object> {
         trigger: "item",
         showContent: true,
         confine: true,
-        position: ["32", "32"],
+        position: this.props.tooltipPosition
+          ? this.props.tooltipPosition
+          : "top",
         formatter: (params: {
           dataType: string;
           name: string;

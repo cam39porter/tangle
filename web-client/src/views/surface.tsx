@@ -578,6 +578,7 @@ class Surface extends React.Component<Props, State> {
           nodeData={nodeData}
           edgeData={edgeData}
           categoryData={categoryData}
+          tooltipPosition={this.state.isSearch ? ["32", "32"] : "top"}
         />
       </div>
     );

@@ -79,7 +79,7 @@ class Surface extends React.Component<Props, State> {
     this.renderSideBar = this.renderSideBar.bind(this);
     this.renderGraph = this.renderGraph.bind(this);
 
-    const query =
+    const query: string =
       qs.parse(this.props.location.search, {
         ignoreQueryPrefix: true
       }).query || "";
@@ -87,7 +87,7 @@ class Surface extends React.Component<Props, State> {
     this.state = {
       query,
       focusStartIndex: 0,
-      isSearch: !!query,
+      isSearch: query.length !== 0,
       isCapturing: false
     };
   }
@@ -105,7 +105,7 @@ class Surface extends React.Component<Props, State> {
       this.setState({
         query: nextQuery,
         focusStartIndex: 0,
-        isSearch: !!nextQuery
+        isSearch: nextQuery !== undefined && nextQuery.length !== 0
       });
     }
   }

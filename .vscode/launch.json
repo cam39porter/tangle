@@ -13,17 +13,11 @@
       }
     },
     {
-      "name": "Debug desktop-client main process",
-      "type": "node",
+      "name": "Launch Chrome against localhost web client",
+      "type": "chrome",
       "request": "launch",
-      "cwd": "${workspaceRoot}/desktop-client/",
-      "runtimeExecutable":
-        "${workspaceRoot}/desktop-client/node_modules/.bin/electron",
-      "windows": {
-        "runtimeExecutable":
-          "${workspaceRoot}/desktop-client/node_modules/.bin/electron.cmd"
-      },
-      "args": ["."]
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/web-client"
     }
   ]
 }

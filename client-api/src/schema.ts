@@ -47,7 +47,6 @@ export default `
   }
 
   type Query {
-    getCapture(id: String!): Graph!
     search(
       rawQuery: String!
       start: Int = 0

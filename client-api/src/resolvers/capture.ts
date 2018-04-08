@@ -23,9 +23,6 @@ let cachedNLP;
 
 export default {
   Query: {
-    getCapture(_, params, context): Promise<Graph> {
-      return null;
-    },
     search(_, params, context): Promise<SearchResults> {
       return search(params.rawQuery).then(graph => {
         return new SearchResults(graph);
@@ -72,14 +69,6 @@ function insertCapture(body: string): Promise<any> {
   return execute(
     `CREATE (n:Capture {id:"${uuid}", body:"${body}", created:TIMESTAMP()}) RETURN n`
   );
-}
-
-function get(id: string): Promise<Capture> {
-  return db
-    .select()
-    .from(table)
-    .where("ID", id)
-    .then(format);
 }
 
 function getAll(): Promise<[Capture]> {

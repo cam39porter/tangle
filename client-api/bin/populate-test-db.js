@@ -3,7 +3,7 @@ const request = require("graphql-request").request;
 const _ = require("lodash");
 
 // endpoint
-const URL = "https://client-api-dot-opit-193719.appspot.com/graphql";
+const URL = "http://localhost:8080/graphql";
 
 // path to test dir
 const path = process.argv[2];
@@ -23,9 +23,8 @@ fs.readdir(path, (err, files) => {
             mutation {
               createCapture(body: "${trimmedLine}") {
                 captures {
-                  body
-                }
-              }
+                  id, body, created, tags { name }
+                }              }
             }
           `;
 

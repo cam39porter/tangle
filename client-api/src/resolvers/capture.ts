@@ -11,6 +11,7 @@ import {
 } from "../models";
 import { db } from "../db/db";
 import { getNLPResponse } from "../services/nlp";
+import { execute } from "../db/graphdb";
 
 const table = "capture";
 
@@ -43,7 +44,7 @@ export default {
   },
   Mutation: {
     createCapture(_, params, context): Promise<Graph> {
-      return insert(params.body).then(id =>
+      return insert(params.body).then(() =>
         getAll().then(captures => {
           const graph = buildGraph(captures, cachedNLP);
           cachedNLP = undefined;
@@ -107,10 +108,7 @@ function buildNLP(): Promise<NLPResponse> {
 }
 
 function insert(body: string): Promise<string> {
-  return db(table)
-    .insert({ body })
-    .returning("ID")
-    .then(idArr => idArr[0]);
+  return execute(`CREATE (n:Capture {body:"${body}", created:TIMESTAMP()})`);
 }
 
 function get(id: string): Promise<Capture> {
@@ -122,11 +120,15 @@ function get(id: string): Promise<Capture> {
 }
 
 function getAll(): Promise<[Capture]> {
-  return db
-    .select()
-    .from(table)
-    .orderBy("created", "desc")
-    .then(formatAll);
+  return execute("MATCH (n) RETURN n").then(result => {
+    return result.records.map(record => {
+      return new Capture({
+        id: record.get("n").identity.toString(),
+        body: record.get("n").properties.body,
+        created: record.get("n").properties.created.toString()
+      });
+    });
+  });
 }
 
 function search(rawQuery: string): Promise<[Capture]> {

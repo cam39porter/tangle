@@ -6,7 +6,7 @@ export class Capture {
   created: string;
   tags: Tag[];
   constructor(data) {
-    this.id = data.ID;
+    this.id = data.id;
     this.body = data.body;
     this.created = data.created;
     this.tags = parseTags(data.body).map(tag => new Tag({ name: tag }));

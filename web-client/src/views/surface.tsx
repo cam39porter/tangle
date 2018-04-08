@@ -44,6 +44,14 @@ interface State {
   isCapturing: boolean;
 }
 
+function getQuery(queryString: string) {
+  return (
+    qs.parse(queryString, {
+      ignoreQueryPrefix: true
+    }).query || ""
+  );
+}
+
 class Surface extends React.Component<Props, State> {
   // eChart instance ref for dispatching events
   eChart;
@@ -52,16 +60,10 @@ class Surface extends React.Component<Props, State> {
     super(props);
 
     this.handleIsCapturing = this.handleIsCapturing.bind(this);
-    this.handleSurface = this.handleSurface.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.handlePageDown = this.handlePageDown.bind(this);
-    this.handlePageUp = this.handlePageUp.bind(this);
 
-    const query: string =
-      qs.parse(this.props.location.search, {
-        ignoreQueryPrefix: true
-      }).query || "";
+    const query = getQuery(this.props.location.search);
 
     this.state = {
       query,
@@ -72,13 +74,9 @@ class Surface extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const query = qs.parse(this.props.location.search, {
-      ignoreQueryPrefix: true
-    }).query;
+    const query = getQuery(this.props.location.search);
 
-    const nextQuery = qs.parse(nextProps.location.search, {
-      ignoreQueryPrefix: true
-    }).query;
+    const nextQuery = getQuery(nextProps.location.search);
 
     if (nextQuery !== query) {
       this.setState({
@@ -264,12 +262,7 @@ class Surface extends React.Component<Props, State> {
         };
       });
 
-    const queryTerms = split(
-      qs.parse(this.props.location.search, {
-        ignoreQueryPrefix: true
-      }).query,
-      " "
-    );
+    const queryTerms = split(getQuery(this.props.location.search), " ");
 
     let entityNodes: Array<Node> = graph.entities
       .filter(entity => {
@@ -601,10 +594,7 @@ class Surface extends React.Component<Props, State> {
 const SurfaceResultsWithData = graphql<Response, Props>(QUERY, {
   options: (ownProps: Props) => ({
     variables: {
-      query:
-        qs.parse(ownProps.location.search, {
-          ignoreQueryPrefix: true
-        }).query || "",
+      query: getQuery(ownProps.location.search),
       count: COUNT,
       surfaceCount: SURFACE_COUNT
     },

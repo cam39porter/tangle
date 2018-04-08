@@ -18,8 +18,6 @@ class NavigationBarTab extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.isMatch = this.isMatch.bind(this);
-
     this.state = {
       isActive: false
     };

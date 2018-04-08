@@ -27,12 +27,6 @@ interface Props {
 class Graph extends React.Component<Props, object> {
   eChart: ReactECharts | null = null;
 
-  constructor(props: Props) {
-    super(props);
-
-    this.getOption = this.getOption.bind(this);
-  }
-
   shouldComponentUpdate(nextProps: Props) {
     return (
       this.props.focusStartIndex !== nextProps.focusStartIndex ||

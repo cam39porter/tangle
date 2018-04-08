@@ -50,26 +50,6 @@ class Capture extends React.Component<Props, State> {
     this.handlePageDown = this.handlePageDown.bind(this);
     this.handlePageUp = this.handlePageUp.bind(this);
 
-    this.isActivePageUp = this.isActivePageUp.bind(this);
-    this.isFocusResult = this.isFocusResult.bind(this);
-    this.isLoadedWithoutError = this.isLoadedWithoutError.bind(this);
-
-    this.getFocusEndIndex = this.getFocusEndIndex.bind(this);
-    this.getTotalResults = this.getTotalResults.bind(this);
-    this.getSurfaceNodeData = this.getSurfaceNodeData.bind(this);
-    this.getSurfaceCategoryData = this.getSurfaceCategoryData.bind(this);
-    this.getResultsCategoryData = this.getResultsCategoryData.bind(this);
-    this.getGradient = this.getGradient.bind(this);
-
-    this.renderResultsPagination = this.renderResultsPagination.bind(this);
-    this.renderResultPagingText = this.renderResultPagingText.bind(this);
-    this.renderPageDown = this.renderPageDown.bind(this);
-    this.renderPageUp = this.renderPageUp.bind(this);
-    this.renderResults = this.renderResults.bind(this);
-    this.renderDailyCaptureCount = this.renderDailyCaptureCount.bind(this);
-    this.renderSideBar = this.renderSideBar.bind(this);
-    this.renderGraph = this.renderGraph.bind(this);
-
     this.state = {
       focusStartIndex: 0,
       isSearch: false,

@@ -58,27 +58,6 @@ class Surface extends React.Component<Props, State> {
     this.handlePageDown = this.handlePageDown.bind(this);
     this.handlePageUp = this.handlePageUp.bind(this);
 
-    this.isActivePageUp = this.isActivePageUp.bind(this);
-    this.isFocusResult = this.isFocusResult.bind(this);
-    this.isLoadedWithoutError = this.isLoadedWithoutError.bind(this);
-
-    this.getFocusEndIndex = this.getFocusEndIndex.bind(this);
-    this.getTotalResults = this.getTotalResults.bind(this);
-    this.getSurfaceNodeData = this.getSurfaceNodeData.bind(this);
-    this.getSurfaceCategoryData = this.getSurfaceCategoryData.bind(this);
-    this.getResultsCategoryData = this.getResultsCategoryData.bind(this);
-    this.getResultsNodeData = this.getResultsNodeData.bind(this);
-    this.getGradient = this.getGradient.bind(this);
-
-    this.renderResultsPagination = this.renderResultsPagination.bind(this);
-    this.renderResultPagingText = this.renderResultPagingText.bind(this);
-    this.renderPageDown = this.renderPageDown.bind(this);
-    this.renderPageUp = this.renderPageUp.bind(this);
-    this.renderResults = this.renderResults.bind(this);
-    this.renderSearchBar = this.renderSearchBar.bind(this);
-    this.renderSideBar = this.renderSideBar.bind(this);
-    this.renderGraph = this.renderGraph.bind(this);
-
     const query: string =
       qs.parse(this.props.location.search, {
         ignoreQueryPrefix: true

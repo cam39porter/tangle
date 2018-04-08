@@ -32,8 +32,6 @@ class CaptureDialogue extends React.Component<Props, State> {
     this.handleCapture = this.handleCapture.bind(this);
 
     this.updateClearValue = this.updateClearValue.bind(this);
-
-    this.renderMinimizeButton = this.renderMinimizeButton.bind(this);
   }
 
   updateClearValue(newClearValue: boolean) {

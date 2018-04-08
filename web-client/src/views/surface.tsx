@@ -71,11 +71,12 @@ class Surface extends React.Component<Props, State> {
     this.renderResultsPagination = this.renderResultsPagination.bind(this);
 
     const query = getQuery(this.props.location.search);
+    const isSearch = query.length !== 0;
 
     this.state = {
       query,
       focusStartIndex: 0,
-      isSearch: query.length !== 0,
+      isSearch,
       isCapturing: false
     };
   }
@@ -86,10 +87,12 @@ class Surface extends React.Component<Props, State> {
     const nextQuery = getQuery(nextProps.location.search);
 
     if (nextQuery !== query) {
+      const isSearch = nextQuery.length !== 0;
+
       this.setState({
         query: nextQuery,
         focusStartIndex: 0,
-        isSearch: nextQuery !== undefined && nextQuery.length !== 0
+        isSearch
       });
     }
   }
@@ -365,7 +368,8 @@ class Surface extends React.Component<Props, State> {
         {this.getTotalResults() > 0 ? (
           <div className={`fr pa3 dt`}>
             <div className={`tr f6 gray dtc v-mid`}>
-              {this.renderResultPagingText()}
+              {`Showing results ${this.state.focusStartIndex +
+                1} - ${this.getFocusEndIndex()}`}
             </div>
             <Chevron
               right={false}
@@ -385,11 +389,6 @@ class Surface extends React.Component<Props, State> {
         )}
       </div>
     );
-  }
-
-  renderResultPagingText() {
-    return `Showing results ${this.state.focusStartIndex +
-      1} - ${this.getFocusEndIndex()}`;
   }
 
   renderResults() {

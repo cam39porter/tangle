@@ -12,12 +12,13 @@ import FloatingGraphButtons from "../components/floating-graph-buttons";
 import Sidebar from "../components/sidebar";
 import Chevron from "../components/chevron";
 
+import { getGradient } from "../utils";
+
 import qs from "qs";
 
 import { split, toLower } from "lodash";
 
 import tinycolor from "tinycolor2";
-import tinygradient from "tinygradient";
 
 import config from "../cfg";
 
@@ -62,6 +63,8 @@ class Surface extends React.Component<Props, State> {
     this.handleIsCapturing = this.handleIsCapturing.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handlePageDown = this.handlePageDown.bind(this);
+    this.handlePageUp = this.handlePageUp.bind(this);
 
     this.renderSearchBar = this.renderSearchBar.bind(this);
     this.renderResults = this.renderResults.bind(this);
@@ -205,7 +208,7 @@ class Surface extends React.Component<Props, State> {
   }
 
   getSurfaceCategoryData() {
-    const gradient = this.getGradient(SURFACE_COUNT);
+    const gradient = getGradient(FOCUS_COLOR_1, FOCUS_COLOR_2, SURFACE_COUNT);
 
     return gradient.map((color, index) => {
       return {
@@ -320,7 +323,7 @@ class Surface extends React.Component<Props, State> {
     const totalFocusResults =
       this.getFocusEndIndex() - this.state.focusStartIndex;
     const gradientNumber = 2 > totalFocusResults ? 2 : totalFocusResults;
-    const gradient = this.getGradient(gradientNumber);
+    const gradient = getGradient(FOCUS_COLOR_1, FOCUS_COLOR_2, gradientNumber);
 
     return gradient
       .map((color, index) => {
@@ -349,10 +352,6 @@ class Surface extends React.Component<Props, State> {
           }
         }
       });
-  }
-
-  getGradient(gradientNumber: number) {
-    return tinygradient(FOCUS_COLOR_1, FOCUS_COLOR_2).rgb(gradientNumber);
   }
 
   renderResultsPagination() {
@@ -404,7 +403,7 @@ class Surface extends React.Component<Props, State> {
     const totalFocusResults =
       this.getFocusEndIndex() - this.state.focusStartIndex;
     const gradientNumber = totalFocusResults < 2 ? 2 : totalFocusResults;
-    let gradient = this.getGradient(gradientNumber);
+    let gradient = getGradient(FOCUS_COLOR_1, FOCUS_COLOR_2, gradientNumber);
 
     return (
       <div>

@@ -16,9 +16,7 @@ class ListItem extends React.Component<Props, object> {
         style={{ minWidth: "30em" }}
       >
         <div className={`dt-row ma2 w-100`}>
-          <p
-            className={`dtc fl ma3 h3 measure-narrow f6 overflow-hidden overflow-scroll overflow-x-hidden`}
-          >
+          <p className={`dtc fl ma3 h3 measure-narrow f6 overflow-hidden`}>
             {this.props.body}
           </p>
           <div className={`dtc fr ma3`}>

@@ -19,8 +19,6 @@ const dedupe = require("dedupe");
 
 const table = "capture";
 
-let cachedNLP;
-
 export default {
   Query: {
     search(_, params, context): Promise<SearchResults> {

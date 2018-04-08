@@ -95,8 +95,7 @@ function search(
     const captures: GraphNode[] = res.records.map(
       record =>
         new GraphNode(
-          record.get("c").properties.id ||
-            record.get("c").properties.created.toString(),
+          record.get("c").properties.id,
           "CAPTURE",
           record.get("c").properties.body
         )
@@ -105,7 +104,7 @@ function search(
       captures,
       capture => capture.id
     );
-    const dedupedAndPagedCaptures = captures.slice(start, start + count);
+    const dedupedAndPagedCaptures = dedupedCaptures.slice(start, start + count);
 
     const pagedRecords = res.records.filter(record =>
       dedupedAndPagedCaptures

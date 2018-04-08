@@ -9,6 +9,7 @@ import ResultListItem from "../components/result-list-item";
 import Graph from "../components/graph";
 import { Node } from "../components/graph";
 import FloatingGraphButtons from "../components/floating-graph-buttons";
+import Sidebar from "../components/sidebar";
 
 import { ChevronRight, ChevronLeft } from "react-feather";
 
@@ -62,6 +63,10 @@ class Surface extends React.Component<Props, State> {
     this.handleIsCapturing = this.handleIsCapturing.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+
+    this.renderSearchBar = this.renderSearchBar.bind(this);
+    this.renderResults = this.renderResults.bind(this);
+    this.renderResultsPagination = this.renderResultsPagination.bind(this);
 
     const query = getQuery(this.props.location.search);
 
@@ -352,6 +357,10 @@ class Surface extends React.Component<Props, State> {
   }
 
   renderResultsPagination() {
+    if (!this.isLoadedWithoutError) {
+      return null;
+    }
+
     return (
       <div className={`w-100`}>
         {/* Results Pagination Text */}
@@ -404,8 +413,11 @@ class Surface extends React.Component<Props, State> {
   }
 
   renderResults() {
-    if (!(this.props.data && this.props.data.searchv2)) {
-      return;
+    if (
+      !(this.props.data && this.props.data.searchv2) ||
+      !this.isLoadedWithoutError()
+    ) {
+      return null;
     }
 
     const totalFocusResults =
@@ -413,52 +425,56 @@ class Surface extends React.Component<Props, State> {
     const gradientNumber = totalFocusResults < 2 ? 2 : totalFocusResults;
     let gradient = this.getGradient(gradientNumber);
 
-    return this.props.data.searchv2.graph.captures
-      .filter((_, index) => {
-        return this.isFocusResult(index);
-      })
-      .map((capture, index) => {
-        return (
-          <div
-            key={capture.id}
-            onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
-              if (this.eChart) {
-                const eChartInstance = this.eChart.getEchartsInstance();
+    return (
+      <div>
+        {this.props.data.searchv2.graph.captures
+          .filter((_, index) => {
+            return this.isFocusResult(index);
+          })
+          .map((capture, index) => {
+            return (
+              <div
+                key={capture.id}
+                onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                  if (this.eChart) {
+                    const eChartInstance = this.eChart.getEchartsInstance();
 
-                eChartInstance.dispatchAction({
-                  type: "focusNodeAdjacency",
-                  dataIndex: index
-                });
-              }
-            }}
-            onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
-              if (this.eChart) {
-                const eChartInstance = this.eChart.getEchartsInstance();
+                    eChartInstance.dispatchAction({
+                      type: "focusNodeAdjacency",
+                      dataIndex: index
+                    });
+                  }
+                }}
+                onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                  if (this.eChart) {
+                    const eChartInstance = this.eChart.getEchartsInstance();
 
-                eChartInstance.dispatchAction({
-                  type: "unfocusNodeAdjacency"
-                });
-              }
-            }}
-          >
-            <ResultListItem
-              body={capture.body}
-              tags={capture.tags}
-              onClick={() => {
-                return;
-              }}
-              nodeColor={gradient[index].toHexString()}
-              accentColor={config.surfaceAccentColor}
-            />
-          </div>
-        );
-      });
+                    eChartInstance.dispatchAction({
+                      type: "unfocusNodeAdjacency"
+                    });
+                  }
+                }}
+              >
+                <ResultListItem
+                  body={capture.body}
+                  tags={capture.tags}
+                  onClick={() => {
+                    return;
+                  }}
+                  nodeColor={gradient[index].toHexString()}
+                  accentColor={config.surfaceAccentColor}
+                />
+              </div>
+            );
+          })}
+      </div>
+    );
   }
 
   renderSearchBar() {
     return (
       <div
-        className={`drawer h4 measure absolute z-max ${
+        className={`h4 measure absolute z-max ${
           this.state.isSearch ? `bg-light-gray` : ""
         }`}
         style={{ minWidth: "30em" }}
@@ -484,32 +500,6 @@ class Surface extends React.Component<Props, State> {
               }}
             />
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  renderSideBar() {
-    return (
-      <div className={`flex-column flex-grow z-max measure shadow-3`}>
-        {/* Search Bar */}
-        {this.renderSearchBar()}
-
-        {/* Results */}
-        <div
-          className={`flex-column flex-grow measure bg-light-gray overflow-auto`}
-        >
-          {/* Padding to ensure results start below the search bar */}
-          <div className={`h4 measure`} />
-          {/* Results List */}
-          {this.isLoadedWithoutError() ? this.renderResults() : null}
-        </div>
-
-        {/* Pagination Footer */}
-        <div
-          className={`flex-column drawer h3 measure bg-white bt b--light-gray`}
-        >
-          {this.isLoadedWithoutError() ? this.renderResultsPagination() : null}
         </div>
       </div>
     );
@@ -566,7 +556,15 @@ class Surface extends React.Component<Props, State> {
             isCapturing={this.state.isCapturing}
           />
           {/* Search */}
-          {this.state.isSearch ? this.renderSideBar() : this.renderSearchBar()}
+          {this.state.isSearch ? (
+            <Sidebar
+              renderHeader={this.renderSearchBar}
+              renderBody={this.renderResults}
+              renderFooter={this.renderResultsPagination}
+            />
+          ) : (
+            this.renderSearchBar()
+          )}
           {/* Graph */}
           {this.renderGraph()}
         </div>

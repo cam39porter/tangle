@@ -32,7 +32,7 @@ export default `
 
   type SearchResults {
     graph: Graph! # for generating the graph visualization,
-    pageInfo: PageInfo
+    pageInfo: PageInfo!
   }
 
   type PageInfo {

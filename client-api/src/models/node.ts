@@ -1,4 +1,4 @@
-export class Node {
+export class GraphNode {
   id: string;
   type: string;
   text: string;

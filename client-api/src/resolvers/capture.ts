@@ -7,7 +7,7 @@ import {
   SearchResults,
   Entity,
   Graph,
-  Node,
+  GraphNode,
   Edge,
   NLPEntity
 } from "../models";
@@ -22,9 +22,7 @@ const table = "capture";
 export default {
   Query: {
     search(_, params, context): Promise<SearchResults> {
-      return search(params.rawQuery).then(graph => {
-        return new SearchResults(graph);
-      });
+      return search(params.rawQuery, params.start, params.count);
     }
   },
   Mutation: {
@@ -83,26 +81,41 @@ function getAll(): Promise<[Capture]> {
   });
 }
 
-function search(rawQuery: string): Promise<Graph> {
+function search(
+  rawQuery: string,
+  start: number,
+  count: number
+): Promise<SearchResults> {
   return execute(
     `MATCH (c:Capture) 
     WHERE c.body CONTAINS '${rawQuery}' 
     MATCH (c)-[r:REFERENCES]->(e:Entity)
     RETURN c,r,e`
   ).then(res => {
-    const captures = res.records.map(
+    const captures: GraphNode[] = res.records.map(
       record =>
-        new Node(
+        new GraphNode(
           record.get("c").properties.id ||
             record.get("c").properties.created.toString(),
           "CAPTURE",
           record.get("c").properties.body
         )
     );
-    const dedupedCaptures = dedupe(captures, capture => capture.id);
-    const entities = res.records.map(
+    const dedupedCaptures: GraphNode[] = dedupe(
+      captures,
+      capture => capture.id
+    );
+    const dedupedAndPagedCaptures = captures.slice(start, start + count);
+
+    const pagedRecords = res.records.filter(record =>
+      dedupedAndPagedCaptures
+        .map(node => node.id)
+        .includes(record.get("c").properties.id)
+    );
+
+    const entities: GraphNode[] = pagedRecords.map(
       record =>
-        new Node(
+        new GraphNode(
           record.get("e").properties.id ||
             record.get("e").properties.name +
               ";" +
@@ -111,8 +124,8 @@ function search(rawQuery: string): Promise<Graph> {
           record.get("e").properties.name
         )
     );
-    const dedupedEntities = dedupe(entities, entity => entity.id);
-    const edges = res.records.map(
+    const dedupedEntities: GraphNode[] = dedupe(entities, entity => entity.id);
+    const edges: Edge[] = pagedRecords.map(
       record =>
         new Edge({
           source:
@@ -127,6 +140,11 @@ function search(rawQuery: string): Promise<Graph> {
           salience: record.get("r").properties.salience
         })
     );
-    return new Graph(dedupedCaptures.concat(dedupedEntities), edges);
+    const graph = new Graph(
+      dedupedAndPagedCaptures.concat(dedupedEntities),
+      edges
+    );
+    const pageInfo = new PageInfo(start, count, dedupedCaptures.length);
+    return new SearchResults(graph, pageInfo);
   });
 }

@@ -4,7 +4,6 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
-import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
 import { makeExecutableSchema } from "graphql-tools";
 
 import schema from "./schema";
@@ -12,6 +11,8 @@ import resolvers from "./resolvers/capture";
 import { GraphQLSchema } from "graphql";
 
 import { createSMSCapture } from "./controllers/sms";
+
+const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 
 /*!
  * Make the schema executable

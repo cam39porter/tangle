@@ -8,7 +8,7 @@ import { RouteComponentProps } from "react-router";
 import ResultListItem from "../components/result-list-item";
 import Graph from "../components/graph";
 import { Node } from "../components/graph";
-import CaptureDialogue from "../components/capture-dialogue";
+import FloatingGraphButtons from "../components/floating-graph-buttons";
 
 import { ChevronRight, ChevronLeft } from "react-feather";
 
@@ -556,31 +556,15 @@ class Surface extends React.Component<Props, State> {
     );
   }
 
-  renderFloatingButtons() {
-    return (
-      <div className={`bottom-2 right-2 absolute z-999`}>
-        {this.state.isCapturing ? (
-          <CaptureDialogue handleMinimize={this.handleIsCapturing} />
-        ) : (
-          <div
-            className={`dt h3 w3 white br1 bg-${
-              config.captureAccentColor
-            } shadow-1 pointer`}
-            onClick={this.handleIsCapturing}
-          >
-            <div className={`dtc tc v-mid f3`}>+</div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
   render() {
     return (
       <div className={`w-100 vh-100 flex-column`}>
         <div className={`flex flex-grow relative`}>
           {/* Floating Buttons */}
-          {this.renderFloatingButtons()}
+          <FloatingGraphButtons
+            handleIsCapturing={this.handleIsCapturing}
+            isCapturing={this.state.isCapturing}
+          />
           {/* Search */}
           {this.state.isSearch ? this.renderSideBar() : this.renderSearchBar()}
           {/* Graph */}

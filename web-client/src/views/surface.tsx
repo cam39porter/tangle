@@ -10,8 +10,7 @@ import Graph from "../components/graph";
 import { Node } from "../components/graph";
 import FloatingGraphButtons from "../components/floating-graph-buttons";
 import Sidebar from "../components/sidebar";
-
-import { ChevronRight, ChevronLeft } from "react-feather";
+import Chevron from "../components/chevron";
 
 import qs from "qs";
 
@@ -369,8 +368,16 @@ class Surface extends React.Component<Props, State> {
             <div className={`tr f6 gray dtc v-mid`}>
               {this.renderResultPagingText()}
             </div>
-            {this.renderPageDown()}
-            {this.renderPageUp()}
+            <Chevron
+              right={false}
+              isActive={this.state.focusStartIndex > 0}
+              onClick={this.handlePageDown}
+            />
+            <Chevron
+              right={true}
+              isActive={this.isActivePageUp()}
+              onClick={this.handlePageUp}
+            />
           </div>
         ) : (
           <div className={`fr pa3 dt`}>
@@ -384,32 +391,6 @@ class Surface extends React.Component<Props, State> {
   renderResultPagingText() {
     return `Showing results ${this.state.focusStartIndex +
       1} - ${this.getFocusEndIndex()}`;
-  }
-
-  renderPageDown() {
-    let isActive = this.state.focusStartIndex > 0;
-
-    return (
-      <div
-        className={`f6 dtc v-mid ${isActive ? "gray pointer" : "light-gray"}`}
-        onClick={this.handlePageDown}
-      >
-        <ChevronLeft />
-      </div>
-    );
-  }
-
-  renderPageUp() {
-    return (
-      <div
-        className={`f6 dtc v-mid ${
-          this.isActivePageUp() ? "gray pointer" : "light-gray"
-        }`}
-        onClick={this.handlePageUp}
-      >
-        <ChevronRight />
-      </div>
-    );
   }
 
   renderResults() {

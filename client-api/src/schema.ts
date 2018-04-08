@@ -6,39 +6,32 @@ export default `
   type Edge {
     source: String!
     destination: String!
-    weight: Float # number corresponding to the relevancy of the edge
+    type: EdgeType!
+    salience: Float 
   }
 
   type Graph {
-    captures: [Capture!]!
-    entities: [Entity!]!
+    nodes: [Node!]!
     edges: [Edge!]!
   }
 
-  type Capture {
+  type Node {
     id: String!
-    body: String!
-    created: String!
-    tags: [Tag!]!
+    type: NodeType!
+    text: String!
   }
 
-  type Entity {
-    id: String!
-    name: String!
-    type: String! # from NLP API
+  enum NodeType {
+    CAPTURE, 
+    ENTITY
   }
 
-  type Tag {
-    name: String!
+  enum EdgeType {
+    REFERENCES
   }
 
   type SearchResults {
     graph: Graph! # for generating the graph visualization,
-    pageInfo: PageInfo
-  }
-
-  type CaptureCollection {
-    results: [Capture!]!
     pageInfo: PageInfo
   }
 
@@ -54,14 +47,12 @@ export default `
   }
 
   type Query {
-    getCapture(id: String!): Capture!
-    getCaptures(start: Int = 0, count: Int = 10): CaptureCollection!
+    getCapture(id: String!): Graph!
     search(
       rawQuery: String!
       start: Int = 0
       count: Int = 10
-    ): CaptureCollection!
-    searchv2(rawQuery: String!, start: Int = 0, count: Int = 10): SearchResults
+    ): SearchResults!
   }
 
   type Mutation {

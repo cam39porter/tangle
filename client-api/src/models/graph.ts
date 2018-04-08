@@ -1,12 +1,10 @@
-import { GraphEdge, Entity, Capture } from ".";
+import { Edge, Entity, Capture } from ".";
 
 export class Graph {
-  captures: Capture[];
-  entities: Entity[];
-  edges: GraphEdge[];
-  constructor(data) {
-    this.captures = data.captures || [];
-    this.entities = data.entities || [];
-    this.edges = data.edges || [];
+  nodes: Node[];
+  edges: Edge[];
+  constructor(nodes: Node[], edges: Edge[]) {
+    this.nodes = nodes || [];
+    this.edges = edges || [];
   }
 }

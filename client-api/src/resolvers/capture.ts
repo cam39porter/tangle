@@ -104,9 +104,9 @@ function insertEntityWithRel(
   entity: NLPEntity
 ): Promise<any> {
   return execute(`
-    MATCH (capture) WHERE ID(capture) = ${captureId}
+    MATCH (capture {id: "${captureId}"})
     MERGE (entity:Entity {
-      id: "${entity.name}";"${entity.type}",
+      id: "${entity.name};${entity.type}",
       name: "${entity.name}",
       type: "${entity.type}"
     })

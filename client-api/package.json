@@ -8,7 +8,7 @@
     "compile": "tsc -w",
     "start:dev": "tsc && NODE_ENV=development node .compiled/index.js",
     "start": "tsc && node .compiled/index.js",
-    "deploy": "gcloud app deploy ./app.yaml"
+    "deploy": "gcloud -q app deploy ./app.yaml"
   },
   "author": "",
   "license": "ISC",

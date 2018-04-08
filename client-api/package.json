@@ -35,6 +35,7 @@
     "@types/graphql": "0.12.4",
     "graphql-request": "1.5.1",
     "ngrok": "3.0.0",
-    "nodemon": "1.14.12"
+    "nodemon": "1.14.12",
+    "sleep": "5.1.1"
   }
 }

@@ -1,9 +1,10 @@
 const fs = require("fs");
 const request = require("graphql-request").request;
 const _ = require("lodash");
+const sleep = require("sleep");
 
 // endpoint
-const URL = "http://localhost:8080/graphql";
+const URL = "https://client-api-dot-opit-193719.appspot.com/graphql";
 
 // path to test dir
 const path = process.argv[2];
@@ -14,6 +15,7 @@ fs.readdir(path, (err, files) => {
       input: require("fs").createReadStream(`${path}/${file}`)
     });
     lineReader.on("line", line => {
+      sleep.msleep(100);
       let trimmedLine = _.trim(line);
       if (trimmedLine === "") {
         return;
@@ -22,9 +24,8 @@ fs.readdir(path, (err, files) => {
       let mutation = `
             mutation {
               createCapture(body: "${trimmedLine}") {
-                captures {
-                  id, body, created, tags { name }
-                }              }
+                nodes { id } 
+              }
             }
           `;
 

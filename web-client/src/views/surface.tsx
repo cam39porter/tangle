@@ -57,6 +57,8 @@ class Surface extends React.Component<Props, State> {
   // eChart instance ref for dispatching events
   eChart;
 
+  searchInput: HTMLInputElement | null;
+
   constructor(props: Props) {
     super(props);
 
@@ -442,7 +444,14 @@ class Surface extends React.Component<Props, State> {
         }`}
         style={{ minWidth: "30em" }}
       >
-        <div className={`center w-90 dt ma4`}>
+        <div
+          className={`center w-90 dt ma4`}
+          onClick={() => {
+            if (this.searchInput) {
+              this.searchInput.focus();
+            }
+          }}
+        >
           <div
             className={`w-100 h2 pa3 dtc v-mid tc bg-white br1 bb bw1 b--${
               config.surfaceAccentColor
@@ -450,6 +459,9 @@ class Surface extends React.Component<Props, State> {
           >
             <input
               className={`f6 w-100`}
+              ref={input => {
+                this.searchInput = input;
+              }}
               value={this.state.query || ""}
               onChange={this.handleChange}
               onKeyPress={this.handleKeyPress}

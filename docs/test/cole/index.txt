@@ -1,1 +1,27 @@
+Importance of arranging my desk to be efficient today
+
+Always be stackranking, remember to prioritize your day each morning
+
+It is essential to provide positive reinforcement whenever you see something good happening
+
+I am noticing that taking time to write these things down is actually really ruining my flow
+
+Seems like thoughts could be whatever the user wants them to be- we should have types that are user specified (maybe different than tags?)
+
+WFH allows me to really be productive, its partly a placebo- but I just have so much time to get shit done
+
+Capturing really interrupts flow- we will need to fix this somehow
+
+No one will make the nodio reference- too complicated
+
+I forgot how much ragers can get me going
+
+Proper naming is one of the most important things when it comes to software development
+
+static typing is always better in the long run #typescript
+
+move runtime errors to compile time #typescript
+
+my git pull command takes too long. It is extremely important to have quick build/etc. commands
+
 

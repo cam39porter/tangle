@@ -1,9 +1,9 @@
 import language from "@google-cloud/language";
-import { NLPResponse, NLPEntity } from "../models/nlp";
+import { NLPEntityResponse, NLPEntity } from "../models/nlp";
 
 const client = new language.LanguageServiceClient();
 
-function getNLPResponse(body: string): Promise<NLPResponse> {
+function getNLPResponse(body: string): Promise<NLPEntityResponse> {
   const document = {
     content: body,
     type: "PLAIN_TEXT"
@@ -11,7 +11,7 @@ function getNLPResponse(body: string): Promise<NLPResponse> {
   return client
     .analyzeEntitySentiment({ document: document })
     .then(results => {
-      let resp = new NLPResponse();
+      let resp = new NLPEntityResponse();
       results[0].entities.forEach(element => {
         const entity = new NLPEntity(element);
         resp.entities.push(entity);

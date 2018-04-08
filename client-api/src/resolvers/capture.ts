@@ -3,28 +3,28 @@ import {
   Capture,
   CaptureCollection,
   Tag,
-  NLPResponse,
+  NLPEntityResponse,
   SearchResults,
   Entity,
   Graph,
-  GraphEdge
+  GraphEdge,
+  NLPEntity
 } from "../models";
 import { db } from "../db/db";
 import { getNLPResponse } from "../services/nlp";
 import { execute } from "../db/graphdb";
 
 const table = "capture";
+const uuidv4 = require("uuid/v4");
 
 let cachedNLP;
 
 export default {
   Query: {
     getCaptures(_, params, context): Promise<CaptureCollection> {
-      return getAll()
-        .then(warmNLPCache)
-        .then(captures => {
-          return page(captures, params.start, params.count);
-        });
+      return getAll().then(captures => {
+        return page(captures, params.start, params.count);
+      });
     },
     getCapture(_, params, context): Promise<Capture> {
       return get(params.id);
@@ -35,80 +35,91 @@ export default {
       );
     },
     searchv2(_, params, context): Promise<SearchResults> {
-      return search(params.rawQuery)
-        .then(warmNLPCache)
-        .then(captures => {
-          return new SearchResults({ graph: buildGraph(captures, cachedNLP) });
+      return search(params.rawQuery).then(captures => {
+        return new SearchResults({
+          graph: buildGraph(captures)
         });
+      });
     }
   },
   Mutation: {
     createCapture(_, params, context): Promise<Graph> {
-      return insert(params.body).then(() =>
-        getAll().then(captures => {
-          const graph = buildGraph(captures, cachedNLP);
-          cachedNLP = undefined;
-          return graph;
-        })
-      );
+      return insertCapture(params.body).then(capture => {
+        const id =
+          capture.records[0].get("n").properties.id ||
+          capture.records[0].get("n").properties.created.toString();
+        return getNLPResponse(params.body).then(nlp => {
+          const promises = Promise.all(
+            nlp.entities.map(entity => insertEntityWithRel(id, entity))
+          );
+          return promises.then(results => {
+            return new Graph({});
+          });
+        });
+      });
     }
   }
 };
 
-function buildGraph(captures: Capture[], nlp: NLPResponse): Graph {
+function createNLPResponse(body: string) {}
+
+function buildGraph(captures: Capture[]): Graph {
   const joinedCaptures = captures.map(capture => capture.body).join("/n");
   const dedupe = require("dedupe");
-  const entities: Entity[] = nlp.entities
-    .filter(entity => joinedCaptures.includes(entity.name))
-    .map(
-      nlpEntity =>
-        new Entity({
-          id: `${nlpEntity.name};${nlpEntity.type}`,
-          name: nlpEntity.name,
-          type: nlpEntity.type
-        })
-    );
-  const dedupedEntites: Entity[] = dedupe(entities, entity => entity.id);
-  const edges: GraphEdge[][] = dedupedEntites.map(entity => {
-    let localEdges: GraphEdge[] = [];
-    captures.forEach(capture => {
-      if (capture.body.includes(entity.name)) {
-        localEdges.push(
-          new GraphEdge({
-            source: capture.id,
-            destination: entity.id
-          })
-        );
-      }
-    });
-    return localEdges;
-  });
+  // const entities: Entity[] = nlp.entities
+  //   .filter(entity => joinedCaptures.includes(entity.name))
+  //   .map(
+  //     nlpEntity =>
+  //       new Entity({
+  //         id: `${nlpEntity.name};${nlpEntity.type}`,
+  //         name: nlpEntity.name,
+  //         type: nlpEntity.type
+  //       })
+  //   );
+  // const dedupedEntites: Entity[] = dedupe(entities, entity => entity.id);
+  // const edges: GraphEdge[][] = dedupedEntites.map(entity => {
+  //   let localEdges: GraphEdge[] = [];
+  //   captures.forEach(capture => {
+  //     if (capture.body.includes(entity.name)) {
+  //       localEdges.push(
+  //         new GraphEdge({
+  //           source: capture.id,
+  //           destination: entity.id
+  //         })
+  //       );
+  //     }
+  //   });
+  //   return localEdges;
+  // });
 
   return new Graph({
     captures: captures,
-    entities: dedupedEntites,
-    edges: [].concat(...edges)
+    entities: [],
+    edges: []
   });
 }
 
-function warmNLPCache(ret) {
-  if (!cachedNLP) {
-    return buildNLP()
-      .then(nlpResp => (cachedNLP = nlpResp))
-      .then(nll => ret);
-  } else {
-    return ret;
-  }
+function insertEntityWithRel(
+  captureId: number,
+  entity: NLPEntity
+): Promise<any> {
+  return execute(`
+    MATCH (capture) WHERE ID(capture) = ${captureId}
+    MERGE (entity:Entity {
+      id: "${entity.name}";"${entity.type}",
+      name: "${entity.name}",
+      type: "${entity.type}"
+    })
+    CREATE (entity)<-[r:REFERENCES { salience: ${entity.salience} }]-(capture)
+    RETURN entity
+  `);
 }
 
-function buildNLP(): Promise<NLPResponse> {
-  return getAll()
-    .then(captures => captures.map(capture => capture.body).join("\n"))
-    .then(joinedCapture => getNLPResponse(joinedCapture));
-}
-
-function insert(body: string): Promise<string> {
-  return execute(`CREATE (n:Capture {body:"${body}", created:TIMESTAMP()})`);
+function insertCapture(body: string): Promise<any> {
+  const uuid = uuidv4();
+  return execute(
+    `CREATE (n:Capture {id:"${uuid}", body:"${body}", created:TIMESTAMP()}) RETURN n`
+  );
 }
 
 function get(id: string): Promise<Capture> {
@@ -120,10 +131,12 @@ function get(id: string): Promise<Capture> {
 }
 
 function getAll(): Promise<[Capture]> {
-  return execute("MATCH (n) RETURN n").then(result => {
+  return execute("MATCH (n:Capture) RETURN n").then(result => {
     return result.records.map(record => {
       return new Capture({
-        id: record.get("n").identity.toString(),
+        id:
+          record.get("n").properties.id ||
+          record.get("n").properties.created.toString(),
         body: record.get("n").properties.body,
         created: record.get("n").properties.created.toString()
       });

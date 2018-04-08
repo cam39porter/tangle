@@ -9,7 +9,7 @@ interface Props {
   handleIsCapturing: () => void;
 }
 
-class FloatingGraphButtons extends React.Component<Props, object> {
+class GraphButtons extends React.Component<Props, object> {
   render() {
     return (
       <div className={`bottom-2 right-2 absolute z-999`}>
@@ -30,4 +30,4 @@ class FloatingGraphButtons extends React.Component<Props, object> {
   }
 }
 
-export default FloatingGraphButtons;
+export default GraphButtons;

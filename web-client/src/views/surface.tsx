@@ -8,9 +8,9 @@ import { RouteComponentProps } from "react-router";
 import ResultListItem from "../components/result-list-item";
 import Graph from "../components/graph";
 import { Node } from "../components/graph";
-import FloatingGraphButtons from "../components/floating-graph-buttons";
+import GraphButtons from "../components/graph-buttons";
 import Sidebar from "../components/sidebar";
-import Chevron from "../components/chevron";
+import ResultPagination from "../components/result-pagination";
 
 import { getGradient } from "../utils";
 
@@ -363,31 +363,15 @@ class Surface extends React.Component<Props, State> {
     }
 
     return (
-      <div className={`w-100`}>
-        {/* Results Pagination Text */}
-        {this.getTotalResults() > 0 ? (
-          <div className={`fr pa3 dt`}>
-            <div className={`tr f6 gray dtc v-mid`}>
-              {`Showing results ${this.state.focusStartIndex +
-                1} - ${this.getFocusEndIndex()}`}
-            </div>
-            <Chevron
-              right={false}
-              isActive={this.state.focusStartIndex > 0}
-              onClick={this.handlePageDown}
-            />
-            <Chevron
-              right={true}
-              isActive={this.isActivePageUp()}
-              onClick={this.handlePageUp}
-            />
-          </div>
-        ) : (
-          <div className={`fr pa3 dt`}>
-            <div className={`tr f6 gray dtc v-mid`}>No results</div>
-          </div>
-        )}
-      </div>
+      <ResultPagination
+        totalResults={this.getTotalResults()}
+        startIndex={this.state.focusStartIndex}
+        endIndex={this.getFocusEndIndex()}
+        isActivePageDown={this.state.focusStartIndex > 0}
+        handlePageDown={this.handlePageDown}
+        isActivePageUp={this.isActivePageUp()}
+        handlePageUp={this.handlePageUp}
+      />
     );
   }
 
@@ -508,20 +492,18 @@ class Surface extends React.Component<Props, State> {
       : undefined;
 
     return (
-      <div className={`flex-column flex-grow`}>
-        <Graph
-          refEChart={e => {
-            this.eChart = e;
-          }}
-          layout={"force"}
-          focusStartIndex={focusStartIndex}
-          focusEndIndex={focusEndIndex}
-          nodeData={nodeData}
-          edgeData={edgeData}
-          categoryData={categoryData}
-          tooltipPosition={this.state.isSearch ? ["32", "32"] : "top"}
-        />
-      </div>
+      <Graph
+        refEChart={e => {
+          this.eChart = e;
+        }}
+        layout={"force"}
+        focusStartIndex={focusStartIndex}
+        focusEndIndex={focusEndIndex}
+        nodeData={nodeData}
+        edgeData={edgeData}
+        categoryData={categoryData}
+        tooltipPosition={this.state.isSearch ? ["32", "32"] : "top"}
+      />
     );
   }
 
@@ -530,7 +512,7 @@ class Surface extends React.Component<Props, State> {
       <div className={`w-100 vh-100 flex-column`}>
         <div className={`flex flex-grow relative`}>
           {/* Floating Buttons */}
-          <FloatingGraphButtons
+          <GraphButtons
             handleIsCapturing={this.handleIsCapturing}
             isCapturing={this.state.isCapturing}
           />

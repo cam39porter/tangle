@@ -136,12 +136,14 @@ class Graph extends React.Component<Props, object> {
 
   render() {
     return (
-      <ReactECharts
-        ref={this.props.refEChart}
-        style={{ height: "100%", width: "100%" }}
-        option={this.getOption()}
-        opts={{ renderer: "canvas" }}
-      />
+      <div className={`flex-column flex-grow`}>
+        <ReactECharts
+          ref={this.props.refEChart}
+          style={{ height: "100%", width: "100%" }}
+          option={this.getOption()}
+          opts={{ renderer: "canvas" }}
+        />
+      </div>
     );
   }
 }

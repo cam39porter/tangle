@@ -24,11 +24,13 @@ export default `
 
   enum NodeType {
     CAPTURE, 
-    ENTITY
+    ENTITY,
+    TAG
   }
 
   enum EdgeType {
-    REFERENCES
+    REFERENCES,
+    TAGGED_WITH
   }
 
   type SearchResults {

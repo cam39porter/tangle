@@ -9,4 +9,9 @@ function parseTags(str: string): string[] {
   return ret;
 }
 
-export { parseTags };
+function stripTags(str: string): string {
+  const regexp = new RegExp("#([^\\s]*)", "g");
+  return str.replace(regexp, "");
+}
+
+export { parseTags, stripTags };

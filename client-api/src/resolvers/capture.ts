@@ -14,9 +14,9 @@ import {
 import { db } from "../db/db";
 import { getNLPResponse } from "../services/nlp";
 import { execute } from "../db/graphdb";
+import { parseTags, stripTags } from "../helpers/tag";
 const uuidv4 = require("uuid/v4");
 const dedupe = require("dedupe");
-
 const table = "capture";
 
 export default {
@@ -32,12 +32,17 @@ export default {
     createCapture(_, params, context): Promise<Graph> {
       return insertCapture(params.body).then(capture => {
         const id = capture.records[0].get("n").properties.id;
-        return getNLPResponse(params.body).then(nlp => {
+        return getNLPResponse(stripTags(params.body)).then(nlp => {
           const nlpCreates = Promise.all(
             nlp.entities.map(entity => insertEntityWithRel(id, entity))
           );
-          return nlpCreates.then(results => {
-            return get(id);
+          return nlpCreates.then(nlpCreateResults => {
+            const tagCreates = Promise.all(
+              parseTags(params.body).map(tag => insertTagWithRel(id, tag))
+            );
+            return tagCreates.then(tagCreateResults => {
+              return get(id);
+            });
           });
         });
       });
@@ -45,8 +50,20 @@ export default {
   }
 };
 
+function insertTagWithRel(captureId: string, tag: string) {
+  return execute(`
+    MATCH (capture {id: "${captureId}"})
+    MERGE (tag:Tag {
+      id: "${tag}",
+      name: "${tag}"
+    })
+    CREATE (tag)<-[r:TAGGED_WITH]-(capture)
+    RETURN tag
+  `);
+}
+
 function insertEntityWithRel(
-  captureId: number,
+  captureId: string,
   entity: NLPEntity
 ): Promise<any> {
   return execute(`
@@ -71,8 +88,8 @@ function insertCapture(body: string): Promise<any> {
 function get(id: string): Promise<Graph> {
   return execute(`
     MATCH (c:Capture {id:"${id}"}) 
-    OPTIONAL MATCH (c)-[r:REFERENCES]->(e:Entity)
-    RETURN c,r,e
+    OPTIONAL MATCH (c)-[r]->(n)
+    RETURN c,r,n
   `).then(res => buildGraphFromNeo4jResp(res.records, 0, 1));
 }
 function getAll(): Promise<[Capture]> {
@@ -97,8 +114,8 @@ function search(
   return execute(
     `MATCH (c:Capture) 
     WHERE c.body CONTAINS '${rawQuery}' 
-    MATCH (c)-[r:REFERENCES]->(e:Entity)
-    RETURN c,r,e`
+    OPTIONAL MATCH (c)-[r]->(n)
+    RETURN c,r,n`
   ).then(res => {
     return buildSearchResultsFromNeo4jResp(res.records, start, count);
   });
@@ -140,24 +157,44 @@ function buildGraphFromNeo4jResp(records, start, count) {
   );
   const dedupedCaptures: GraphNode[] = dedupe(captures, capture => capture.id);
 
-  const entities: GraphNode[] = records.map(
-    record =>
-      new GraphNode(
-        record.get("e").properties.id,
-        "ENTITY",
-        record.get("e").properties.name,
-        1
-      )
-  );
+  const entities: GraphNode[] = records
+    .filter(record => record.get("n").labels.includes("Entity"))
+    .map(
+      record =>
+        new GraphNode(
+          record.get("n").properties.id,
+          "ENTITY",
+          record.get("n").properties.name,
+          1
+        )
+    );
   const dedupedEntities: GraphNode[] = dedupe(entities, entity => entity.id);
-  const edges: Edge[] = records.map(
-    record =>
-      new Edge({
-        source: record.get("c").properties.id,
-        destination: record.get("e").properties.id,
-        type: record.get("r").type,
-        salience: record.get("r").properties.salience
-      })
+
+  const tags: GraphNode[] = records
+    .filter(record => {
+      return record.get("n").labels.includes("Tag");
+    })
+    .map(
+      record =>
+        new GraphNode(
+          record.get("n").properties.id,
+          "TAG",
+          record.get("n").properties.name,
+          1
+        )
+    );
+  const dedupedTags: GraphNode[] = dedupe(tags, tag => tag.id);
+
+  const edges: Edge[] = records.map(record => {
+    return new Edge({
+      source: record.get("c").properties.id,
+      destination: record.get("n").properties.id,
+      type: record.get("r").type,
+      salience: record.get("r").properties.salience
+    });
+  });
+  return new Graph(
+    dedupedCaptures.concat(dedupedEntities.concat(dedupedTags)),
+    edges
   );
-  return new Graph(dedupedCaptures.concat(dedupedEntities), edges);
 }

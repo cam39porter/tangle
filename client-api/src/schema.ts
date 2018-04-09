@@ -19,6 +19,7 @@ export default `
     id: String!
     type: NodeType!
     text: String!
+    level: Int!
   }
 
   enum NodeType {
@@ -52,6 +53,7 @@ export default `
       start: Int = 0
       count: Int = 10
     ): SearchResults!
+    get(id: String!): Graph!
   }
 
   type Mutation {

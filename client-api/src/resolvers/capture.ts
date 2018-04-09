@@ -97,7 +97,8 @@ function search(
         new GraphNode(
           record.get("c").properties.id,
           "CAPTURE",
-          record.get("c").properties.body
+          record.get("c").properties.body,
+          0
         )
     );
     const dedupedCaptures: GraphNode[] = dedupe(
@@ -120,7 +121,8 @@ function search(
               ";" +
               record.get("e").properties.type,
           "ENTITY",
-          record.get("e").properties.name
+          record.get("e").properties.name,
+          1
         )
     );
     const dedupedEntities: GraphNode[] = dedupe(entities, entity => entity.id);

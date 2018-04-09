@@ -23,6 +23,9 @@ export default {
   Query: {
     search(_, params, context): Promise<SearchResults> {
       return search(params.rawQuery, params.start, params.count);
+    },
+    get(_, params, context): Promise<Graph> {
+      return get(params.id);
     }
   },
   Mutation: {
@@ -67,6 +70,13 @@ function insertCapture(body: string): Promise<any> {
   );
 }
 
+function get(id: string): Promise<Graph> {
+  return execute(`
+    MATCH (c:Capture {id:"${id}"}) 
+    OPTIONAL MATCH (c)-[r:REFERENCES]->(e:Entity)
+    RETURN c,r,e
+  `).then(res => buildGraphFromNeo4jResp(res.records, 0, 1));
+}
 function getAll(): Promise<[Capture]> {
   return execute("MATCH (n:Capture) RETURN n").then(result => {
     return result.records.map(record => {
@@ -92,60 +102,63 @@ function search(
     MATCH (c)-[r:REFERENCES]->(e:Entity)
     RETURN c,r,e`
   ).then(res => {
-    const captures: GraphNode[] = res.records.map(
-      record =>
-        new GraphNode(
-          record.get("c").properties.id,
-          "CAPTURE",
-          record.get("c").properties.body,
-          0
-        )
-    );
-    const dedupedCaptures: GraphNode[] = dedupe(
-      captures,
-      capture => capture.id
-    );
-    const dedupedAndPagedCaptures = dedupedCaptures.slice(start, start + count);
-
-    const pagedRecords = res.records.filter(record =>
-      dedupedAndPagedCaptures
-        .map(node => node.id)
-        .includes(record.get("c").properties.id)
-    );
-
-    const entities: GraphNode[] = pagedRecords.map(
-      record =>
-        new GraphNode(
-          record.get("e").properties.id ||
-            record.get("e").properties.name +
-              ";" +
-              record.get("e").properties.type,
-          "ENTITY",
-          record.get("e").properties.name,
-          1
-        )
-    );
-    const dedupedEntities: GraphNode[] = dedupe(entities, entity => entity.id);
-    const edges: Edge[] = pagedRecords.map(
-      record =>
-        new Edge({
-          source:
-            record.get("c").properties.id ||
-            record.get("c").properties.created.toString(),
-          destination:
-            record.get("e").properties.id ||
-            record.get("e").properties.name +
-              ";" +
-              record.get("e").properties.type,
-          type: record.get("r").type,
-          salience: record.get("r").properties.salience
-        })
-    );
-    const graph = new Graph(
-      dedupedAndPagedCaptures.concat(dedupedEntities),
-      edges
-    );
-    const pageInfo = new PageInfo(start, count, dedupedCaptures.length);
-    return new SearchResults(graph, pageInfo);
+    return buildSearchResultsFromNeo4jResp(res.records, start, count);
   });
+}
+
+function buildSearchResultsFromNeo4jResp(records, start, count) {
+  const captures: GraphNode[] = records.map(
+    record =>
+      new GraphNode(
+        record.get("c").properties.id,
+        "CAPTURE",
+        record.get("c").properties.body,
+        0
+      )
+  );
+  const dedupedCaptures: GraphNode[] = dedupe(captures, capture => capture.id);
+  const dedupedAndPagedCaptures = dedupedCaptures.slice(start, start + count);
+
+  const pagedRecords = records.filter(record =>
+    dedupedAndPagedCaptures
+      .map(node => node.id)
+      .includes(record.get("c").properties.id)
+  );
+  return new SearchResults(
+    buildGraphFromNeo4jResp(pagedRecords, start, count),
+    new PageInfo(start, count, dedupedCaptures.length)
+  );
+}
+
+function buildGraphFromNeo4jResp(records, start, count) {
+  const captures: GraphNode[] = records.map(
+    record =>
+      new GraphNode(
+        record.get("c").properties.id,
+        "CAPTURE",
+        record.get("c").properties.body,
+        0
+      )
+  );
+
+  const entities: GraphNode[] = records.map(
+    record =>
+      new GraphNode(
+        record.get("e").properties.id,
+        "ENTITY",
+        record.get("e").properties.name,
+        1
+      )
+  );
+  const dedupedEntities: GraphNode[] = dedupe(entities, entity => entity.id);
+  const edges: Edge[] = records.map(
+    record =>
+      new Edge({
+        source: record.get("c").properties.id,
+        destination: record.get("e").properties.id,
+        type: record.get("r").type,
+        salience: record.get("r").properties.salience
+      })
+  );
+  return new Graph(captures.concat(dedupedEntities), edges);
 }

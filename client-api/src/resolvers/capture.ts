@@ -140,6 +140,7 @@ function buildGraphFromNeo4jResp(records, start, count) {
         0
       )
   );
+  const dedupedCaptures: GraphNode[] = dedupe(captures, capture => capture.id);
 
   const entities: GraphNode[] = records.map(
     record =>
@@ -160,5 +161,5 @@ function buildGraphFromNeo4jResp(records, start, count) {
         salience: record.get("r").properties.salience
       })
   );
-  return new Graph(captures.concat(dedupedEntities), edges);
+  return new Graph(dedupedCaptures.concat(dedupedEntities), edges);
 }

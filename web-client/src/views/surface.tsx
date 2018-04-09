@@ -17,7 +17,7 @@ import { getGradient } from "../utils";
 
 import qs from "qs";
 
-import { split, toLower, assign } from "lodash";
+import { assign } from "lodash";
 
 import tinycolor from "tinycolor2";
 
@@ -233,11 +233,112 @@ class Surface extends React.Component<Props, State> {
     if (!(this.props.data && this.props.data.search)) {
       return 0;
     }
-    // TODO: filter this on node type capture
-    return this.props.data.search.graph.nodes.length;
+    return this.props.data.search.pageInfo.total;
   }
 
-  getNodeData() {
+  getDetailNodeData() {
+    if (!(this.props.data && this.props.data.get)) {
+      return [];
+    }
+
+    const nodes = this.props.data.get.nodes;
+
+    let detailNode: Array<Node> = nodes
+      .filter(node => {
+        return node.level === 0;
+      })
+      .map(capture => {
+        return {
+          id: capture.id,
+          name: capture.text,
+          category: `detailNode`,
+          symbolSize: 24,
+          label: {
+            show: false,
+            emphasis: {
+              show: false
+            }
+          }
+        };
+      });
+
+    let entityNodes: Array<Node> = nodes
+      .filter(node => {
+        return node.type === "ENTITY";
+      })
+      .filter(entity => {
+        return entity.text.length > 3;
+      })
+      .map(entity => {
+        return {
+          id: entity.id,
+          name: entity.text,
+          category: "entity",
+          symbolSize: 12,
+          label: {
+            show: true,
+            color: "#777777",
+            emphasis: {
+              show: true
+            }
+          }
+        };
+      });
+
+    return detailNode.concat(entityNodes);
+  }
+
+  getDetailEdgeData() {
+    if (!(this.props.data && this.props.data.get)) {
+      return [];
+    }
+
+    const edges = this.props.data.get.edges;
+
+    return edges.map(edge => {
+      return {
+        source: edge.source,
+        target: edge.destination,
+        label: {
+          show: false,
+          emphasis: {
+            show: false
+          }
+        }
+      };
+    });
+  }
+
+  getDetailCategoryData() {
+    return [
+      {
+        name: `detailNode`,
+        itemStyle: {
+          normal: {
+            color: FOCUS_COLOR_1.toHexString()
+          }
+        }
+      },
+      {
+        name: "notDetailNode",
+        itemStyle: {
+          normal: {
+            color: BLUR_COLOR
+          }
+        }
+      },
+      {
+        name: "entity",
+        itemStyle: {
+          normal: {
+            color: "#FFFFFF"
+          }
+        }
+      }
+    ];
+  }
+
+  getSearchNodeData() {
     if (!(this.props.data && this.props.data.search)) {
       return [];
     }
@@ -265,7 +366,6 @@ class Surface extends React.Component<Props, State> {
 
     let blurCaptureNodes: Array<Node> = graph.nodes
       .filter((node, index) => {
-        // filter to focus on only the results not on the current page
         return !this.isFocusResult(index) && node.type === "CAPTURE";
       })
       .map(capture => {
@@ -283,18 +383,12 @@ class Surface extends React.Component<Props, State> {
         };
       });
 
-    const queryTerms = split(getQuery(this.props.location.search), " ");
-
     let entityNodes: Array<Node> = graph.nodes
       .filter(node => {
         return node.type === "ENTITY";
       })
       .filter(entity => {
-        const isQueryTerm = queryTerms.reduce((isTerm, term) => {
-          return isTerm || toLower(term) === toLower(entity.text);
-        }, false);
-
-        return !isQueryTerm && entity.text.length > 4 && entity.text !== "thi";
+        return entity.text.length > 3;
       })
       .map(entity => {
         return {
@@ -315,7 +409,7 @@ class Surface extends React.Component<Props, State> {
     return focusCaptureNodes.concat(blurCaptureNodes).concat(entityNodes);
   }
 
-  getEdgeData() {
+  getSearchEdgeData() {
     if (!(this.props.data && this.props.data.search)) {
       return [];
     }
@@ -336,7 +430,7 @@ class Surface extends React.Component<Props, State> {
     });
   }
 
-  getCategoryData() {
+  getSearchCategoryData() {
     const totalFocusResults =
       this.getFocusEndIndex() - this.state.focusStartIndex;
     const gradientNumber = 2 > totalFocusResults ? 2 : totalFocusResults;
@@ -458,7 +552,15 @@ class Surface extends React.Component<Props, State> {
   }
 
   renderDetail() {
-    return <ResultDetail id={this.state.id} />;
+    if (!(this.props.data && this.props.data.get)) {
+      return null;
+    }
+
+    const detailNode = this.props.data.get.nodes.filter(node => {
+      return node.level === 0;
+    })[0];
+
+    return <ResultDetail id={this.state.id} body={detailNode.text} />;
   }
 
   renderResultsPagination() {
@@ -484,13 +586,27 @@ class Surface extends React.Component<Props, State> {
       return null;
     }
 
-    const focusStartIndex = this.state.isSearch
-      ? this.state.focusStartIndex
-      : undefined;
+    const nodeData = this.state.isDetail
+      ? this.getDetailNodeData()
+      : this.getSearchNodeData();
 
-    const focusEndIndex = this.state.isSearch
-      ? this.getFocusEndIndex()
-      : undefined;
+    const edgeData = this.state.isDetail
+      ? this.getDetailEdgeData()
+      : this.getSearchEdgeData();
+
+    const categoryData = this.state.isDetail
+      ? this.getDetailCategoryData()
+      : this.getSearchCategoryData();
+
+    const focusStartIndex =
+      this.state.isSearch && !this.state.isDetail
+        ? this.state.focusStartIndex
+        : undefined;
+
+    const focusEndIndex =
+      this.state.isSearch && !this.state.isDetail
+        ? this.getFocusEndIndex()
+        : undefined;
 
     return (
       <Graph
@@ -500,9 +616,9 @@ class Surface extends React.Component<Props, State> {
         layout={"force"}
         focusStartIndex={focusStartIndex}
         focusEndIndex={focusEndIndex}
-        nodeData={this.getNodeData()}
-        edgeData={this.getEdgeData()}
-        categoryData={this.getCategoryData()}
+        nodeData={nodeData}
+        edgeData={edgeData}
+        categoryData={categoryData}
         tooltipPosition={this.state.isSearch ? ["32", "32"] : "top"}
         onClick={e => {
           if (e.dataType !== "node" || e.data.category === "entity") {
@@ -549,7 +665,9 @@ const SurfaceResultsWithData = graphql<Response, Props>(QUERY, {
   options: (ownProps: Props) => ({
     variables: {
       query: getQuery(ownProps.location.search),
-      count: COUNT
+      count: COUNT,
+      detailId: getId(ownProps.location.search),
+      isDetail: getId(ownProps.location.search).length > 0
     },
     fetchPolicy: "network-only"
   })

@@ -123,7 +123,7 @@ class Graph extends React.Component<Props, object> {
             gravity: 0.2,
             layoutAnimation: true
           },
-          roam: false,
+          roam: true,
           nodeScaleRation: 0.5,
           draggable: false,
           focusNodeAdjacency: true,

@@ -22,6 +22,9 @@ interface Props {
   categoryData: Array<Object>;
   layout?: "circular" | "force";
   tooltipPosition?: Array<String> | String;
+  onClick: (
+    e: { dataType: string; data: { id: string; category: string } }
+  ) => void;
 }
 
 class Graph extends React.Component<Props, object> {
@@ -32,6 +35,12 @@ class Graph extends React.Component<Props, object> {
       this.props.focusStartIndex !== nextProps.focusStartIndex ||
       this.props.focusEndIndex !== nextProps.focusEndIndex
     );
+  }
+
+  getEvents() {
+    return {
+      click: this.props.onClick
+    };
   }
 
   getOption() {
@@ -114,7 +123,7 @@ class Graph extends React.Component<Props, object> {
             gravity: 0.2,
             layoutAnimation: true
           },
-          roam: true,
+          roam: false,
           nodeScaleRation: 0.5,
           draggable: false,
           focusNodeAdjacency: true,
@@ -142,6 +151,7 @@ class Graph extends React.Component<Props, object> {
           style={{ height: "100%", width: "100%" }}
           option={this.getOption()}
           opts={{ renderer: "canvas" }}
+          onEvents={this.getEvents()}
         />
       </div>
     );

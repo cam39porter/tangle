@@ -1,19 +1,26 @@
 import * as React from "react";
 
 interface Props {
+  id: string;
   body: string;
   tags: Array<{ name: string }>;
-  onClick: () => void;
+  onClick?: () => void;
+  onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onMouseLeave?: (e: React.MouseEvent<HTMLDivElement>) => void;
   accentColor: string;
   nodeColor: string;
 }
 
-class ListItem extends React.Component<Props, object> {
+class ResultListItem extends React.Component<Props, object> {
   render() {
     return (
       <div
         className={`bg-white bb b--light-gray dt pointer bg-animate hover-bg-near-white`}
         style={{ minWidth: "30em" }}
+        onMouseEnter={this.props.onMouseEnter}
+        onMouseLeave={this.props.onMouseLeave}
+        onClick={this.props.onClick}
+        key={this.props.id}
       >
         <div className={`dt-row ma2 w-100`}>
           <p className={`dtc fl ma3 h3 measure-narrow f6 overflow-hidden`}>
@@ -44,4 +51,4 @@ class ListItem extends React.Component<Props, object> {
   }
 }
 
-export default ListItem;
+export default ResultListItem;

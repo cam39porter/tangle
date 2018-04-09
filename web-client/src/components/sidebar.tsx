@@ -18,7 +18,7 @@ class Sidebar extends React.Component<Props, object> {
           className={`flex-column flex-grow measure bg-light-gray overflow-auto`}
         >
           {/* Padding to ensure results start below the header*/}
-          <div className={`h4 measure`} style={{ minWidth: "30em" }} />
+          <div className={``} style={{ minWidth: "30em", minHeight: "8rem" }} />
 
           {this.props.renderBody()}
         </div>

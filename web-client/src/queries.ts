@@ -4,22 +4,16 @@ import gql from "graphql-tag";
 export const CreateCapture = gql`
   mutation CreateCapture($body: String!) {
     createCapture(body: $body) {
-      captures {
+      nodes {
         id
-        body
-        created
-        tags {
-          name
-        }
-      }
-      entities {
-        id
-        name
         type
+        text
       }
       edges {
         source
         destination
+        type
+        salience
       }
     }
   }
@@ -27,40 +21,25 @@ export const CreateCapture = gql`
 
 // Search for captures
 export const Search = gql`
-  query Search($query: String!, $start: Int, $count: Int, $surfaceCount: Int) {
-    searchv2(rawQuery: $query, start: $start, count: $count) {
+  query Search($query: String!, $start: Int, $count: Int) {
+    search(rawQuery: $query, start: $start, count: $count) {
       graph {
-        captures {
+        nodes {
           id
-          body
-          created
-          tags {
-            name
-          }
-        }
-        entities {
-          id
-          name
           type
+          text
         }
         edges {
           source
           destination
+          type
+          salience
         }
       }
       pageInfo {
         start
         count
         total
-      }
-    }
-    getCaptures(count: $surfaceCount) {
-      results {
-        body
-        id
-        tags {
-          name
-        }
       }
     }
   }

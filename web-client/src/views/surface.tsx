@@ -6,6 +6,7 @@ import { graphql, ChildProps } from "react-apollo";
 
 import { RouteComponentProps } from "react-router";
 import ResultListItem from "../components/result-list-item";
+import ResultDetail from "../components/result-detail";
 import Graph from "../components/graph";
 import { Node } from "../components/graph";
 import GraphButtons from "../components/graph-buttons";
@@ -16,7 +17,7 @@ import { getGradient } from "../utils";
 
 import qs from "qs";
 
-import { split, toLower } from "lodash";
+import { split, toLower, assign } from "lodash";
 
 import tinycolor from "tinycolor2";
 
@@ -24,7 +25,6 @@ import config from "../cfg";
 
 const COUNT = 40; // number of results to return
 const PAGE_COUNT = 10; // number of results per page
-const SURFACE_COUNT = 500; // number of results to show on home surface page
 
 const BLUR_COLOR = "#CCCCCC";
 const FOCUS_COLOR_1 = tinycolor("#357EDD");
@@ -39,9 +39,11 @@ interface RouteProps extends RouteComponentProps<InputProps> {}
 interface Props extends RouteProps, ChildProps<InputProps, Response> {}
 
 interface State {
+  id: string;
   query: string;
   focusStartIndex: number;
   isSearch: boolean;
+  isDetail: boolean;
   isCapturing: boolean;
 }
 
@@ -50,6 +52,14 @@ function getQuery(queryString: string) {
     qs.parse(queryString, {
       ignoreQueryPrefix: true
     }).query || ""
+  );
+}
+
+function getId(queryString: string) {
+  return (
+    qs.parse(queryString, {
+      ignoreQueryPrefix: true
+    }).id || ""
   );
 }
 
@@ -67,36 +77,49 @@ class Surface extends React.Component<Props, State> {
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handlePageDown = this.handlePageDown.bind(this);
     this.handlePageUp = this.handlePageUp.bind(this);
+    this.handleSurfaceDetail = this.handleSurfaceDetail.bind(this);
 
     this.renderSearchBar = this.renderSearchBar.bind(this);
     this.renderResults = this.renderResults.bind(this);
+    this.renderDetail = this.renderDetail.bind(this);
     this.renderResultsPagination = this.renderResultsPagination.bind(this);
 
     const query = getQuery(this.props.location.search);
     const isSearch = query.length !== 0;
 
+    const id = getId(this.props.location.search);
+    const isDetail = id.length !== 0;
+
     this.state = {
       query,
+      id,
       focusStartIndex: 0,
       isSearch,
+      isDetail,
       isCapturing: false
     };
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const query = getQuery(this.props.location.search);
+    let nextState = {};
 
+    const query = getQuery(this.props.location.search);
     const nextQuery = getQuery(nextProps.location.search);
 
     if (nextQuery !== query) {
       const isSearch = nextQuery.length !== 0;
 
-      this.setState({
+      nextState = {
         query: nextQuery,
         focusStartIndex: 0,
         isSearch
-      });
+      };
     }
+
+    const id = getId(nextProps.location.search);
+    const isDetail = id.length !== 0;
+
+    this.setState(assign(nextState, { id, isDetail }));
   }
 
   handleIsCapturing() {
@@ -129,6 +152,13 @@ class Surface extends React.Component<Props, State> {
     );
   }
 
+  handleSurfaceDetail(id: string) {
+    this.props.history.push(
+      `/surface?query=${encodeURIComponent(this.state.query || "")}&id=${id}`
+    );
+    this.handleUnfocusNode();
+  }
+
   handlePageDown() {
     const startResultIndex = this.state.focusStartIndex;
 
@@ -149,6 +179,27 @@ class Surface extends React.Component<Props, State> {
     this.setState({
       focusStartIndex: this.state.focusStartIndex + PAGE_COUNT
     });
+  }
+
+  handleFocusNode(index: number) {
+    if (this.eChart) {
+      const eChartInstance = this.eChart.getEchartsInstance();
+
+      eChartInstance.dispatchAction({
+        type: "focusNodeAdjacency",
+        dataIndex: index
+      });
+    }
+  }
+
+  handleUnfocusNode() {
+    if (this.eChart) {
+      const eChartInstance = this.eChart.getEchartsInstance();
+
+      eChartInstance.dispatchAction({
+        type: "unfocusNodeAdjacency"
+      });
+    }
   }
 
   isActivePageUp() {
@@ -179,70 +230,28 @@ class Surface extends React.Component<Props, State> {
   }
 
   getTotalResults() {
-    if (!(this.props.data && this.props.data.searchv2)) {
+    if (!(this.props.data && this.props.data.search)) {
       return 0;
     }
-    return this.props.data.searchv2.graph.captures.length;
+    // TODO: filter this on node type capture
+    return this.props.data.search.graph.nodes.length;
   }
 
-  getSurfaceNodeData() {
-    if (
-      !(
-        this.props.data &&
-        this.props.data.searchv2 &&
-        this.props.data.getCaptures
-      )
-    ) {
+  getNodeData() {
+    if (!(this.props.data && this.props.data.search)) {
       return [];
     }
 
-    const results = this.props.data.getCaptures.results;
-    return results.map((capture, index) => {
-      return {
-        id: capture.id,
-        name: capture.body,
-        category: `${index}surfaceResult`,
-        label: {
-          show: false,
-          emphasis: {
-            show: false
-          }
-        }
-      };
-    });
-  }
+    const graph = this.props.data.search.graph;
 
-  getSurfaceCategoryData() {
-    const gradient = getGradient(FOCUS_COLOR_1, FOCUS_COLOR_2, SURFACE_COUNT);
-
-    return gradient.map((color, index) => {
-      return {
-        name: `${index}surfaceResult`,
-        itemStyle: {
-          normal: {
-            color: color.toHexString()
-          }
-        }
-      };
-    });
-  }
-
-  getResultsNodeData() {
-    if (!(this.props.data && this.props.data.searchv2)) {
-      return [];
-    }
-
-    const graph = this.props.data.searchv2.graph;
-
-    let focusCaptureNodes: Array<Node> = graph.captures
-      .filter((_, index) => {
-        // filter to focus on only the results on the current page
-        return this.isFocusResult(index);
+    let focusCaptureNodes: Array<Node> = graph.nodes
+      .filter((node, index) => {
+        return this.isFocusResult(index) && node.type === "CAPTURE";
       })
       .map((capture, index) => {
         return {
           id: capture.id,
-          name: capture.body,
+          name: capture.text,
           category: `${index}focusResult`,
           symbolSize: 24,
           label: {
@@ -254,15 +263,15 @@ class Surface extends React.Component<Props, State> {
         };
       });
 
-    let blurCaptureNodes: Array<Node> = graph.captures
-      .filter((_, index) => {
+    let blurCaptureNodes: Array<Node> = graph.nodes
+      .filter((node, index) => {
         // filter to focus on only the results not on the current page
-        return !this.isFocusResult(index);
+        return !this.isFocusResult(index) && node.type === "CAPTURE";
       })
       .map(capture => {
         return {
           id: capture.id,
-          name: capture.body,
+          name: capture.text,
           category: "blurResult",
           symbolSize: 16,
           label: {
@@ -276,18 +285,21 @@ class Surface extends React.Component<Props, State> {
 
     const queryTerms = split(getQuery(this.props.location.search), " ");
 
-    let entityNodes: Array<Node> = graph.entities
+    let entityNodes: Array<Node> = graph.nodes
+      .filter(node => {
+        return node.type === "ENTITY";
+      })
       .filter(entity => {
         const isQueryTerm = queryTerms.reduce((isTerm, term) => {
-          return isTerm || toLower(term) === toLower(entity.name);
+          return isTerm || toLower(term) === toLower(entity.text);
         }, false);
 
-        return !isQueryTerm && entity.name.length > 4 && entity.name !== "thi";
+        return !isQueryTerm && entity.text.length > 4 && entity.text !== "thi";
       })
       .map(entity => {
         return {
           id: entity.id,
-          name: entity.name,
+          name: entity.text,
           category: "entity",
           symbolSize: 12,
           label: {
@@ -303,12 +315,12 @@ class Surface extends React.Component<Props, State> {
     return focusCaptureNodes.concat(blurCaptureNodes).concat(entityNodes);
   }
 
-  getResultsEdgeData() {
-    if (!(this.props.data && this.props.data.searchv2)) {
+  getEdgeData() {
+    if (!(this.props.data && this.props.data.search)) {
       return [];
     }
 
-    const edges = this.props.data.searchv2.graph.edges;
+    const edges = this.props.data.search.graph.edges;
 
     return edges.map(edge => {
       return {
@@ -324,7 +336,7 @@ class Surface extends React.Component<Props, State> {
     });
   }
 
-  getResultsCategoryData() {
+  getCategoryData() {
     const totalFocusResults =
       this.getFocusEndIndex() - this.state.focusStartIndex;
     const gradientNumber = 2 > totalFocusResults ? 2 : totalFocusResults;
@@ -357,83 +369,6 @@ class Surface extends React.Component<Props, State> {
           }
         }
       });
-  }
-
-  renderResultsPagination() {
-    if (!this.isLoadedWithoutError) {
-      return null;
-    }
-
-    return (
-      <ResultPagination
-        totalResults={this.getTotalResults()}
-        startIndex={this.state.focusStartIndex}
-        endIndex={this.getFocusEndIndex()}
-        isActivePageDown={this.state.focusStartIndex > 0}
-        handlePageDown={this.handlePageDown}
-        isActivePageUp={this.isActivePageUp()}
-        handlePageUp={this.handlePageUp}
-      />
-    );
-  }
-
-  renderResults() {
-    if (
-      !(this.props.data && this.props.data.searchv2) ||
-      !this.isLoadedWithoutError()
-    ) {
-      return null;
-    }
-
-    const totalFocusResults =
-      this.getFocusEndIndex() - this.state.focusStartIndex;
-    const gradientNumber = totalFocusResults < 2 ? 2 : totalFocusResults;
-    let gradient = getGradient(FOCUS_COLOR_1, FOCUS_COLOR_2, gradientNumber);
-
-    return (
-      <div>
-        {this.props.data.searchv2.graph.captures
-          .filter((_, index) => {
-            return this.isFocusResult(index);
-          })
-          .map((capture, index) => {
-            return (
-              <div
-                key={capture.id}
-                onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
-                  if (this.eChart) {
-                    const eChartInstance = this.eChart.getEchartsInstance();
-
-                    eChartInstance.dispatchAction({
-                      type: "focusNodeAdjacency",
-                      dataIndex: index
-                    });
-                  }
-                }}
-                onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
-                  if (this.eChart) {
-                    const eChartInstance = this.eChart.getEchartsInstance();
-
-                    eChartInstance.dispatchAction({
-                      type: "unfocusNodeAdjacency"
-                    });
-                  }
-                }}
-              >
-                <ResultListItem
-                  body={capture.body}
-                  tags={capture.tags}
-                  onClick={() => {
-                    return;
-                  }}
-                  nodeColor={gradient[index].toHexString()}
-                  accentColor={config.surfaceAccentColor}
-                />
-              </div>
-            );
-          })}
-      </div>
-    );
   }
 
   renderSearchBar() {
@@ -480,20 +415,74 @@ class Surface extends React.Component<Props, State> {
     );
   }
 
+  renderResults() {
+    if (
+      !(this.props.data && this.props.data.search) ||
+      !this.isLoadedWithoutError()
+    ) {
+      return null;
+    }
+
+    const totalFocusResults =
+      this.getFocusEndIndex() - this.state.focusStartIndex;
+    const gradientNumber = totalFocusResults < 2 ? 2 : totalFocusResults;
+    let gradient = getGradient(FOCUS_COLOR_1, FOCUS_COLOR_2, gradientNumber);
+
+    return (
+      <div>
+        {this.props.data.search.graph.nodes
+          .filter((node, index) => {
+            return this.isFocusResult(index) && node.type === "CAPTURE";
+          })
+          .map((capture, index) => {
+            return (
+              <ResultListItem
+                key={capture.id}
+                id={capture.id}
+                body={capture.text}
+                tags={[]}
+                onClick={this.handleSurfaceDetail.bind(null, capture.id)}
+                onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                  this.handleFocusNode(index);
+                }}
+                onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                  this.handleUnfocusNode();
+                }}
+                nodeColor={gradient[index].toHexString()}
+                accentColor={config.surfaceAccentColor}
+              />
+            );
+          })}
+      </div>
+    );
+  }
+
+  renderDetail() {
+    return <ResultDetail id={this.state.id} />;
+  }
+
+  renderResultsPagination() {
+    if (!this.isLoadedWithoutError) {
+      return null;
+    }
+
+    return (
+      <ResultPagination
+        totalResults={this.getTotalResults()}
+        startIndex={this.state.focusStartIndex}
+        endIndex={this.getFocusEndIndex()}
+        isActivePageDown={this.state.focusStartIndex > 0}
+        handlePageDown={this.handlePageDown}
+        isActivePageUp={this.isActivePageUp()}
+        handlePageUp={this.handlePageUp}
+      />
+    );
+  }
+
   renderGraph() {
     if (!this.isLoadedWithoutError()) {
       return null;
     }
-
-    const nodeData = this.state.isSearch
-      ? this.getResultsNodeData()
-      : this.getSurfaceNodeData();
-
-    const edgeData = this.state.isSearch ? this.getResultsEdgeData() : [];
-
-    const categoryData = this.state.isSearch
-      ? this.getResultsCategoryData()
-      : this.getSurfaceCategoryData();
 
     const focusStartIndex = this.state.isSearch
       ? this.state.focusStartIndex
@@ -511,10 +500,16 @@ class Surface extends React.Component<Props, State> {
         layout={"force"}
         focusStartIndex={focusStartIndex}
         focusEndIndex={focusEndIndex}
-        nodeData={nodeData}
-        edgeData={edgeData}
-        categoryData={categoryData}
+        nodeData={this.getNodeData()}
+        edgeData={this.getEdgeData()}
+        categoryData={this.getCategoryData()}
         tooltipPosition={this.state.isSearch ? ["32", "32"] : "top"}
+        onClick={e => {
+          if (e.dataType !== "node" || e.data.category === "entity") {
+            return;
+          }
+          this.handleSurfaceDetail(e.data.id);
+        }}
       />
     );
   }
@@ -529,11 +524,15 @@ class Surface extends React.Component<Props, State> {
             isCapturing={this.state.isCapturing}
           />
           {/* Search */}
-          {this.state.isSearch ? (
+          {this.state.isSearch || this.state.isDetail ? (
             <Sidebar
               renderHeader={this.renderSearchBar}
-              renderBody={this.renderResults}
-              renderFooter={this.renderResultsPagination}
+              renderBody={
+                !this.state.isDetail ? this.renderResults : this.renderDetail
+              }
+              renderFooter={
+                !this.state.isDetail ? this.renderResultsPagination : () => null
+              }
             />
           ) : (
             this.renderSearchBar()
@@ -550,8 +549,7 @@ const SurfaceResultsWithData = graphql<Response, Props>(QUERY, {
   options: (ownProps: Props) => ({
     variables: {
       query: getQuery(ownProps.location.search),
-      count: COUNT,
-      surfaceCount: SURFACE_COUNT
+      count: COUNT
     },
     fetchPolicy: "network-only"
   })

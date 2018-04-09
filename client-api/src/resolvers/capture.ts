@@ -31,15 +31,13 @@ export default {
   Mutation: {
     createCapture(_, params, context): Promise<Graph> {
       return insertCapture(params.body).then(capture => {
-        const id =
-          capture.records[0].get("n").properties.id ||
-          capture.records[0].get("n").properties.created.toString();
+        const id = capture.records[0].get("n").properties.id;
         return getNLPResponse(params.body).then(nlp => {
-          const promises = Promise.all(
+          const nlpCreates = Promise.all(
             nlp.entities.map(entity => insertEntityWithRel(id, entity))
           );
-          return promises.then(results => {
-            return new Graph(null, null);
+          return nlpCreates.then(results => {
+            return get(id);
           });
         });
       });

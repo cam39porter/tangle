@@ -158,7 +158,9 @@ function buildGraphFromNeo4jResp(records, start, count) {
   const dedupedCaptures: GraphNode[] = dedupe(captures, capture => capture.id);
 
   const entities: GraphNode[] = records
-    .filter(record => record.get("n").labels.includes("Entity"))
+    .filter(
+      record => record.get("n") && record.get("n").labels.includes("Entity")
+    )
     .map(
       record =>
         new GraphNode(
@@ -172,7 +174,7 @@ function buildGraphFromNeo4jResp(records, start, count) {
 
   const tags: GraphNode[] = records
     .filter(record => {
-      return record.get("n").labels.includes("Tag");
+      return record.get("n") && record.get("n").labels.includes("Tag");
     })
     .map(
       record =>

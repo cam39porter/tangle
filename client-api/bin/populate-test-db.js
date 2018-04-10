@@ -14,7 +14,8 @@ fs.readdir(path, (err, files) => {
     var lineReader = require("readline").createInterface({
       input: require("fs").createReadStream(`${path}/${file}`)
     });
-      sleep.msleep(100);
+    lineReader.on("line", line => {
+      sleep.msleep(500);
       let trimmedLine = _.trim(line);
       if (trimmedLine === "") {
         return;

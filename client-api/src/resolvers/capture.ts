@@ -11,7 +11,6 @@ import {
   Edge,
   NLPEntity
 } from "../models";
-import { db } from "../db/db";
 import { getNLPResponse } from "../services/nlp";
 import { execute } from "../db/graphdb";
 import { parseTags, stripTags } from "../helpers/tag";

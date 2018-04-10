@@ -280,7 +280,7 @@ class Surface extends React.Component<Props, State> {
           id: entity.id,
           name: entity.text,
           category: "entity",
-          symbolSize: 12,
+          symbolSize: 24,
           label: {
             show: true,
             color: ENTITY_COLOR,
@@ -300,11 +300,11 @@ class Surface extends React.Component<Props, State> {
           id: tag.id,
           name: `#${tag.text}`,
           category: "tag",
-          symbolSize: 12,
+          symbolSize: 24,
           label: {
             show: true,
             color: TAG_COLOR,
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: "bold",
             emphasis: {
               show: true
@@ -431,7 +431,7 @@ class Surface extends React.Component<Props, State> {
           id: entity.id,
           name: entity.text,
           category: "entity",
-          symbolSize: 12,
+          symbolSize: 24,
           label: {
             show: true,
             color: ENTITY_COLOR,
@@ -451,11 +451,11 @@ class Surface extends React.Component<Props, State> {
           id: tag.id,
           name: `#${tag.text}`,
           category: "tag",
-          symbolSize: 12,
+          symbolSize: 24,
           label: {
             show: true,
             color: TAG_COLOR,
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: "bold",
             emphasis: {
               show: true

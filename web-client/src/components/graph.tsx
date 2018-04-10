@@ -69,7 +69,10 @@ class Graph extends React.Component<Props, object> {
         }) => {
           switch (params.dataType) {
             case "node":
-              if (params.data.category === "entity") {
+              if (
+                params.data.category === "entity" ||
+                params.data.category === "tag"
+              ) {
                 return "";
               }
 

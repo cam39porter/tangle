@@ -187,14 +187,16 @@ function buildGraphFromNeo4jResp(records, start, count) {
     );
   const dedupedTags: GraphNode[] = dedupe(tags, tag => tag.id);
 
-  const edges: Edge[] = records.map(record => {
-    return new Edge({
-      source: record.get("c").properties.id,
-      destination: record.get("n").properties.id,
-      type: record.get("r").type,
-      salience: record.get("r").properties.salience
+  const edges: Edge[] = records
+    .filter(record => record.get("r"))
+    .map(record => {
+      return new Edge({
+        source: record.get("c").properties.id,
+        destination: record.get("n").properties.id,
+        type: record.get("r").type,
+        salience: record.get("r").properties.salience
+      });
     });
-  });
   return new Graph(
     dedupedCaptures.concat(dedupedEntities.concat(dedupedTags)),
     edges

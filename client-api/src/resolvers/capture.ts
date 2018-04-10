@@ -8,9 +8,12 @@ import {
   NLPEntity
 } from "../models";
 import { getNLPResponse } from "../services/nlp";
-import { executeQuery, createNode } from "../db/db";
+import {
+  executeQuery,
+  createCaptureNode,
+  createTagNodeWithEdge
+} from "../db/db";
 import { parseTags, stripTags } from "../helpers/tag";
-const uuidv4 = require("uuid/v4");
 const dedupe = require("dedupe");
 const table = "capture";
 
@@ -25,18 +28,21 @@ export default {
   },
   Mutation: {
     createCapture(_, params, context): Promise<Graph> {
-      return insertCapture(params.body).then(captureNode => {
-        const id = captureNode.id;
+      return createCaptureNode(params.body).then(captureNode => {
         return getNLPResponse(stripTags(params.body)).then(nlp => {
           const nlpCreates = Promise.all(
-            nlp.entities.map(entity => insertEntityWithRel(id, entity))
+            nlp.entities.map(entity =>
+              insertEntityWithRel(captureNode.id, entity)
+            )
           );
           return nlpCreates.then(nlpCreateResults => {
             const tagCreates = Promise.all(
-              parseTags(params.body).map(tag => insertTagWithRel(id, tag))
+              parseTags(params.body).map(tag =>
+                createTagNodeWithEdge(tag, captureNode.id)
+              )
             );
             return tagCreates.then(tagCreateResults => {
-              return get(id);
+              return get(captureNode.id);
             });
           });
         });
@@ -44,18 +50,6 @@ export default {
     }
   }
 };
-
-function insertTagWithRel(captureId: string, tag: string) {
-  return executeQuery(`
-    MATCH (capture {id: "${captureId}"})
-    MERGE (tag:Tag {
-      id: "${tag}",
-      name: "${tag}"
-    })
-    CREATE (tag)<-[r:TAGGED_WITH]-(capture)
-    RETURN tag
-  `);
-}
 
 function insertEntityWithRel(
   captureId: string,
@@ -71,11 +65,6 @@ function insertEntityWithRel(
     CREATE (entity)<-[r:REFERENCES { salience: ${entity.salience} }]-(capture)
     RETURN entity
   `);
-}
-
-function insertCapture(body: string): Promise<GraphNode> {
-  const uuid = uuidv4();
-  return createNode(new GraphNode(uuid, "Capture", body, null));
 }
 
 function get(id: string): Promise<Graph> {

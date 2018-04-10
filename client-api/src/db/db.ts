@@ -1,5 +1,5 @@
 import { GraphNode } from "../models";
-
+const uuidv4 = require("uuid/v4");
 const neo4j = require("neo4j-driver").v1;
 
 const driver = neo4j.driver(
@@ -8,18 +8,40 @@ const driver = neo4j.driver(
 );
 const session = driver.session();
 
-function createNode(node: GraphNode): Promise<GraphNode> {
+function createCaptureNode(body: string): Promise<GraphNode> {
+  const uuid = uuidv4();
   return executeQuery(
-    `MERGE (n:${node.type} {id:"${node.id}", body:"${
-      node.text
-    }"}) ON CREATE SET n.created = TIMESTAMP() RETURN n`
+    `MERGE (n:Capture {id:"${uuid}", body:"${body}"})
+    ON CREATE SET n.created = TIMESTAMP()
+    RETURN n`
   ).then(result => {
-    const record = result.records[0];
+    const record = result.records[0].get("n");
     return new GraphNode(
-      record.get("n").properties.id,
+      record.properties.id,
       "CAPTURE",
-      record.get("n").properties.body,
+      record.properties.body,
       0
+    );
+  });
+}
+
+function createTagNodeWithEdge(tag: string, toNodeId: string): GraphNode {
+  return executeQuery(`
+    MATCH (to {id: "${toNodeId}"})
+    MERGE (tag:Tag {
+      id: "${tag}",
+      name: "${tag}"
+    })
+    ON CREATE SET tag.created = TIMESTAMP()
+    CREATE (tag)<-[r:TAGGED_WITH]-(to)
+    RETURN tag
+  `).then(result => {
+    const record = result.records[0].get("tag");
+    return new GraphNode(
+      record.properties.id,
+      "TAG",
+      record.properties.name,
+      null
     );
   });
 }
@@ -37,4 +59,4 @@ function executeQuery(cypherQuery) {
     });
 }
 
-export { executeQuery, createNode };
+export { executeQuery, createCaptureNode, createTagNodeWithEdge };

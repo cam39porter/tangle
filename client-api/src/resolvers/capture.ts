@@ -8,7 +8,7 @@ import {
   NLPEntity
 } from "../models";
 import { getNLPResponse } from "../services/nlp";
-import { execute } from "../db/graphdb";
+import { executeQuery, createNode } from "../db/db";
 import { parseTags, stripTags } from "../helpers/tag";
 const uuidv4 = require("uuid/v4");
 const dedupe = require("dedupe");
@@ -25,8 +25,8 @@ export default {
   },
   Mutation: {
     createCapture(_, params, context): Promise<Graph> {
-      return insertCapture(params.body).then(capture => {
-        const id = capture.records[0].get("n").properties.id;
+      return insertCapture(params.body).then(captureNode => {
+        const id = captureNode.id;
         return getNLPResponse(stripTags(params.body)).then(nlp => {
           const nlpCreates = Promise.all(
             nlp.entities.map(entity => insertEntityWithRel(id, entity))
@@ -46,7 +46,7 @@ export default {
 };
 
 function insertTagWithRel(captureId: string, tag: string) {
-  return execute(`
+  return executeQuery(`
     MATCH (capture {id: "${captureId}"})
     MERGE (tag:Tag {
       id: "${tag}",
@@ -61,7 +61,7 @@ function insertEntityWithRel(
   captureId: string,
   entity: NLPEntity
 ): Promise<any> {
-  return execute(`
+  return executeQuery(`
     MATCH (capture {id: "${captureId}"})
     MERGE (entity:Entity {
       id: "${entity.name};${entity.type}",
@@ -73,15 +73,13 @@ function insertEntityWithRel(
   `);
 }
 
-function insertCapture(body: string): Promise<any> {
+function insertCapture(body: string): Promise<GraphNode> {
   const uuid = uuidv4();
-  return execute(
-    `CREATE (n:Capture {id:"${uuid}", body:"${body}", created:TIMESTAMP()}) RETURN n`
-  );
+  return createNode(new GraphNode(uuid, "Capture", body, null));
 }
 
 function get(id: string): Promise<Graph> {
-  return execute(`
+  return executeQuery(`
     MATCH (c:Capture {id:"${id}"}) 
     OPTIONAL MATCH (c)-[r]->(n)
     RETURN c,r,n
@@ -93,7 +91,7 @@ function search(
   start: number,
   count: number
 ): Promise<SearchResults> {
-  return execute(
+  return executeQuery(
     `MATCH (c:Capture) 
     WHERE c.body CONTAINS '${rawQuery}' 
     OPTIONAL MATCH (c)-[r]->(n)

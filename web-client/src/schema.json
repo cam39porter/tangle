@@ -318,6 +318,12 @@
               "description": "",
               "isDeprecated": false,
               "deprecationReason": null
+            },
+            {
+              "name": "TAG",
+              "description": "",
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "possibleTypes": null
@@ -403,6 +409,12 @@
           "enumValues": [
             {
               "name": "REFERENCES",
+              "description": "",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "TAGGED_WITH",
               "description": "",
               "isDeprecated": false,
               "deprecationReason": null

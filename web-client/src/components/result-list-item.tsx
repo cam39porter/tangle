@@ -3,7 +3,6 @@ import * as React from "react";
 interface Props {
   id: string;
   body: string;
-  tags: Array<{ name: string }>;
   onClick?: () => void;
   onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onMouseLeave?: (e: React.MouseEvent<HTMLDivElement>) => void;
@@ -32,19 +31,6 @@ class ResultListItem extends React.Component<Props, object> {
               style={{ backgroundColor: this.props.nodeColor }}
             />
           </div>
-        </div>
-        <div className={`dt-row ma2 h2 w-100`}>
-          {this.props.tags.map((tag, index) => {
-            const name = tag.name;
-            return (
-              <span
-                key={`${index}-${name}`}
-                className={`f6 ma3 ${this.props.accentColor} fw5`}
-              >
-                {`#${name}`}
-              </span>
-            );
-          })}
         </div>
       </div>
     );

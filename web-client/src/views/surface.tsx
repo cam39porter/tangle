@@ -17,7 +17,7 @@ import { getGradient } from "../utils";
 
 import qs from "qs";
 
-import { assign } from "lodash";
+import { assign, concat } from "lodash";
 
 import tinycolor from "tinycolor2";
 
@@ -29,6 +29,8 @@ const PAGE_COUNT = 10; // number of results per page
 const BLUR_COLOR = "#CCCCCC";
 const FOCUS_COLOR_1 = tinycolor("#357EDD");
 const FOCUS_COLOR_2 = tinycolor("#CDECFF");
+const TAG_COLOR = "#333333";
+const ENTITY_COLOR = "#777777";
 
 interface InputProps {
   query: string;
@@ -277,7 +279,7 @@ class Surface extends React.Component<Props, State> {
           symbolSize: 12,
           label: {
             show: true,
-            color: "#777777",
+            color: ENTITY_COLOR,
             emphasis: {
               show: true
             }
@@ -285,7 +287,27 @@ class Surface extends React.Component<Props, State> {
         };
       });
 
-    return detailNode.concat(entityNodes);
+    let tagNodes: Array<Node> = nodes
+      .filter(node => {
+        return node.type === "TAG";
+      })
+      .map(entity => {
+        return {
+          id: entity.id,
+          name: entity.text,
+          category: "entity",
+          symbolSize: 12,
+          label: {
+            show: true,
+            color: TAG_COLOR,
+            emphasis: {
+              show: true
+            }
+          }
+        };
+      });
+
+    return concat(detailNode, entityNodes, tagNodes);
   }
 
   getDetailEdgeData() {
@@ -343,9 +365,9 @@ class Surface extends React.Component<Props, State> {
       return [];
     }
 
-    const graph = this.props.data.search.graph;
+    const nodes = this.props.data.search.graph.nodes;
 
-    let focusCaptureNodes: Array<Node> = graph.nodes
+    let focusCaptureNodes: Array<Node> = nodes
       .filter((node, index) => {
         return this.isFocusResult(index) && node.type === "CAPTURE";
       })
@@ -364,7 +386,7 @@ class Surface extends React.Component<Props, State> {
         };
       });
 
-    let blurCaptureNodes: Array<Node> = graph.nodes
+    let blurCaptureNodes: Array<Node> = nodes
       .filter((node, index) => {
         return !this.isFocusResult(index) && node.type === "CAPTURE";
       })
@@ -383,7 +405,7 @@ class Surface extends React.Component<Props, State> {
         };
       });
 
-    let entityNodes: Array<Node> = graph.nodes
+    let entityNodes: Array<Node> = nodes
       .filter(node => {
         return node.type === "ENTITY";
       })
@@ -398,7 +420,7 @@ class Surface extends React.Component<Props, State> {
           symbolSize: 12,
           label: {
             show: true,
-            color: "#777777",
+            color: ENTITY_COLOR,
             emphasis: {
               show: true
             }
@@ -406,7 +428,27 @@ class Surface extends React.Component<Props, State> {
         };
       });
 
-    return focusCaptureNodes.concat(blurCaptureNodes).concat(entityNodes);
+    let tagNodes: Array<Node> = nodes
+      .filter(node => {
+        return node.type === "TAG";
+      })
+      .map(entity => {
+        return {
+          id: entity.id,
+          name: entity.text,
+          category: "entity",
+          symbolSize: 12,
+          label: {
+            show: true,
+            color: TAG_COLOR,
+            emphasis: {
+              show: true
+            }
+          }
+        };
+      });
+
+    return concat(focusCaptureNodes, blurCaptureNodes, entityNodes, tagNodes);
   }
 
   getSearchEdgeData() {
@@ -534,7 +576,6 @@ class Surface extends React.Component<Props, State> {
                 key={capture.id}
                 id={capture.id}
                 body={capture.text}
-                tags={[]}
                 onClick={this.handleSurfaceDetail.bind(null, capture.id)}
                 onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
                   this.handleFocusNode(index);

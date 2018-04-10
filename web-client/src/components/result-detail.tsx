@@ -7,7 +7,14 @@ interface Props {
 
 class ResultDetail extends React.Component<Props, object> {
   render() {
-    return <div className={`tc`}>{this.props.body}</div>;
+    return (
+      <div
+        className={`w-100 bg-blue light-gray pa3 tl f6`}
+        style={{ minHeight: "8rem" }}
+      >
+        <div className={`measure`}>{this.props.body}</div>
+      </div>
+    );
   }
 }
 

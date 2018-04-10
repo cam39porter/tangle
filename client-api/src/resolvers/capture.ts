@@ -1,11 +1,7 @@
 import {
   PageInfo,
-  Capture,
-  CaptureCollection,
-  Tag,
   NLPEntityResponse,
   SearchResults,
-  Entity,
   Graph,
   GraphNode,
   Edge,
@@ -90,19 +86,6 @@ function get(id: string): Promise<Graph> {
     OPTIONAL MATCH (c)-[r]->(n)
     RETURN c,r,n
   `).then(res => buildGraphFromNeo4jResp(res.records, 0, 1));
-}
-function getAll(): Promise<[Capture]> {
-  return execute("MATCH (n:Capture) RETURN n").then(result => {
-    return result.records.map(record => {
-      return new Capture({
-        id:
-          record.get("n").properties.id ||
-          record.get("n").properties.created.toString(),
-        body: record.get("n").properties.body,
-        created: record.get("n").properties.created.toString()
-      });
-    });
-  });
 }
 
 function search(

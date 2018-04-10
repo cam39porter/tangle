@@ -217,6 +217,10 @@ class Surface extends React.Component<Props, State> {
   }
 
   isFocusResult(index: number) {
+    if (getQuery(this.props.location.search) === "") {
+      return true;
+    }
+
     return (
       index >= this.state.focusStartIndex &&
       index < this.state.focusStartIndex + PAGE_COUNT
@@ -474,7 +478,9 @@ class Surface extends React.Component<Props, State> {
 
   getSearchCategoryData() {
     const totalFocusResults =
-      this.getFocusEndIndex() - this.state.focusStartIndex;
+      getQuery(this.props.location.search) === ""
+        ? COUNT
+        : this.getFocusEndIndex() - this.state.focusStartIndex;
     const gradientNumber = 2 > totalFocusResults ? 2 : totalFocusResults;
     const gradient = getGradient(FOCUS_COLOR_1, FOCUS_COLOR_2, gradientNumber);
 

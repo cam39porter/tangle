@@ -12,7 +12,7 @@ class ResultDetail extends React.Component<Props, object> {
         className={`w-100 bg-blue light-gray pa3 tl f6`}
         style={{ minHeight: "8rem" }}
       >
-        <div className={`measure`}>{this.props.body}</div>
+        <div className={`measure lh-copy`}>{this.props.body}</div>
       </div>
     );
   }

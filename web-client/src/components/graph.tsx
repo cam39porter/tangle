@@ -118,8 +118,8 @@ class Graph extends React.Component<Props, object> {
             rotateLabel: false
           },
           force: {
-            edgeLength: 24,
-            repulsion: 256,
+            edgeLength: 50,
+            repulsion: 600,
             gravity: 0.2,
             layoutAnimation: true
           },

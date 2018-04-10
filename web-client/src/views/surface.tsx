@@ -23,7 +23,7 @@ import tinycolor from "tinycolor2";
 
 import config from "../cfg";
 
-const COUNT = 40; // number of results to return
+const COUNT = 200; // number of results to return
 const PAGE_COUNT = 10; // number of results per page
 
 const BLUR_COLOR = "#CCCCCC";
@@ -295,15 +295,17 @@ class Surface extends React.Component<Props, State> {
       .filter(node => {
         return node.type === "TAG";
       })
-      .map(entity => {
+      .map(tag => {
         return {
-          id: entity.id,
-          name: entity.text,
-          category: "entity",
+          id: tag.id,
+          name: `#${tag.text}`,
+          category: "tag",
           symbolSize: 12,
           label: {
             show: true,
             color: TAG_COLOR,
+            fontSize: 14,
+            fontWeight: "bold",
             emphasis: {
               show: true
             }
@@ -355,6 +357,14 @@ class Surface extends React.Component<Props, State> {
       },
       {
         name: "entity",
+        itemStyle: {
+          normal: {
+            color: "#FFFFFF"
+          }
+        }
+      },
+      {
+        name: "tag",
         itemStyle: {
           normal: {
             color: "#FFFFFF"
@@ -436,15 +446,17 @@ class Surface extends React.Component<Props, State> {
       .filter(node => {
         return node.type === "TAG";
       })
-      .map(entity => {
+      .map(tag => {
         return {
-          id: entity.id,
-          name: entity.text,
-          category: "entity",
+          id: tag.id,
+          name: `#${tag.text}`,
+          category: "tag",
           symbolSize: 12,
           label: {
             show: true,
             color: TAG_COLOR,
+            fontSize: 14,
+            fontWeight: "bold",
             emphasis: {
               show: true
             }
@@ -505,6 +517,14 @@ class Surface extends React.Component<Props, State> {
       })
       .concat({
         name: "entity",
+        itemStyle: {
+          normal: {
+            color: "#FFFFFF"
+          }
+        }
+      })
+      .concat({
+        name: "tag",
         itemStyle: {
           normal: {
             color: "#FFFFFF"
@@ -668,7 +688,10 @@ class Surface extends React.Component<Props, State> {
         categoryData={categoryData}
         tooltipPosition={this.state.isSearch ? ["32", "32"] : "top"}
         onClick={e => {
-          if (e.dataType !== "node" || e.data.category === "entity") {
+          if (
+            e.dataType !== "node" ||
+            (e.data.category === "entity" || e.data.category === "tag")
+          ) {
             return;
           }
           this.handleSurfaceDetail(e.data.id);

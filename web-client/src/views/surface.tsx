@@ -136,10 +136,6 @@ class Surface extends React.Component<Props, State> {
     this.setState({
       query
     });
-
-    if (query === "") {
-      this.props.history.push(`/surface`);
-    }
   }
 
   handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {

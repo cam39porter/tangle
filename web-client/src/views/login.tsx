@@ -2,11 +2,17 @@ import * as React from "react";
 
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 
+import { RouteProps } from "react-router";
+
+interface Props extends RouteProps {}
+
 import { firebaseAuth } from "../utils";
 
-interface Props {}
+interface Props extends RouteProps {}
 
-class Login extends React.Component<Props, object> {
+interface State {}
+
+class Login extends React.Component<Props, State> {
   render() {
     return (
       <div className={`dt vh-100 w-100`}>
@@ -19,7 +25,11 @@ class Login extends React.Component<Props, object> {
                   firebaseAuth.GoogleAuthProvider.PROVIDER_ID,
                   firebaseAuth.EmailAuthProvider.PROVIDER_ID
                 ],
-                signInSuccessUrl: "/surface"
+                signInSuccessUrl: `${
+                  this.props.location
+                    ? this.props.location.pathname + this.props.location.search
+                    : "/"
+                }`
               }}
             />
           </div>

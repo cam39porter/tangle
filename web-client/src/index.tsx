@@ -8,6 +8,7 @@ import { unregister as unregisterServiceWorker } from "./registerServiceWorker";
 // Apollo
 import { ApolloClient } from "apollo-client";
 import { createHttpLink } from "apollo-link-http";
+import { setContext } from "apollo-link-context";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloProvider } from "react-apollo";
 
@@ -18,9 +19,19 @@ const httpLink = createHttpLink({
   uri: process.env.REACT_APP_GRAPHQL_URI
 });
 
+const authLink = setContext((_, { headers }) => {
+  const idToken = localStorage.getItem("idToken");
+  return {
+    headers: {
+      ...headers,
+      authorization: idToken ? `Bearer ${idToken}` : ""
+    }
+  };
+});
+
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: httpLink
+  link: authLink.concat(httpLink)
 });
 
 class ApolloWrappedApp extends React.Component<object, object> {

@@ -8,7 +8,9 @@ import config from "../cfg";
 
 interface Props {}
 
-class Tangle extends React.Component<Props, object> {
+interface State {}
+
+class Tangle extends React.Component<Props, State> {
   render() {
     return (
       <div className={`vh-100 w-100 relative`}>
@@ -17,6 +19,7 @@ class Tangle extends React.Component<Props, object> {
             accentColor={config.tangleAccentColor}
             title="sign out"
             onClick={() => {
+              localStorage.removeItem("idToken");
               firebaseAuth().signOut();
             }}
           />

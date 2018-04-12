@@ -4,11 +4,14 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
+import * as requestContext from "request-context";
+
 import { makeExecutableSchema } from "graphql-tools";
 
 import schema from "./schema";
 import resolvers from "./resolvers/capture";
 import { GraphQLSchema } from "graphql";
+import { authFilter, initAuth } from "./filters/auth";
 
 import { createSMSCapture } from "./controllers/sms";
 
@@ -22,6 +25,8 @@ const executableSchema: GraphQLSchema = makeExecutableSchema({
   typeDefs: schema,
   resolvers: resolvers
 });
+
+initAuth();
 
 const PORT = 8080;
 const app = express();
@@ -41,9 +46,12 @@ if (process.env.NODE_ENV === "production") {
   app.use(cors());
 }
 
+app.use(requestContext.middleware("request"));
+
 // bodyParser is needed just for POST.
 app.use(
   "/graphql",
+  authFilter,
   bodyParser.json(),
   graphqlExpress({ schema: executableSchema })
 );

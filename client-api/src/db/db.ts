@@ -8,11 +8,15 @@ const driver = neo4j.driver(
 );
 const session = driver.session();
 
-function createCaptureNode(body: string): Promise<GraphNode> {
+function createCaptureNode(user, body: string): Promise<GraphNode> {
   const uuid = uuidv4();
   return executeQuery(
-    `MERGE (n:Capture {id:"${uuid}", body:"${body}"})
+    `MERGE (u:User {id:"${user.uid}", name:"${user.name}", email:"${
+      user.email
+    }"})
+    MERGE (n:Capture {id:"${uuid}", body:"${body}"})
     ON CREATE SET n.created = TIMESTAMP()
+    CREATE (u)-[created:CREATED]->(n)
     RETURN n`
   ).then(result => {
     const record = result.records[0].get("n");

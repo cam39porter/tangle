@@ -49,3 +49,6 @@ dist/
 release-builds/
 build/
 __generated__/
+
+# Emacs #
+*~

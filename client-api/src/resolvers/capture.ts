@@ -14,6 +14,8 @@ import {
   createTagNodeWithEdge
 } from "../db/db";
 import { parseTags, stripTags } from "../helpers/tag";
+import * as requestContext from "request-context";
+
 const dedupe = require("dedupe");
 const table = "capture";
 
@@ -28,7 +30,8 @@ export default {
   },
   Mutation: {
     createCapture(_, params, context): Promise<Graph> {
-      return createCaptureNode(params.body).then(captureNode => {
+      const user = requestContext.get("request").user;
+      return createCaptureNode(user, params.body).then(captureNode => {
         return getNLPResponse(stripTags(params.body)).then(nlp => {
           const nlpCreates = Promise.all(
             nlp.entities.map(entity =>
@@ -80,9 +83,11 @@ function search(
   start: number,
   count: number
 ): Promise<SearchResults> {
+  const userId =
+    requestContext.get("request") && requestContext.get("request").user.uid;
   return executeQuery(
-    `MATCH (c:Capture) 
-    WHERE c.body CONTAINS '${rawQuery}' 
+    `MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"}) 
+    WHERE c.body CONTAINS "${rawQuery}"
     OPTIONAL MATCH (c)-[r]->(n)
     RETURN c,r,n`
   ).then(res => {

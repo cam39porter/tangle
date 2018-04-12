@@ -9,7 +9,6 @@ function initAuth() {
 }
 
 function authFilter(req, res, next) {
-  console.log(process.env.GOOGLE_APPLICATION_CREDENTIALS);
   if (req.get("authorization")) {
     const encodedToken = parseAuthorization(req.get("authorization"));
     verify(encodedToken)
@@ -24,10 +23,10 @@ function authFilter(req, res, next) {
       })
       .catch(error => {
         console.log(error);
-        res.send(401);
+        res.send(401, error);
       });
   } else {
-    res.send(400);
+    res.send(400, "Authorization header not provided");
   }
 }
 

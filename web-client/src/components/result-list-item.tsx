@@ -23,7 +23,10 @@ class ResultListItem extends React.Component<Props, object> {
         key={this.props.id}
       >
         <div className={`dt-row ma2 w-100`}>
-          <p className={`dtc fl ma3 h3 measure-narrow f6 overflow-hidden`}>
+          <p
+            className={`dtc fl ma3 h3 measure-narrow f6 overflow-hidden `}
+            style={{}}
+          >
             {this.props.body}
           </p>
           <div className={`dtc fr ma3`}>

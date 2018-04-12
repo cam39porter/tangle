@@ -21,8 +21,6 @@ import ResultPagination from "../components/result-pagination";
 // Config / Utils
 import { getGradient } from "../utils";
 import config from "../cfg";
-
-// Random
 import qs from "qs";
 import { assign, concat } from "lodash";
 import tinycolor from "tinycolor2";
@@ -543,6 +541,7 @@ class Surface extends React.Component<Props, State> {
       >
         <div
           className={`center w-90 dt ma4`}
+          style={{ cursor: "text" }}
           onClick={() => {
             if (this.searchInput) {
               this.searchInput.focus();

@@ -7,10 +7,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/client-api/.compiled/index.js",
       "sourceMaps": true,
-      "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS":
-          "/Users/colemccracken/Downloads/opit-9afec94eb5d9.json"
-      }
+      "envFile": "${workspaceRoot}/client-api/.env"
     },
     {
       "name": "Launch Chrome against localhost web client",

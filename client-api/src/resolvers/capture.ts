@@ -15,6 +15,7 @@ import {
 } from "../db/db";
 import { parseTags, stripTags } from "../helpers/tag";
 import * as requestContext from "request-context";
+import * as _ from "lodash";
 
 const dedupe = require("dedupe");
 const table = "capture";
@@ -71,11 +72,46 @@ function insertEntityWithRel(
 }
 
 function get(id: string): Promise<Graph> {
-  return executeQuery(`
-    MATCH (c:Capture {id:"${id}"}) 
-    OPTIONAL MATCH (c)-[r]->(n)
-    RETURN c,r,n
-  `).then(res => buildGraphFromNeo4jResp(res.records, 0, 1));
+  return executeQuery(`MATCH (c {id:"${id}"}) 
+  CALL apoc.path.subgraphAll(c, {maxLevel:2, labelFilter:"-User"}) yield nodes, relationships
+  RETURN nodes,relationships`).then(res => {
+    const neoIdToNodeId = _.mapValues(
+      _.keyBy(res.records[0].get("nodes"), "identity"),
+      "properties.id"
+    );
+
+    const nodes: GraphNode[] = res.records[0]
+      .get("nodes")
+      .map(
+        node =>
+          new GraphNode(
+            node.properties.id,
+            node.labels[0],
+            node.properties.body || node.properties.name,
+            getLevel(id, node.properties.id, node.labels[0])
+          )
+      );
+    const edges: Edge[] = res.records[0].get("relationships").map(
+      edge =>
+        new Edge({
+          source: neoIdToNodeId[edge.start],
+          destination: neoIdToNodeId[edge.end],
+          type: edge.type,
+          salience: edge.properties.salience
+        })
+    );
+    return new Graph(nodes, edges);
+  });
+}
+
+function getLevel(startId: string, nodeId: string, nodeType: string): number {
+  if (startId === nodeId) {
+    return 0;
+  } else if (nodeType !== "Capture") {
+    return 1;
+  } else {
+    return 2;
+  }
 }
 
 function search(
@@ -99,7 +135,7 @@ function buildSearchResultsFromNeo4jResp(records, start, count) {
     record =>
       new GraphNode(
         record.get("c").properties.id,
-        "CAPTURE",
+        "Capture",
         record.get("c").properties.body,
         0
       )
@@ -123,7 +159,7 @@ function buildGraphFromNeo4jResp(records, start, count) {
     record =>
       new GraphNode(
         record.get("c").properties.id,
-        "CAPTURE",
+        "Capture",
         record.get("c").properties.body,
         0
       )
@@ -138,7 +174,7 @@ function buildGraphFromNeo4jResp(records, start, count) {
       record =>
         new GraphNode(
           record.get("n").properties.id,
-          "ENTITY",
+          "Entity",
           record.get("n").properties.name,
           1
         )
@@ -153,7 +189,7 @@ function buildGraphFromNeo4jResp(records, start, count) {
       record =>
         new GraphNode(
           record.get("n").properties.id,
-          "TAG",
+          "Tag",
           record.get("n").properties.name,
           1
         )

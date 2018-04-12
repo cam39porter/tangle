@@ -23,9 +23,9 @@ export default `
   }
 
   enum NodeType {
-    CAPTURE, 
-    ENTITY,
-    TAG
+    Capture, 
+    Entity,
+    Tag
   }
 
   enum EdgeType {

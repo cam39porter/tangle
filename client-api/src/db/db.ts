@@ -22,7 +22,7 @@ function createCaptureNode(user, body: string): Promise<GraphNode> {
     const record = result.records[0].get("n");
     return new GraphNode(
       record.properties.id,
-      "CAPTURE",
+      "Capture",
       record.properties.body,
       0
     );
@@ -47,7 +47,7 @@ function createTagNodeWithEdge(tag: string, toNodeId: string): GraphNode {
     const record = result.records[0].get("tag");
     return new GraphNode(
       record.properties.id,
-      "TAG",
+      "Tag",
       record.properties.name,
       null
     );

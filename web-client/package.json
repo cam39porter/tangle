@@ -17,6 +17,7 @@
     "graphql": "0.13.0",
     "graphql-tag": "2.8.0",
     "lodash": "^4.17.5",
+    "prop-types": "15.6.1",
     "qs": "^6.5.1",
     "react": "^16.2.0",
     "react-apollo": "2.0.4",
@@ -43,6 +44,7 @@
     "deploy": "yarn build && gcloud -q app deploy ./app.yaml"
   },
   "devDependencies": {
+    "@firebase/app-types": "0.1.2",
     "@types/echarts": "^0.0.12",
     "@types/graphql": "0.12.4",
     "@types/jest": "^22.1.3",

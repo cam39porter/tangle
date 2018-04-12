@@ -2,7 +2,11 @@
 import * as React from "react";
 
 // GraphQL
-import { SearchQuery as Response } from "../__generated__/types";
+import {
+  SearchQuery as Response,
+  NodeType,
+  EdgeType
+} from "../__generated__/types";
 import { Search as QUERY } from "../queries";
 import { graphql, ChildProps } from "react-apollo";
 
@@ -13,26 +17,37 @@ import { RouteComponentProps } from "react-router";
 import ResultListItem from "../components/result-list-item";
 import ResultDetail from "../components/result-detail";
 import Graph from "../components/graph";
-import { Node } from "../components/graph";
+import { GraphNode } from "../components/graph";
 import GraphButtons from "../components/graph-buttons";
 import Sidebar from "../components/sidebar";
 import ResultPagination from "../components/result-pagination";
 
 // Config / Utils
-import { getGradient } from "../utils";
 import config from "../cfg";
 import qs from "qs";
-import { assign, concat } from "lodash";
-import tinycolor from "tinycolor2";
+import { assign } from "lodash";
 
 const COUNT = 200; // number of results to return
 const PAGE_COUNT = 10; // number of results per page
 
-const BLUR_COLOR = "#CCCCCC";
-const FOCUS_COLOR_1 = tinycolor("#357EDD");
-const FOCUS_COLOR_2 = tinycolor("#CDECFF");
-const TAG_COLOR = "#333333";
-const ENTITY_COLOR = "#777777";
+const FOCUS_COLOR_1 = "#357EDD";
+const FOCUS_COLOR_2 = "#CDECFF";
+
+interface Node {
+  __typename: "Node";
+  id: string;
+  type: NodeType;
+  text: string;
+  level: number;
+}
+
+interface Edge {
+  __typename: "Edge";
+  source: string;
+  destination: string;
+  type: EdgeType;
+  salience: number | null;
+}
 
 interface InputProps {
   query: string;
@@ -240,295 +255,95 @@ class Surface extends React.Component<Props, State> {
     return this.props.data.search.pageInfo.total;
   }
 
-  getDetailNodeData() {
-    if (!(this.props.data && this.props.data.get)) {
-      return [];
-    }
-
-    const nodes = this.props.data.get.nodes;
-
-    let detailNode: Array<Node> = nodes
-      .filter(node => {
-        return node.level === 0;
-      })
-      .map(capture => {
-        return {
-          id: capture.id,
-          name: capture.text,
-          category: `detailNode`,
-          symbolSize: 24,
-          label: {
-            show: false,
-            emphasis: {
-              show: false
-            }
-          }
-        };
-      });
-
-    let entityNodes: Array<Node> = nodes
-      .filter(node => {
-        return node.type === "ENTITY";
-      })
-      .filter(entity => {
-        return entity.text.length > 3;
-      })
-      .map(entity => {
-        return {
-          id: entity.id,
-          name: entity.text,
-          category: "entity",
-          symbolSize: 24,
-          label: {
-            show: true,
-            color: ENTITY_COLOR,
-            emphasis: {
-              show: true
-            }
-          }
-        };
-      });
-
-    let tagNodes: Array<Node> = nodes
-      .filter(node => {
-        return node.type === "TAG";
-      })
-      .map(tag => {
-        return {
-          id: tag.id,
-          name: `#${tag.text}`,
-          category: "tag",
-          symbolSize: 24,
-          label: {
-            show: true,
-            color: TAG_COLOR,
-            fontSize: 12,
-            fontWeight: "bold",
-            emphasis: {
-              show: true
-            }
-          }
-        };
-      });
-
-    return concat(detailNode, entityNodes, tagNodes);
-  }
-
-  getDetailEdgeData() {
-    if (!(this.props.data && this.props.data.get)) {
-      return [];
-    }
-
-    const edges = this.props.data.get.edges;
-
-    return edges.map(edge => {
-      return {
-        source: edge.source,
-        target: edge.destination,
-        label: {
-          show: false,
-          emphasis: {
-            show: false
-          }
-        }
-      };
-    });
-  }
-
-  getDetailCategoryData() {
-    return [
-      {
-        name: `detailNode`,
-        itemStyle: {
-          normal: {
-            color: FOCUS_COLOR_1.toHexString()
-          }
-        }
-      },
-      {
-        name: "notDetailNode",
-        itemStyle: {
-          normal: {
-            color: BLUR_COLOR
-          }
-        }
-      },
-      {
-        name: "entity",
-        itemStyle: {
-          normal: {
-            color: "#FFFFFF"
-          }
-        }
-      },
-      {
-        name: "tag",
-        itemStyle: {
-          normal: {
-            color: "#FFFFFF"
-          }
-        }
-      }
-    ];
-  }
-
-  getSearchNodeData() {
-    if (!(this.props.data && this.props.data.search)) {
-      return [];
-    }
-
-    const nodes = this.props.data.search.graph.nodes;
-
-    let focusCaptureNodes: Array<Node> = nodes
-      .filter((node, index) => {
-        return this.isFocusResult(index) && node.type === "CAPTURE";
-      })
-      .map((capture, index) => {
-        return {
-          id: capture.id,
-          name: capture.text,
-          category: `${index}focusResult`,
-          symbolSize: 24,
-          label: {
-            show: false,
-            emphasis: {
-              show: false
-            }
-          }
-        };
-      });
-
-    let blurCaptureNodes: Array<Node> = nodes
-      .filter((node, index) => {
-        return !this.isFocusResult(index) && node.type === "CAPTURE";
-      })
-      .map(capture => {
-        return {
-          id: capture.id,
-          name: capture.text,
-          category: "blurResult",
-          symbolSize: 16,
-          label: {
-            show: false,
-            emphasis: {
-              show: false
-            }
-          }
-        };
-      });
-
-    let entityNodes: Array<Node> = nodes
-      .filter(node => {
-        return node.type === "ENTITY";
-      })
-      .filter(entity => {
-        return entity.text.length > 3;
-      })
-      .map(entity => {
-        return {
-          id: entity.id,
-          name: entity.text,
-          category: "entity",
-          symbolSize: 24,
-          label: {
-            show: true,
-            color: ENTITY_COLOR,
-            emphasis: {
-              show: true
-            }
-          }
-        };
-      });
-
-    let tagNodes: Array<Node> = nodes
-      .filter(node => {
-        return node.type === "TAG";
-      })
-      .map(tag => {
-        return {
-          id: tag.id,
-          name: `#${tag.text}`,
-          category: "tag",
-          symbolSize: 24,
-          label: {
-            show: true,
-            color: TAG_COLOR,
-            fontSize: 12,
-            fontWeight: "bold",
-            emphasis: {
-              show: true
-            }
-          }
-        };
-      });
-
-    return concat(focusCaptureNodes, blurCaptureNodes, entityNodes, tagNodes);
-  }
-
-  getSearchEdgeData() {
-    if (!(this.props.data && this.props.data.search)) {
-      return [];
-    }
-
-    const edges = this.props.data.search.graph.edges;
-
-    return edges.map(edge => {
-      return {
-        source: edge.source,
-        target: edge.destination,
-        label: {
-          show: false,
-          emphasis: {
-            show: false
-          }
-        }
-      };
-    });
-  }
-
-  getSearchCategoryData() {
+  getGradientNumber() {
     const totalFocusResults =
       getQuery(this.props.location.search) === ""
         ? COUNT
         : this.getFocusEndIndex() - this.state.focusStartIndex;
-    const gradientNumber = 2 > totalFocusResults ? 2 : totalFocusResults;
-    const gradient = getGradient(FOCUS_COLOR_1, FOCUS_COLOR_2, gradientNumber);
+    return 2 > totalFocusResults ? 2 : totalFocusResults;
+  }
 
-    return gradient
-      .map((color, index) => {
-        return {
-          name: `${index}focusResult`,
-          itemStyle: {
-            normal: {
-              color: color.toHexString()
-            }
+  getNodeData(): Array<GraphNode> {
+    if (!this.props.data) {
+      return [];
+    }
+
+    let nodes: Array<Node> = [];
+
+    if (this.props.data.search) {
+      nodes = this.props.data.search.graph.nodes;
+    }
+
+    if (this.props.data.get) {
+      nodes = this.props.data.get.nodes;
+    }
+
+    return nodes.map((node, index) => {
+      switch (node.type) {
+        // Entities
+        case NodeType.ENTITY:
+          return {
+            id: node.id,
+            name: node.text,
+            category: "entity"
+          };
+
+        // Tags
+        case NodeType.TAG:
+          return {
+            id: node.id,
+            name: node.text,
+            category: "tag"
+          };
+
+        // Captures
+        default:
+          if (this.state.isDetail && node.level === 0) {
+            return {
+              id: node.id,
+              name: node.text,
+              category: "detail"
+            };
           }
-        };
-      })
-      .concat({
-        name: "blurResult",
-        itemStyle: {
-          normal: {
-            color: BLUR_COLOR
+
+          if (this.isFocusResult(index)) {
+            return {
+              id: node.id,
+              name: node.text,
+              category: `${index}focus`
+            };
           }
-        }
-      })
-      .concat({
-        name: "entity",
-        itemStyle: {
-          normal: {
-            color: "#FFFFFF"
-          }
-        }
-      })
-      .concat({
-        name: "tag",
-        itemStyle: {
-          normal: {
-            color: "#FFFFFF"
-          }
-        }
-      });
+
+          return {
+            id: node.id,
+            name: node.text,
+            category: `blur`
+          };
+      }
+    });
+  }
+
+  getEdgeData(): Array<{ source: string; destination: string }> {
+    if (!this.props.data) {
+      return [];
+    }
+
+    let edges: Array<Edge> = [];
+
+    if (this.props.data.search) {
+      edges = this.props.data.search.graph.edges;
+    }
+
+    if (this.props.data.get) {
+      edges = this.props.data.get.edges;
+    }
+
+    return edges.map(edge => {
+      return {
+        source: edge.source,
+        destination: edge.destination
+      };
+    });
   }
 
   renderSearchBar() {
@@ -584,11 +399,6 @@ class Surface extends React.Component<Props, State> {
       return null;
     }
 
-    const totalFocusResults =
-      this.getFocusEndIndex() - this.state.focusStartIndex;
-    const gradientNumber = totalFocusResults < 2 ? 2 : totalFocusResults;
-    let gradient = getGradient(FOCUS_COLOR_1, FOCUS_COLOR_2, gradientNumber);
-
     return (
       <div>
         {this.props.data.search.graph.nodes
@@ -608,7 +418,6 @@ class Surface extends React.Component<Props, State> {
                 onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
                   this.handleUnfocusNode();
                 }}
-                nodeColor={gradient[index].toHexString()}
                 accentColor={config.surfaceAccentColor}
               />
             );
@@ -652,39 +461,16 @@ class Surface extends React.Component<Props, State> {
       return null;
     }
 
-    const nodeData = this.state.isDetail
-      ? this.getDetailNodeData()
-      : this.getSearchNodeData();
-
-    const edgeData = this.state.isDetail
-      ? this.getDetailEdgeData()
-      : this.getSearchEdgeData();
-
-    const categoryData = this.state.isDetail
-      ? this.getDetailCategoryData()
-      : this.getSearchCategoryData();
-
-    const focusStartIndex =
-      this.state.isSearch && !this.state.isDetail
-        ? this.state.focusStartIndex
-        : undefined;
-
-    const focusEndIndex =
-      this.state.isSearch && !this.state.isDetail
-        ? this.getFocusEndIndex()
-        : undefined;
-
     return (
       <Graph
         refEChart={e => {
           this.eChart = e;
         }}
         layout={"force"}
-        focusStartIndex={focusStartIndex}
-        focusEndIndex={focusEndIndex}
-        nodeData={nodeData}
-        edgeData={edgeData}
-        categoryData={categoryData}
+        focusStartIndex={this.state.focusStartIndex}
+        focusEndIndex={this.getFocusEndIndex()}
+        nodeData={this.getNodeData()}
+        edgeData={this.getEdgeData()}
         tooltipPosition={this.state.isSearch ? ["32", "32"] : "top"}
         onClick={e => {
           if (
@@ -695,6 +481,9 @@ class Surface extends React.Component<Props, State> {
           }
           this.handleSurfaceDetail(e.data.id);
         }}
+        focusColor1={FOCUS_COLOR_1}
+        focusColor2={FOCUS_COLOR_2}
+        gradientNumber={this.getGradientNumber()}
       />
     );
   }

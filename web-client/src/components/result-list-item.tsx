@@ -8,7 +8,6 @@ interface Props {
   onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onMouseLeave?: (e: React.MouseEvent<HTMLDivElement>) => void;
   accentColor: string;
-  nodeColor: string;
 }
 
 class ResultListItem extends React.Component<Props, object> {
@@ -29,12 +28,6 @@ class ResultListItem extends React.Component<Props, object> {
           >
             {this.props.body}
           </p>
-          <div className={`dtc fr ma3`}>
-            <p
-              className={`v-mid fr h2 w2 br-100`}
-              style={{ backgroundColor: this.props.nodeColor }}
-            />
-          </div>
         </div>
       </div>
     );

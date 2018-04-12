@@ -308,19 +308,19 @@
           "interfaces": null,
           "enumValues": [
             {
-              "name": "CAPTURE",
+              "name": "Capture",
               "description": "",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "ENTITY",
+              "name": "Entity",
               "description": "",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "TAG",
+              "name": "Tag",
               "description": "",
               "isDeprecated": false,
               "deprecationReason": null

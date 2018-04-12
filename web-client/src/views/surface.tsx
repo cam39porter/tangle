@@ -281,7 +281,7 @@ class Surface extends React.Component<Props, State> {
     return nodes.map((node, index) => {
       switch (node.type) {
         // Entities
-        case NodeType.ENTITY:
+        case NodeType.Entity:
           return {
             id: node.id,
             name: node.text,
@@ -289,7 +289,7 @@ class Surface extends React.Component<Props, State> {
           };
 
         // Tags
-        case NodeType.TAG:
+        case NodeType.Tag:
           return {
             id: node.id,
             name: node.text,
@@ -403,7 +403,7 @@ class Surface extends React.Component<Props, State> {
       <div>
         {this.props.data.search.graph.nodes
           .filter((node, index) => {
-            return this.isFocusResult(index) && node.type === "CAPTURE";
+            return this.isFocusResult(index) && node.type === "Capture";
           })
           .map((capture, index) => {
             return (

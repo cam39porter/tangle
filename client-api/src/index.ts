@@ -15,6 +15,7 @@ import { authFilter, initAuth } from "./filters/auth";
 
 import { createSMSCapture } from "./controllers/sms";
 
+require("dotenv").config();
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 
 /*!

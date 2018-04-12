@@ -9,6 +9,7 @@ function initAuth() {
 }
 
 function authFilter(req, res, next) {
+  console.log(process.env.GOOGLE_APPLICATION_CREDENTIALS);
   if (req.get("authorization")) {
     const encodedToken = parseAuthorization(req.get("authorization"));
     verify(encodedToken)

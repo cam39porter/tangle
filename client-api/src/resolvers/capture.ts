@@ -83,8 +83,7 @@ function search(
   start: number,
   count: number
 ): Promise<SearchResults> {
-  const userId =
-    requestContext.get("request") && requestContext.get("request").user.uid;
+  const userId = requestContext.get("request").user.uid;
   return executeQuery(
     `MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"}) 
     WHERE c.body CONTAINS "${rawQuery}"

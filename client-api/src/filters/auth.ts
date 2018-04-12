@@ -26,9 +26,7 @@ function authFilter(req, res, next) {
         res.send(401);
       });
   } else {
-    if (isDevOverride(req)) {
-      next();
-    }
+    res.send(400);
   }
 }
 

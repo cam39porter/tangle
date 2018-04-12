@@ -14,7 +14,7 @@ function createCaptureNode(user, body: string): Promise<GraphNode> {
     `MERGE (u:User {id:"${user.uid}", name:"${user.name}", email:"${
       user.email
     }"})
-    MERGE (n:Capture {id:"${uuid}", body:"${body}"})
+    MERGE (n:Capture {id:"${uuid}", body:"${escape(body)}"})
     ON CREATE SET n.created = TIMESTAMP()
     CREATE (u)-[created:CREATED]->(n)
     RETURN n`
@@ -27,6 +27,10 @@ function createCaptureNode(user, body: string): Promise<GraphNode> {
       0
     );
   });
+}
+
+function escape(text: string) {
+  return text.replace(/\"/g, '\\"');
 }
 
 function createTagNodeWithEdge(tag: string, toNodeId: string): GraphNode {
@@ -60,6 +64,7 @@ function executeQuery(cypherQuery) {
     .catch(error => {
       session.close();
       console.log(error);
+      throw error;
     });
 }
 

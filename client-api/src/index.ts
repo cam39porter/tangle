@@ -13,8 +13,6 @@ import resolvers from "./resolvers/capture";
 import { GraphQLSchema } from "graphql";
 import { authFilter, initAuth } from "./filters/auth";
 
-import { createSMSCapture } from "./controllers/sms";
-
 require("dotenv").config();
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 
@@ -60,8 +58,6 @@ app.use(
 app.get("/graphiql", graphiqlExpress({ endpointURL: "/graphql" })); // if you want GraphiQL enabled
 
 app.use(bodyParser.urlencoded({ extended: false }));
-
-app.post("/sms", createSMSCapture);
 
 app.listen(PORT, () => {
   console.log("Api listening on port " + PORT);

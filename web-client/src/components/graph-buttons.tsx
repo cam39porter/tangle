@@ -1,7 +1,10 @@
+// React
 import * as React from "react";
 
+// Components
 import CaptureDialogue from "./capture-dialogue";
 
+// Config / Utils
 import config from "../cfg";
 
 interface Props {

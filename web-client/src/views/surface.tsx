@@ -1,10 +1,15 @@
+// React
 import * as React from "react";
 
+// GraphQL
 import { SearchQuery as Response } from "../__generated__/types";
 import { Search as QUERY } from "../queries";
 import { graphql, ChildProps } from "react-apollo";
 
+// Router
 import { RouteComponentProps } from "react-router";
+
+// Components
 import ResultListItem from "../components/result-list-item";
 import ResultDetail from "../components/result-detail";
 import Graph from "../components/graph";
@@ -13,15 +18,14 @@ import GraphButtons from "../components/graph-buttons";
 import Sidebar from "../components/sidebar";
 import ResultPagination from "../components/result-pagination";
 
+// Config / Utils
 import { getGradient } from "../utils";
-
-import qs from "qs";
-
-import { assign, concat } from "lodash";
-
-import tinycolor from "tinycolor2";
-
 import config from "../cfg";
+
+// Random
+import qs from "qs";
+import { assign, concat } from "lodash";
+import tinycolor from "tinycolor2";
 
 const COUNT = 200; // number of results to return
 const PAGE_COUNT = 10; // number of results per page

@@ -1,9 +1,12 @@
+// React
 import * as React from "react";
 
+// Quill
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 
-import * as _ from "lodash";
+// Random
+import { assign } from "lodash";
 
 interface Props {
   handleChange?: (value: string) => void;
@@ -31,7 +34,7 @@ class TextInput extends React.Component<Props, State> {
     };
 
     if (this.props.handleEnterKey) {
-      modules = _.assign(modules, {
+      modules = assign(modules, {
         keyboard: {
           bindings: {
             tab: false,

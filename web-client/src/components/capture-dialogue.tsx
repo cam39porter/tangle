@@ -1,14 +1,17 @@
+// React
 import * as React from "react";
 
+// Components
 import TextInput from "../components/text-input";
 
-import * as _ from "lodash";
-
-import config from "../cfg";
-
+// GraphQL
 import { CreateCaptureMutation as Response } from "../__generated__/types";
 import { CreateCapture as MUTATION } from "../queries";
 import { graphql, ChildProps } from "react-apollo";
+
+// Config / Utils
+import { trimEnd } from "lodash";
+import config from "../cfg";
 
 interface Props extends ChildProps<{}, Response> {
   handleMinimize: () => void;
@@ -43,7 +46,7 @@ class CaptureDialogue extends React.Component<Props, State> {
   handleChange(value: string): void {
     // Trim whitespace (like newlines) from input
     this.setState({
-      value: _.trimEnd(value)
+      value: trimEnd(value)
     });
   }
 

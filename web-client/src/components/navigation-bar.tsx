@@ -1,7 +1,11 @@
+// React
 import * as React from "react";
-import config from "../cfg";
 
+// Components
 import NavigationBarTab from "./navigation-bar-tab";
+
+// Config / utils
+import config from "../cfg";
 
 interface Props {}
 

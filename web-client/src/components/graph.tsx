@@ -1,5 +1,7 @@
+// React
 import * as React from "react";
 
+// Components
 import ReactECharts from "echarts-for-react";
 
 export interface Node {

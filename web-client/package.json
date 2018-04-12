@@ -9,6 +9,7 @@
     "apollo-cache-inmemory": "1.1.9",
     "apollo-client": "2.2.5",
     "apollo-link-context": "1.0.7",
+    "apollo-link-error": "1.0.7",
     "apollo-link-http": "1.5.2",
     "echarts": "^4.0.4",
     "echarts-for-react": "^2.0.8",

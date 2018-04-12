@@ -1,11 +1,13 @@
+// React
 import * as React from "react";
 
+// Components
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 
+// Route
 import { RouteProps } from "react-router";
 
-interface Props extends RouteProps {}
-
+// Config / Utils
 import { firebaseAuth } from "../utils";
 
 interface Props extends RouteProps {}

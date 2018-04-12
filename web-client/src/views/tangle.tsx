@@ -1,9 +1,13 @@
+// React
 import * as React from "react";
 
+// Components
 import Button from "../components/button";
 
+// Firebase
 import { firebaseAuth } from "../utils";
 
+// Config
 import config from "../cfg";
 
 interface Props {}

@@ -1,5 +1,7 @@
+// React
 import * as React from "react";
 
+// Components
 import { ChevronRight, ChevronLeft } from "react-feather";
 
 interface Props {

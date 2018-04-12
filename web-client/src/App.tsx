@@ -56,7 +56,9 @@ class App extends React.Component<Props, State> {
     return (
       <div className={`vh-100 w-100 avenir relative`}>
         {this.state.isAuthenticated ? (
-          <div className={`z-max absolute top-2 right-2`}>
+          <div
+            className={`z-max w-100 measure-narrow-l absolute bottom-0 top-2-l right-2-l`}
+          >
             <NavigationBar />
           </div>
         ) : null}

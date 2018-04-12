@@ -12,7 +12,7 @@ interface Props {}
 function NavigationBar(props: Props) {
   return (
     <div
-      className={`dt f6 measure-narrow shadow-1 br1 bg-white`}
+      className={`dt f6 w-100 shadow-1 br1 bg-white`}
       style={{
         minWidth: "20em"
       }}

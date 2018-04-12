@@ -41,7 +41,7 @@ class NavigationBarTab extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className={`dtc`}>
+      <div className={`dtc w-third`}>
         <Link
           to={`/${this.props.title}`}
           style={{

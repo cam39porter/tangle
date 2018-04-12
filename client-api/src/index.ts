@@ -13,7 +13,11 @@ import resolvers from "./resolvers/capture";
 import { GraphQLSchema } from "graphql";
 import { authFilter, initAuth } from "./filters/auth";
 
-require("dotenv").config();
+if (process.env.NODE_ENV === "development") {
+  console.log("here");
+  require("dotenv").config();
+}
+
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 
 /*!

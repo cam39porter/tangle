@@ -121,10 +121,10 @@ function search(
 ): Promise<SearchResults> {
   const userId = requestContext.get("request").user.uid;
   return executeQuery(
-    `MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"}) 
-    WHERE c.body CONTAINS "${rawQuery}"
-    OPTIONAL MATCH (c)-[r]->(n)
-    RETURN c,r,n`
+    `CALL apoc.index.search("captures", "${rawQuery}~") YIELD node as c, weight
+      MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
+      OPTIONAL MATCH (c)-[r]->(n)
+      RETURN c,weight,r,n`
   ).then(res => {
     return buildSearchResultsFromNeo4jResp(res.records, start, count);
   });

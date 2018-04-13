@@ -24,7 +24,7 @@ class Login extends React.Component<Props, State> {
               firebaseAuth={firebaseAuth()}
               uiConfig={{
                 signInOptions: [
-                  // firebaseAuth.GoogleAuthProvider.PROVIDER_ID,
+                  firebaseAuth.GoogleAuthProvider.PROVIDER_ID,
                   firebaseAuth.EmailAuthProvider.PROVIDER_ID
                 ],
                 signInSuccessUrl: `${

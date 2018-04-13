@@ -3,6 +3,7 @@ import * as React from "react";
 
 // Components
 import TextInput from "../components/text-input";
+import Button from "../components/button";
 
 // GraphQL
 import { CreateCaptureMutation as Response } from "../__generated__/types";
@@ -92,14 +93,27 @@ class CaptureDialogue extends React.Component<Props, State> {
           {this.renderMinimizeButton()}
 
           {/* Text Bar */}
-          <div className={`h-50 w-100 dt pb3`}>
-            <div className={`v-btm dtc bb bw1 b--${config.captureAccentColor}`}>
-              <TextInput
-                handleChange={this.handleChange}
-                handleEnterKey={this.handleCapture}
-                clearValue={this.state.clearValue}
-                updateClearValue={this.updateClearValue}
-                placeholder={"What's on your mind..."}
+          <div className={`dt w-100 h-100`}>
+            <div className={`t-row w-100 h-50`}>
+              <div className={`h-100 w-100 dt pb3`}>
+                <div
+                  className={`v-btm dtc bb bw1 b--${config.captureAccentColor}`}
+                >
+                  <TextInput
+                    handleChange={this.handleChange}
+                    handleEnterKey={this.handleCapture}
+                    clearValue={this.state.clearValue}
+                    updateClearValue={this.updateClearValue}
+                    placeholder={"What's on your mind..."}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={`t-row tc w-100 pa3`}>
+              <Button
+                onClick={this.handleCapture}
+                title="capture"
+                accentColor={config.captureAccentColor}
               />
             </div>
           </div>

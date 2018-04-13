@@ -38,7 +38,6 @@ class App extends React.Component<Props, State> {
   componentDidMount() {
     this.removeFirebaseListener = firebaseAuth().onIdTokenChanged(user => {
       if (user) {
-        // store user id token in local storage
         user.getIdToken(true).then(idToken => {
           localStorage.setItem("idToken", idToken);
         });

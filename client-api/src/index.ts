@@ -14,7 +14,6 @@ import { GraphQLSchema } from "graphql";
 import { authFilter, initAuth } from "./filters/auth";
 
 if (process.env.NODE_ENV === "development") {
-  console.log("here");
   require("dotenv").config();
 }
 

@@ -120,12 +120,17 @@ function search(
   count: number
 ): Promise<SearchResults> {
   const userId = requestContext.get("request").user.uid;
-  return executeQuery(
-    `CALL apoc.index.search("captures", "${rawQuery}~") YIELD node as c, weight
+  const cypherQuery =
+    rawQuery && rawQuery.length > 0
+      ? `CALL apoc.index.search("captures", "${rawQuery}~") YIELD node as c, weight
       MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
       OPTIONAL MATCH (c)-[r]->(n)
       RETURN c,weight,r,n`
-  ).then(res => {
+      : `MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
+      OPTIONAL MATCH (c)-[r]->(n)
+      RETURN c,r,n`;
+
+  return executeQuery(cypherQuery).then(res => {
     return buildSearchResultsFromNeo4jResp(res.records, start, count);
   });
 }

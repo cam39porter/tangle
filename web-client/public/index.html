@@ -3,8 +3,28 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no maximum-scale=1.0, user-scalable=0">
-  <meta name="theme-color" content="#000000">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no maximum-scale=1.0,  minimum-scale=1, user-scalable=0">
+
+  <!-- Apple Mobile Web App -->
+  <meta name="apple-mobile-web-app-title" content="Tangle" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <script type="text/javascript">
+    $(document).ready(function () {
+      // iOS web app full screen hacks.
+      if (window.navigator.standalone == true) {
+        // make all link remain in web app mode.
+        $('a').click(function () {
+          window.location = $(this).attr('href');
+          return false;
+        });
+      }
+    });
+  </script>
+
+
+
+  <meta name="theme-color" content="#FFFFFF">
   <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/

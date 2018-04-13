@@ -63,6 +63,7 @@ interface State {
   focusStartIndex: number;
   isSearch: boolean;
   isDetail: boolean;
+  isShowingList: boolean;
   isCapturing: boolean;
 }
 
@@ -91,6 +92,7 @@ class Surface extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    this.handleIsShowingList = this.handleIsShowingList.bind(this);
     this.handleIsCapturing = this.handleIsCapturing.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -102,6 +104,7 @@ class Surface extends React.Component<Props, State> {
     this.renderResults = this.renderResults.bind(this);
     this.renderDetail = this.renderDetail.bind(this);
     this.renderResultsPagination = this.renderResultsPagination.bind(this);
+    this.renderShowList = this.renderShowList.bind(this);
 
     const query = getQuery(this.props.location.search);
     const isSearch = query.length !== 0;
@@ -115,6 +118,7 @@ class Surface extends React.Component<Props, State> {
       focusStartIndex: 0,
       isSearch,
       isDetail,
+      isShowingList: false,
       isCapturing: false
     };
   }
@@ -141,6 +145,12 @@ class Surface extends React.Component<Props, State> {
     this.setState(assign(nextState, { id, isDetail }));
   }
 
+  handleIsShowingList() {
+    this.setState({
+      isShowingList: !this.state.isShowingList
+    });
+  }
+
   handleIsCapturing() {
     this.setState({
       isCapturing: !this.state.isCapturing
@@ -162,6 +172,9 @@ class Surface extends React.Component<Props, State> {
   }
 
   handleSurface() {
+    this.setState({
+      isShowingList: false
+    });
     this.props.history.push(
       `/surface?query=${encodeURIComponent(this.state.query || "")}`
     );
@@ -349,43 +362,36 @@ class Surface extends React.Component<Props, State> {
   renderSearchBar() {
     return (
       <div
-        className={`h4 measure absolute z-max ${
-          this.state.isSearch ? `bg-light-gray` : ""
-        }`}
-        style={{ minWidth: "30em" }}
+        className={`center fixed w-100 dt pa3 z-999`}
+        style={{ cursor: "text" }}
+        onClick={() => {
+          if (this.searchInput) {
+            this.searchInput.focus();
+          }
+        }}
       >
         <div
-          className={`center w-90 dt ma4`}
-          style={{ cursor: "text" }}
-          onClick={() => {
-            if (this.searchInput) {
-              this.searchInput.focus();
-            }
-          }}
+          className={`w-100 h2 pa3 dtc v-mid tc bg-white br1 bb bw1 b--${
+            config.surfaceAccentColor
+          } shadow-1`}
         >
-          <div
-            className={`w-100 h2 pa3 dtc v-mid tc bg-white br1 bb bw1 b--${
-              config.surfaceAccentColor
-            } shadow-1`}
-          >
-            <input
-              className={`f6 w-100`}
-              ref={input => {
-                this.searchInput = input;
-              }}
-              value={this.state.query || ""}
-              onChange={this.handleChange}
-              onKeyPress={this.handleKeyPress}
-              placeholder={"What are you looking for..."}
-              autoFocus={true}
-              onFocus={e => {
-                // focus on the end value in the input
-                var tempValue = e.target.value;
-                e.target.value = "";
-                e.target.value = tempValue;
-              }}
-            />
-          </div>
+          <input
+            className={`f6 w-100`}
+            ref={input => {
+              this.searchInput = input;
+            }}
+            value={this.state.query || ""}
+            onChange={this.handleChange}
+            onKeyPress={this.handleKeyPress}
+            placeholder={"What are you looking for..."}
+            autoFocus={true}
+            onFocus={e => {
+              // focus on the end value in the input
+              var tempValue = e.target.value;
+              e.target.value = "";
+              e.target.value = tempValue;
+            }}
+          />
         </div>
       </div>
     );
@@ -456,64 +462,80 @@ class Surface extends React.Component<Props, State> {
     );
   }
 
+  renderShowList() {
+    return (
+      <div className={`dt w-100 bg-white`} onClick={this.handleIsShowingList}>
+        <div className={`dtc v-mid w-100 h2 pa3 ttu f6 gray`}>
+          {this.state.isDetail
+            ? this.state.isShowingList ? "hide detail" : "show detail"
+            : this.state.isShowingList ? "hide list" : "show list"}
+        </div>
+      </div>
+    );
+  }
+
   renderGraph() {
     if (!this.isLoadedWithoutError()) {
       return null;
     }
 
     return (
-      <Graph
-        refEChart={e => {
-          this.eChart = e;
-        }}
-        layout={"force"}
-        focusStartIndex={this.state.focusStartIndex}
-        focusEndIndex={this.getFocusEndIndex()}
-        nodeData={this.getNodeData()}
-        edgeData={this.getEdgeData()}
-        tooltipPosition={this.state.isSearch ? ["32", "32"] : "top"}
-        onClick={e => {
-          if (
-            e.dataType !== "node" ||
-            (e.data.category === "entity" || e.data.category === "tag")
-          ) {
-            return;
-          }
-          this.handleSurfaceDetail(e.data.id);
-        }}
-        focusColor1={FOCUS_COLOR_1}
-        focusColor2={FOCUS_COLOR_2}
-        gradientNumber={this.getGradientNumber()}
-      />
+      <div className={`w-100 h-100 fixed top-0`}>
+        <Graph
+          refEChart={e => {
+            this.eChart = e;
+          }}
+          layout={"force"}
+          focusStartIndex={this.state.focusStartIndex}
+          focusEndIndex={this.getFocusEndIndex()}
+          nodeData={this.getNodeData()}
+          edgeData={this.getEdgeData()}
+          tooltipPosition={this.state.isSearch ? ["32", "32"] : "top"}
+          onClick={e => {
+            if (
+              e.dataType !== "node" ||
+              (e.data.category === "entity" || e.data.category === "tag")
+            ) {
+              return;
+            }
+            this.handleSurfaceDetail(e.data.id);
+          }}
+          focusColor1={FOCUS_COLOR_1}
+          focusColor2={FOCUS_COLOR_2}
+          gradientNumber={this.getGradientNumber()}
+        />
+      </div>
     );
   }
 
   render() {
     return (
-      <div className={`w-100 vh-100 flex-column`}>
-        <div className={`flex flex-grow relative`}>
-          {/* Floating Buttons */}
-          <GraphButtons
-            handleIsCapturing={this.handleIsCapturing}
-            isCapturing={this.state.isCapturing}
-          />
-          {/* Search */}
-          {this.state.isSearch || this.state.isDetail ? (
+      <div>
+        {this.renderSearchBar()}
+        {this.renderGraph()}
+
+        <GraphButtons
+          handleIsCapturing={this.handleIsCapturing}
+          isCapturing={this.state.isCapturing}
+        />
+
+        {this.state.isSearch || this.state.isDetail ? (
+          this.state.isShowingList ? (
             <Sidebar
               renderHeader={this.renderSearchBar}
               renderBody={
                 !this.state.isDetail ? this.renderResults : this.renderDetail
               }
               renderFooter={
-                !this.state.isDetail ? this.renderResultsPagination : () => null
+                !this.state.isDetail ? this.renderShowList : () => null
               }
             />
           ) : (
-            this.renderSearchBar()
-          )}
-          {/* Graph */}
-          {this.renderGraph()}
-        </div>
+            <div className={`fixed w-100 bottom-0 z-4`}>
+              {this.renderShowList()}
+            </div>
+          )
+        ) : null}
       </div>
     );
   }

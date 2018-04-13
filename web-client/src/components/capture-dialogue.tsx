@@ -71,7 +71,7 @@ class CaptureDialogue extends React.Component<Props, State> {
   renderMinimizeButton() {
     return (
       <div
-        className={`absolute dt h2 w2 f3 b top-1 right-1 pointer z-999 ba br1 bw1 ${
+        className={`absolute dt h2 w2 f3 b top-1 right-1 pointer ba br1 bw1 ${
           config.captureAccentColor
         }`}
         onClick={this.props.handleMinimize}
@@ -86,14 +86,13 @@ class CaptureDialogue extends React.Component<Props, State> {
       <div>
         {/* Capture Box */}
         <div
-          className={`measure-narrow relative pa3 shadow-1 br1 bg-white`}
-          style={{ minWidth: "20em" }}
+          className={`w-100 h-100 center fixed top-0 pa3 shadow-1 br1 bg-white z-max`}
         >
           {/* Mimimize Button */}
           {this.renderMinimizeButton()}
 
           {/* Text Bar */}
-          <div className={`h5 w-100 dt pb3`}>
+          <div className={`h-100 w-100 dt pb3`}>
             <div className={`v-btm dtc bb bw1 b--${config.captureAccentColor}`}>
               <TextInput
                 handleChange={this.handleChange}

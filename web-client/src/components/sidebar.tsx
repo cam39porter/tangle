@@ -10,24 +10,23 @@ interface Props {
 class Sidebar extends React.Component<Props, object> {
   render() {
     return (
-      <div className={`flex-column flex-grow z-max measure shadow-3`}>
+      <div
+        className={`z-max w-100 h-100 fixed top-0 bg-light-gray flex flex-column`}
+      >
         {/* Header */}
         <div>{this.props.renderHeader()}</div>
+        {/* Padding to ensure results start below the header*/}
+        <div className={`flex-column`} style={{ minHeight: "6rem" }} />
 
         {/* Body */}
         <div
-          className={`flex-column flex-grow measure bg-light-gray overflow-auto`}
+          className={`flex-column flex-grow w-100 bg-light-gray overflow-auto`}
         >
-          {/* Padding to ensure results start below the header*/}
-          <div className={``} style={{ minWidth: "30em", minHeight: "8rem" }} />
-
           {this.props.renderBody()}
         </div>
 
         {/* Footer */}
-        <div
-          className={`flex-column drawer h3 measure bg-white bt b--light-gray`}
-        >
+        <div className={`flex-column flex-shrink bt b--light-gray`}>
           {this.props.renderFooter()}
         </div>
       </div>

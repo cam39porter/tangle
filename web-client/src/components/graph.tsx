@@ -286,7 +286,7 @@ class Graph extends React.Component<Props, object> {
 
   render() {
     return (
-      <div className={`flex-column flex-grow`}>
+      <div className={`w-100 h-100`}>
         <ReactECharts
           ref={this.props.refEChart}
           style={{ height: "100%", width: "100%" }}

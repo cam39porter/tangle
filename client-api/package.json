@@ -27,6 +27,7 @@
     "graphql-tools": "2.19.0",
     "knex": "0.14.4",
     "lodash": "4.17.5",
+    "moment": "2.22.0",
     "mysql": "2.15.0",
     "neo4j-driver": "1.5.3",
     "request-context": "2.0.0",

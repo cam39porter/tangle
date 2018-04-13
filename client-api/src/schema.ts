@@ -56,7 +56,13 @@ export default `
       count: Int = 10
     ): SearchResults!
     get(id: String!): Graph!
+    getAll(useCase: String!, timezoneOffset: Int): SearchResults!
   }
+
+  enum GetAllUseCase {
+    CAPTURED_TODAY,
+  }
+
 
   type Mutation {
     createCapture(body: String!): Graph!

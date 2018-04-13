@@ -16,6 +16,7 @@ import {
 import { parseTags, stripTags } from "../helpers/tag";
 import * as requestContext from "request-context";
 import * as _ from "lodash";
+import * as moment from "moment";
 
 const dedupe = require("dedupe");
 const table = "capture";
@@ -27,6 +28,9 @@ export default {
     },
     get(_, params, context): Promise<Graph> {
       return get(params.id);
+    },
+    getAll(_, params, context): Promise<SearchResults> {
+      return getAll(params.timezoneOffset);
     }
   },
   Mutation: {
@@ -69,6 +73,30 @@ function insertEntityWithRel(
     CREATE (entity)<-[r:REFERENCES { salience: ${entity.salience} }]-(capture)
     RETURN entity
   `);
+}
+
+function getAll(timezoneOffset: number): Promise<SearchResults> {
+  const userId = requestContext.get("request").user.uid;
+  const since = getCreatedSince(timezoneOffset).unix() * 1000;
+  return executeQuery(
+    `MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
+    WHERE c.created > ${since}
+    WITH c 
+    ORDER BY c.created DESC
+    LIMIT 50
+    OPTIONAL MATCH (c)-[r]->(n)
+    RETURN c,r,n
+    `
+  ).then(res => {
+    return buildSearchResults(res.records, 0, 20);
+  });
+}
+
+function getCreatedSince(timezoneOffset: number) {
+  return moment
+    .utc()
+    .add(timezoneOffset ? moment.duration(timezoneOffset, "hours") : 0)
+    .startOf("day");
 }
 
 function get(id: string): Promise<Graph> {
@@ -124,42 +152,29 @@ function search(
     rawQuery && rawQuery.length > 0
       ? `CALL apoc.index.search("captures", "${rawQuery}~") YIELD node as c, weight
       MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
+      WITH c, weight
+      SKIP ${start} LIMIT ${count}
       OPTIONAL MATCH (c)-[r]->(n)
       RETURN c,weight,r,n`
       : `MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
+      WITH c
+      SKIP ${start} LIMIT ${count}
       OPTIONAL MATCH (c)-[r]->(n)
       RETURN c,r,n`;
 
   return executeQuery(cypherQuery).then(res => {
-    return buildSearchResultsFromNeo4jResp(res.records, start, count);
+    return buildSearchResults(res.records, start, count);
   });
 }
 
-function buildSearchResultsFromNeo4jResp(records, start, count) {
-  const captures: GraphNode[] = records.map(
-    record =>
-      new GraphNode(
-        record.get("c").properties.id,
-        "Capture",
-        record.get("c").properties.body,
-        0
-      )
-  );
-  const dedupedCaptures: GraphNode[] = dedupe(captures, capture => capture.id);
-  const dedupedAndPagedCaptures = dedupedCaptures.slice(start, start + count);
-
-  const pagedRecords = records.filter(record =>
-    dedupedAndPagedCaptures
-      .map(node => node.id)
-      .includes(record.get("c").properties.id)
-  );
+function buildSearchResults(records, start, count) {
   return new SearchResults(
-    buildGraphFromNeo4jResp(pagedRecords, start, count),
-    new PageInfo(start, count, dedupedCaptures.length)
+    buildGraph(records, start, count),
+    new PageInfo(start, count, start + count)
   );
 }
 
-function buildGraphFromNeo4jResp(records, start, count) {
+function buildGraph(records, start, count) {
   const captures: GraphNode[] = records.map(
     record =>
       new GraphNode(

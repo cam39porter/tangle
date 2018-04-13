@@ -1,17 +1,21 @@
+// React
 import * as React from "react";
 
+// Style
 import "tachyons";
 
+// Routing
 import { RouteProps } from "react-router";
 import { Route, Switch } from "react-router-dom";
 
+// Components
 import NavigationBar from "./components/navigation-bar";
-
 import Login from "./views/login";
 import Tangle from "./views/tangle";
 // import Capture from "./views/capture";
 import Surface from "./views/surface";
 
+// Config / Utils
 import { firebaseAuth } from "./utils";
 
 interface Props extends RouteProps {}
@@ -32,7 +36,7 @@ class App extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.removeFirebaseListener = firebaseAuth().onAuthStateChanged(user => {
+    this.removeFirebaseListener = firebaseAuth().onIdTokenChanged(user => {
       if (user) {
         // store user id token in local storage
         user.getIdToken(true).then(idToken => {

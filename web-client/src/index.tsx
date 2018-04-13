@@ -11,11 +11,15 @@ import App from "./App";
 import { ApolloClient } from "apollo-client";
 import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
+import { onError } from "apollo-link-error";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloProvider } from "react-apollo";
 
 // Router
 import { BrowserRouter as Router } from "react-router-dom";
+
+// Config / Utils
+import { firebaseAuth } from "./utils";
 
 const httpLink = createHttpLink({
   uri: process.env.REACT_APP_GRAPHQL_URI
@@ -31,9 +35,18 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const logoutLink = onError(({ networkError }) => {
+  if (networkError) {
+    if (networkError["statusCode"] === 401) {
+      localStorage.removeItem("idToken");
+      firebaseAuth().signOut();
+    }
+  }
+});
+
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: authLink.concat(httpLink)
+  link: logoutLink.concat(authLink.concat(httpLink))
 });
 
 class ApolloWrappedApp extends React.Component<object, object> {

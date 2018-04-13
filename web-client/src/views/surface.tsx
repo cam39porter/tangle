@@ -1,5 +1,6 @@
 // React
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 
 // GraphQL
 import {
@@ -100,6 +101,7 @@ class Surface extends React.Component<Props, State> {
     this.handlePageDown = this.handlePageDown.bind(this);
     this.handlePageUp = this.handlePageUp.bind(this);
     this.handleSurfaceDetail = this.handleSurfaceDetail.bind(this);
+    this.handleFocusInput = this.handleFocusInput.bind(this);
 
     this.renderSearchBar = this.renderSearchBar.bind(this);
     this.renderResults = this.renderResults.bind(this);
@@ -173,12 +175,20 @@ class Surface extends React.Component<Props, State> {
   }
 
   handleSurface(query?: string) {
-    this.setState({
-      isShowingList: false
-    });
+    this.setState(
+      {
+        isShowingList: false
+      },
+      () => {
+        this.handleFocusInput(false);
+      }
+    );
+
     this.props.history.push(
       `/surface?query=${encodeURIComponent(query || "")}`
     );
+
+    this.handleFocusInput(false);
   }
 
   handleSurfaceDetail(id: string) {
@@ -228,6 +238,14 @@ class Surface extends React.Component<Props, State> {
       eChartInstance.dispatchAction({
         type: "unfocusNodeAdjacency"
       });
+    }
+  }
+
+  handleFocusInput(shouldFocus: boolean) {
+    const input = ReactDOM.findDOMNode(this).querySelector("input");
+
+    if (input) {
+      shouldFocus ? input.focus() : input.blur();
     }
   }
 
@@ -377,7 +395,7 @@ class Surface extends React.Component<Props, State> {
           } shadow-1`}
         >
           <input
-            className={`f6 fl ${
+            className={`f6 fl pa1 ${
               this.state.isSearch || this.state.isDetail ? "w-80" : "w-100"
             }`}
             ref={input => {
@@ -387,7 +405,7 @@ class Surface extends React.Component<Props, State> {
             onChange={this.handleChange}
             onKeyPress={this.handleKeyPress}
             placeholder={"What are you looking for..."}
-            autoFocus={true}
+            autoFocus={false}
             onFocus={e => {
               // focus on the end value in the input
               var tempValue = e.target.value;
@@ -397,13 +415,13 @@ class Surface extends React.Component<Props, State> {
           />
           {this.state.isSearch || this.state.isDetail ? (
             <div
-              className={`dt fr`}
+              className={`dt fr pointer`}
               onClick={() => {
                 this.handleSurface();
               }}
             >
-              <div className={`dtc v-mid gray`}>
-                <X />
+              <div className={`dtc v-btm gray`}>
+                <X size={20} />
               </div>
             </div>
           ) : null}

@@ -92,7 +92,7 @@ class CaptureDialogue extends React.Component<Props, State> {
           {this.renderMinimizeButton()}
 
           {/* Text Bar */}
-          <div className={`h-100 w-100 dt pb3`}>
+          <div className={`h-50 w-100 dt pb3`}>
             <div className={`v-btm dtc bb bw1 b--${config.captureAccentColor}`}>
               <TextInput
                 handleChange={this.handleChange}

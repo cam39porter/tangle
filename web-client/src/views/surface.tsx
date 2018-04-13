@@ -545,7 +545,7 @@ class Surface extends React.Component<Props, State> {
 
   render() {
     return (
-      <div>
+      <div className={``}>
         {this.renderSearchBar()}
         {this.renderGraph()}
 

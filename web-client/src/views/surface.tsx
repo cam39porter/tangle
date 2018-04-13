@@ -26,6 +26,7 @@ import ResultPagination from "../components/result-pagination";
 import config from "../cfg";
 import qs from "qs";
 import { assign } from "lodash";
+import { X } from "react-feather";
 
 const COUNT = 200; // number of results to return
 const PAGE_COUNT = 10; // number of results per page
@@ -167,16 +168,16 @@ class Surface extends React.Component<Props, State> {
 
   handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
-      this.handleSurface();
+      this.handleSurface(this.state.query);
     }
   }
 
-  handleSurface() {
+  handleSurface(query?: string) {
     this.setState({
       isShowingList: false
     });
     this.props.history.push(
-      `/surface?query=${encodeURIComponent(this.state.query || "")}`
+      `/surface?query=${encodeURIComponent(query || "")}`
     );
   }
 
@@ -376,7 +377,9 @@ class Surface extends React.Component<Props, State> {
           } shadow-1`}
         >
           <input
-            className={`f6 w-100`}
+            className={`f6 fl ${
+              this.state.isSearch || this.state.isDetail ? "w-80" : "w-100"
+            }`}
             ref={input => {
               this.searchInput = input;
             }}
@@ -392,6 +395,18 @@ class Surface extends React.Component<Props, State> {
               e.target.value = tempValue;
             }}
           />
+          {this.state.isSearch || this.state.isDetail ? (
+            <div
+              className={`dt fr`}
+              onClick={() => {
+                this.handleSurface();
+              }}
+            >
+              <div className={`dtc v-mid gray`}>
+                <X />
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     );
@@ -503,6 +518,8 @@ class Surface extends React.Component<Props, State> {
           focusColor1={FOCUS_COLOR_1}
           focusColor2={FOCUS_COLOR_2}
           gradientNumber={this.getGradientNumber()}
+          focusNodeAdjacency={false}
+          showTooltip={false}
         />
       </div>
     );
@@ -526,9 +543,7 @@ class Surface extends React.Component<Props, State> {
               renderBody={
                 !this.state.isDetail ? this.renderResults : this.renderDetail
               }
-              renderFooter={
-                !this.state.isDetail ? this.renderShowList : () => null
-              }
+              renderFooter={this.renderShowList}
             />
           ) : (
             <div className={`fixed w-100 bottom-0 z-4`}>

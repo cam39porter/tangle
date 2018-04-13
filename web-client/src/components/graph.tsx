@@ -37,6 +37,8 @@ interface Props {
   focusColor1: string;
   focusColor2: string;
   gradientNumber: number;
+  focusNodeAdjacency: boolean;
+  showTooltip: boolean;
 }
 
 class Graph extends React.Component<Props, object> {
@@ -193,7 +195,7 @@ class Graph extends React.Component<Props, object> {
         show: false
       },
       tooltip: {
-        show: true,
+        show: this.props.showTooltip,
         trigger: "item",
         showContent: true,
         confine: true,
@@ -267,7 +269,7 @@ class Graph extends React.Component<Props, object> {
           roam: true,
           nodeScaleRation: 0.5,
           draggable: false,
-          focusNodeAdjacency: true,
+          focusNodeAdjacency: this.props.focusNodeAdjacency,
           cursor: "pointer",
           lineStyle: {
             curveness: 0.3,

@@ -71,6 +71,7 @@ interface State {
   isDetail: boolean;
   isShowingList: boolean;
   isCapturing: boolean;
+  hoverFocus: Node | null;
 }
 
 function getQuery(queryString: string) {
@@ -126,7 +127,8 @@ class Surface extends React.Component<Props, State> {
       isSearch,
       isDetail,
       isShowingList: false,
-      isCapturing: false
+      isCapturing: false,
+      hoverFocus: null
     };
   }
 
@@ -556,6 +558,49 @@ class Surface extends React.Component<Props, State> {
             }
             this.handleSurfaceDetail(e.data.id);
           }}
+          onMouseOver={e => {
+            if (
+              e.dataType !== "node" ||
+              (e.data.category === "entity" || e.data.category === "tag")
+            ) {
+              return;
+            }
+
+            let nodes: Array<Node> = [];
+
+            if (!this.props.data) {
+              return null;
+            }
+
+            if (this.props.data.get) {
+              nodes = this.props.data.get.nodes;
+            }
+
+            if (this.props.data.search && this.props.data.search.graph.nodes) {
+              nodes = this.props.data.search.graph.nodes;
+            }
+
+            if (nodes.length < 1) {
+              return;
+            }
+
+            let node = nodes.find(n => {
+              return n.id === e.data.id;
+            });
+
+            if (node) {
+              this.setState({
+                hoverFocus: node
+              });
+            }
+
+            return;
+          }}
+          onMouseOut={e => {
+            this.setState({
+              hoverFocus: null
+            });
+          }}
           focusColor1={FOCUS_COLOR_1}
           focusColor2={FOCUS_COLOR_2}
           gradientNumber={this.getGradientNumber()}
@@ -585,12 +630,14 @@ class Surface extends React.Component<Props, State> {
       return null;
     }
 
-    const node = nodes[0];
+    const node =
+      this.state.hoverFocus !== null ? this.state.hoverFocus : nodes[0];
 
     return (
       <div
-        className={`dt w-100 bg-white pointer bt b--light-gray tl ${!this.state
-          .isShowingList &&
+        className={`dt w-100 bg-white pointer bt b--light-gray tl ${(!this.state
+          .isShowingList ||
+          this.state.hoverFocus !== null) &&
           "shadow-1-l measure-l fixed-l bottom-2-l left-2-l"}`}
       >
         <ResultListItem
@@ -630,6 +677,10 @@ class Surface extends React.Component<Props, State> {
               {this.renderDetailBar()}
             </div>
           )
+        ) : this.state.hoverFocus ? (
+          <div className={`fixed w-100 bottom-0 z-3`}>
+            {this.renderDetailBar()}
+          </div>
         ) : null}
 
         <div

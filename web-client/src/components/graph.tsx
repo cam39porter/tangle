@@ -23,6 +23,11 @@ export interface GraphEdge {
   destination: string;
 }
 
+export interface GraphEvent {
+  dataType: string;
+  data: { id: string; category: string };
+}
+
 interface Props {
   refEChart?: (eChart: ReactECharts) => void;
   focusStartIndex?: number;
@@ -31,9 +36,9 @@ interface Props {
   edgeData: Array<GraphEdge>;
   layout?: "circular" | "force";
   tooltipPosition?: Array<String> | String;
-  onClick: (
-    e: { dataType: string; data: { id: string; category: string } }
-  ) => void;
+  onClick: (e: GraphEvent) => void;
+  onMouseOver: (e: GraphEvent) => void;
+  onMouseOut: (e: GraphEvent) => void;
   focusColor1: string;
   focusColor2: string;
   gradientNumber: number;
@@ -179,7 +184,9 @@ class Graph extends React.Component<Props, object> {
 
   getEvents() {
     return {
-      click: this.props.onClick
+      click: this.props.onClick,
+      mouseover: this.props.onMouseOver,
+      mouseout: this.props.onMouseOut
     };
   }
 

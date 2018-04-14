@@ -37,25 +37,27 @@ export default {
   Mutation: {
     createCapture(_, params, context): Promise<Graph> {
       const user: User = getAuthenticatedUser();
-      return createCaptureNode(user, params.body).then(captureNode => {
-        return getNLPResponse(stripTags(params.body)).then(nlp => {
-          const nlpCreates = Promise.all(
-            nlp.entities.map(entity =>
-              insertEntityWithRel(captureNode.id, entity)
-            )
-          );
-          return nlpCreates.then(nlpCreateResults => {
-            const tagCreates = Promise.all(
-              parseTags(params.body).map(tag =>
-                createTagNodeWithEdge(tag, captureNode.id)
+      return createCaptureNode(user, params.body).then(
+        (captureNode: GraphNode) => {
+          return getNLPResponse(stripTags(params.body)).then(nlp => {
+            const nlpCreates = Promise.all(
+              nlp.entities.map(entity =>
+                insertEntityWithRel(captureNode.id, entity)
               )
             );
-            return tagCreates.then(tagCreateResults => {
-              return get(captureNode.id);
+            return nlpCreates.then(nlpCreateResults => {
+              const tagCreates = Promise.all(
+                parseTags(params.body).map(tag =>
+                  createTagNodeWithEdge(tag, captureNode.id)
+                )
+              );
+              return tagCreates.then(tagCreateResults => {
+                return get(captureNode.id);
+              });
             });
           });
-        });
-      });
+        }
+      );
     }
   }
 };

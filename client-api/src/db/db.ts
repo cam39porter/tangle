@@ -12,13 +12,8 @@ const session = driver.session();
 function getUser(uid: string): Promise<User> {
   return executeQuery(`
   MATCH (u:User {id:"${uid}"})
-  RETURN u`).then(res => {
-    const userRecord = res.records[0].get("u");
-    return new User(
-      userRecord.properties.id,
-      userRecord.properties.name,
-      userRecord.properties.email
-    );
+  RETURN u`).then((result: StatementResult) => {
+    return result.records[0].get("u").properties as User;
   });
 }
 
@@ -40,7 +35,7 @@ function createCaptureNode(user: User, body: string): Promise<GraphNode> {
     ON CREATE SET n.created = TIMESTAMP()
     CREATE (u)-[created:CREATED]->(n)
     RETURN n`
-  ).then(result => {
+  ).then((result: StatementResult) => {
     const record = result.records[0].get("n");
     return new GraphNode(
       record.properties.id,
@@ -68,7 +63,7 @@ function createTagNodeWithEdge(
     ON CREATE SET tag.created = TIMESTAMP()
     CREATE (tag)<-[r:TAGGED_WITH]-(to)
     RETURN tag
-  `).then(result => {
+  `).then((result: StatementResult) => {
     const record = result.records[0].get("tag");
     return new GraphNode(
       record.properties.id,

@@ -76,7 +76,7 @@ function insertEntityWithRel(
 }
 
 function getAll(timezoneOffset: number): Promise<SearchResults> {
-  const userId = requestContext.get("request").user.uid;
+  const userId = requestContext.get("request").user.id;
   const since = getCreatedSince(timezoneOffset).unix() * 1000;
   return executeQuery(
     `MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
@@ -147,7 +147,7 @@ function search(
   start: number,
   count: number
 ): Promise<SearchResults> {
-  const userId = requestContext.get("request").user.uid;
+  const userId = requestContext.get("request").user.id;
   const cypherQuery =
     rawQuery && rawQuery.length > 0
       ? `CALL apoc.index.search("captures", "${rawQuery}~") YIELD node as c, weight

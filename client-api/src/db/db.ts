@@ -16,9 +16,9 @@ function getUser(uid: string) {
   });
 }
 
-function deleteCaptureNode(uid: string, captureId: string) {
+function deleteCaptureNode(id: string, captureId: string) {
   return executeQuery(
-    `MATCH (c:Capture {id:"${captureId}"})<-[:CREATED]-(u:User {id:"${uid}"})
+    `MATCH (c:Capture {id:"${captureId}"})<-[:CREATED]-(u:User {id:"${id}"})
     DETACH DELETE c
     `
   );
@@ -27,7 +27,7 @@ function deleteCaptureNode(uid: string, captureId: string) {
 function createCaptureNode(user, body: string): Promise<GraphNode> {
   const uuid = uuidv4();
   return executeQuery(
-    `MERGE (u:User {id:"${user.uid}", name:"${user.name}", email:"${
+    `MERGE (u:User {id:"${user.id}", name:"${user.name}", email:"${
       user.email
     }"})
     MERGE (n:Capture {id:"${uuid}", body:"${escape(body)}"})

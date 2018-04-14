@@ -60,7 +60,7 @@ class App extends React.Component<Props, State> {
       <div className={`vh-100 w-100 avenir`}>
         {this.state.isAuthenticated ? (
           <div
-            className={`z-1 w-100 measure-narrow-l fixed bottom-0 top-2-l right-2-l`}
+            className={`z-1 w-100 h2 measure-narrow-l fixed bottom-1 top-2-l right-2-l`}
           >
             <NavigationBar />
           </div>

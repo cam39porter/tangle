@@ -111,7 +111,7 @@ class Surface extends React.Component<Props, State> {
     this.renderResults = this.renderResults.bind(this);
     this.renderDetail = this.renderDetail.bind(this);
     this.renderResultsPagination = this.renderResultsPagination.bind(this);
-    this.renderShowList = this.renderShowList.bind(this);
+    this.renderHideList = this.renderHideList.bind(this);
 
     const query = getQuery(this.props.location.search);
     const isSearch = query.length !== 0;
@@ -513,17 +513,14 @@ class Surface extends React.Component<Props, State> {
     );
   }
 
-  renderShowList() {
+  renderHideList() {
     return (
       <div
-        className={`dt w-100 bg-white pointer ${!this.state.isShowingList &&
-          "shadow-1-l fixed-l bottom-2-l left-2-l w4-l tc-l"}`}
+        className={`dt w-100 bg-white pointer`}
         onClick={this.handleIsShowingList}
       >
         <div className={`dtc v-mid w-100 h2 pa3 ttu f6 gray`}>
-          {this.state.isDetail
-            ? this.state.isShowingList ? "hide detail" : "show detail"
-            : this.state.isShowingList ? "hide list" : "show list"}
+          {this.state.isDetail ? "hide detail" : "hide list"}
         </div>
       </div>
     );
@@ -569,16 +566,55 @@ class Surface extends React.Component<Props, State> {
     );
   }
 
+  renderDetailBar() {
+    let nodes: Array<Node> = [];
+
+    if (!this.props.data) {
+      return null;
+    }
+
+    if (this.props.data.get) {
+      nodes = this.props.data.get.nodes;
+    }
+
+    if (this.props.data.search && this.props.data.search.graph.nodes) {
+      nodes = this.props.data.search.graph.nodes;
+    }
+
+    if (nodes.length < 1) {
+      return null;
+    }
+
+    const node = nodes[0];
+
+    return (
+      <div
+        className={`dt w-100 bg-white pointer bt b--light-gray tl ${!this.state
+          .isShowingList &&
+          "shadow-1-l measure-l fixed-l bottom-2-l left-2-l"}`}
+      >
+        <ResultListItem
+          key={node.id}
+          id={node.id}
+          body={node.text}
+          onClick={this.handleIsShowingList}
+          onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+            this.handleFocusNode(0);
+          }}
+          onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+            this.handleUnfocusNode();
+          }}
+          accentColor={config.surfaceAccentColor}
+        />
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className={``}>
         {this.renderSearchBar()}
         {this.renderGraph()}
-
-        <GraphButtons
-          handleIsCapturing={this.handleIsCapturing}
-          isCapturing={this.state.isCapturing}
-        />
 
         {this.state.isSearch || this.state.isDetail ? (
           this.state.isShowingList ? (
@@ -587,14 +623,29 @@ class Surface extends React.Component<Props, State> {
               renderBody={
                 !this.state.isDetail ? this.renderResults : this.renderDetail
               }
-              renderFooter={this.renderShowList}
+              renderFooter={this.renderHideList}
             />
           ) : (
-            <div className={`fixed w-100 bottom-0 z-4`}>
-              {this.renderShowList()}
+            <div className={`fixed w-100 bottom-0 z-3`}>
+              {this.renderDetailBar()}
             </div>
           )
         ) : null}
+
+        <div
+          className={`
+          ${this.state.isDetail || this.state.isSearch ? "mb5 pb4" : ""}
+          ${
+            this.state.isCapturing
+              ? "w-100 h-100 ma0 pa0"
+              : "fixed bottom-2 right-0 mb4 mh2 pa0"
+          } bottom-2-l right-2-l ma0-l z-2 pa0-l`}
+        >
+          <GraphButtons
+            handleIsCapturing={this.handleIsCapturing}
+            isCapturing={this.state.isCapturing}
+          />
+        </div>
       </div>
     );
   }

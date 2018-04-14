@@ -10,7 +10,7 @@ import { makeExecutableSchema } from "graphql-tools";
 
 import schema from "./schema";
 import resolvers from "./resolvers/capture";
-import { GraphQLSchema } from "graphql";
+import { GraphQLSchema, formatError } from "graphql";
 import { authFilter, initAuth } from "./filters/auth";
 
 if (process.env.NODE_ENV === "development") {
@@ -34,16 +34,18 @@ const PORT = 8080;
 const app = express();
 
 if (process.env.NODE_ENV === "production") {
-  app.use(
-    cors({
-      origin: [
-        "https://desktop-client-dot-opit-193719.appspot.com",
-        "https://web-client-dot-opit-193719.appspot.com"
-      ],
-      methods: ["GET", "POST"],
-      optionsSuccessStatus: 200
-    })
-  );
+  // app.use(
+  //   cors({
+  //     origin: [
+  //       "https://desktop-client-dot-opit-193719.appspot.com",
+  //       "https://web-client-dot-opit-193719.appspot.com",
+  //     ],
+  //     methods: ["GET", "POST"],
+  //     optionsSuccessStatus: 200
+  //   })
+  // );
+  // TODO cole differentiate this in prod/ei/dev
+  app.use(cors());
 } else {
   app.use(cors());
 }

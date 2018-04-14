@@ -1,6 +1,6 @@
 import { GraphNode, User } from "../models";
 import { v1 as neo4j } from "neo4j-driver";
-import uuidv4 from "uuid/v4";
+import { v4 as uuidv4 } from "uuid/v4";
 import { StatementResult } from "neo4j-driver/types/v1";
 
 const driver = neo4j.driver(

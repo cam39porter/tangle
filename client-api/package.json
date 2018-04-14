@@ -6,9 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc -w",
-    "start:dev": "tsc && NODE_ENV=development node .compiled/index.js",
-    "start": "tsc && node .compiled/index.js",
-    "deploy": "gcloud -q app deploy ./app.yaml"
+    "start:dev": "yarn build && NODE_ENV=development node .compiled/index.js",
+    "build": "tsc",
+    "start": "node .compiled/index.js",
+    "deploy": "yarn build && gcloud -q app deploy ./app.yaml"
   },
   "author": "",
   "license": "ISC",

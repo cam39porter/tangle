@@ -1,6 +1,7 @@
 import { GraphNode, User } from "../models";
-const uuidv4 = require("uuid/v4");
-const neo4j = require("neo4j-driver").v1;
+import { v1 as neo4j } from "neo4j-driver";
+import uuidv4 from "uuid/v4";
+import { StatementResult } from "neo4j-driver/types/v1";
 
 const driver = neo4j.driver(
   "bolt://35.197.102.210:7687",
@@ -8,20 +9,25 @@ const driver = neo4j.driver(
 );
 const session = driver.session();
 
-function getUser(uid: string) {
+function getUser(uid: string): Promise<User> {
   return executeQuery(`
   MATCH (u:User {id:"${uid}"})
   RETURN u`).then(res => {
-    return res.records[0].get("u");
+    const userRecord = res.records[0].get("u");
+    return new User(
+      userRecord.properties.id,
+      userRecord.properties.name,
+      userRecord.properties.email
+    );
   });
 }
 
-function deleteCaptureNode(id: string, captureId: string) {
+function deleteCaptureNode(id: string, captureId: string): Promise<void> {
   return executeQuery(
     `MATCH (c:Capture {id:"${captureId}"})<-[:CREATED]-(u:User {id:"${id}"})
     DETACH DELETE c
     `
-  );
+  ).then(result => null);
 }
 
 function createCaptureNode(user: User, body: string): Promise<GraphNode> {
@@ -45,11 +51,14 @@ function createCaptureNode(user: User, body: string): Promise<GraphNode> {
   });
 }
 
-function escape(text: string) {
+function escape(text: string): string {
   return text.replace(/\"/g, '\\"');
 }
 
-function createTagNodeWithEdge(tag: string, toNodeId: string): GraphNode {
+function createTagNodeWithEdge(
+  tag: string,
+  toNodeId: string
+): Promise<GraphNode> {
   return executeQuery(`
     MATCH (to {id: "${toNodeId}"})
     MERGE (tag:Tag {
@@ -70,7 +79,7 @@ function createTagNodeWithEdge(tag: string, toNodeId: string): GraphNode {
   });
 }
 
-function executeQuery(cypherQuery) {
+function executeQuery(cypherQuery: string): Promise<StatementResult> {
   return session
     .run(cypherQuery)
     .then(result => {

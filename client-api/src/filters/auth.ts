@@ -33,14 +33,7 @@ function authFilter(req, res, next) {
 }
 
 function setDevOverride(uid: string): Promise<void> {
-  return getUser(uid).then(userRecord => {
-    const user = new User(
-      userRecord.properties.id,
-      userRecord.properties.name,
-      userRecord.properties.email
-    );
-    setAuthenticatedUser(user);
-  });
+  return getUser(uid).then(setAuthenticatedUser);
 }
 
 function verify(encodedToken) {

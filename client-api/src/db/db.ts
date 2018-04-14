@@ -1,4 +1,4 @@
-import { GraphNode } from "../models";
+import { GraphNode, User } from "../models";
 const uuidv4 = require("uuid/v4");
 const neo4j = require("neo4j-driver").v1;
 
@@ -24,7 +24,7 @@ function deleteCaptureNode(id: string, captureId: string) {
   );
 }
 
-function createCaptureNode(user, body: string): Promise<GraphNode> {
+function createCaptureNode(user: User, body: string): Promise<GraphNode> {
   const uuid = uuidv4();
   return executeQuery(
     `MERGE (u:User {id:"${user.id}", name:"${user.name}", email:"${

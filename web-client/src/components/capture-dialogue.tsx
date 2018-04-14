@@ -87,15 +87,15 @@ class CaptureDialogue extends React.Component<Props, State> {
       <div>
         {/* Capture Box */}
         <div
-          className={`w-100 h-100 center fixed top-0 pa3 shadow-1 br1 bg-white z-max overflow-hidden`}
+          className={`w-100 measure-narrow-l h-100 h5-l center fixed bottom-2-l right-2-l pa3 pa0-l shadow-1 br1 bg-white z-max overflow-hidden`}
         >
           {/* Mimimize Button */}
           {this.renderMinimizeButton()}
 
           {/* Text Bar */}
-          <div className={`dt w-100 h-100`}>
-            <div className={`t-row w-100 h-50`}>
-              <div className={`h-100 w-100 dt pb3`}>
+          <div className={`dt pa3 w-100 h-100`}>
+            <div className={`t-row w-100 h-50 h-75-l`}>
+              <div className={`h-100 w-100 dt`}>
                 <div
                   className={`v-btm dtc bb bw1 b--${config.captureAccentColor}`}
                 >
@@ -109,12 +109,14 @@ class CaptureDialogue extends React.Component<Props, State> {
                 </div>
               </div>
             </div>
-            <div className={`t-row tc w-100 pa3`}>
-              <Button
-                onClick={this.handleCapture}
-                title="capture"
-                accentColor={config.captureAccentColor}
-              />
+            <div className={`t-row w-100 h-25 pa3`}>
+              <div className={`tc pa2`}>
+                <Button
+                  onClick={this.handleCapture}
+                  title="capture"
+                  accentColor={config.captureAccentColor}
+                />
+              </div>
             </div>
           </div>
         </div>

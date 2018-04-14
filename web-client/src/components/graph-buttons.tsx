@@ -19,7 +19,9 @@ class GraphButtons extends React.Component<Props, object> {
     }
 
     return (
-      <div className={`fixed right-0 bottom-0 pr3 pb5 z-999`}>
+      <div
+        className={`fixed right-0 right-2-l bottom-0 bottom-2-l pr3 pa0-l pb5 z-999`}
+      >
         <div
           className={`dt h3 w3 white br1 bg-${
             config.captureAccentColor

@@ -381,7 +381,7 @@ class Surface extends React.Component<Props, State> {
   renderSearchBar() {
     return (
       <div
-        className={`center fixed w-100 dt pa3 z-999`}
+        className={`fixed top-2-l left-2-l center w-100 measure-l dt pa3 pa0-l z-999`}
         style={{ cursor: "text" }}
         onClick={() => {
           if (this.searchInput) {

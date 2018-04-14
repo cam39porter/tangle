@@ -27,6 +27,7 @@
     "react-quill": "1.2.6",
     "react-router-dom": "^4.2.2",
     "react-scripts-ts": "2.13.0",
+    "react-window-size": "1.0.1",
     "tachyons": "^4.9.1",
     "tinycolor": "^0.0.1",
     "tinycolor2": "^1.4.1",

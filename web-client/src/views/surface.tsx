@@ -28,6 +28,7 @@ import config from "../cfg";
 import qs from "qs";
 import { assign } from "lodash";
 import { X } from "react-feather";
+import windowSize from "react-window-size";
 
 const COUNT = 200; // number of results to return
 const PAGE_COUNT = 10; // number of results per page
@@ -57,7 +58,10 @@ interface InputProps {
 
 interface RouteProps extends RouteComponentProps<InputProps> {}
 
-interface Props extends RouteProps, ChildProps<InputProps, Response> {}
+interface Props extends RouteProps, ChildProps<InputProps, Response> {
+  windowWidth: number;
+  windowHeight: number;
+}
 
 interface State {
   id: string;
@@ -126,8 +130,18 @@ class Surface extends React.Component<Props, State> {
     };
   }
 
+  componentDidMount() {
+    this.setState({
+      isShowingList: this.isLargeWindow()
+    });
+  }
+
   componentWillReceiveProps(nextProps: Props) {
     let nextState = {};
+
+    if (this.props.windowWidth !== 0) {
+      nextState = assign(nextState, { isShowingList: this.isLargeWindow() });
+    }
 
     const query = getQuery(this.props.location.search);
     const nextQuery = getQuery(nextProps.location.search);
@@ -135,11 +149,11 @@ class Surface extends React.Component<Props, State> {
     if (nextQuery !== query) {
       const isSearch = nextQuery.length !== 0;
 
-      nextState = {
+      nextState = assign(nextState, {
         query: nextQuery,
         focusStartIndex: 0,
         isSearch
-      };
+      });
     }
 
     const id = getId(nextProps.location.search);
@@ -247,6 +261,10 @@ class Surface extends React.Component<Props, State> {
     if (input) {
       shouldFocus ? input.focus() : input.blur();
     }
+  }
+
+  isLargeWindow() {
+    return this.props.windowWidth >= 1024;
   }
 
   isActivePageUp() {
@@ -592,6 +610,6 @@ const SurfaceResultsWithData = graphql<Response, Props>(QUERY, {
     },
     fetchPolicy: "network-only"
   })
-})(Surface);
+})(windowSize(Surface));
 
 export default SurfaceResultsWithData;

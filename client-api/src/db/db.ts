@@ -8,6 +8,22 @@ const driver = neo4j.driver(
 );
 const session = driver.session();
 
+function getUser(uid: string) {
+  return executeQuery(`
+  MATCH (u:User {id:"${uid}"})
+  RETURN u`).then(res => {
+    return res.records[0].get("u");
+  });
+}
+
+function deleteCaptureNode(uid: string, captureId: string) {
+  return executeQuery(
+    `MATCH (c:Capture {id:"${captureId}"})<-[:CREATED]-(u:User {id:"${uid}"})
+    DETACH DELETE c
+    `
+  );
+}
+
 function createCaptureNode(user, body: string): Promise<GraphNode> {
   const uuid = uuidv4();
   return executeQuery(
@@ -68,4 +84,10 @@ function executeQuery(cypherQuery) {
     });
 }
 
-export { executeQuery, createCaptureNode, createTagNodeWithEdge };
+export {
+  getUser,
+  executeQuery,
+  deleteCaptureNode,
+  createCaptureNode,
+  createTagNodeWithEdge
+};

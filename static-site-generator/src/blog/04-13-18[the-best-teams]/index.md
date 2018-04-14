@@ -1,8 +1,8 @@
 ---
 path: '/blog/team-principles'
 date: '2018-04-13'
-title: 'Opportunity Cost'
-subtitle: 'A Framework for Modern Decision-Making'
+title: 'Principles'
+subtitle: 'Team building'
 author: 'Myles McGinley'
 tags: ['team', 'building', 'principles']
 ---

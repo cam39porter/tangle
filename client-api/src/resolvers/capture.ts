@@ -24,40 +24,48 @@ const table = "capture";
 
 export default {
   Query: {
-    search(_, params, context): Promise<SearchResults> {
-      return search(params.rawQuery, params.start, params.count);
+    search(
+      parent,
+      { rawQuery, start, count },
+      context,
+      info
+    ): Promise<SearchResults> {
+      return search(rawQuery, start, count);
     },
-    get(_, params, context): Promise<Graph> {
-      return get(params.id);
+    get(parent, { id }, context, info): Promise<Graph> {
+      return get(id);
     },
-    getAll(_, params, context): Promise<SearchResults> {
-      return getAll(params.timezoneOffset);
+    getAll(
+      parent,
+      { useCase, timezoneOffset },
+      context,
+      info
+    ): Promise<SearchResults> {
+      return getAll(timezoneOffset);
     }
   },
   Mutation: {
-    createCapture(_, params, context): Promise<Graph> {
+    createCapture(parent, { body }, context, info): Promise<Graph> {
       const user: User = getAuthenticatedUser();
-      return createCaptureNode(user, params.body).then(
-        (captureNode: GraphNode) => {
-          return getNLPResponse(stripTags(params.body)).then(nlp => {
-            const nlpCreates = Promise.all(
-              nlp.entities.map(entity =>
-                insertEntityWithRel(captureNode.id, entity)
+      return createCaptureNode(user, body).then((captureNode: GraphNode) => {
+        return getNLPResponse(stripTags(body)).then(nlp => {
+          const nlpCreates = Promise.all(
+            nlp.entities.map(entity =>
+              insertEntityWithRel(captureNode.id, entity)
+            )
+          );
+          return nlpCreates.then(nlpCreateResults => {
+            const tagCreates = Promise.all(
+              parseTags(body).map(tag =>
+                createTagNodeWithEdge(tag, captureNode.id)
               )
             );
-            return nlpCreates.then(nlpCreateResults => {
-              const tagCreates = Promise.all(
-                parseTags(params.body).map(tag =>
-                  createTagNodeWithEdge(tag, captureNode.id)
-                )
-              );
-              return tagCreates.then(tagCreateResults => {
-                return get(captureNode.id);
-              });
+            return tagCreates.then(tagCreateResults => {
+              return get(captureNode.id);
             });
           });
-        }
-      );
+        });
+      });
     }
   }
 };

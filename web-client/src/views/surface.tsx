@@ -381,7 +381,7 @@ class Surface extends React.Component<Props, State> {
   renderSearchBar() {
     return (
       <div
-        className={`fixed top-2-l left-2-l center w-100 measure-l dt pa3 pa0-l z-999`}
+        className={`fixed top-2-l center w-100 w-third-l dt pa3 pv0-l ph4-l z-999`}
         style={{ cursor: "text" }}
         onClick={() => {
           if (this.searchInput) {
@@ -497,7 +497,11 @@ class Surface extends React.Component<Props, State> {
 
   renderShowList() {
     return (
-      <div className={`dt w-100 bg-white`} onClick={this.handleIsShowingList}>
+      <div
+        className={`dt w-100 bg-white pointer ${!this.state.isShowingList &&
+          "shadow-1-l fixed-l bottom-2-l left-2-l w4-l tc-l"}`}
+        onClick={this.handleIsShowingList}
+      >
         <div className={`dtc v-mid w-100 h2 pa3 ttu f6 gray`}>
           {this.state.isDetail
             ? this.state.isShowingList ? "hide detail" : "show detail"
@@ -513,7 +517,11 @@ class Surface extends React.Component<Props, State> {
     }
 
     return (
-      <div className={`w-100 h-100 fixed top-0`}>
+      <div
+        className={`w-100 ${(this.state.isDetail || this.state.isSearch) &&
+          this.state.isShowingList &&
+          "w-two-thirds-l"} h-100 fixed right-0 top-0`}
+      >
         <Graph
           refEChart={e => {
             this.eChart = e;

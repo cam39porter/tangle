@@ -94,7 +94,7 @@ class CaptureDialogue extends React.Component<Props, State> {
 
           {/* Text Bar */}
           <div className={`dt pa3 w-100 h-100`}>
-            <div className={`t-row w-100 h-50 h-75-l`}>
+            <div className={`t-row w-100 h-50 h-100-l`}>
               <div className={`h-100 w-100 dt`}>
                 <div
                   className={`v-btm dtc bb bw1 b--${config.captureAccentColor}`}
@@ -109,7 +109,7 @@ class CaptureDialogue extends React.Component<Props, State> {
                 </div>
               </div>
             </div>
-            <div className={`t-row w-100 h-25 pa3`}>
+            <div className={`t-row w-100 h-25 pa3 hide-ns`}>
               <div className={`tc pa2`}>
                 <Button
                   onClick={this.handleCapture}

@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
-import * as requestContext from "request-context";
 import { getUser } from "../db/db";
 import { User } from "../models";
+import { setAuthenticatedUser } from "../services/request-context";
 
 function initAuth() {
   admin.initializeApp({
@@ -20,7 +20,7 @@ function authFilter(req, res, next) {
     verify(encodedToken)
       .then(token => {
         const user = new User(token.uid, token.name, token.email);
-        requestContext.set("request:user", user);
+        setAuthenticatedUser(user);
         next();
       })
       .catch(error => {
@@ -39,7 +39,7 @@ function setDevOverride(uid: string): Promise<void> {
       userRecord.properties.name,
       userRecord.properties.email
     );
-    requestContext.set("request:user", user);
+    setAuthenticatedUser(user);
   });
 }
 

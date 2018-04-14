@@ -5,7 +5,8 @@ import {
   Graph,
   GraphNode,
   Edge,
-  NLPEntity
+  NLPEntity,
+  User
 } from "../models";
 import { getNLPResponse } from "../services/nlp";
 import {
@@ -14,9 +15,9 @@ import {
   createTagNodeWithEdge
 } from "../db/db";
 import { parseTags, stripTags } from "../helpers/tag";
-import * as requestContext from "request-context";
 import * as _ from "lodash";
 import * as moment from "moment";
+import { getAuthenticatedUser } from "../services/request-context";
 
 const dedupe = require("dedupe");
 const table = "capture";
@@ -35,7 +36,7 @@ export default {
   },
   Mutation: {
     createCapture(_, params, context): Promise<Graph> {
-      const user = requestContext.get("request").user;
+      const user: User = getAuthenticatedUser();
       return createCaptureNode(user, params.body).then(captureNode => {
         return getNLPResponse(stripTags(params.body)).then(nlp => {
           const nlpCreates = Promise.all(
@@ -76,7 +77,7 @@ function insertEntityWithRel(
 }
 
 function getAll(timezoneOffset: number): Promise<SearchResults> {
-  const userId = requestContext.get("request").user.id;
+  const userId = getAuthenticatedUser().id;
   const since = getCreatedSince(timezoneOffset).unix() * 1000;
   return executeQuery(
     `MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
@@ -147,7 +148,7 @@ function search(
   start: number,
   count: number
 ): Promise<SearchResults> {
-  const userId = requestContext.get("request").user.id;
+  const userId = getAuthenticatedUser().id;
   const cypherQuery =
     rawQuery && rawQuery.length > 0
       ? `CALL apoc.index.search("captures", "${rawQuery}~") YIELD node as c, weight

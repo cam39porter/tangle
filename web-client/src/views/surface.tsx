@@ -21,7 +21,6 @@ import Graph from "../components/graph";
 import { GraphNode } from "../components/graph";
 import GraphButtons from "../components/graph-buttons";
 import Sidebar from "../components/sidebar";
-import ResultPagination from "../components/result-pagination";
 
 // Config / Utils
 import config from "../cfg";
@@ -111,7 +110,6 @@ class Surface extends React.Component<Props, State> {
     this.renderSearchBar = this.renderSearchBar.bind(this);
     this.renderResults = this.renderResults.bind(this);
     this.renderDetail = this.renderDetail.bind(this);
-    this.renderResultsPagination = this.renderResultsPagination.bind(this);
     this.renderHideList = this.renderHideList.bind(this);
 
     const query = getQuery(this.props.location.search);
@@ -451,19 +449,23 @@ class Surface extends React.Component<Props, State> {
     );
   }
 
-  renderResults() {
-    if (
-      !(this.props.data && this.props.data.search) ||
-      !this.isLoadedWithoutError()
-    ) {
+  renderResults(nodes?: Array<Node>) {
+    if (!this.isLoadedWithoutError) {
       return null;
+    }
+
+    if (nodes === undefined) {
+      if (!(this.props.data && this.props.data.search)) {
+        return null;
+      }
+      nodes = this.props.data.search.graph.nodes;
     }
 
     return (
       <div>
-        {this.props.data.search.graph.nodes
+        {nodes
           .filter((node, index) => {
-            return this.isFocusResult(index) && node.type === "Capture";
+            return node.type === "Capture";
           })
           .map((capture, index) => {
             return (
@@ -491,28 +493,26 @@ class Surface extends React.Component<Props, State> {
       return null;
     }
 
-    const detailNode = this.props.data.get.nodes.filter(node => {
-      return node.level === 0;
-    })[0];
+    let detailNode;
 
-    return <ResultDetail id={this.state.id} body={detailNode.text} />;
-  }
-
-  renderResultsPagination() {
-    if (!this.isLoadedWithoutError) {
-      return null;
-    }
+    const captureNodes = this.props.data.get.nodes.filter(node => {
+      if (node.type === "Capture") {
+        if (node.level === 0) {
+          detailNode = node;
+          return false;
+        }
+        return true;
+      }
+      return false;
+    });
 
     return (
-      <ResultPagination
-        totalResults={this.getTotalResults()}
-        startIndex={this.state.focusStartIndex}
-        endIndex={this.getFocusEndIndex()}
-        isActivePageDown={this.state.focusStartIndex > 0}
-        handlePageDown={this.handlePageDown}
-        isActivePageUp={this.isActivePageUp()}
-        handlePageUp={this.handlePageUp}
-      />
+      <div>
+        {detailNode !== undefined ? (
+          <ResultDetail id={this.state.id} body={detailNode.text} />
+        ) : null}
+        {this.renderResults(captureNodes)}
+      </div>
     );
   }
 
@@ -551,10 +551,7 @@ class Surface extends React.Component<Props, State> {
           edgeData={this.getEdgeData()}
           tooltipPosition={this.state.isSearch ? ["32", "32"] : "top"}
           onClick={e => {
-            if (
-              e.dataType !== "node" ||
-              (e.data.category === "entity" || e.data.category === "tag")
-            ) {
+            if (e.dataType !== "node") {
               return;
             }
             this.handleSurfaceDetail(e.data.id);

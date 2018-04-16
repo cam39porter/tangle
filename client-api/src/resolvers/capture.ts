@@ -21,7 +21,6 @@ import { getAuthenticatedUser } from "../services/request-context";
 import { toEntityUrn, toUserUrn } from "../helpers/urn-helpers";
 
 const dedupe = require("dedupe");
-const table = "capture";
 
 export default {
   Query: {
@@ -72,12 +71,12 @@ export default {
 };
 
 function insertEntityWithRel(
-  captureId: string,
+  captureUrn: string,
   entity: NLPEntity
 ): Promise<any> {
   const urn = toEntityUrn(`${entity.name};${entity.type}`);
   return executeQuery(`
-    MATCH (capture {id: "${captureId}"})
+    MATCH (capture {id: "${captureUrn}"})
     MERGE (entity:Entity {
       id: "${urn}",
       name: "${entity.name}",
@@ -112,9 +111,9 @@ function getCreatedSince(timezoneOffset: number) {
     .startOf("day");
 }
 
-function get(id: string): Promise<Graph> {
+function get(urn: string): Promise<Graph> {
   const userUrn = getAuthenticatedUser().id;
-  return executeQuery(`MATCH (node {id:"${id}"}) 
+  return executeQuery(`MATCH (node {id:"${urn}"}) 
   CALL apoc.path.subgraphAll(node, {maxLevel:2, labelFilter:"-User"}) yield nodes, relationships
   WITH nodes, relationships
   UNWIND nodes AS n
@@ -126,6 +125,11 @@ function get(id: string): Promise<Graph> {
       "properties.id"
     );
 
+    const rootNodeType: string = res.records[0]
+      .get("nodes")
+      .filter(node => node.properties.id === urn)
+      .map(node => node.labels[0])[0];
+
     const nodes: GraphNode[] = res.records[0]
       .get("nodes")
       .map(
@@ -134,7 +138,7 @@ function get(id: string): Promise<Graph> {
             node.properties.id,
             node.labels[0],
             node.properties.body || node.properties.name,
-            getLevel(id, node.properties.id, node.labels[0])
+            getLevel(urn, rootNodeType, node.properties.id, node.labels[0])
           )
       );
     const edges: Edge[] = res.records[0]
@@ -153,13 +157,27 @@ function get(id: string): Promise<Graph> {
   });
 }
 
-function getLevel(startId: string, nodeId: string, nodeType: string): number {
+function getLevel(
+  startId: string,
+  startType: string,
+  nodeId: string,
+  nodeType: string
+): number {
   if (startId === nodeId) {
     return 0;
-  } else if (nodeType !== "Capture") {
-    return 1;
+  } else if (startType === "Capture") {
+    if (nodeType === "Capture") {
+      return 2;
+    } else {
+      return 1;
+    }
+    // startType != Capture
   } else {
-    return 2;
+    if (nodeType === "Capture") {
+      return 1;
+    } else {
+      return 2;
+    }
   }
 }
 

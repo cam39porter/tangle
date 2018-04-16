@@ -30,7 +30,7 @@ function deleteCaptureNode(id: string, captureId: string): Promise<void> {
 function createCaptureNode(user: User, body: string): Promise<GraphNode> {
   const uuid = uuidv4();
   const captureUrn = toCaptureUrn(uuid);
-  const userUrn = toUserUrn(user.id);
+  const userUrn = user.id;
   return executeQuery(
     `MERGE (u:User {id:"${userUrn}", name:"${user.name}", email:"${
       user.email
@@ -56,10 +56,10 @@ function escape(text: string): string {
 
 function createTagNodeWithEdge(
   tag: string,
-  toNodeId: string
+  toNodeUrn: string
 ): Promise<GraphNode> {
   return executeQuery(`
-    MATCH (to {id: "${toNodeId}"})
+    MATCH (to {id: "${toNodeUrn}"})
     MERGE (tag:Tag {
       id: "${toTagUrn(tag)}",
       name: "${tag}"

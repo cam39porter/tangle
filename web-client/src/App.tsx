@@ -36,20 +36,27 @@ class App extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.removeFirebaseListener = firebaseAuth().onIdTokenChanged(user => {
-      if (user) {
-        user.getIdToken(true).then(idToken => {
-          localStorage.setItem("idToken", idToken);
+    firebaseAuth()
+      .setPersistence(firebaseAuth.Auth.Persistence.LOCAL)
+      .then(() => {
+        this.removeFirebaseListener = firebaseAuth().onIdTokenChanged(user => {
+          if (user) {
+            user.getIdToken(true).then(idToken => {
+              localStorage.setItem("idToken", idToken);
+            });
+            this.setState({
+              isAuthenticated: true
+            });
+          } else {
+            this.setState({
+              isAuthenticated: false
+            });
+          }
         });
-        this.setState({
-          isAuthenticated: true
-        });
-      } else {
-        this.setState({
-          isAuthenticated: false
-        });
-      }
-    });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
   componentWillUnmount() {
     this.removeFirebaseListener();

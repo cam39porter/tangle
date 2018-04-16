@@ -138,7 +138,7 @@ function get(urn: string): Promise<Graph> {
   UNWIND nodes AS n
   MATCH (u:User {id:"${userUrn}"})
   WHERE n:Tag OR n:Entity OR (n:Capture)<-[:CREATED]-(u)
-  RETURN collect(distinct n) AS nodes,relationships`).then(res => {
+  RETURN collect(distinct n) AS nodes, relationships`).then(res => {
     return buildGraph(
       res.records[0].get("nodes"),
       res.records[0].get("relationships"),
@@ -161,7 +161,22 @@ function buildGraph(
     .filter(node => node.properties.id === startUrn)
     .map(node => node.labels[0])[0];
 
-  const nodes: GraphNode[] = neoNodes.map(
+  const filteredRel = neoRelationships.filter(
+    edge => neoIdToNodeId[edge.start] && neoIdToNodeId[edge.end]
+  );
+
+  const nodeIdsWithRel = [].concat(
+    ...filteredRel.map(rel => [
+      neoIdToNodeId[rel.start],
+      neoIdToNodeId[rel.end]
+    ])
+  );
+
+  const filteredNodes = neoNodes.filter(node =>
+    nodeIdsWithRel.includes(node.properties.id)
+  );
+
+  const nodes: GraphNode[] = filteredNodes.map(
     node =>
       new GraphNode(
         node.properties.id,
@@ -170,9 +185,7 @@ function buildGraph(
         getLevel(startUrn, rootNodeType, node.properties.id, node.labels[0])
       )
   );
-  const edges: Edge[] = neoRelationships
-    .filter(edge => neoIdToNodeId[edge.start] && neoIdToNodeId[edge.end])
-    .map(
+  const edges: Edge[] = filteredRel.map(
       edge =>
         new Edge({
           source: neoIdToNodeId[edge.start],

@@ -71,6 +71,7 @@ interface State {
   isShowingList: boolean;
   isCapturing: boolean;
   hoverFocus: Node | null;
+  nodeIdToIndex: Object;
 }
 
 function getQuery(queryString: string) {
@@ -126,7 +127,8 @@ class Surface extends React.Component<Props, State> {
       isDetail,
       isShowingList: false,
       isCapturing: false,
-      hoverFocus: null
+      hoverFocus: null,
+      nodeIdToIndex: {}
     };
   }
 
@@ -139,16 +141,16 @@ class Surface extends React.Component<Props, State> {
   componentWillReceiveProps(nextProps: Props) {
     let nextState = {};
 
+    // update window size
     if (this.props.windowWidth !== 0) {
       nextState = assign(nextState, { isShowingList: this.isLargeWindow() });
     }
 
+    // update current query
     const query = getQuery(this.props.location.search);
     const nextQuery = getQuery(nextProps.location.search);
-
     if (nextQuery !== query) {
       const isSearch = nextQuery.length !== 0;
-
       nextState = assign(nextState, {
         query: nextQuery,
         focusStartIndex: 0,
@@ -156,10 +158,29 @@ class Surface extends React.Component<Props, State> {
       });
     }
 
+    // update is detail view
     const id = getId(nextProps.location.search);
     const isDetail = id.length !== 0;
+    nextState = assign(nextState, { id, isDetail });
 
-    this.setState(assign(nextState, { id, isDetail }));
+    // update mapping of node ids to index
+    let nextNoddeIdToIndex = {};
+    let nodes: Array<Node> = [];
+    if (nextProps.data) {
+      if (nextProps.data.search && nextProps.data.search.graph.nodes) {
+        nodes = nextProps.data.search.graph.nodes;
+      }
+      if (nextProps.data.get && nextProps.data.get.nodes) {
+        nodes = nextProps.data.get.nodes;
+      }
+    }
+    nodes.forEach((node, index) => {
+      nextNoddeIdToIndex[node.id] = index;
+    });
+    nextState = assign({ nodeIdToIndex: nextNoddeIdToIndex }, nextState);
+
+    // update state
+    this.setState(nextState);
   }
 
   handleIsShowingList() {
@@ -235,13 +256,13 @@ class Surface extends React.Component<Props, State> {
     });
   }
 
-  handleFocusNode(index: number) {
+  handleFocusNode(id: string) {
     if (this.eChart) {
       const eChartInstance = this.eChart.getEchartsInstance();
 
       eChartInstance.dispatchAction({
         type: "focusNodeAdjacency",
-        dataIndex: index
+        dataIndex: this.state.nodeIdToIndex[id]
       });
     }
   }
@@ -475,7 +496,7 @@ class Surface extends React.Component<Props, State> {
                 body={capture.text}
                 onClick={this.handleSurfaceDetail.bind(null, capture.id)}
                 onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
-                  this.handleFocusNode(index);
+                  this.handleFocusNode(capture.id);
                 }}
                 onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
                   this.handleUnfocusNode();
@@ -644,7 +665,7 @@ class Surface extends React.Component<Props, State> {
           body={node.text}
           onClick={this.handleIsShowingList}
           onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
-            this.handleFocusNode(0);
+            this.handleFocusNode(node.id);
           }}
           onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
             this.handleUnfocusNode();

@@ -457,6 +457,11 @@ class Surface extends React.Component<Props, State> {
                   this.handleUnfocusNode();
                 }}
                 accentColor={config.surfaceAccentColor}
+                isFocus={
+                  (this.isLargeWindow() &&
+                    (this.state.hoverFocus &&
+                      this.state.hoverFocus.id === capture.id)) === true
+                }
               />
             );
           })}
@@ -628,6 +633,7 @@ class Surface extends React.Component<Props, State> {
             this.handleUnfocusNode();
           }}
           accentColor={config.surfaceAccentColor}
+          isFocus={false}
         />
       </div>
     );
@@ -644,7 +650,9 @@ class Surface extends React.Component<Props, State> {
             <Sidebar
               renderHeader={this.renderSearchBar}
               renderBody={
-                !this.state.isDetail ? this.renderResults : this.renderDetail
+                !this.state.isDetail
+                  ? this.renderResults.bind(this)
+                  : this.renderDetail.bind(this)
               }
               renderFooter={this.renderHideList}
             />

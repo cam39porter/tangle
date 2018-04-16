@@ -65,6 +65,6 @@ export default `
 
 
   type Mutation {
-    createCapture(body: String!): Graph!
+    createCapture(body: String!, timezoneOffset: Int): Graph!
   }
 `;

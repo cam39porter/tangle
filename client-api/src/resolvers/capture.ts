@@ -45,7 +45,12 @@ export default {
     }
   },
   Mutation: {
-    createCapture(parent, { body }, context, info): Promise<Graph> {
+    createCapture(
+      parent,
+      { body, timezoneOffset },
+      context,
+      info
+    ): Promise<Graph> {
       const user: User = getAuthenticatedUser();
       return createCaptureNode(user, body).then((captureNode: GraphNode) => {
         return getNLPResponse(stripTags(body)).then(nlp => {
@@ -61,7 +66,9 @@ export default {
               )
             );
             return tagCreates.then(tagCreateResults => {
-              return get(captureNode.id);
+              return getAll(timezoneOffset).then(
+                searchResults => searchResults.graph
+              );
             });
           });
         });

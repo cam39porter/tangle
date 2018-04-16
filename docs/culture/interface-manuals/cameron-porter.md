@@ -15,6 +15,7 @@
 * Very expressive with his face and with his hands.
 * Talks extremely passionately regardless of the subject
 * Often crosses his legs
+* Will loudly talk to himself while reading or coding
 
 ## Interests
 

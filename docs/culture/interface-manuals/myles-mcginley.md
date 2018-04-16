@@ -8,6 +8,12 @@
 
 * Enabler
 
+* Friendly
+
+* Calming - will diffuse conflict in discussions
+
+* Happy - laughs and smiles at everything
+
 ## Quirks
 
 * He will happily change his mind mid conversation
@@ -16,6 +22,12 @@
 
 * When focusing intensely, he listens to loud music and breathes heavily
 
+* Bald and proud
+
+* Flexes his pecs often during conversation
+
+* Great impersonizations
+
 ## Interests
 
 * Footy (Manchester United)
@@ -23,3 +35,7 @@
 * The bald man's style
 
 * Real estate
+
+* Meeting people
+
+* Arbitrage - Tries to exploit inefficiencies

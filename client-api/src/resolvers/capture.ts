@@ -111,9 +111,14 @@ function getCreatedSince(timezoneOffset: number) {
 }
 
 function get(id: string): Promise<Graph> {
+  const userId = getAuthenticatedUser().id;
   return executeQuery(`MATCH (c {id:"${id}"}) 
   CALL apoc.path.subgraphAll(c, {maxLevel:2, labelFilter:"-User"}) yield nodes, relationships
-  RETURN nodes,relationships`).then(res => {
+  WITH nodes, relationships
+  UNWIND nodes AS n
+  MATCH (u:User {id:"${userId}"})
+  WHERE n:Tag OR n:Entity OR (n:Capture)<-[:CREATED]-(u)
+  RETURN collect(distinct n) AS nodes,relationships`).then(res => {
     const neoIdToNodeId = _.mapValues(
       _.keyBy(res.records[0].get("nodes"), "identity"),
       "properties.id"
@@ -130,15 +135,18 @@ function get(id: string): Promise<Graph> {
             getLevel(id, node.properties.id, node.labels[0])
           )
       );
-    const edges: Edge[] = res.records[0].get("relationships").map(
-      edge =>
-        new Edge({
-          source: neoIdToNodeId[edge.start],
-          destination: neoIdToNodeId[edge.end],
-          type: edge.type,
-          salience: edge.properties.salience
-        })
-    );
+    const edges: Edge[] = res.records[0]
+      .get("relationships")
+      .filter(edge => neoIdToNodeId[edge.start] && neoIdToNodeId[edge.end])
+      .map(
+        edge =>
+          new Edge({
+            source: neoIdToNodeId[edge.start],
+            destination: neoIdToNodeId[edge.end],
+            type: edge.type,
+            salience: edge.properties.salience
+          })
+      );
     return new Graph(nodes, edges);
   });
 }

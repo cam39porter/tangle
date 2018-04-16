@@ -193,7 +193,10 @@ class Surface extends React.Component<Props, State> {
   handleSurface(query?: string) {
     this.setState(
       {
-        isShowingList: false
+        isShowingList: false,
+        isDetail: false,
+        isSearch: query ? true : false,
+        hoverFocus: null
       },
       () => {
         this.handleFocusInput(false);
@@ -203,8 +206,6 @@ class Surface extends React.Component<Props, State> {
     this.props.history.push(
       `/surface?query=${encodeURIComponent(query || "")}`
     );
-
-    this.handleFocusInput(false);
   }
 
   handleSurfaceDetail(id: string) {

@@ -358,7 +358,7 @@ class Surface extends React.Component<Props, State> {
             };
           }
 
-          if (this.isFocusResult(index)) {
+          if (this.isFocusResult(index) && !this.state.isDetail) {
             return {
               id: node.id,
               name: node.text,

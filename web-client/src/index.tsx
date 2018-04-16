@@ -35,12 +35,14 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const logoutLink = onError(({ networkError }) => {
+const logoutLink = onError(({ networkError, graphQLErrors }) => {
   if (networkError) {
     if (networkError["statusCode"] === 401) {
       localStorage.removeItem("idToken");
       firebaseAuth().signOut();
     }
+  } else if (graphQLErrors) {
+    console.error(graphQLErrors[0].message);
   }
 });
 

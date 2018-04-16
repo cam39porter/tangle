@@ -598,6 +598,10 @@ class Surface extends React.Component<Props, State> {
       nodes = this.props.data.search.graph.nodes;
     }
 
+    nodes = nodes.filter(n => {
+      return n.type === "Capture";
+    });
+
     if (nodes.length < 1) {
       return null;
     }

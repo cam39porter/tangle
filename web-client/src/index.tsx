@@ -43,6 +43,9 @@ const logoutLink = onError(({ networkError, graphQLErrors }) => {
     }
   } else if (graphQLErrors) {
     console.error(graphQLErrors[0].message);
+    alert(
+      "Sorry, you seemed to have found a dark corner of our application. Please email cole@hex.ventures and tell us about your problem so that we can fix it!"
+    );
   }
 });
 

@@ -7,6 +7,7 @@ import ReactECharts from "echarts-for-react";
 // Config / Utils
 import { getGradient } from "../utils";
 import tinycolor from "tinycolor2";
+import { isEqual } from "lodash";
 
 const BLUR_COLOR = "#CCCCCC";
 const TAG_COLOR = "#333333";
@@ -30,8 +31,6 @@ export interface GraphEvent {
 
 interface Props {
   refEChart?: (eChart: ReactECharts) => void;
-  focusStartIndex?: number;
-  focusEndIndex?: number;
   nodeData: Array<GraphNode>;
   edgeData: Array<GraphEdge>;
   layout?: "circular" | "force";
@@ -50,10 +49,7 @@ class Graph extends React.Component<Props, object> {
   eChart: ReactECharts | null = null;
 
   shouldComponentUpdate(nextProps: Props) {
-    return (
-      this.props.focusStartIndex !== nextProps.focusStartIndex ||
-      this.props.focusEndIndex !== nextProps.focusEndIndex
-    );
+    return !isEqual(nextProps.nodeData, this.props.nodeData);
   }
 
   getNodes() {

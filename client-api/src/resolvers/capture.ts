@@ -98,16 +98,28 @@ function getAll(timezoneOffset: number): Promise<SearchResults> {
   const userId = getAuthenticatedUser().id;
   const since = getCreatedSince(timezoneOffset).unix() * 1000;
   return executeQuery(
-    `MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
-    WHERE c.created > ${since}
-    WITH c 
-    ORDER BY c.created DESC
+    `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:"${userId}"})
+    WHERE capture.created > ${since}
+    WITH capture 
+    ORDER BY capture.created DESC
     LIMIT 50
-    OPTIONAL MATCH (c)-[r]->(n)
-    RETURN c,r,n
+    OPTIONAL MATCH (capture)-[r]->(other)
+    WITH collect(distinct capture) + collect(distinct other) as nodes, collect(r) as relationships
+    RETURN nodes, relationships
     `
   ).then(res => {
-    return buildSearchResults(res.records, 0, 20);
+    return new SearchResults(
+      buildGraph(
+        res.records[0].get("nodes"),
+        res.records[0].get("relationships"),
+        null
+      ),
+      new PageInfo(
+        0,
+        res.records[0].get("nodes").length,
+        res.records[0].get("nodes").length
+      )
+    );
   });
 }
 
@@ -127,41 +139,49 @@ function get(urn: string): Promise<Graph> {
   MATCH (u:User {id:"${userUrn}"})
   WHERE n:Tag OR n:Entity OR (n:Capture)<-[:CREATED]-(u)
   RETURN collect(distinct n) AS nodes,relationships`).then(res => {
-    const neoIdToNodeId = _.mapValues(
-      _.keyBy(res.records[0].get("nodes"), "identity"),
-      "properties.id"
+    return buildGraph(
+      res.records[0].get("nodes"),
+      res.records[0].get("relationships"),
+      urn
     );
-
-    const rootNodeType: string = res.records[0]
-      .get("nodes")
-      .filter(node => node.properties.id === urn)
-      .map(node => node.labels[0])[0];
-
-    const nodes: GraphNode[] = res.records[0]
-      .get("nodes")
-      .map(
-        node =>
-          new GraphNode(
-            node.properties.id,
-            node.labels[0],
-            node.properties.body || node.properties.name,
-            getLevel(urn, rootNodeType, node.properties.id, node.labels[0])
-          )
-      );
-    const edges: Edge[] = res.records[0]
-      .get("relationships")
-      .filter(edge => neoIdToNodeId[edge.start] && neoIdToNodeId[edge.end])
-      .map(
-        edge =>
-          new Edge({
-            source: neoIdToNodeId[edge.start],
-            destination: neoIdToNodeId[edge.end],
-            type: edge.type,
-            salience: edge.properties.salience
-          })
-      );
-    return new Graph(nodes, edges);
   });
+}
+
+function buildGraph(
+  neoNodes: any,
+  neoRelationships: any,
+  startUrn: string
+): Graph {
+  const neoIdToNodeId = _.mapValues(
+    _.keyBy(neoNodes, "identity"),
+    "properties.id"
+  );
+
+  const rootNodeType: string = neoNodes
+    .filter(node => node.properties.id === startUrn)
+    .map(node => node.labels[0])[0];
+
+  const nodes: GraphNode[] = neoNodes.map(
+    node =>
+      new GraphNode(
+        node.properties.id,
+        node.labels[0],
+        node.properties.body || node.properties.name,
+        getLevel(startUrn, rootNodeType, node.properties.id, node.labels[0])
+      )
+  );
+  const edges: Edge[] = neoRelationships
+    .filter(edge => neoIdToNodeId[edge.start] && neoIdToNodeId[edge.end])
+    .map(
+      edge =>
+        new Edge({
+          source: neoIdToNodeId[edge.start],
+          destination: neoIdToNodeId[edge.end],
+          type: edge.type,
+          salience: edge.properties.salience
+        })
+    );
+  return new Graph(nodes, edges);
 }
 
 function getLevel(
@@ -170,7 +190,15 @@ function getLevel(
   nodeId: string,
   nodeType: string
 ): number {
-  if (startId === nodeId) {
+  // getAll
+  if (startId === null) {
+    if (nodeType === "Capture") {
+      return 0;
+    } else {
+      return 1;
+    }
+    // get
+  } else if (startId === nodeId) {
     return 0;
   } else if (startType === "Capture") {
     if (nodeType === "Capture") {
@@ -201,79 +229,22 @@ function search(
       WITH c, weight
       SKIP ${start} LIMIT ${count}
       OPTIONAL MATCH (c)-[r]->(n)
-      RETURN c,weight,r,n`
+      WITH collect(distinct c) + collect(distinct n) as nodes, collect(r) as relationships
+      RETURN nodes, relationships`
       : `MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
       WITH c
       SKIP ${start} LIMIT ${count}
       OPTIONAL MATCH (c)-[r]->(n)
-      RETURN c,r,n`;
-
+      WITH collect(distinct c) + collect(distinct n) as nodes, collect(r) as relationships
+      RETURN nodes, relationships`;
   return executeQuery(cypherQuery).then(res => {
-    return buildSearchResults(res.records, start, count);
+    return new SearchResults(
+      buildGraph(
+        res.records[0].get("nodes"),
+        res.records[0].get("relationships"),
+        null
+      ),
+      new PageInfo(start, count, start + count)
+    );
   });
-}
-
-function buildSearchResults(records, start, count) {
-  return new SearchResults(
-    buildGraph(records, start, count),
-    new PageInfo(start, count, start + count)
-  );
-}
-
-function buildGraph(records, start, count) {
-  const captures: GraphNode[] = records.map(
-    record =>
-      new GraphNode(
-        record.get("c").properties.id,
-        "Capture",
-        record.get("c").properties.body,
-        0
-      )
-  );
-  const dedupedCaptures: GraphNode[] = dedupe(captures, capture => capture.id);
-
-  const entities: GraphNode[] = records
-    .filter(
-      record => record.get("n") && record.get("n").labels.includes("Entity")
-    )
-    .map(
-      record =>
-        new GraphNode(
-          record.get("n").properties.id,
-          "Entity",
-          record.get("n").properties.name,
-          1
-        )
-    );
-  const dedupedEntities: GraphNode[] = dedupe(entities, entity => entity.id);
-
-  const tags: GraphNode[] = records
-    .filter(record => {
-      return record.get("n") && record.get("n").labels.includes("Tag");
-    })
-    .map(
-      record =>
-        new GraphNode(
-          record.get("n").properties.id,
-          "Tag",
-          record.get("n").properties.name,
-          1
-        )
-    );
-  const dedupedTags: GraphNode[] = dedupe(tags, tag => tag.id);
-
-  const edges: Edge[] = records
-    .filter(record => record.get("r"))
-    .map(record => {
-      return new Edge({
-        source: record.get("c").properties.id,
-        destination: record.get("n").properties.id,
-        type: record.get("r").type,
-        salience: record.get("r").properties.salience
-      });
-    });
-  return new Graph(
-    dedupedCaptures.concat(dedupedEntities.concat(dedupedTags)),
-    edges
-  );
 }

@@ -30,7 +30,6 @@ import { X } from "react-feather";
 import windowSize from "react-window-size";
 
 const COUNT = 200; // number of results to return
-const PAGE_COUNT = 10; // number of results per page
 
 const FOCUS_COLOR_1 = "#357EDD";
 const FOCUS_COLOR_2 = "#CDECFF";
@@ -103,8 +102,6 @@ class Surface extends React.Component<Props, State> {
     this.handleIsCapturing = this.handleIsCapturing.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.handlePageDown = this.handlePageDown.bind(this);
-    this.handlePageUp = this.handlePageUp.bind(this);
     this.handleSurfaceDetail = this.handleSurfaceDetail.bind(this);
     this.handleFocusInput = this.handleFocusInput.bind(this);
 
@@ -234,28 +231,6 @@ class Surface extends React.Component<Props, State> {
     this.handleUnfocusNode();
   }
 
-  handlePageDown() {
-    const startResultIndex = this.state.focusStartIndex;
-
-    if (startResultIndex === 0) {
-      return;
-    }
-
-    this.setState({
-      focusStartIndex: startResultIndex - PAGE_COUNT
-    });
-  }
-
-  handlePageUp() {
-    if (!this.isActivePageUp()) {
-      return;
-    }
-
-    this.setState({
-      focusStartIndex: this.state.focusStartIndex + PAGE_COUNT
-    });
-  }
-
   handleFocusNode(id: string) {
     if (this.eChart) {
       const eChartInstance = this.eChart.getEchartsInstance();
@@ -289,10 +264,6 @@ class Surface extends React.Component<Props, State> {
     return this.props.windowWidth >= 1024;
   }
 
-  isActivePageUp() {
-    return this.getTotalResults() > this.getFocusEndIndex();
-  }
-
   isLoadedWithoutError() {
     return (
       this.props.data &&
@@ -301,38 +272,22 @@ class Surface extends React.Component<Props, State> {
     );
   }
 
-  isFocusResult(index: number) {
-    if (getQuery(this.props.location.search) === "") {
-      return true;
-    }
-
-    return (
-      index >= this.state.focusStartIndex &&
-      index < this.state.focusStartIndex + PAGE_COUNT
-    );
-  }
-
-  getFocusEndIndex() {
-    const totalResults = this.getTotalResults();
-
-    return totalResults < this.state.focusStartIndex + PAGE_COUNT
-      ? totalResults
-      : this.state.focusStartIndex + PAGE_COUNT;
-  }
-
-  getTotalResults() {
-    if (!(this.props.data && this.props.data.search)) {
-      return 0;
-    }
-    return this.props.data.search.pageInfo.total;
-  }
-
   getGradientNumber() {
-    const totalFocusResults =
-      getQuery(this.props.location.search) === ""
-        ? COUNT
-        : this.getFocusEndIndex() - this.state.focusStartIndex;
-    return 2 > totalFocusResults ? 2 : totalFocusResults;
+    if (!(this.props.data && this.props.data.search)) {
+      return 2;
+    }
+
+    let resultCount = this.props.data.search.graph.nodes.reduce(
+      (count, node) => {
+        if (node.type === "Capture") {
+          return count + 1;
+        }
+        return count;
+      },
+      0
+    );
+
+    return resultCount < 3 ? 2 : resultCount;
   }
 
   getNodeData(): Array<GraphNode> {
@@ -378,7 +333,7 @@ class Surface extends React.Component<Props, State> {
             };
           }
 
-          if (this.isFocusResult(index) && !this.state.isDetail) {
+          if (!this.state.isDetail) {
             return {
               id: node.id,
               name: node.text,
@@ -566,8 +521,6 @@ class Surface extends React.Component<Props, State> {
             this.eChart = e;
           }}
           layout={"force"}
-          focusStartIndex={this.state.focusStartIndex}
-          focusEndIndex={this.getFocusEndIndex()}
           nodeData={this.getNodeData()}
           edgeData={this.getEdgeData()}
           tooltipPosition={this.state.isSearch ? ["32", "32"] : "top"}

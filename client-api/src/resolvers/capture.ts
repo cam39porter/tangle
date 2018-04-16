@@ -18,6 +18,7 @@ import { parseTags, stripTags } from "../helpers/tag";
 import * as _ from "lodash";
 import * as moment from "moment";
 import { getAuthenticatedUser } from "../services/request-context";
+import { toEntityUrn, toUserUrn } from "../helpers/urn-helpers";
 
 const dedupe = require("dedupe");
 const table = "capture";
@@ -74,10 +75,11 @@ function insertEntityWithRel(
   captureId: string,
   entity: NLPEntity
 ): Promise<any> {
+  const urn = toEntityUrn(`${entity.name};${entity.type}`);
   return executeQuery(`
     MATCH (capture {id: "${captureId}"})
     MERGE (entity:Entity {
-      id: "${entity.name};${entity.type}",
+      id: "${urn}",
       name: "${entity.name}",
       type: "${entity.type}"
     })
@@ -111,12 +113,12 @@ function getCreatedSince(timezoneOffset: number) {
 }
 
 function get(id: string): Promise<Graph> {
-  const userId = getAuthenticatedUser().id;
-  return executeQuery(`MATCH (c {id:"${id}"}) 
-  CALL apoc.path.subgraphAll(c, {maxLevel:2, labelFilter:"-User"}) yield nodes, relationships
+  const userUrn = getAuthenticatedUser().id;
+  return executeQuery(`MATCH (node {id:"${id}"}) 
+  CALL apoc.path.subgraphAll(node, {maxLevel:2, labelFilter:"-User"}) yield nodes, relationships
   WITH nodes, relationships
   UNWIND nodes AS n
-  MATCH (u:User {id:"${userId}"})
+  MATCH (u:User {id:"${userUrn}"})
   WHERE n:Tag OR n:Entity OR (n:Capture)<-[:CREATED]-(u)
   RETURN collect(distinct n) AS nodes,relationships`).then(res => {
     const neoIdToNodeId = _.mapValues(

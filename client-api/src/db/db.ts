@@ -3,15 +3,17 @@ import { v1 as neo4j } from "neo4j-driver";
 import { v4 as uuidv4 } from "uuid/v4";
 import { StatementResult } from "neo4j-driver/types/v1";
 
+import { toCaptureUrn, toTagUrn, toUserUrn } from "../helpers/urn-helpers";
+
 const driver = neo4j.driver(
   "bolt://35.197.102.210:7687",
   neo4j.auth.basic("neo4j", "Z868sybiq7cGzFeA")
 );
 const session = driver.session();
 
-function getUser(uid: string): Promise<User> {
+function getUser(urn: string): Promise<User> {
   return executeQuery(`
-  MATCH (u:User {id:"${uid}"})
+  MATCH (u:User {id:"${urn}"})
   RETURN u`).then((result: StatementResult) => {
     return result.records[0].get("u").properties as User;
   });
@@ -27,11 +29,13 @@ function deleteCaptureNode(id: string, captureId: string): Promise<void> {
 
 function createCaptureNode(user: User, body: string): Promise<GraphNode> {
   const uuid = uuidv4();
+  const captureUrn = toCaptureUrn(uuid);
+  const userUrn = toUserUrn(user.id);
   return executeQuery(
-    `MERGE (u:User {id:"${user.id}", name:"${user.name}", email:"${
+    `MERGE (u:User {id:"${userUrn}", name:"${user.name}", email:"${
       user.email
     }"})
-    MERGE (n:Capture {id:"${uuid}", body:"${escape(body)}"})
+    MERGE (n:Capture {id:"${captureUrn}", body:"${escape(body)}"})
     ON CREATE SET n.created = TIMESTAMP()
     CREATE (u)-[created:CREATED]->(n)
     RETURN n`
@@ -57,7 +61,7 @@ function createTagNodeWithEdge(
   return executeQuery(`
     MATCH (to {id: "${toNodeId}"})
     MERGE (tag:Tag {
-      id: "${tag}",
+      id: "${toTagUrn(tag)}",
       name: "${tag}"
     })
     ON CREATE SET tag.created = TIMESTAMP()

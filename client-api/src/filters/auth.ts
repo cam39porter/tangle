@@ -2,6 +2,7 @@ import * as admin from "firebase-admin";
 import { getUser } from "../db/db";
 import { User } from "../models";
 import { setAuthenticatedUser } from "../services/request-context";
+import { toUserUrn } from "../helpers/urn-helpers";
 
 function initAuth() {
   admin.initializeApp({
@@ -11,15 +12,15 @@ function initAuth() {
 }
 
 function authFilter(req, res, next) {
-  if (process.env.NODE_ENV === "development" && req.get("dev-override-uid")) {
-    setDevOverride(req.get("dev-override-uid"))
+  if (process.env.NODE_ENV === "development" && req.get("dev-override-id")) {
+    setDevOverride(req.get("dev-override-id"))
       .then(() => next())
       .catch(err => res.send(500, err));
   } else if (req.get("authorization")) {
     const encodedToken = parseAuthorization(req.get("authorization"));
     verify(encodedToken)
       .then(token => {
-        const user = new User(token.uid, token.name, token.email);
+        const user = new User(toUserUrn(token.uid), token.name, token.email);
         setAuthenticatedUser(user);
         next();
       })
@@ -32,8 +33,8 @@ function authFilter(req, res, next) {
   }
 }
 
-function setDevOverride(uid: string): Promise<void> {
-  return getUser(uid).then(setAuthenticatedUser);
+function setDevOverride(urn: string): Promise<void> {
+  return getUser(urn).then(setAuthenticatedUser);
 }
 
 function verify(encodedToken) {

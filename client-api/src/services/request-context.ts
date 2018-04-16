@@ -10,7 +10,7 @@ function getAuthenticatedUser(): User {
   if (!userJson) {
     throw new Error("Authenticated user has not yet been set. Cannot proceed");
   }
-  return new User(userJson.id, userJson.email, userJson.name);
+  return userJson as User;
 }
 
 export { setAuthenticatedUser, getAuthenticatedUser };

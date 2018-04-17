@@ -4,11 +4,11 @@ import * as ReactDOM from "react-dom";
 
 // GraphQL
 import {
-  SearchQuery as Response,
+  DailyCapturesQuery as Response,
   NodeType,
   EdgeType
 } from "../__generated__/types";
-import { Search as QUERY } from "../queries";
+import { DailyCaptures as QUERY } from "../queries";
 import { graphql, ChildProps } from "react-apollo";
 
 // Router
@@ -28,8 +28,6 @@ import qs from "qs";
 import { assign } from "lodash";
 // import { X } from "react-feather";
 import windowSize from "react-window-size";
-
-const COUNT = 200; // number of results to return
 
 const FOCUS_COLOR_1 = "#19A974";
 const FOCUS_COLOR_2 = "#9EEBCF";
@@ -131,20 +129,20 @@ class Capture extends React.Component<Props, State> {
     nextState = assign(nextState, { id, isDetail });
 
     // update mapping of node ids to index
-    let nextNoddeIdToIndex = {};
+    let nextNodeIdToIndex = {};
     let nodes: Array<Node> = [];
     if (nextProps.data) {
-      if (nextProps.data.search && nextProps.data.search.graph.nodes) {
-        nodes = nextProps.data.search.graph.nodes;
+      if (nextProps.data.getAll && nextProps.data.getAll.graph.nodes) {
+        nodes = nextProps.data.getAll.graph.nodes;
       }
       if (nextProps.data.get && nextProps.data.get.nodes) {
         nodes = nextProps.data.get.nodes;
       }
     }
     nodes.forEach((node, index) => {
-      nextNoddeIdToIndex[node.id] = index;
+      nextNodeIdToIndex[node.id] = index;
     });
-    nextState = assign({ nodeIdToIndex: nextNoddeIdToIndex }, nextState);
+    nextState = assign({ nodeIdToIndex: nextNodeIdToIndex }, nextState);
 
     // update state
     this.setState(nextState);
@@ -215,11 +213,11 @@ class Capture extends React.Component<Props, State> {
   }
 
   getGradientNumber() {
-    if (!(this.props.data && this.props.data.search)) {
+    if (!(this.props.data && this.props.data.getAll)) {
       return 2;
     }
 
-    let resultCount = this.props.data.search.graph.nodes.reduce(
+    let resultCount = this.props.data.getAll.graph.nodes.reduce(
       (count, node) => {
         if (node.type === "Capture") {
           return count + 1;
@@ -239,8 +237,8 @@ class Capture extends React.Component<Props, State> {
 
     let nodes: Array<Node> = [];
 
-    if (this.props.data.search) {
-      nodes = this.props.data.search.graph.nodes;
+    if (this.props.data.getAll) {
+      nodes = this.props.data.getAll.graph.nodes;
     }
 
     if (this.props.data.get) {
@@ -299,8 +297,8 @@ class Capture extends React.Component<Props, State> {
 
     let edges: Array<Edge> = [];
 
-    if (this.props.data.search) {
-      edges = this.props.data.search.graph.edges;
+    if (this.props.data.getAll) {
+      edges = this.props.data.getAll.graph.edges;
     }
 
     if (this.props.data.get) {
@@ -337,10 +335,10 @@ class Capture extends React.Component<Props, State> {
     }
 
     if (nodes === undefined) {
-      if (!(this.props.data && this.props.data.search)) {
+      if (!(this.props.data && this.props.data.getAll)) {
         return null;
       }
-      nodes = this.props.data.search.graph.nodes;
+      nodes = this.props.data.getAll.graph.nodes;
     }
 
     return (
@@ -427,8 +425,7 @@ class Capture extends React.Component<Props, State> {
 
     return (
       <div
-        className={`w-100 ${this.state.isDetail &&
-          this.state.isShowingList &&
+        className={`w-100 ${this.state.isShowingList &&
           "w-two-thirds-l"} h-100 fixed right-0 top-0`}
       >
         <Graph
@@ -463,8 +460,8 @@ class Capture extends React.Component<Props, State> {
               nodes = this.props.data.get.nodes;
             }
 
-            if (this.props.data.search && this.props.data.search.graph.nodes) {
-              nodes = this.props.data.search.graph.nodes;
+            if (this.props.data.getAll && this.props.data.getAll.graph.nodes) {
+              nodes = this.props.data.getAll.graph.nodes;
             }
 
             if (nodes.length < 1) {
@@ -509,8 +506,8 @@ class Capture extends React.Component<Props, State> {
       nodes = this.props.data.get.nodes;
     }
 
-    if (this.props.data.search && this.props.data.search.graph.nodes) {
-      nodes = this.props.data.search.graph.nodes;
+    if (this.props.data.getAll && this.props.data.getAll.graph.nodes) {
+      nodes = this.props.data.getAll.graph.nodes;
     }
 
     nodes = nodes.filter(n => {
@@ -555,27 +552,27 @@ class Capture extends React.Component<Props, State> {
         {this.renderCaptureCount()}
         {this.renderGraph()}
 
-        {this.state.isDetail ? (
-          this.state.isShowingList ? (
-            <Sidebar
-              renderHeader={this.renderCaptureCount}
-              renderBody={
-                !this.state.isDetail
-                  ? this.renderResults.bind(this)
-                  : this.renderDetail.bind(this)
-              }
-              renderFooter={this.renderHideList}
-            />
-          ) : (
-            <div className={`fixed w-100 bottom-0 z-3`}>
-              {this.renderDetailBar()}
-            </div>
-          )
-        ) : this.state.hoverFocus ? (
+        {this.state.isShowingList ? (
+          <Sidebar
+            renderHeader={this.renderCaptureCount}
+            renderBody={
+              !this.state.isDetail
+                ? this.renderResults.bind(this)
+                : this.renderDetail.bind(this)
+            }
+            renderFooter={this.renderHideList}
+          />
+        ) : (
           <div className={`fixed w-100 bottom-0 z-3`}>
             {this.renderDetailBar()}
           </div>
-        ) : null}
+        )}
+
+        {/* this.state.hoverFocus ? (
+          <div className={`fixed w-100 bottom-0 z-3`}>
+            {this.renderDetailBar()}
+          </div>
+        ) : null} */}
 
         <div
           className={`
@@ -599,8 +596,7 @@ class Capture extends React.Component<Props, State> {
 const CaptureWithData = graphql<Response, Props>(QUERY, {
   options: (ownProps: Props) => ({
     variables: {
-      query: "",
-      count: COUNT,
+      timeOffset: 0,
       detailId: getId(ownProps.location.search),
       isDetail: getId(ownProps.location.search).length > 0
     },

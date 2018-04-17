@@ -68,8 +68,13 @@ export const Search = gql`
 `;
 
 export const DailyCaptures = gql`
-  query DailyCaptures($timezoneOffset: String!) {
-    getAll(useCase: "CAPTURE_TODAY", timezoneOffset: $timezoneOffset) {
+  query DailyCaptures(
+    $timezoneOffset: Int!
+    $detailId: String!
+    $isDetail: Boolean!
+  ) {
+    getAll(useCase: "CAPTURED_TODAY", timezoneOffset: $timezoneOffset)
+      @skip(if: $isDetail) {
       graph {
         nodes {
           id
@@ -88,6 +93,20 @@ export const DailyCaptures = gql`
         count
         total
         start
+      }
+    }
+    get(id: $detailId) @include(if: $isDetail) {
+      nodes {
+        id
+        type
+        text
+        level
+      }
+      edges {
+        source
+        destination
+        type
+        salience
       }
     }
   }

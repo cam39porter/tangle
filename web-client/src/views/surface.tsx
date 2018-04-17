@@ -161,7 +161,7 @@ class Surface extends React.Component<Props, State> {
     nextState = assign(nextState, { id, isDetail });
 
     // update mapping of node ids to index
-    let nextNoddeIdToIndex = {};
+    let nextNodeIdToIndex = {};
     let nodes: Array<Node> = [];
     if (nextProps.data) {
       if (nextProps.data.search && nextProps.data.search.graph.nodes) {
@@ -172,9 +172,9 @@ class Surface extends React.Component<Props, State> {
       }
     }
     nodes.forEach((node, index) => {
-      nextNoddeIdToIndex[node.id] = index;
+      nextNodeIdToIndex[node.id] = index;
     });
-    nextState = assign({ nodeIdToIndex: nextNoddeIdToIndex }, nextState);
+    nextState = assign({ nodeIdToIndex: nextNodeIdToIndex }, nextState);
 
     // update state
     this.setState(nextState);

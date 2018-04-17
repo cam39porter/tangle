@@ -240,26 +240,7 @@ function buildGraph(
     rootNodes.push(startUrn);
   }
 
-  const rootNodeType: string = neoNodes
-    .filter(node => node.properties.id === startUrn)
-    .map(node => node.labels[0])[0];
-
-  const filteredRel = neoRelationships.filter(
-    edge => neoIdToNodeId[edge.start] && neoIdToNodeId[edge.end]
-  );
-
-  const nodeIdsWithRel = [].concat(
-    ...filteredRel.map(rel => [
-      neoIdToNodeId[rel.start],
-      neoIdToNodeId[rel.end]
-    ])
-  );
-
-  const filteredNodes = neoNodes.filter(node =>
-    nodeIdsWithRel.includes(node.properties.id)
-  );
-
-  const nodes: GraphNode[] = filteredNodes.map(
+  const nodes: GraphNode[] = neoNodes.map(
     node =>
       new GraphNode(
         node.properties.id,
@@ -268,7 +249,7 @@ function buildGraph(
         getLevel(rootNodes, node.properties.id)
       )
   );
-  const edges: Edge[] = filteredRel.map(
+  const edges: Edge[] = neoRelationships.map(
     edge =>
       new Edge({
         source: neoIdToNodeId[edge.start],

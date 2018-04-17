@@ -12,7 +12,8 @@ import { getNLPResponse } from "../services/nlp";
 import {
   executeQuery,
   createCaptureNode,
-  createTagNodeWithEdge
+  createTagNodeWithEdge,
+  createEntityNodeWithEdge
 } from "../db/db";
 import { parseTags, stripTags } from "../helpers/tag";
 import * as _ from "lodash";
@@ -41,7 +42,7 @@ export default {
       context,
       info
     ): Promise<SearchResults> {
-      return getAll(timezoneOffset);
+      return getAllCapturedToday(timezoneOffset);
     }
   },
   Mutation: {
@@ -56,7 +57,7 @@ export default {
         return getNLPResponse(stripTags(body)).then(nlp => {
           const nlpCreates = Promise.all(
             nlp.entities.map(entity =>
-              insertEntityWithRel(captureNode.id, entity)
+              createEntityNodeWithEdge(captureNode.id, entity)
             )
           );
           return nlpCreates.then(nlpCreateResults => {
@@ -66,7 +67,7 @@ export default {
               )
             );
             return tagCreates.then(tagCreateResults => {
-              return getAll(timezoneOffset).then(
+              return getAllCapturedToday(timezoneOffset).then(
                 searchResults => searchResults.graph
               );
             });
@@ -76,23 +77,6 @@ export default {
     }
   }
 };
-
-function insertEntityWithRel(
-  captureUrn: string,
-  entity: NLPEntity
-): Promise<any> {
-  const urn = toEntityUrn(`${entity.name};${entity.type}`);
-  return executeQuery(`
-    MATCH (capture {id: "${captureUrn}"})
-    MERGE (entity:Entity {
-      id: "${urn}",
-      name: "${entity.name}",
-      type: "${entity.type}"
-    })
-    CREATE (entity)<-[r:REFERENCES { salience: ${entity.salience} }]-(capture)
-    RETURN entity
-  `);
-}
 
 /**
  * Generates a piece of a cypher query that will expand a set of captures, called "roots" to their second degree connections
@@ -118,7 +102,7 @@ function search(
 ): Promise<SearchResults> {
   const userId = getAuthenticatedUser().id;
   if (!rawQuery || rawQuery.length === 0) {
-    return getAll(null);
+    return getAllRandomCapture();
   } else {
     return executeQuery(`CALL apoc.index.search("captures", "${rawQuery}~") YIELD node as c, weight
     MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
@@ -140,7 +124,33 @@ function search(
   }
 }
 
-function getAll(timezoneOffset: number): Promise<SearchResults> {
+function getAllRandomCapture(): Promise<SearchResults> {
+  const userId = getAuthenticatedUser().id;
+  return executeQuery(
+    `MATCH (roots:Capture)<-[created:CREATED]-(user:User {id:"${userId}"})
+    WITH roots, rand() as number
+    ORDER BY number
+    LIMIT 1
+    ${expandCaptures(userId)}
+    RETURN roots, nodes, relationships
+    `
+  ).then(res => {
+    return new SearchResults(
+      buildGraph(
+        res.records[0].get("nodes"),
+        res.records[0].get("relationships"),
+        null,
+        res.records[0].get("roots")
+      ),
+      new PageInfo(
+        0,
+        res.records[0].get("nodes").length,
+        res.records[0].get("nodes").length
+      )
+    );
+  });
+}
+function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
   const userId = getAuthenticatedUser().id;
   const since = getCreatedSince(timezoneOffset).unix() * 1000;
 

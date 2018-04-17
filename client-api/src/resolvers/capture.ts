@@ -12,13 +12,14 @@ import { getNLPResponse } from "../services/nlp";
 import {
   executeQuery,
   createCaptureNode,
-  createTagNodeWithEdge
+  createTagNodeWithEdge,
+  createEntityNodeWithEdge
 } from "../db/db";
 import { parseTags, stripTags } from "../helpers/tag";
 import * as _ from "lodash";
 import * as moment from "moment";
 import { getAuthenticatedUser } from "../services/request-context";
-import { toEntityUrn, toUserUrn } from "../helpers/urn-helpers";
+import { toEntityUrn, toUserUrn, getUrnType } from "../helpers/urn-helpers";
 
 const dedupe = require("dedupe");
 
@@ -41,7 +42,7 @@ export default {
       context,
       info
     ): Promise<SearchResults> {
-      return getAll(timezoneOffset);
+      return getAllCapturedToday(timezoneOffset);
     }
   },
   Mutation: {
@@ -56,7 +57,7 @@ export default {
         return getNLPResponse(stripTags(body)).then(nlp => {
           const nlpCreates = Promise.all(
             nlp.entities.map(entity =>
-              insertEntityWithRel(captureNode.id, entity)
+              createEntityNodeWithEdge(captureNode.id, entity)
             )
           );
           return nlpCreates.then(nlpCreateResults => {
@@ -66,7 +67,7 @@ export default {
               )
             );
             return tagCreates.then(tagCreateResults => {
-              return getAll(timezoneOffset).then(
+              return getAllCapturedToday(timezoneOffset).then(
                 searchResults => searchResults.graph
               );
             });
@@ -77,42 +78,98 @@ export default {
   }
 };
 
-function insertEntityWithRel(
-  captureUrn: string,
-  entity: NLPEntity
-): Promise<any> {
-  const urn = toEntityUrn(`${entity.name};${entity.type}`);
-  return executeQuery(`
-    MATCH (capture {id: "${captureUrn}"})
-    MERGE (entity:Entity {
-      id: "${urn}",
-      name: "${entity.name}",
-      type: "${entity.type}"
-    })
-    CREATE (entity)<-[r:REFERENCES { salience: ${entity.salience} }]-(capture)
-    RETURN entity
-  `);
+/**
+ * Generates a piece of a cypher query that will expand a set of captures, called "roots" to their second degree connections
+ * @param userUrn the id of the user requesting
+ * @returns two collections in cypher, called "nodes", and "relationship". The caller is responsible for returning these
+ */
+function expandCaptures(userUrn: string): string {
+  return `OPTIONAL MATCH (roots:Capture)-[r1]-(firstDegree) 
+  WHERE NOT firstDegree:User
+  OPTIONAL MATCH (firstDegree)-[r2]-(secondDegree:Capture)<-[:CREATED]-(u:User {id:"${userUrn}"})
+  WITH roots, collect(roots)+collect(firstDegree)+collect(secondDegree) AS nodes,
+  collect(distinct r1)+collect(distinct r2) AS relationships
+  UNWIND nodes as node
+  UNWIND relationships as rel
+  WITH collect(distinct roots) as roots, collect(distinct node) as nodes, collect(distinct rel) as relationships
+  `;
 }
 
-function getAll(timezoneOffset: number): Promise<SearchResults> {
+function search(
+  rawQuery: string,
+  start: number,
+  count: number
+): Promise<SearchResults> {
   const userId = getAuthenticatedUser().id;
-  const since = getCreatedSince(timezoneOffset).unix() * 1000;
+  if (!rawQuery || rawQuery.length === 0) {
+    return getAllRandomCapture();
+  } else {
+    return executeQuery(`CALL apoc.index.search("captures", "${rawQuery}~") YIELD node as c, weight
+    MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
+    WITH c as roots, weight
+    SKIP ${start} LIMIT ${count}
+    ${expandCaptures(userId)}
+    RETURN roots, nodes, relationships
+`).then(res => {
+      return new SearchResults(
+        buildGraph(
+          res.records[0].get("nodes"),
+          res.records[0].get("relationships"),
+          null,
+          res.records[0].get("roots")
+        ),
+        new PageInfo(start, count, start + count)
+      );
+    });
+  }
+}
+
+function getAllRandomCapture(): Promise<SearchResults> {
+  const userId = getAuthenticatedUser().id;
   return executeQuery(
-    `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:"${userId}"})
-    WHERE capture.created > ${since}
-    WITH capture 
-    ORDER BY capture.created DESC
-    LIMIT 50
-    OPTIONAL MATCH (capture)-[r]->(other)
-    WITH collect(distinct capture) + collect(distinct other) as nodes, collect(r) as relationships
-    RETURN nodes, relationships
+    `MATCH (roots:Capture)<-[created:CREATED]-(user:User {id:"${userId}"})
+    WITH roots, rand() as number
+    ORDER BY number
+    LIMIT 1
+    ${expandCaptures(userId)}
+    RETURN roots, nodes, relationships
     `
   ).then(res => {
     return new SearchResults(
       buildGraph(
         res.records[0].get("nodes"),
         res.records[0].get("relationships"),
-        null
+        null,
+        res.records[0].get("roots")
+      ),
+      new PageInfo(
+        0,
+        res.records[0].get("nodes").length,
+        res.records[0].get("nodes").length
+      )
+    );
+  });
+}
+function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
+  const userId = getAuthenticatedUser().id;
+  const since = getCreatedSince(timezoneOffset).unix() * 1000;
+
+  return executeQuery(
+    `MATCH (roots:Capture)<-[created:CREATED]-(user:User {id:"${userId}"})
+    WHERE roots.created > ${since}
+    WITH roots 
+    ORDER BY roots.created DESC
+    LIMIT 50
+    ${expandCaptures(userId)}
+    RETURN roots, nodes, relationships
+    `
+  ).then(res => {
+    return new SearchResults(
+      buildGraph(
+        res.records[0].get("nodes"),
+        res.records[0].get("relationships"),
+        null,
+        res.records[0].get("roots")
       ),
       new PageInfo(
         0,
@@ -131,31 +188,57 @@ function getCreatedSince(timezoneOffset: number) {
 }
 
 function get(urn: string): Promise<Graph> {
+  if (getUrnType(urn) === "capture") {
+    return getCapture(urn);
+  } else {
+    return getOthers(urn);
+  }
+}
+
+function getOthers(urn: string) {
   const userUrn = getAuthenticatedUser().id;
-  return executeQuery(`MATCH (node {id:"${urn}"}) 
-  CALL apoc.path.subgraphAll(node, {maxLevel:2, labelFilter:"-User"}) yield nodes, relationships
-  WITH nodes, relationships
-  UNWIND nodes AS n
-  MATCH (u:User {id:"${userUrn}"})
-  WHERE n:Tag OR n:Entity OR (n:Capture)<-[:CREATED]-(u)
-  RETURN collect(distinct n) AS nodes, relationships`).then(res => {
+  return executeQuery(`MATCH (other {id:"${urn}"})-[r]-(roots:Capture) 
+  ${expandCaptures(userUrn)}
+  RETURN roots, nodes, relationships
+  `).then(res => {
     return buildGraph(
       res.records[0].get("nodes"),
       res.records[0].get("relationships"),
-      urn
+      urn,
+      res.records[0].get("roots")
     );
   });
 }
 
+function getCapture(urn: string) {
+  const userUrn = getAuthenticatedUser().id;
+  return executeQuery(`MATCH (roots:Capture {id:"${urn}"})
+  ${expandCaptures(userUrn)}
+  RETURN roots, nodes, relationships
+  `).then(res => {
+    return buildGraph(
+      res.records[0].get("nodes"),
+      res.records[0].get("relationships"),
+      urn,
+      res.records[0].get("roots")
+    );
+  });
+}
 function buildGraph(
   neoNodes: any,
   neoRelationships: any,
-  startUrn: string
+  startUrn: string,
+  neoRoots: any
 ): Graph {
   const neoIdToNodeId = _.mapValues(
     _.keyBy(neoNodes, "identity"),
     "properties.id"
   );
+
+  let rootNodes = neoRoots.map(node => node.properties.id);
+  if (startUrn) {
+    rootNodes.push(startUrn);
+  }
 
   const rootNodeType: string = neoNodes
     .filter(node => node.properties.id === startUrn)
@@ -182,82 +265,25 @@ function buildGraph(
         node.properties.id,
         node.labels[0],
         node.properties.body || node.properties.name,
-        getLevel(startUrn, rootNodeType, node.properties.id, node.labels[0])
+        getLevel(rootNodes, node.properties.id)
       )
   );
   const edges: Edge[] = filteredRel.map(
-      edge =>
-        new Edge({
-          source: neoIdToNodeId[edge.start],
-          destination: neoIdToNodeId[edge.end],
-          type: edge.type,
-          salience: edge.properties.salience
-        })
-    );
+    edge =>
+      new Edge({
+        source: neoIdToNodeId[edge.start],
+        destination: neoIdToNodeId[edge.end],
+        type: edge.type,
+        salience: edge.properties.salience
+      })
+  );
   return new Graph(nodes, edges);
 }
 
-function getLevel(
-  startId: string,
-  startType: string,
-  nodeId: string,
-  nodeType: string
-): number {
-  // getAll
-  if (startId === null) {
-    if (nodeType === "Capture") {
-      return 0;
-    } else {
-      return 1;
-    }
-    // get
-  } else if (startId === nodeId) {
+function getLevel(rootIds, id): number {
+  if (rootIds.includes(id)) {
     return 0;
-  } else if (startType === "Capture") {
-    if (nodeType === "Capture") {
-      return 2;
-    } else {
-      return 1;
-    }
-    // startType != Capture
   } else {
-    if (nodeType === "Capture") {
-      return 1;
-    } else {
-      return 2;
-    }
+    return 1;
   }
-}
-
-function search(
-  rawQuery: string,
-  start: number,
-  count: number
-): Promise<SearchResults> {
-  const userId = getAuthenticatedUser().id;
-  const cypherQuery =
-    rawQuery && rawQuery.length > 0
-      ? `CALL apoc.index.search("captures", "${rawQuery}~") YIELD node as c, weight
-      MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
-      WITH c, weight
-      SKIP ${start} LIMIT ${count}
-      OPTIONAL MATCH (c)-[r]->(n)
-      WITH collect(distinct c) + collect(distinct n) as nodes, collect(r) as relationships
-      RETURN nodes, relationships`
-      : `MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
-      WITH c
-      SKIP ${start} LIMIT ${count}
-      OPTIONAL MATCH (c)-[r]->(n)
-      WITH collect(distinct c) + collect(distinct n) as nodes, collect(r) as relationships
-      RETURN nodes, relationships`;
-  return executeQuery(cypherQuery).then(res => {
-    return new SearchResults(
-      buildGraph(
-        res.records[0].get("nodes"),
-        res.records[0].get("relationships"),
-        null
-      ),
-      new PageInfo(start, count, start + count)
-    );
-  });
 }

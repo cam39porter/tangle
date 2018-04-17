@@ -42,7 +42,7 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "schema":
-      "apollo-codegen introspect-schema http://localhost:8080/graphql --output ./src/schema.json",
+      "apollo-codegen introspect-schema ../client-api/data-template/schema.graphql --output ./src/schema.json",
     "types":
       "rm -rf ./src/__generated__ && mkdir ./src/__generated__ && apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
     "deploy": "yarn build && gcloud -q app deploy ./app.yaml"

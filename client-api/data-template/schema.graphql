@@ -1,8 +1,3 @@
-/*!
- * Type definitions (typeDefs) that are turned into the schema
- */
-
-export default `
   type Edge {
     source: String!
     destination: String!
@@ -67,4 +62,3 @@ export default `
   type Mutation {
     createCapture(body: String!, timezoneOffset: Int): Graph!
   }
-`;

@@ -8,10 +8,16 @@ import * as requestContext from "request-context";
 
 import { makeExecutableSchema } from "graphql-tools";
 
-import schema from "./schema";
 import resolvers from "./resolvers/capture";
 import { GraphQLSchema, formatError } from "graphql";
 import { authFilter, initAuth } from "./filters/auth";
+import * as fs from "fs";
+import * as path from "path";
+
+const schema = fs.readFileSync(
+  path.join(__dirname, "../data-template/schema.graphql"),
+  "utf8"
+);
 
 if (process.env.NODE_ENV === "development") {
   require("dotenv").config();

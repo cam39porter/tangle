@@ -16,6 +16,7 @@ import config from "../cfg";
 
 interface Props extends ChildProps<{}, Response> {
   handleMinimize: () => void;
+  handleRefetch?: () => void;
 }
 
 interface State {
@@ -63,10 +64,16 @@ class CaptureDialogue extends React.Component<Props, State> {
     if (capture === "") {
       return;
     }
-    this.props.mutate({
-      // strip new lines from the value entered
-      variables: { body: capture }
-    });
+    this.props
+      .mutate({
+        // strip new lines from the value entered
+        variables: { body: capture }
+      })
+      .then(() => {
+        if (this.props.handleRefetch) {
+          this.props.handleRefetch();
+        }
+      });
   }
 
   renderMinimizeButton() {

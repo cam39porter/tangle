@@ -10,12 +10,18 @@ import config from "../cfg";
 interface Props {
   isCapturing: boolean;
   handleIsCapturing: () => void;
+  handleRefetch?: () => void;
 }
 
 class GraphButtons extends React.Component<Props, object> {
   render() {
     if (this.props.isCapturing) {
-      return <CaptureDialogue handleMinimize={this.props.handleIsCapturing} />;
+      return (
+        <CaptureDialogue
+          handleMinimize={this.props.handleIsCapturing}
+          handleRefetch={this.props.handleRefetch}
+        />
+      );
     }
 
     return (

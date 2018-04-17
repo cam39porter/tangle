@@ -16,7 +16,6 @@ import { RouteComponentProps } from "react-router";
 
 // Components
 import ResultListItem from "../components/result-list-item";
-import ResultDetail from "../components/result-detail";
 import Graph from "../components/graph";
 import { GraphNode } from "../components/graph";
 import GraphButtons from "../components/graph-buttons";
@@ -24,7 +23,6 @@ import Sidebar from "../components/sidebar";
 
 // Config / Utils
 import config from "../cfg";
-import qs from "qs";
 import { assign } from "lodash";
 // import { X } from "react-feather";
 import windowSize from "react-window-size";
@@ -48,32 +46,18 @@ interface Edge {
   salience: number | null;
 }
 
-interface InputProps {
-  query: string;
-}
+interface RouteProps extends RouteComponentProps<{}> {}
 
-interface RouteProps extends RouteComponentProps<InputProps> {}
-
-interface Props extends RouteProps, ChildProps<InputProps, Response> {
+interface Props extends RouteProps, ChildProps<{}, Response> {
   windowWidth: number;
   windowHeight: number;
 }
 
 interface State {
-  id: string;
-  isDetail: boolean;
   isShowingList: boolean;
   isCapturing: boolean;
   hoverFocus: Node | null;
   nodeIdToIndex: Object;
-}
-
-function getId(queryString: string) {
-  return (
-    qs.parse(queryString, {
-      ignoreQueryPrefix: true
-    }).id || ""
-  );
 }
 
 class Capture extends React.Component<Props, State> {
@@ -87,21 +71,14 @@ class Capture extends React.Component<Props, State> {
 
     this.handleIsShowingList = this.handleIsShowingList.bind(this);
     this.handleIsCapturing = this.handleIsCapturing.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSurfaceDetail = this.handleSurfaceDetail.bind(this);
     this.handleFocusInput = this.handleFocusInput.bind(this);
 
     this.renderCaptureCount = this.renderCaptureCount.bind(this);
     this.renderResults = this.renderResults.bind(this);
-    this.renderDetail = this.renderDetail.bind(this);
     this.renderHideList = this.renderHideList.bind(this);
 
-    const id = getId(this.props.location.search);
-    const isDetail = id.length !== 0;
-
     this.state = {
-      id,
-      isDetail,
       isShowingList: false,
       isCapturing: false,
       hoverFocus: null,
@@ -109,24 +86,8 @@ class Capture extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount() {
-    this.setState({
-      isShowingList: this.isLargeWindow()
-    });
-  }
-
   componentWillReceiveProps(nextProps: Props) {
     let nextState = {};
-
-    // update window size
-    if (this.props.windowWidth !== 0) {
-      nextState = assign(nextState, { isShowingList: this.isLargeWindow() });
-    }
-
-    // update is detail view
-    const id = getId(nextProps.location.search);
-    const isDetail = id.length !== 0;
-    nextState = assign(nextState, { id, isDetail });
 
     // update mapping of node ids to index
     let nextNodeIdToIndex = {};
@@ -134,9 +95,6 @@ class Capture extends React.Component<Props, State> {
     if (nextProps.data) {
       if (nextProps.data.getAll && nextProps.data.getAll.graph.nodes) {
         nodes = nextProps.data.getAll.graph.nodes;
-      }
-      if (nextProps.data.get && nextProps.data.get.nodes) {
-        nodes = nextProps.data.get.nodes;
       }
     }
     nodes.forEach((node, index) => {
@@ -160,14 +118,8 @@ class Capture extends React.Component<Props, State> {
     });
   }
 
-  handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
-      //
-    }
-  }
-
   handleSurfaceDetail(id: string) {
-    this.props.history.push(`/capture?id=${id}`);
+    this.props.history.push(`/surface?id=${encodeURIComponent(id)}`);
     this.handleUnfocusNode();
   }
 
@@ -241,10 +193,6 @@ class Capture extends React.Component<Props, State> {
       nodes = this.props.data.getAll.graph.nodes;
     }
 
-    if (this.props.data.get) {
-      nodes = this.props.data.get.nodes;
-    }
-
     return nodes.map((node, index) => {
       switch (node.type) {
         // Entities
@@ -265,19 +213,11 @@ class Capture extends React.Component<Props, State> {
 
         // Captures
         default:
-          if (this.state.isDetail && node.level === 0) {
+          if (node.level === 0) {
             return {
               id: node.id,
               name: node.text,
               category: "detail"
-            };
-          }
-
-          if (!this.state.isDetail) {
-            return {
-              id: node.id,
-              name: node.text,
-              category: `${index}focus`
             };
           }
 
@@ -301,10 +241,6 @@ class Capture extends React.Component<Props, State> {
       edges = this.props.data.getAll.graph.edges;
     }
 
-    if (this.props.data.get) {
-      edges = this.props.data.get.edges;
-    }
-
     return edges.map(edge => {
       return {
         source: edge.source,
@@ -317,13 +253,20 @@ class Capture extends React.Component<Props, State> {
     return (
       <div
         className={`fixed top-2-l center w-100 w-third-l dt pa3 pv0-l ph4-l z-999 pointer`}
+        onClick={this.handleIsShowingList}
       >
         <div
           className={`w-100 f6 h2 pa3 dtc v-mid tc gray bg-white br1 bb bw1 b--${
             config.captureAccentColor
           } shadow-1`}
         >
-          {`You have made ${"10"} captures so far today!`}
+          {this.props.data && this.props.data.getAll
+            ? `You have made ${
+                this.props.data.getAll.graph.nodes.filter(node => {
+                  return node.type === "Capture" && node.level === 0;
+                }).length
+              } captures so far today!`
+            : ""}
         </div>
       </div>
     );
@@ -345,7 +288,7 @@ class Capture extends React.Component<Props, State> {
       <div>
         {nodes
           .filter((node, index) => {
-            return node.type === "Capture";
+            return node.type === "Capture" && node.level === 0;
           })
           .map((capture, index) => {
             return (
@@ -373,38 +316,6 @@ class Capture extends React.Component<Props, State> {
     );
   }
 
-  renderDetail() {
-    if (!(this.props.data && this.props.data.get)) {
-      return null;
-    }
-
-    let detailNode;
-
-    const captureNodes = this.props.data.get.nodes.filter(node => {
-      if (node.type === "Capture") {
-        if (node.level === 0) {
-          detailNode = node;
-          return false;
-        }
-        return true;
-      }
-      return false;
-    });
-
-    return (
-      <div>
-        {detailNode !== undefined ? (
-          <ResultDetail
-            id={this.state.id}
-            body={detailNode.text}
-            backgroundColor={config.captureBaseColor}
-          />
-        ) : null}
-        {this.renderResults(captureNodes)}
-      </div>
-    );
-  }
-
   renderHideList() {
     return (
       <div
@@ -412,7 +323,7 @@ class Capture extends React.Component<Props, State> {
         onClick={this.handleIsShowingList}
       >
         <div className={`dtc v-mid w-100 h2 pa3 ttu f6 gray`}>
-          {this.state.isDetail ? "hide detail" : "hide list"}
+          {"hide list"}
         </div>
       </div>
     );
@@ -454,10 +365,6 @@ class Capture extends React.Component<Props, State> {
 
             if (!this.props.data) {
               return null;
-            }
-
-            if (this.props.data.get) {
-              nodes = this.props.data.get.nodes;
             }
 
             if (this.props.data.getAll && this.props.data.getAll.graph.nodes) {
@@ -502,10 +409,6 @@ class Capture extends React.Component<Props, State> {
       return null;
     }
 
-    if (this.props.data.get) {
-      nodes = this.props.data.get.nodes;
-    }
-
     if (this.props.data.getAll && this.props.data.getAll.graph.nodes) {
       nodes = this.props.data.getAll.graph.nodes;
     }
@@ -532,7 +435,7 @@ class Capture extends React.Component<Props, State> {
           key={node.id}
           id={node.id}
           body={node.text}
-          onClick={this.handleIsShowingList}
+          onClick={this.handleSurfaceDetail.bind(null, node.id)}
           onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
             this.handleFocusNode(node.id);
           }}
@@ -555,28 +458,17 @@ class Capture extends React.Component<Props, State> {
         {this.state.isShowingList ? (
           <Sidebar
             renderHeader={this.renderCaptureCount}
-            renderBody={
-              !this.state.isDetail
-                ? this.renderResults.bind(this)
-                : this.renderDetail.bind(this)
-            }
+            renderBody={this.renderResults}
             renderFooter={this.renderHideList}
           />
-        ) : (
+        ) : this.state.hoverFocus ? (
           <div className={`fixed w-100 bottom-0 z-3`}>
             {this.renderDetailBar()}
           </div>
-        )}
-
-        {/* this.state.hoverFocus ? (
-          <div className={`fixed w-100 bottom-0 z-3`}>
-            {this.renderDetailBar()}
-          </div>
-        ) : null} */}
+        ) : null}
 
         <div
           className={`
-          ${this.state.isDetail ? "mb5 pb4" : ""}
           ${
             this.state.isCapturing
               ? "w-100 h-100 ma0 pa0"
@@ -586,6 +478,7 @@ class Capture extends React.Component<Props, State> {
           <GraphButtons
             handleIsCapturing={this.handleIsCapturing}
             isCapturing={this.state.isCapturing}
+            handleRefetch={this.props.data && this.props.data.refetch}
           />
         </div>
       </div>
@@ -596,9 +489,7 @@ class Capture extends React.Component<Props, State> {
 const CaptureWithData = graphql<Response, Props>(QUERY, {
   options: (ownProps: Props) => ({
     variables: {
-      timeOffset: 0,
-      detailId: getId(ownProps.location.search),
-      isDetail: getId(ownProps.location.search).length > 0
+      timezoneOffset: 0
     },
     fetchPolicy: "network-only"
   })

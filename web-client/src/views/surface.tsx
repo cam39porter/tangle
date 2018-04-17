@@ -226,7 +226,9 @@ class Surface extends React.Component<Props, State> {
 
   handleSurfaceDetail(id: string) {
     this.props.history.push(
-      `/surface?query=${encodeURIComponent(this.state.query || "")}&id=${id}`
+      `/surface?query=${encodeURIComponent(
+        this.state.query || ""
+      )}&id=${encodeURIComponent(id)}`
     );
     this.handleUnfocusNode();
   }
@@ -325,7 +327,7 @@ class Surface extends React.Component<Props, State> {
 
         // Captures
         default:
-          if (this.state.isDetail && node.level === 0) {
+          if (node.level === 0) {
             return {
               id: node.id,
               name: node.text,
@@ -683,6 +685,7 @@ class Surface extends React.Component<Props, State> {
           <GraphButtons
             handleIsCapturing={this.handleIsCapturing}
             isCapturing={this.state.isCapturing}
+            handleRefetch={this.props.data && this.props.data.refetch}
           />
         </div>
       </div>

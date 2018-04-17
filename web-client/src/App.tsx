@@ -12,7 +12,7 @@ import { Route, Switch } from "react-router-dom";
 import NavigationBar from "./components/navigation-bar";
 import Login from "./views/login";
 import Tangle from "./views/tangle";
-// import Capture from "./views/capture";
+import Capture from "./views/capture";
 import Surface from "./views/surface";
 
 // Config / Utils
@@ -78,14 +78,14 @@ class App extends React.Component<Props, State> {
           <div>
             {this.state.isAuthenticated ? (
               <Switch>
-                {/* <Route path="/capture" component={Capture} /> */}
+                <Route path="/capture" component={Capture} />
                 <Route path="/surface" component={Surface} />
                 <Route path="/tangle" component={Tangle} />
+                <Route path="/" component={Capture} />
               </Switch>
             ) : (
               <Switch>
                 <Route to="/" component={Login} />
-                <Route to="/login" component={Login} />
               </Switch>
             )}
           </div>

@@ -16,7 +16,7 @@ class ResultListItem extends React.Component<Props, object> {
     return (
       <div
         className={`bg-white w-100 pa2 bb b--light-gray dt pointer bg-animate-ns hover-bg-near-white-ns ${this
-          .props.isFocus && "bg-lightest-blue"}`}
+          .props.isFocus && `bg-${this.props.accentColor}`}`}
         onMouseEnter={this.props.onMouseEnter}
         onMouseLeave={this.props.onMouseLeave}
         onClick={this.props.onClick}

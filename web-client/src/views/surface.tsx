@@ -490,7 +490,11 @@ class Surface extends React.Component<Props, State> {
     return (
       <div>
         {detailNode !== undefined ? (
-          <ResultDetail id={this.state.id} body={detailNode.text} />
+          <ResultDetail
+            id={this.state.id}
+            body={detailNode.text}
+            backgroundColor={config.surfaceBaseColor}
+          />
         ) : null}
         {this.renderResults(captureNodes)}
       </div>

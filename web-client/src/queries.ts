@@ -66,3 +66,29 @@ export const Search = gql`
     }
   }
 `;
+
+export const DailyCaptures = gql`
+  query DailyCaptures($timezoneOffset: String!) {
+    getAll(useCase: "CAPTURE_TODAY", timezoneOffset: $timezoneOffset) {
+      graph {
+        nodes {
+          id
+          type
+          text
+          level
+        }
+        edges {
+          source
+          destination
+          type
+          salience
+        }
+      }
+      pageInfo {
+        count
+        total
+        start
+      }
+    }
+  }
+`;

@@ -197,7 +197,7 @@ function get(urn: string): Promise<Graph> {
 
 function getOthers(urn: string) {
   const userUrn = getAuthenticatedUser().id;
-  return executeQuery(`MATCH (other {id:"${urn}"})-[r]-(roots:Capture) 
+  return executeQuery(`MATCH (other {id:"${urn}"})-[r]-(roots:Capture)<-[:CREATED]-(u:User {id:"${userUrn}"})
   ${expandCaptures(userUrn)}
   RETURN roots, nodes, relationships
   `).then(res => {

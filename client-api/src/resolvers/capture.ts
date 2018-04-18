@@ -44,7 +44,13 @@ export default {
       context,
       info
     ): Promise<SearchResults> {
+      if (useCase === "CAPTURED_TODAY") {
       return getAllCapturedToday(timezoneOffset);
+      } else if (useCase === "ALL") {
+        return getAll();
+      } else {
+        return getAll();
+    }
     }
   },
   Mutation: {
@@ -103,6 +109,10 @@ function expandCaptures(userUrn: string): string {
   `;
 }
 
+function filterCaptures(captureName: string) {
+  return null;
+}
+
 function search(
   rawQuery: string,
   start: number,
@@ -159,6 +169,32 @@ function getAllRandomCapture(): Promise<SearchResults> {
     );
   });
 }
+
+function getAll() {
+  const userId = getAuthenticatedUser().id;
+  return executeQuery(`MATCH (roots:Capture)<-[created:CREATED]-(user:User {id:"${userId}"})
+  WITH roots
+  ORDER BY roots.created DESC
+  LIMIT 50
+  ${expandCaptures(userId)}
+  RETURN roots, nodes, relationships
+  `).then(res => {
+    return new SearchResults(
+      buildGraph(
+        res.records[0].get("nodes"),
+        res.records[0].get("relationships"),
+        null,
+        res.records[0].get("roots")
+      ),
+      new PageInfo(
+        0,
+        res.records[0].get("nodes").length,
+        res.records[0].get("nodes").length
+      )
+    );
+  });
+}
+
 function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
   const userId = getAuthenticatedUser().id;
   const since = getCreatedSince(timezoneOffset).unix() * 1000;

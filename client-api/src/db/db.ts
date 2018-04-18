@@ -32,6 +32,22 @@ function archiveCaptureNode(id: string, captureId: string): Promise<void> {
   ).then(result => null);
 }
 
+function editCaptureNode(
+  userId: string,
+  captureId: string,
+  body: string
+): Promise<boolean> {
+  return executeQuery(`
+  MATCH (n:Capture {id:"${captureId}"})<-[:CREATED]-(u:User {id:"${userId}"})
+  MATCH (n)-[r]-(other)
+  WHERE type(r)<>"CREATED"
+  DELETE r
+  SET n.body="${escape(body)}"
+  RETURN n`).then((result: StatementResult) => {
+    return true;
+  });
+}
+
 function createCaptureNode(user: User, body: string): Promise<GraphNode> {
   const uuid = uuidv4();
   const captureUrn = toCaptureUrn(uuid);
@@ -119,6 +135,7 @@ export {
   executeQuery,
   archiveCaptureNode,
   createCaptureNode,
+  editCaptureNode,
   createTagNodeWithEdge,
   createEntityNodeWithEdge
 };

@@ -299,7 +299,7 @@ class Capture extends React.Component<Props, State> {
 
     return (
       <div>
-        <SidebarSectionHeader title={"daily captures"} />
+        <SidebarSectionHeader title={"today's captures"} />
         {detailNodes.map((capture, index) => {
           return (
             <ResultListItem

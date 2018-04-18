@@ -8,7 +8,7 @@ interface Props {
 const SidebarSectionHeader = function(props: Props) {
   return (
     <div className={`dt`}>
-      <div className={`dtc v-mid h3 ttu pa3 gray`}>{props.title}</div>
+      <div className={`dtc v-btm h3 ttu f6 pa2 gray`}>{props.title}</div>
     </div>
   );
 };

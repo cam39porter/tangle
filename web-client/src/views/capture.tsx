@@ -250,9 +250,17 @@ class Capture extends React.Component<Props, State> {
   }
 
   renderCaptureCount() {
+    let dailyCaptureCount = 0;
+
+    if (this.props.data && this.props.data.getAll) {
+      dailyCaptureCount = this.props.data.getAll.graph.nodes.filter(node => {
+        return node.type === "Capture" && node.level === 0;
+      }).length;
+    }
+
     return (
       <div
-        className={`fixed top-2-l center w-100 w-third-l dt pv0-l ph4-l z-999 pointer`}
+        className={`fixed top-1 top-2-l center ph2 w-100 w-third-l dt pv0-l ph4-l z-999 pointer`}
         onClick={this.handleIsShowingList}
         style={{
           minHeight: "3rem"
@@ -265,13 +273,9 @@ class Capture extends React.Component<Props, State> {
               : `${config.captureAccentColor} white`
           } br1 shadow-1`}
         >
-          {this.props.data && this.props.data.getAll
-            ? `You have made ${
-                this.props.data.getAll.graph.nodes.filter(node => {
-                  return node.type === "Capture" && node.level === 0;
-                }).length
-              } captures so far today!`
-            : ""}
+          {dailyCaptureCount === 0
+            ? "Make your first capture today!"
+            : `You have made ${dailyCaptureCount} captures today!`}
         </div>
       </div>
     );

@@ -684,7 +684,8 @@ class Surface extends React.Component<Props, State> {
       <div
         className={`dt w-100 bg-white pointer bt b--light-gray tl ${(!this.state
           .isShowingList ||
-          this.state.hoverFocus !== null) &&
+          this.state.hoverFocus !== null ||
+          (!this.state.isSearch || !this.state.isDetail)) &&
           "shadow-1-l measure-l fixed-l bottom-2-l left-2-l"}`}
       >
         <ResultListItem
@@ -729,7 +730,9 @@ class Surface extends React.Component<Props, State> {
               {this.renderDetailBar()}
             </div>
           )
-        ) : this.state.hoverFocus ? (
+        ) : this.state.hoverFocus ||
+        (this.isLargeWindow() &&
+          (!this.state.isSearch || !this.state.isDetail)) ? (
           <div className={`fixed w-100 bottom-0 z-3`}>
             {this.renderDetailBar()}
           </div>

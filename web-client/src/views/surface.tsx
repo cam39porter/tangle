@@ -18,7 +18,6 @@ import { RouteComponentProps } from "react-router";
 import ResultListItem from "../components/result-list-item";
 import Graph from "../components/graph";
 import { GraphNode } from "../components/graph";
-import GraphButtons from "../components/graph-buttons";
 import Sidebar from "../components/sidebar";
 
 // Config / Utils
@@ -696,22 +695,6 @@ class Surface extends React.Component<Props, State> {
             {this.renderDetailBar()}
           </div>
         ) : null}
-
-        <div
-          className={`
-          ${this.state.isDetail || this.state.isSearch ? "mb5 pb4" : ""}
-          ${
-            this.state.isCapturing
-              ? "w-100 h-100 ma0 pa0"
-              : "fixed bottom-2 right-0 mb4 mh2 pa0"
-          } bottom-2-l right-2-l ma0-l z-2 pa0-l`}
-        >
-          <GraphButtons
-            handleIsCapturing={this.handleIsCapturing}
-            isCapturing={this.state.isCapturing}
-            handleRefetch={this.props.data && this.props.data.refetch}
-          />
-        </div>
       </div>
     );
   }

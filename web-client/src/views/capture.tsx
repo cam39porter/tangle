@@ -80,7 +80,7 @@ class Capture extends React.Component<Props, State> {
 
     this.state = {
       isShowingList: false,
-      isCapturing: false,
+      isCapturing: true,
       hoverFocus: null,
       nodeIdToIndex: {}
     };

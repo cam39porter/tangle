@@ -31,7 +31,7 @@ class ResultListItem extends React.Component<Props, object> {
           <p
             className={`dtc fl ma3 f6 overflow-hidden lh-copy`}
             style={{
-              maxHeight: "4rem"
+              maxHeight: this.props.maxHeight
             }}
           >
             {this.props.body}

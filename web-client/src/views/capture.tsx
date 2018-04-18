@@ -261,7 +261,13 @@ class Capture extends React.Component<Props, State> {
     return (
       <div
         className={`fixed top-1 top-2-l center ph2 w-100 w-third-l dt pv0-l ph4-l z-999 pointer`}
-        onClick={this.handleIsShowingList}
+        onClick={
+          !dailyCaptureCount
+            ? () => {
+                return;
+              }
+            : this.handleIsShowingList
+        }
         style={{
           minHeight: "3rem"
         }}
@@ -270,10 +276,12 @@ class Capture extends React.Component<Props, State> {
           className={`w-100 f6 dtc v-mid tc bg-${
             this.state.isShowingList
               ? `white gray`
-              : `${config.captureAccentColor} white`
+              : dailyCaptureCount
+                ? `${config.captureAccentColor} white`
+                : `light-gray gray`
           } br1 shadow-1`}
         >
-          {dailyCaptureCount === 0
+          {!dailyCaptureCount
             ? "Make your first capture today!"
             : `You have made ${dailyCaptureCount} captures today!`}
         </div>

@@ -19,6 +19,7 @@ import ResultListItem from "../components/result-list-item";
 import Graph from "../components/graph";
 import { GraphNode } from "../components/graph";
 import Sidebar from "../components/sidebar";
+import SidebarSectionHeader from "../components/sidebar-section-header";
 
 // Config / Utils
 import config from "../cfg";
@@ -442,6 +443,9 @@ class Surface extends React.Component<Props, State> {
 
     return (
       <div>
+        <SidebarSectionHeader
+          title={!this.state.isDetail ? "top captures" : "related captures"}
+        />
         {nodes
           .filter((node, index) => {
             return node.type === "Capture";
@@ -493,6 +497,11 @@ class Surface extends React.Component<Props, State> {
 
     return (
       <div>
+        <SidebarSectionHeader
+          title={
+            detailNodes.length === 1 ? "detail capture" : "connected captures"
+          }
+        />
         {detailNodes !== undefined
           ? detailNodes.map(detailNode => {
               return (

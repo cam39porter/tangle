@@ -20,6 +20,7 @@ import Graph from "../components/graph";
 import { GraphNode } from "../components/graph";
 import GraphButtons from "../components/graph-buttons";
 import Sidebar from "../components/sidebar";
+import SidebarSectionHeader from "../components/sidebar-section-header";
 
 // Config / Utils
 import config from "../cfg";
@@ -298,6 +299,7 @@ class Capture extends React.Component<Props, State> {
 
     return (
       <div>
+        <SidebarSectionHeader title={"daily captures"} />
         {detailNodes.map((capture, index) => {
           return (
             <ResultListItem
@@ -322,6 +324,7 @@ class Capture extends React.Component<Props, State> {
             />
           );
         })}
+        <SidebarSectionHeader title={"related captures"} />
         {captureNodes.map((capture, index) => {
           return (
             <ResultListItem

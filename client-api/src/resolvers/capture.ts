@@ -192,8 +192,8 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
 function getCreatedSince(timezoneOffset: number) {
   return moment
     .utc()
-    .add(timezoneOffset ? moment.duration(timezoneOffset, "hours") : 0)
-    .startOf("day");
+    .startOf("day")
+    .subtract(timezoneOffset ? moment.duration(timezoneOffset, "hours") : 0);
 }
 
 function get(urn: string): Promise<Graph> {

@@ -165,7 +165,7 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
 
   return executeQuery(
     `MATCH (roots:Capture)<-[created:CREATED]-(user:User {id:"${userId}"})
-    WHERE roots.created > ${since}
+    WHERE roots.created > ${since} AND NOT EXISTS (roots.archived)
     WITH roots 
     ORDER BY roots.created DESC
     LIMIT 50

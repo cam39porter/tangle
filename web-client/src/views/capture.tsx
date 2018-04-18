@@ -519,10 +519,12 @@ class Capture extends React.Component<Props, State> {
   }
 }
 
+console.log(new Date().getTimezoneOffset() / 60);
+
 const CaptureWithData = graphql<Response, Props>(QUERY, {
   options: (ownProps: Props) => ({
     variables: {
-      timezoneOffset: 0
+      timezoneOffset: new Date().getTimezoneOffset() / 60 * -1
     },
     fetchPolicy: "network-only"
   })

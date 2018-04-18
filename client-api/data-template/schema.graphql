@@ -57,4 +57,5 @@ enum GetAllUseCase {
 type Mutation {
   createCapture(body: String!): Graph!
   archiveCapture(id: String!): Boolean
+  editCapture(id: String!, body: String!): Boolean
 }

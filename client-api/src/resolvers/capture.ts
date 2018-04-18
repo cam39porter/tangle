@@ -14,7 +14,8 @@ import {
   createCaptureNode,
   createTagNodeWithEdge,
   createEntityNodeWithEdge,
-  archiveCaptureNode
+  archiveCaptureNode,
+  editCaptureNode
 } from "../db/db";
 import { parseTags, stripTags } from "../helpers/tag";
 import * as _ from "lodash";
@@ -51,32 +52,38 @@ export default {
       const userId: string = getAuthenticatedUser().id;
       return archiveCaptureNode(userId, id).then(() => true);
     },
+    editCapture(parent, { id, body }, context, info): Promise<boolean> {
+      const userId = getAuthenticatedUser().id;
+      return editCaptureNode(userId, id, body).then(() =>
+        createRelations(id, body)
+      );
+    },
     createCapture(parent, { body }, context, info): Promise<Graph> {
       const user: User = getAuthenticatedUser();
-      return createCaptureNode(user, body).then((captureNode: GraphNode) => {
-        return getNLPResponse(stripTags(body)).then(nlp => {
-          const nlpCreates = Promise.all(
-            nlp.entities.map(entity =>
-              createEntityNodeWithEdge(captureNode.id, entity)
-            )
-          );
-          return nlpCreates.then(nlpCreateResults => {
-            const tagCreates = Promise.all(
-              parseTags(body).map(tag =>
-                createTagNodeWithEdge(tag, captureNode.id)
-              )
-            );
-            return tagCreates.then(tagCreateResults => {
-              return getAllCapturedToday(null).then(
-                searchResults => searchResults.graph
-              );
-            });
-          });
-        });
-      });
+      return createCaptureNode(user, body).then((captureNode: GraphNode) =>
+        createRelations(captureNode.id, body).then(() =>
+          getAllCapturedToday(null).then(results => results.graph)
+        )
+      );
     }
   }
 };
+
+function createRelations(captureId: string, body: string): Promise<boolean> {
+  return getNLPResponse(stripTags(body)).then(nlp => {
+    const nlpCreates = Promise.all(
+      nlp.entities.map(entity => createEntityNodeWithEdge(captureId, entity))
+    );
+    return nlpCreates.then(nlpCreateResults => {
+      const tagCreates = Promise.all(
+        parseTags(body).map(tag => createTagNodeWithEdge(tag, captureId))
+      );
+      return tagCreates.then(tagCreateResults => {
+        return true;
+      });
+    });
+  });
+}
 
 /**
  * Generates a piece of a cypher query that will expand a set of captures, called "roots" to their second degree connections

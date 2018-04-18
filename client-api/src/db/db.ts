@@ -24,10 +24,10 @@ function getUser(urn: string): Promise<User> {
   });
 }
 
-function deleteCaptureNode(id: string, captureId: string): Promise<void> {
+function archiveCaptureNode(id: string, captureId: string): Promise<void> {
   return executeQuery(
     `MATCH (c:Capture {id:"${captureId}"})<-[:CREATED]-(u:User {id:"${id}"})
-    DETACH DELETE c
+    SET c.archived = true
     `
   ).then(result => null);
 }
@@ -117,7 +117,7 @@ function executeQuery(cypherQuery: string): Promise<StatementResult> {
 export {
   getUser,
   executeQuery,
-  deleteCaptureNode,
+  archiveCaptureNode,
   createCaptureNode,
   createTagNodeWithEdge,
   createEntityNodeWithEdge

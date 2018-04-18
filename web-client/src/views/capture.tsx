@@ -256,9 +256,11 @@ class Capture extends React.Component<Props, State> {
         onClick={this.handleIsShowingList}
       >
         <div
-          className={`w-100 f6 h2 pa3 dtc v-mid tc gray bg-white br1 bb bw1 b--${
-            config.captureAccentColor
-          } shadow-1`}
+          className={`w-100 f6 h2 pa3 dtc v-mid tc bg-${
+            this.state.isShowingList
+              ? `white gray`
+              : `${config.captureAccentColor} white`
+          } br1 shadow-1`}
         >
           {this.props.data && this.props.data.getAll
             ? `You have made ${
@@ -277,41 +279,71 @@ class Capture extends React.Component<Props, State> {
       return null;
     }
 
-    if (nodes === undefined) {
-      if (!(this.props.data && this.props.data.getAll)) {
-        return null;
-      }
-      nodes = this.props.data.getAll.graph.nodes;
+    if (!(this.props.data && this.props.data.getAll)) {
+      return null;
     }
+
+    let detailNodes: Array<Node> = [];
+
+    const captureNodes = this.props.data.getAll.graph.nodes.filter(node => {
+      if (node.type === "Capture") {
+        if (node.level === 0) {
+          detailNodes = detailNodes.concat(node);
+          return false;
+        }
+        return true;
+      }
+      return false;
+    });
 
     return (
       <div>
-        {nodes
-          .filter((node, index) => {
-            return node.type === "Capture" && node.level === 0;
-          })
-          .map((capture, index) => {
-            return (
-              <ResultListItem
-                key={capture.id}
-                id={capture.id}
-                body={capture.text}
-                onClick={this.handleSurfaceDetail.bind(null, capture.id)}
-                onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
-                  this.handleFocusNode(capture.id);
-                }}
-                onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
-                  this.handleUnfocusNode();
-                }}
-                accentColor={config.captureAccentColor}
-                isFocus={
-                  (this.isLargeWindow() &&
-                    (this.state.hoverFocus &&
-                      this.state.hoverFocus.id === capture.id)) === true
-                }
-              />
-            );
-          })}
+        {detailNodes.map((capture, index) => {
+          return (
+            <ResultListItem
+              key={capture.id}
+              id={capture.id}
+              body={capture.text}
+              onClick={this.handleSurfaceDetail.bind(null, capture.id)}
+              onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                this.handleFocusNode(capture.id);
+              }}
+              onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                this.handleUnfocusNode();
+              }}
+              accentColor={config.captureAccentColor}
+              baseColor={config.captureBaseColor}
+              textColor={"white"}
+              isFocus={
+                (this.isLargeWindow() &&
+                  (this.state.hoverFocus &&
+                    this.state.hoverFocus.id === capture.id)) === true
+              }
+            />
+          );
+        })}
+        {captureNodes.map((capture, index) => {
+          return (
+            <ResultListItem
+              key={capture.id}
+              id={capture.id}
+              body={capture.text}
+              onClick={this.handleSurfaceDetail.bind(null, capture.id)}
+              onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                this.handleFocusNode(capture.id);
+              }}
+              onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                this.handleUnfocusNode();
+              }}
+              accentColor={config.captureAccentColor}
+              isFocus={
+                (this.isLargeWindow() &&
+                  (this.state.hoverFocus &&
+                    this.state.hoverFocus.id === capture.id)) === true
+              }
+            />
+          );
+        })}
       </div>
     );
   }
@@ -443,6 +475,7 @@ class Capture extends React.Component<Props, State> {
             this.handleUnfocusNode();
           }}
           accentColor={config.captureAccentColor}
+          baseColor={"white"}
           isFocus={false}
         />
       </div>

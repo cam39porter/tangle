@@ -16,7 +16,6 @@ import { RouteComponentProps } from "react-router";
 
 // Components
 import ResultListItem from "../components/result-list-item";
-import ResultDetail from "../components/result-detail";
 import Graph from "../components/graph";
 import { GraphNode } from "../components/graph";
 import GraphButtons from "../components/graph-buttons";
@@ -327,7 +326,10 @@ class Surface extends React.Component<Props, State> {
 
         // Captures
         default:
-          if (node.level === 0) {
+          if (
+            (this.state.isDetail && node.level === 0) ||
+            (!this.state.isSearch && node.level === 0)
+          ) {
             return {
               id: node.id,
               name: node.text,
@@ -335,7 +337,7 @@ class Surface extends React.Component<Props, State> {
             };
           }
 
-          if (!this.state.isDetail) {
+          if (!this.state.isDetail && this.state.isSearch) {
             return {
               id: node.id,
               name: node.text,
@@ -459,6 +461,7 @@ class Surface extends React.Component<Props, State> {
                   this.handleUnfocusNode();
                 }}
                 accentColor={config.surfaceAccentColor}
+                baseColor={"white"}
                 isFocus={
                   (this.isLargeWindow() &&
                     (this.state.hoverFocus &&
@@ -476,12 +479,12 @@ class Surface extends React.Component<Props, State> {
       return null;
     }
 
-    let detailNode;
+    let detailNodes: Array<Node> = [];
 
     const captureNodes = this.props.data.get.nodes.filter(node => {
       if (node.type === "Capture") {
         if (node.level === 0) {
-          detailNode = node;
+          detailNodes = detailNodes.concat(node);
           return false;
         }
         return true;
@@ -491,13 +494,32 @@ class Surface extends React.Component<Props, State> {
 
     return (
       <div>
-        {detailNode !== undefined ? (
-          <ResultDetail
-            id={this.state.id}
-            body={detailNode.text}
-            backgroundColor={config.surfaceBaseColor}
-          />
-        ) : null}
+        {detailNodes !== undefined
+          ? detailNodes.map(detailNode => {
+              return (
+                <ResultListItem
+                  key={detailNode.id}
+                  id={detailNode.id}
+                  body={detailNode.text}
+                  onClick={this.handleSurfaceDetail.bind(null, detailNode.id)}
+                  onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                    this.handleFocusNode(detailNode.id);
+                  }}
+                  onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                    this.handleUnfocusNode();
+                  }}
+                  accentColor={config.surfaceAccentColor}
+                  baseColor={config.surfaceBaseColor}
+                  textColor={"white"}
+                  isFocus={
+                    (this.isLargeWindow() &&
+                      (this.state.hoverFocus &&
+                        this.state.hoverFocus.id === detailNode.id)) === true
+                  }
+                />
+              );
+            })
+          : null}
         {this.renderResults(captureNodes)}
       </div>
     );
@@ -639,7 +661,9 @@ class Surface extends React.Component<Props, State> {
             this.handleUnfocusNode();
           }}
           accentColor={config.surfaceAccentColor}
+          baseColor={"white"}
           isFocus={false}
+          maxHeight={this.isLargeWindow() ? undefined : "4rem"}
         />
       </div>
     );

@@ -8,22 +8,32 @@ interface Props {
   onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onMouseLeave?: (e: React.MouseEvent<HTMLDivElement>) => void;
   accentColor: string;
+  baseColor?: string;
+  textColor?: string;
   isFocus: boolean;
+  maxHeight?: string;
 }
 
 class ResultListItem extends React.Component<Props, object> {
   render() {
     return (
       <div
-        className={`bg-white w-100 pa2 bb b--light-gray dt pointer bg-animate-ns hover-bg-near-white-ns ${this
-          .props.isFocus && `bg-${this.props.accentColor}`}`}
+        className={`bg-${this.props.baseColor ||
+          "white"} w-100 pa2 bb b--light-gray dt pointer bg-animate-ns hover-bg-near-white-ns ${this
+          .props.textColor || "black"}  ${this.props.isFocus &&
+          `bg-${this.props.accentColor}`}`}
         onMouseEnter={this.props.onMouseEnter}
         onMouseLeave={this.props.onMouseLeave}
         onClick={this.props.onClick}
         key={this.props.id}
       >
         <div className={`dt-row ma3 w-100`}>
-          <p className={`dtc fl ma3 h3 f6 overflow-hidden lh-copy`} style={{}}>
+          <p
+            className={`dtc fl ma3 f6 overflow-hidden lh-copy`}
+            style={{
+              maxHeight: "4rem"
+            }}
+          >
             {this.props.body}
           </p>
         </div>

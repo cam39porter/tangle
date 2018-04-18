@@ -376,8 +376,8 @@ class Surface extends React.Component<Props, State> {
   renderSearchBar() {
     return (
       <div
-        className={`fixed top-2-l center w-100 w-third-l dt pa3 pv0-l ph4-l z-999`}
-        style={{ cursor: "text" }}
+        className={`fixed top-1 ph2 w-100 top-2-l center w-third-l dt pv0-l ph4-l z-999`}
+        style={{ cursor: "text", minHeight: "3rem" }}
         onClick={() => {
           if (this.searchInput) {
             this.searchInput.focus();
@@ -385,13 +385,13 @@ class Surface extends React.Component<Props, State> {
         }}
       >
         <div
-          className={`w-100 h2 pa3 dtc v-mid tc bg-white br1 bb bw1 b--${
+          className={`relative w-100 ph1 dtc v-mid tc bg-white br1 bb bw1 b--${
             config.surfaceAccentColor
           } shadow-1`}
         >
           <input
-            className={`f6 fl pa1 ${
-              this.state.isSearch || this.state.isDetail ? "w-80" : "w-100"
+            className={`pv2 ph3 f6 fl ${
+              this.state.isSearch || this.state.isDetail ? "w-80" : "w-90"
             }`}
             ref={input => {
               this.searchInput = input;
@@ -410,14 +410,12 @@ class Surface extends React.Component<Props, State> {
           />
           {this.state.isSearch || this.state.isDetail ? (
             <div
-              className={`dt fr pointer`}
+              className={`absolute right-0 h-100 w3 gray pt1 tc pointer`}
               onClick={() => {
                 this.handleSurface();
               }}
             >
-              <div className={`dtc v-btm gray`}>
-                <X size={20} />
-              </div>
+              <X size={20} />
             </div>
           ) : null}
         </div>

@@ -25,7 +25,6 @@ import SidebarSectionHeader from "../components/sidebar-section-header";
 // Config / Utils
 import config from "../cfg";
 import { assign } from "lodash";
-// import { X } from "react-feather";
 import windowSize from "react-window-size";
 
 const FOCUS_COLOR_1 = "#19A974";
@@ -253,11 +252,14 @@ class Capture extends React.Component<Props, State> {
   renderCaptureCount() {
     return (
       <div
-        className={`fixed top-2-l center w-100 w-third-l dt pa3 pv0-l ph4-l z-999 pointer`}
+        className={`fixed top-2-l center w-100 w-third-l dt pv0-l ph4-l z-999 pointer`}
         onClick={this.handleIsShowingList}
+        style={{
+          minHeight: "3rem"
+        }}
       >
         <div
-          className={`w-100 f6 h2 pa3 dtc v-mid tc bg-${
+          className={`w-100 f6 dtc v-mid tc bg-${
             this.state.isShowingList
               ? `white gray`
               : `${config.captureAccentColor} white`

@@ -7,8 +7,13 @@ interface Props {
 
 const SidebarSectionHeader = function(props: Props) {
   return (
-    <div className={`dt`}>
-      <div className={`dtc v-btm h3 ttu f6 pa2 gray`}>{props.title}</div>
+    <div
+      className={`dt`}
+      style={{
+        minHeight: "3rem"
+      }}
+    >
+      <div className={`dtc v-btm ttu f6 pa2 gray`}>{props.title}</div>
     </div>
   );
 };

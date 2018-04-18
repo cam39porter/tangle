@@ -5,8 +5,6 @@ import * as React from "react";
 import ReactECharts from "echarts-for-react";
 
 // Config / Utils
-import { getGradient } from "../utils";
-import tinycolor from "tinycolor2";
 import { isEqual } from "lodash";
 
 const BLUR_COLOR = "#CCCCCC";
@@ -123,7 +121,7 @@ class Graph extends React.Component<Props, object> {
   }
 
   getCategories() {
-    const baseCategories = [
+    return [
       {
         name: `detail`,
         itemStyle: {
@@ -157,25 +155,6 @@ class Graph extends React.Component<Props, object> {
         }
       }
     ];
-
-    const gradient = getGradient(
-      tinycolor(this.props.focusColor1),
-      tinycolor(this.props.focusColor2),
-      this.props.gradientNumber
-    );
-
-    return gradient
-      .map((color, index) => {
-        return {
-          name: `${index}focus`,
-          itemStyle: {
-            normal: {
-              color: color.toHexString()
-            }
-          }
-        };
-      })
-      .concat(baseCategories);
   }
 
   getEvents() {

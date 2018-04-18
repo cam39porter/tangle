@@ -28,7 +28,7 @@ import { assign } from "lodash";
 import { X } from "react-feather";
 import windowSize from "react-window-size";
 
-const COUNT = 200; // number of results to return
+const COUNT = 5; // number of results to return
 
 const FOCUS_COLOR_1 = "#357EDD";
 const FOCUS_COLOR_2 = "#CDECFF";
@@ -108,6 +108,7 @@ class Surface extends React.Component<Props, State> {
     this.renderResults = this.renderResults.bind(this);
     this.renderDetail = this.renderDetail.bind(this);
     this.renderHideList = this.renderHideList.bind(this);
+    this.renderGraph = this.renderGraph.bind(this);
 
     const query = getQuery(this.props.location.search);
     const isSearch = query.length !== 0;
@@ -224,6 +225,10 @@ class Surface extends React.Component<Props, State> {
   }
 
   handleSurfaceDetail(id: string) {
+    this.setState({
+      hoverFocus: null
+    });
+
     this.props.history.push(
       `/surface?query=${encodeURIComponent(
         this.state.query || ""
@@ -326,30 +331,21 @@ class Surface extends React.Component<Props, State> {
 
         // Captures
         default:
-          if (
-            (this.state.isDetail && node.level === 0) ||
-            (!this.state.isSearch && node.level === 0)
-          ) {
-            return {
-              id: node.id,
-              name: node.text,
-              category: "detail"
-            };
-          }
-
-          if (!this.state.isDetail && this.state.isSearch) {
-            return {
-              id: node.id,
-              name: node.text,
-              category: `${index}focus`
-            };
-          }
-
-          return {
+          let graphNode = {
             id: node.id,
             name: node.text,
             category: `blur`
           };
+
+          if (node.level === 0) {
+            graphNode = assign(graphNode, {
+              id: node.id,
+              name: node.text,
+              category: `detail`
+            });
+          }
+
+          return graphNode;
       }
     });
   }
@@ -441,38 +437,74 @@ class Surface extends React.Component<Props, State> {
       nodes = this.props.data.search.graph.nodes;
     }
 
+    let topCaptures: Array<Node> = [];
+    let relatedCaptures: Array<Node> = [];
+
+    nodes.forEach(node => {
+      if (node.type === "Capture") {
+        if (node.level === 0) {
+          topCaptures = topCaptures.concat(node);
+        } else {
+          relatedCaptures = relatedCaptures.concat(node);
+        }
+      }
+    });
+
     return (
       <div>
-        <SidebarSectionHeader
-          title={!this.state.isDetail ? "top captures" : "related captures"}
-        />
-        {nodes
-          .filter((node, index) => {
-            return node.type === "Capture";
-          })
-          .map((capture, index) => {
-            return (
-              <ResultListItem
-                key={capture.id}
-                id={capture.id}
-                body={capture.text}
-                onClick={this.handleSurfaceDetail.bind(null, capture.id)}
-                onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
-                  this.handleFocusNode(capture.id);
-                }}
-                onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
-                  this.handleUnfocusNode();
-                }}
-                accentColor={config.surfaceAccentColor}
-                baseColor={"white"}
-                isFocus={
-                  (this.isLargeWindow() &&
-                    (this.state.hoverFocus &&
-                      this.state.hoverFocus.id === capture.id)) === true
-                }
-              />
-            );
-          })}
+        {topCaptures.length > 0 && (
+          <SidebarSectionHeader title={"top captures"} />
+        )}
+        {topCaptures.map((capture, index) => {
+          return (
+            <ResultListItem
+              key={capture.id}
+              id={capture.id}
+              body={capture.text}
+              onClick={this.handleSurfaceDetail.bind(null, capture.id)}
+              onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                this.handleFocusNode(capture.id);
+              }}
+              onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                this.handleUnfocusNode();
+              }}
+              accentColor={config.surfaceAccentColor}
+              baseColor={config.surfaceBaseColor}
+              textColor={"white"}
+              isFocus={
+                (this.isLargeWindow() &&
+                  (this.state.hoverFocus &&
+                    this.state.hoverFocus.id === capture.id)) === true
+              }
+            />
+          );
+        })}
+        {relatedCaptures.length > 0 && (
+          <SidebarSectionHeader title={"related captures"} />
+        )}
+        {relatedCaptures.map((capture, index) => {
+          return (
+            <ResultListItem
+              key={capture.id}
+              id={capture.id}
+              body={capture.text}
+              onClick={this.handleSurfaceDetail.bind(null, capture.id)}
+              onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                this.handleFocusNode(capture.id);
+              }}
+              onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                this.handleUnfocusNode();
+              }}
+              accentColor={config.surfaceAccentColor}
+              baseColor={"white"}
+              isFocus={
+                (this.isLargeWindow() &&
+                  (this.state.hoverFocus &&
+                    this.state.hoverFocus.id === capture.id)) === true
+              }
+            />
+          );
+        })}
       </div>
     );
   }

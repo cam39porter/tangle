@@ -16,7 +16,7 @@ class Sidebar extends React.Component<Props, object> {
         {/* Header */}
         <div>{this.props.renderHeader()}</div>
         {/* Padding to ensure results start below the header*/}
-        <div className={`flex-column`} style={{ minHeight: "8rem" }} />
+        <div className={`flex-column`} style={{ minHeight: "6rem" }} />
 
         {/* Body */}
         <div

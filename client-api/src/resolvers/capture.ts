@@ -13,7 +13,8 @@ import {
   executeQuery,
   createCaptureNode,
   createTagNodeWithEdge,
-  createEntityNodeWithEdge
+  createEntityNodeWithEdge,
+  archiveCaptureNode
 } from "../db/db";
 import { parseTags, stripTags } from "../helpers/tag";
 import * as _ from "lodash";
@@ -46,12 +47,11 @@ export default {
     }
   },
   Mutation: {
-    createCapture(
-      parent,
-      { body, timezoneOffset },
-      context,
-      info
-    ): Promise<Graph> {
+    archiveCapture(parent, { id }, context, info): Promise<boolean> {
+      const userId: string = getAuthenticatedUser().id;
+      return archiveCaptureNode(userId, id).then(() => true);
+    },
+    createCapture(parent, { body }, context, info): Promise<Graph> {
       const user: User = getAuthenticatedUser();
       return createCaptureNode(user, body).then((captureNode: GraphNode) => {
         return getNLPResponse(stripTags(body)).then(nlp => {
@@ -67,7 +67,7 @@ export default {
               )
             );
             return tagCreates.then(tagCreateResults => {
-              return getAllCapturedToday(timezoneOffset).then(
+              return getAllCapturedToday(null).then(
                 searchResults => searchResults.graph
               );
             });
@@ -87,6 +87,7 @@ function expandCaptures(userUrn: string): string {
   return `OPTIONAL MATCH (roots:Capture)-[r1]-(firstDegree) 
   WHERE NOT firstDegree:User
   OPTIONAL MATCH (firstDegree)-[r2]-(secondDegree:Capture)<-[:CREATED]-(u:User {id:"${userUrn}"})
+  WHERE NOT EXISTS(secondDegree.archived) or secondDegree.archived = false
   WITH roots, collect(roots)+collect(firstDegree)+collect(secondDegree) AS nodes,
   collect(distinct r1)+collect(distinct r2) AS relationships
   UNWIND nodes as node
@@ -106,6 +107,7 @@ function search(
   } else {
     return executeQuery(`CALL apoc.index.search("captures", "${rawQuery}~") YIELD node as c, weight
     MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
+    WHERE NOT EXISTS (c.archived) OR c.archived = false
     WITH c as roots, weight
     SKIP ${start} LIMIT ${count}
     ${expandCaptures(userId)}
@@ -198,6 +200,7 @@ function get(urn: string): Promise<Graph> {
 function getOthers(urn: string) {
   const userUrn = getAuthenticatedUser().id;
   return executeQuery(`MATCH (other {id:"${urn}"})-[r]-(roots:Capture)<-[:CREATED]-(u:User {id:"${userUrn}"})
+  WHERE NOT EXISTS(roots.archived) OR roots.archived = false
   ${expandCaptures(userUrn)}
   RETURN roots, nodes, relationships
   `).then(res => {

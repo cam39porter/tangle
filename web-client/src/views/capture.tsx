@@ -528,7 +528,14 @@ class Capture extends React.Component<Props, State> {
           <GraphButtons
             handleIsCapturing={this.handleIsCapturing}
             isCapturing={this.state.isCapturing}
-            handleRefetch={this.props.data && this.props.data.refetch}
+            handleRefetch={() => {
+              this.props.data && this.props.data.refetch();
+              if (this.isLargeWindow()) {
+                this.setState({
+                  isShowingList: true
+                });
+              }
+            }}
           />
         </div>
       </div>

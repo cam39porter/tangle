@@ -14,7 +14,7 @@ type Node {
   id: String!
   type: NodeType!
   text: String!
-  level: Int!
+  level: Int
 }
 
 enum NodeType {
@@ -27,6 +27,7 @@ enum NodeType {
 enum EdgeType {
   REFERENCES
   TAGGED_WITH
+  INCLUDES
 }
 
 type SearchResults {
@@ -56,7 +57,7 @@ enum GetAllUseCase {
 }
 
 type Mutation {
-  createCapture(body: String!): Graph!
+  createCapture(body: String!, sessionId: String): Graph!
   createSession(title: String!): Node!
   archiveCapture(id: String!): Boolean
   editCapture(id: String!, body: String!): Boolean

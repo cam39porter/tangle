@@ -67,17 +67,25 @@ function editCaptureNode(
   });
 }
 
-function createCaptureNode(user: User, body: string): Promise<GraphNode> {
+function createCaptureNode(
+  user: User,
+  body: string,
+  sessionId: string
+): Promise<GraphNode> {
   const uuid = uuidv4();
   const captureUrn = toCaptureUrn(uuid);
   const userUrn = user.id;
-  return executeQuery(
-    `MATCH (u:User {id:"${userUrn}"})
-    MERGE (n:Capture {id:"${captureUrn}", body:"${escape(body)}"})
-    ON CREATE SET n.created = TIMESTAMP()
-    CREATE (u)-[created:CREATED]->(n)
-    RETURN n`
-  ).then((result: StatementResult) => {
+  const sessionQuery = sessionId
+    ? `OPTIONAL MATCH (u)-[:CREATED]-(s:Session {id:"${sessionId}"})`
+    : ``;
+  const query = `MATCH (u:User {id:"${userUrn}"})
+  ${sessionQuery}
+  CREATE (u)-[created:CREATED]->(n:Capture {id:"${captureUrn}",
+  body:"${escape(body)}", 
+  created:TIMESTAMP()})
+  ${sessionId ? "CREATE (n)<-[:INCLUDES]-(s)" : ""}
+  RETURN n`;
+  return executeQuery(query).then((result: StatementResult) => {
     const record = result.records[0].get("n");
     return new GraphNode(
       record.properties.id,

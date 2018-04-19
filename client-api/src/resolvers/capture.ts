@@ -65,12 +65,13 @@ export default {
         createRelations(id, body)
       );
     },
-    createCapture(parent, { body }, context, info): Promise<Graph> {
+    createCapture(parent, { body, sessionId }, context, info): Promise<Graph> {
       const user: User = getAuthenticatedUser();
-      return createCaptureNode(user, body).then((captureNode: GraphNode) =>
-        createRelations(captureNode.id, body).then(data =>
-          getAllCapturedToday(null).then(results => results.graph)
-        )
+      return createCaptureNode(user, body, sessionId).then(
+        (captureNode: GraphNode) =>
+          createRelations(captureNode.id, body).then(data =>
+            getAllCapturedToday(null).then(results => results.graph)
+          )
       );
     },
     createSession(parent, { title }, context, info): Promise<GraphNode> {
@@ -102,8 +103,8 @@ function createRelations(captureId: string, body: string): Promise<boolean> {
  * @returns two collections in cypher, called "nodes", and "relationship". The caller is responsible for returning these
  */
 function expandCaptures(userUrn: string): string {
-  return `OPTIONAL MATCH (roots:Capture)-[r1]-(firstDegree) 
-  WHERE firstDegree:Tag OR firstDegree:Entity
+  return `OPTIONAL MATCH (roots:Capture)-[r1]-(firstDegree)
+  WHERE firstDegree:Tag OR firstDegree:Entity OR firstDegree:Session
   OPTIONAL MATCH (firstDegree)-[r2]-(secondDegree:Capture)<-[:CREATED]-(u:User {id:"${userUrn}"})
   WHERE NOT EXISTS(secondDegree.archived) or secondDegree.archived = false
   WITH roots, collect(roots)+collect(firstDegree)+collect(secondDegree) AS nodes,
@@ -296,7 +297,7 @@ function buildGraph(
       new GraphNode(
         node.properties.id,
         node.labels[0],
-        node.properties.body || node.properties.name,
+        node.properties.body || node.properties.name || node.properties.title,
         getLevel(rootNodes, node.properties.id)
       )
   );

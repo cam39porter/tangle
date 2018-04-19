@@ -80,14 +80,12 @@ class CaptureDialogue extends React.Component<Props, State> {
   renderMinimizeButton() {
     return (
       <div
-        className={`absolute dt h2 w2 f3 b top-1 right-1 pointer ba br1 bw1 ${
+        className={`absolute tc h2 w2 f3 b top-1 right-1 pointer ${
           config.captureAccentColor
         }`}
         onClick={this.props.handleMinimize}
       >
-        <div className={`dtc tc v-btm`}>
-          <Minus />
-        </div>
+        <Minus />
       </div>
     );
   }

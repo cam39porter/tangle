@@ -103,7 +103,7 @@ function createRelations(captureId: string, body: string): Promise<boolean> {
  */
 function expandCaptures(userUrn: string): string {
   return `OPTIONAL MATCH (roots:Capture)-[r1]-(firstDegree) 
-  WHERE NOT firstDegree:User
+  WHERE firstDegree:Tag OR firstDegree:Entity
   OPTIONAL MATCH (firstDegree)-[r2]-(secondDegree:Capture)<-[:CREATED]-(u:User {id:"${userUrn}"})
   WHERE NOT EXISTS(secondDegree.archived) or secondDegree.archived = false
   WITH roots, collect(roots)+collect(firstDegree)+collect(secondDegree) AS nodes,

@@ -20,7 +20,7 @@ function authFilter(req, res, next) {
     const encodedToken = parseAuthorization(req.get("authorization"));
     verify(encodedToken)
       .then(token => {
-        const user = new User(toUserUrn(token.uid), token.name, token.email);
+        const user = new User(toUserUrn(token.uid), token.email, token.name);
         setAuthenticatedUser(user);
         next();
       })

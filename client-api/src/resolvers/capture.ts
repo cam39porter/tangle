@@ -15,7 +15,8 @@ import {
   createTagNodeWithEdge,
   createEntityNodeWithEdge,
   archiveCaptureNode,
-  editCaptureNode
+  editCaptureNode,
+  createSession
 } from "../db/db";
 import { parseTags, stripTags } from "../helpers/tag";
 import * as _ from "lodash";
@@ -67,10 +68,14 @@ export default {
     createCapture(parent, { body }, context, info): Promise<Graph> {
       const user: User = getAuthenticatedUser();
       return createCaptureNode(user, body).then((captureNode: GraphNode) =>
-        createRelations(captureNode.id, body).then(() =>
+        createRelations(captureNode.id, body).then(data =>
           getAllCapturedToday(null).then(results => results.graph)
         )
       );
+    },
+    createSession(parent, { title }, context, info): Promise<GraphNode> {
+      const userId = getAuthenticatedUser().id;
+      return createSession(userId, title);
     }
   }
 };

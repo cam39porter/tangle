@@ -21,6 +21,7 @@ enum NodeType {
   Capture
   Entity
   Tag
+  Session
 }
 
 enum EdgeType {
@@ -56,6 +57,7 @@ enum GetAllUseCase {
 
 type Mutation {
   createCapture(body: String!): Graph!
+  createSession(title: String!): Node!
   archiveCapture(id: String!): Boolean
   editCapture(id: String!, body: String!): Boolean
 }

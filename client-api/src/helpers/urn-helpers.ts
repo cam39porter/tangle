@@ -16,8 +16,19 @@ function toTagUrn(id: string): string {
   return `${baseStr}:tag:${id}`;
 }
 
+function toSessionUrn(id: string): string {
+  return `${baseStr}:session:${id}`;
+}
+
 function getUrnType(urn: string): string {
   return urn.split(":")[2];
 }
 
-export { toUserUrn, toCaptureUrn, toEntityUrn, toTagUrn, getUrnType };
+export {
+  toUserUrn,
+  toCaptureUrn,
+  toEntityUrn,
+  toTagUrn,
+  toSessionUrn,
+  getUrnType
+};

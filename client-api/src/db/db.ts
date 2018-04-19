@@ -7,7 +7,8 @@ import {
   toCaptureUrn,
   toTagUrn,
   toUserUrn,
-  toEntityUrn
+  toEntityUrn,
+  toSessionUrn
 } from "../helpers/urn-helpers";
 
 const driver = neo4j.driver(
@@ -15,6 +16,24 @@ const driver = neo4j.driver(
   neo4j.auth.basic("neo4j", "Z868sybiq7cGzFeA")
 );
 const session = driver.session();
+
+function createSession(userId: string, title: string): Promise<GraphNode> {
+  const uuid = uuidv4();
+  const sessionUrn = toSessionUrn(uuid);
+  return executeQuery(`
+  MATCH (u:User {id:"${userId}"})
+  CREATE (session:Session {id:"${sessionUrn}", title:"${title}", created:TIMESTAMP()})
+  CREATE (session)<-[:CREATED]-(u)
+  RETURN session`).then((result: StatementResult) => {
+    const record = result.records[0].get("session");
+    return new GraphNode(
+      record.properties.id,
+      "Session",
+      record.properties.title,
+      null
+    );
+  });
+}
 
 function getUser(urn: string): Promise<User> {
   return executeQuery(`
@@ -53,9 +72,7 @@ function createCaptureNode(user: User, body: string): Promise<GraphNode> {
   const captureUrn = toCaptureUrn(uuid);
   const userUrn = user.id;
   return executeQuery(
-    `MERGE (u:User {id:"${userUrn}", name:"${user.name}", email:"${
-      user.email
-    }"})
+    `MATCH (u:User {id:"${userUrn}"})
     MERGE (n:Capture {id:"${captureUrn}", body:"${escape(body)}"})
     ON CREATE SET n.created = TIMESTAMP()
     CREATE (u)-[created:CREATED]->(n)
@@ -135,6 +152,7 @@ export {
   executeQuery,
   archiveCaptureNode,
   createCaptureNode,
+  createSession,
   editCaptureNode,
   createTagNodeWithEdge,
   createEntityNodeWithEdge

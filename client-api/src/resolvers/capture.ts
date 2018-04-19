@@ -223,7 +223,6 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
       )
     );
   });
-  1524129249;
 }
 
 function getCreatedSince(timezoneOffset: number) {

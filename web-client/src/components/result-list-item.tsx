@@ -1,6 +1,11 @@
 // React
 import * as React from "react";
 
+// GraphQL
+import { ArchiveCaptureMutation as Response } from "../__generated__/types";
+import { ArchiveCapture as MUTATION } from "../queries";
+import { graphql, ChildProps } from "react-apollo";
+
 // Components
 import {
   Edit,
@@ -14,7 +19,7 @@ import {
 
 const ICON_SIZE = 20;
 
-interface Props {
+interface Props extends ChildProps<{}, Response> {
   id: string;
   body: string;
   onClick?: () => void;
@@ -27,6 +32,7 @@ interface Props {
   maxHeight?: string;
   showActionBar: boolean;
   onShowActionBarChange: (id: string) => void;
+  handleRefetch: (id: string) => void;
 }
 
 interface State {}
@@ -89,7 +95,23 @@ class ResultListItem extends React.Component<Props, State> {
             <div className={`dtc v-mid pointer`}>
               <Edit size={ICON_SIZE} />
             </div>
-            <div className={`dtc v-mid pointer`}>
+            <div
+              className={`dtc v-mid pointer`}
+              onClick={() => {
+                if (!this.props.mutate) {
+                  return;
+                }
+
+                this.props
+                  .mutate({
+                    // strip new lines from the value entered
+                    variables: { id: this.props.id }
+                  })
+                  .then(() => {
+                    this.props.handleRefetch(this.props.id);
+                  });
+              }}
+            >
               <Trash size={ICON_SIZE} />
             </div>
           </div>
@@ -99,4 +121,4 @@ class ResultListItem extends React.Component<Props, State> {
   }
 }
 
-export default ResultListItem;
+export default graphql<Response, Props>(MUTATION)(ResultListItem);

@@ -4,12 +4,12 @@ import * as React from "react";
 // Components
 import TextInput from "../components/text-input";
 import Button from "../components/button";
+import { Minus } from "react-feather";
 
 // GraphQL
 import { CreateCaptureMutation as Response } from "../__generated__/types";
 import { CreateCapture as MUTATION } from "../queries";
 import { graphql, ChildProps } from "react-apollo";
-import { Minus } from "react-feather";
 
 // Config / Utils
 import { trimEnd } from "lodash";

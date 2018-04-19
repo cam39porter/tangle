@@ -38,7 +38,7 @@ interface Node {
   id: string;
   type: NodeType;
   text: string;
-  level: number;
+  level: number | null;
 }
 
 interface Edge {
@@ -105,6 +105,9 @@ class Surface extends React.Component<Props, State> {
     this.handleSurfaceDetail = this.handleSurfaceDetail.bind(this);
     this.handleFocusInput = this.handleFocusInput.bind(this);
     this.handleResultActionBarChange = this.handleResultActionBarChange.bind(
+      this
+    );
+    this.handleResultListItemRefetch = this.handleResultListItemRefetch.bind(
       this
     );
 
@@ -193,6 +196,15 @@ class Surface extends React.Component<Props, State> {
 
     // update state
     this.setState(nextState);
+  }
+
+  handleResultListItemRefetch(id: string) {
+    if (this.state.id === id) {
+      this.handleSurface();
+      return;
+    }
+
+    this.props.data && this.props.data.refetch();
   }
 
   handleResultActionBarChange(id: string) {
@@ -516,6 +528,7 @@ class Surface extends React.Component<Props, State> {
               }
               showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
               onShowActionBarChange={this.handleResultActionBarChange}
+              handleRefetch={this.handleResultListItemRefetch}
             />
           );
         })}
@@ -544,6 +557,7 @@ class Surface extends React.Component<Props, State> {
               }
               showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
               onShowActionBarChange={this.handleResultActionBarChange}
+              handleRefetch={this.handleResultListItemRefetch}
             />
           );
         })}
@@ -602,6 +616,7 @@ class Surface extends React.Component<Props, State> {
                     this.state.resultOptionsIsOpenMap[detailNode.id]
                   }
                   onShowActionBarChange={this.handleResultActionBarChange}
+                  handleRefetch={this.handleResultListItemRefetch}
                 />
               );
             })
@@ -753,6 +768,7 @@ class Surface extends React.Component<Props, State> {
           maxHeight={this.isLargeWindow() ? undefined : "4rem"}
           showActionBar={this.state.resultOptionsIsOpenMap[node.id]}
           onShowActionBarChange={this.handleResultActionBarChange}
+          handleRefetch={this.handleResultListItemRefetch}
         />
       </div>
     );

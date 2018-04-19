@@ -35,7 +35,7 @@ interface Node {
   id: string;
   type: NodeType;
   text: string;
-  level: number;
+  level: number | null;
 }
 
 interface Edge {
@@ -81,6 +81,9 @@ class Capture extends React.Component<Props, State> {
     this.handleResultActionBarChange = this.handleResultActionBarChange.bind(
       this
     );
+    this.handleResultListItemRefetch = this.handleResultListItemRefetch.bind(
+      this
+    );
 
     this.state = {
       isShowingList: false,
@@ -119,6 +122,10 @@ class Capture extends React.Component<Props, State> {
 
     // update state
     this.setState(nextState);
+  }
+
+  handleResultListItemRefetch(id: string) {
+    this.props.data && this.props.data.refetch();
   }
 
   handleResultActionBarChange(id: string) {
@@ -377,6 +384,7 @@ class Capture extends React.Component<Props, State> {
               }
               showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
               onShowActionBarChange={this.handleResultActionBarChange}
+              handleRefetch={this.handleResultListItemRefetch}
             />
           );
         })}
@@ -403,6 +411,7 @@ class Capture extends React.Component<Props, State> {
               }
               showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
               onShowActionBarChange={this.handleResultActionBarChange}
+              handleRefetch={this.handleResultListItemRefetch}
             />
           );
         })}
@@ -541,6 +550,7 @@ class Capture extends React.Component<Props, State> {
           isFocus={false}
           showActionBar={this.state.resultOptionsIsOpenMap[node.id]}
           onShowActionBarChange={this.handleResultActionBarChange}
+          handleRefetch={this.handleResultListItemRefetch}
         />
       </div>
     );

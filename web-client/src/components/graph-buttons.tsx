@@ -3,6 +3,7 @@ import * as React from "react";
 
 // Components
 import CaptureDialogue from "./capture-dialogue";
+import { MessageSquare } from "react-feather";
 
 // Config / Utils
 import config from "../cfg";
@@ -31,7 +32,9 @@ class GraphButtons extends React.Component<Props, object> {
         } shadow-1 pointer`}
         onClick={this.props.handleIsCapturing}
       >
-        <div className={`dtc tc v-mid f3`}>+</div>
+        <div className={`dtc tc v-mid pt1 f3`}>
+          <MessageSquare />
+        </div>
       </div>
     );
   }

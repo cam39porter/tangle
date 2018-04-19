@@ -24,7 +24,7 @@ import SidebarSectionHeader from "../components/sidebar-section-header";
 
 // Config / Utils
 import config from "../cfg";
-import { assign } from "lodash";
+import { assign, mapKeys } from "lodash";
 import windowSize from "react-window-size";
 
 const FOCUS_COLOR_1 = "#19A974";
@@ -58,6 +58,7 @@ interface State {
   isCapturing: boolean;
   hoverFocus: Node | null;
   nodeIdToIndex: Object;
+  resultOptionsIsOpenMap: Object;
 }
 
 class Capture extends React.Component<Props, State> {
@@ -77,19 +78,24 @@ class Capture extends React.Component<Props, State> {
     this.renderCaptureCount = this.renderCaptureCount.bind(this);
     this.renderResults = this.renderResults.bind(this);
     this.renderHideList = this.renderHideList.bind(this);
+    this.handleResultActionBarChange = this.handleResultActionBarChange.bind(
+      this
+    );
 
     this.state = {
       isShowingList: false,
       isCapturing: true,
       hoverFocus: null,
-      nodeIdToIndex: {}
+      nodeIdToIndex: {},
+      resultOptionsIsOpenMap: {}
     };
   }
 
   componentWillReceiveProps(nextProps: Props) {
     let nextState = {};
 
-    // update mapping of node ids to index
+    // update mappings
+    let nextResultOptionsIsOpenMap = [];
     let nextNodeIdToIndex = {};
     let nodes: Array<Node> = [];
     if (nextProps.data) {
@@ -99,11 +105,45 @@ class Capture extends React.Component<Props, State> {
     }
     nodes.forEach((node, index) => {
       nextNodeIdToIndex[node.id] = index;
+      if (node.type === "Capture") {
+        nextResultOptionsIsOpenMap[node.id] = false;
+      }
     });
-    nextState = assign({ nodeIdToIndex: nextNodeIdToIndex }, nextState);
+    nextState = assign(
+      {
+        nodeIdToIndex: nextNodeIdToIndex,
+        resultOptionsIsOpenMap: nextResultOptionsIsOpenMap
+      },
+      nextState
+    );
 
     // update state
     this.setState(nextState);
+  }
+
+  handleResultActionBarChange(id: string) {
+    let nextResultOptionsIsOpenMap = this.state.resultOptionsIsOpenMap;
+    const isOpen = nextResultOptionsIsOpenMap[id] ? true : false;
+
+    if (isOpen) {
+      nextResultOptionsIsOpenMap[id] = false;
+      nextResultOptionsIsOpenMap;
+      this.setState({
+        resultOptionsIsOpenMap: nextResultOptionsIsOpenMap
+      });
+      return;
+    }
+
+    nextResultOptionsIsOpenMap = mapKeys(nextResultOptionsIsOpenMap, () => {
+      return false;
+    });
+
+    nextResultOptionsIsOpenMap[id] = true;
+
+    this.setState({
+      resultOptionsIsOpenMap: nextResultOptionsIsOpenMap
+    });
+    return;
   }
 
   handleIsShowingList() {
@@ -329,12 +369,14 @@ class Capture extends React.Component<Props, State> {
               }}
               accentColor={config.captureAccentColor}
               baseColor={config.captureBaseColor}
-              textColor={"white"}
+              textColor={"near-white"}
               isFocus={
                 (this.isLargeWindow() &&
                   (this.state.hoverFocus &&
                     this.state.hoverFocus.id === capture.id)) === true
               }
+              showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
+              onShowActionBarChange={this.handleResultActionBarChange}
             />
           );
         })}
@@ -353,11 +395,14 @@ class Capture extends React.Component<Props, State> {
                 this.handleUnfocusNode();
               }}
               accentColor={config.captureAccentColor}
+              baseColor={"white"}
               isFocus={
                 (this.isLargeWindow() &&
                   (this.state.hoverFocus &&
                     this.state.hoverFocus.id === capture.id)) === true
               }
+              showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
+              onShowActionBarChange={this.handleResultActionBarChange}
             />
           );
         })}
@@ -494,6 +539,8 @@ class Capture extends React.Component<Props, State> {
           accentColor={config.captureAccentColor}
           baseColor={"white"}
           isFocus={false}
+          showActionBar={this.state.resultOptionsIsOpenMap[node.id]}
+          onShowActionBarChange={this.handleResultActionBarChange}
         />
       </div>
     );
@@ -542,8 +589,6 @@ class Capture extends React.Component<Props, State> {
     );
   }
 }
-
-console.log(new Date().getTimezoneOffset() / 60);
 
 const CaptureWithData = graphql<Response, Props>(QUERY, {
   options: (ownProps: Props) => ({

@@ -21,7 +21,7 @@ class Tangle extends React.Component<Props, State> {
         <div className={`fixed top-2 left-2`}>
           <Button
             accentColor={config.tangleAccentColor}
-            title="sign out"
+            title={"sign out"}
             onClick={() => {
               localStorage.removeItem("idToken");
               firebaseAuth().signOut();

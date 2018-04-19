@@ -24,7 +24,7 @@ import SidebarSectionHeader from "../components/sidebar-section-header";
 // Config / Utils
 import config from "../cfg";
 import qs from "qs";
-import { assign } from "lodash";
+import { assign, mapKeys } from "lodash";
 import { X } from "react-feather";
 import windowSize from "react-window-size";
 
@@ -70,6 +70,7 @@ interface State {
   isCapturing: boolean;
   hoverFocus: Node | null;
   nodeIdToIndex: Object;
+  resultOptionsIsOpenMap: Object;
 }
 
 function getQuery(queryString: string) {
@@ -103,6 +104,9 @@ class Surface extends React.Component<Props, State> {
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSurfaceDetail = this.handleSurfaceDetail.bind(this);
     this.handleFocusInput = this.handleFocusInput.bind(this);
+    this.handleResultActionBarChange = this.handleResultActionBarChange.bind(
+      this
+    );
 
     this.renderSearchBar = this.renderSearchBar.bind(this);
     this.renderResults = this.renderResults.bind(this);
@@ -125,7 +129,8 @@ class Surface extends React.Component<Props, State> {
       isShowingList: false,
       isCapturing: false,
       hoverFocus: null,
-      nodeIdToIndex: {}
+      nodeIdToIndex: {},
+      resultOptionsIsOpenMap: {}
     };
   }
 
@@ -160,7 +165,8 @@ class Surface extends React.Component<Props, State> {
     const isDetail = id.length !== 0;
     nextState = assign(nextState, { id, isDetail });
 
-    // update mapping of node ids to index
+    // update mappings
+    let nextResultOptionsIsOpenMap = [];
     let nextNodeIdToIndex = {};
     let nodes: Array<Node> = [];
     if (nextProps.data) {
@@ -173,11 +179,45 @@ class Surface extends React.Component<Props, State> {
     }
     nodes.forEach((node, index) => {
       nextNodeIdToIndex[node.id] = index;
+      if (node.type === "Capture") {
+        nextResultOptionsIsOpenMap[node.id] = false;
+      }
     });
-    nextState = assign({ nodeIdToIndex: nextNodeIdToIndex }, nextState);
+    nextState = assign(
+      {
+        nodeIdToIndex: nextNodeIdToIndex,
+        resultOptionsIsOpenMap: nextResultOptionsIsOpenMap
+      },
+      nextState
+    );
 
     // update state
     this.setState(nextState);
+  }
+
+  handleResultActionBarChange(id: string) {
+    let nextResultOptionsIsOpenMap = this.state.resultOptionsIsOpenMap;
+    const isOpen = nextResultOptionsIsOpenMap[id] ? true : false;
+
+    if (isOpen) {
+      nextResultOptionsIsOpenMap[id] = false;
+      nextResultOptionsIsOpenMap;
+      this.setState({
+        resultOptionsIsOpenMap: nextResultOptionsIsOpenMap
+      });
+      return;
+    }
+
+    nextResultOptionsIsOpenMap = mapKeys(nextResultOptionsIsOpenMap, () => {
+      return false;
+    });
+
+    nextResultOptionsIsOpenMap[id] = true;
+
+    this.setState({
+      resultOptionsIsOpenMap: nextResultOptionsIsOpenMap
+    });
+    return;
   }
 
   handleIsShowingList() {
@@ -376,8 +416,8 @@ class Surface extends React.Component<Props, State> {
   renderSearchBar() {
     return (
       <div
-        className={`fixed top-1 ph2 w-100 top-2-l center w-third-l dt pv0-l ph4-l z-999`}
-        style={{ cursor: "text", minHeight: "3rem" }}
+        className={`fixed top-1 ph2 w-100 top-2-l center w-third-l dt pv0-l ph4-l z-5`}
+        style={{ cursor: "text", minHeight: "3rem", maxHeight: "3rem" }}
         onClick={() => {
           if (this.searchInput) {
             this.searchInput.focus();
@@ -474,6 +514,8 @@ class Surface extends React.Component<Props, State> {
                   (this.state.hoverFocus &&
                     this.state.hoverFocus.id === capture.id)) === true
               }
+              showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
+              onShowActionBarChange={this.handleResultActionBarChange}
             />
           );
         })}
@@ -500,6 +542,8 @@ class Surface extends React.Component<Props, State> {
                   (this.state.hoverFocus &&
                     this.state.hoverFocus.id === capture.id)) === true
               }
+              showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
+              onShowActionBarChange={this.handleResultActionBarChange}
             />
           );
         })}
@@ -548,12 +592,16 @@ class Surface extends React.Component<Props, State> {
                   }}
                   accentColor={config.surfaceAccentColor}
                   baseColor={config.surfaceBaseColor}
-                  textColor={"white"}
+                  textColor={"near-white"}
                   isFocus={
                     (this.isLargeWindow() &&
                       (this.state.hoverFocus &&
                         this.state.hoverFocus.id === detailNode.id)) === true
                   }
+                  showActionBar={
+                    this.state.resultOptionsIsOpenMap[detailNode.id]
+                  }
+                  onShowActionBarChange={this.handleResultActionBarChange}
                 />
               );
             })
@@ -703,6 +751,8 @@ class Surface extends React.Component<Props, State> {
           baseColor={"white"}
           isFocus={false}
           maxHeight={this.isLargeWindow() ? undefined : "4rem"}
+          showActionBar={this.state.resultOptionsIsOpenMap[node.id]}
+          onShowActionBarChange={this.handleResultActionBarChange}
         />
       </div>
     );

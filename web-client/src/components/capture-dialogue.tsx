@@ -9,6 +9,7 @@ import Button from "../components/button";
 import { CreateCaptureMutation as Response } from "../__generated__/types";
 import { CreateCapture as MUTATION } from "../queries";
 import { graphql, ChildProps } from "react-apollo";
+import { Minus } from "react-feather";
 
 // Config / Utils
 import { trimEnd } from "lodash";
@@ -84,7 +85,9 @@ class CaptureDialogue extends React.Component<Props, State> {
         }`}
         onClick={this.props.handleMinimize}
       >
-        <div className={`dtc tc v-mid`}>-</div>
+        <div className={`dtc tc v-btm`}>
+          <Minus />
+        </div>
       </div>
     );
   }

@@ -3,8 +3,7 @@
   "productName": "Tangle",
   "version": "0.1.0",
   "engine": "8.9.4",
-  "description":
-    "A web client for empowering people to capture and connect thoughts to create big ideas",
+  "description": "A web client for empowering people to capture and connect thoughts to create big ideas",
   "private": true,
   "dependencies": {
     "apollo-cache-inmemory": "1.1.9",
@@ -41,10 +40,8 @@
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "schema":
-      "apollo-codegen introspect-schema ../client-api/data-template/schema.graphql --output ./src/schema.json",
-    "types":
-      "rm -rf ./src/__generated__ && mkdir ./src/__generated__ && apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
+    "schema": "apollo-codegen introspect-schema ../client-api/data-template/schema.graphql --output ./src/schema.json",
+    "types": "rm -rf ./src/__generated__ && mkdir ./src/__generated__ && apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
     "deploy": "yarn build && gcloud -q app deploy ./app.yaml"
   },
   "devDependencies": {

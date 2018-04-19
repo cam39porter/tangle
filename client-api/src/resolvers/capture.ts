@@ -15,7 +15,8 @@ import {
   createTagNodeWithEdge,
   createEntityNodeWithEdge,
   archiveCaptureNode,
-  editCaptureNode
+  editCaptureNode,
+  createSession
 } from "../db/db";
 import { parseTags, stripTags } from "../helpers/tag";
 import * as _ from "lodash";
@@ -44,7 +45,13 @@ export default {
       context,
       info
     ): Promise<SearchResults> {
-      return getAllCapturedToday(timezoneOffset);
+      if (useCase === "CAPTURED_TODAY") {
+        return getAllCapturedToday(timezoneOffset);
+      } else if (useCase === "ALL") {
+        return getAll();
+      } else {
+        return getAll();
+      }
     }
   },
   Mutation: {
@@ -61,10 +68,14 @@ export default {
     createCapture(parent, { body }, context, info): Promise<Graph> {
       const user: User = getAuthenticatedUser();
       return createCaptureNode(user, body).then((captureNode: GraphNode) =>
-        createRelations(captureNode.id, body).then(() =>
+        createRelations(captureNode.id, body).then(data =>
           getAllCapturedToday(null).then(results => results.graph)
         )
       );
+    },
+    createSession(parent, { title }, context, info): Promise<GraphNode> {
+      const userId = getAuthenticatedUser().id;
+      return createSession(userId, title);
     }
   }
 };
@@ -92,7 +103,7 @@ function createRelations(captureId: string, body: string): Promise<boolean> {
  */
 function expandCaptures(userUrn: string): string {
   return `OPTIONAL MATCH (roots:Capture)-[r1]-(firstDegree) 
-  WHERE NOT firstDegree:User
+  WHERE firstDegree:Tag OR firstDegree:Entity
   OPTIONAL MATCH (firstDegree)-[r2]-(secondDegree:Capture)<-[:CREATED]-(u:User {id:"${userUrn}"})
   WHERE NOT EXISTS(secondDegree.archived) or secondDegree.archived = false
   WITH roots, collect(roots)+collect(firstDegree)+collect(secondDegree) AS nodes,
@@ -101,6 +112,10 @@ function expandCaptures(userUrn: string): string {
   UNWIND relationships as rel
   WITH collect(distinct roots) as roots, collect(distinct node) as nodes, collect(distinct rel) as relationships
   `;
+}
+
+function filterCaptures(captureName: string) {
+  return null;
 }
 
 function search(
@@ -159,6 +174,32 @@ function getAllRandomCapture(): Promise<SearchResults> {
     );
   });
 }
+
+function getAll() {
+  const userId = getAuthenticatedUser().id;
+  return executeQuery(`MATCH (roots:Capture)<-[created:CREATED]-(user:User {id:"${userId}"})
+  WITH roots
+  ORDER BY roots.created DESC
+  LIMIT 50
+  ${expandCaptures(userId)}
+  RETURN roots, nodes, relationships
+  `).then(res => {
+    return new SearchResults(
+      buildGraph(
+        res.records[0].get("nodes"),
+        res.records[0].get("relationships"),
+        null,
+        res.records[0].get("roots")
+      ),
+      new PageInfo(
+        0,
+        res.records[0].get("nodes").length,
+        res.records[0].get("nodes").length
+      )
+    );
+  });
+}
+
 function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
   const userId = getAuthenticatedUser().id;
   const since = getCreatedSince(timezoneOffset).unix() * 1000;
@@ -192,8 +233,8 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
 function getCreatedSince(timezoneOffset: number) {
   return moment
     .utc()
-    .startOf("day")
-    .subtract(timezoneOffset ? moment.duration(timezoneOffset, "hours") : 0);
+    .add(timezoneOffset ? moment.duration(timezoneOffset, "hours") : 0)
+    .startOf("day");
 }
 
 function get(urn: string): Promise<Graph> {

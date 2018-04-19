@@ -45,12 +45,12 @@ export default {
       info
     ): Promise<SearchResults> {
       if (useCase === "CAPTURED_TODAY") {
-      return getAllCapturedToday(timezoneOffset);
+        return getAllCapturedToday(timezoneOffset);
       } else if (useCase === "ALL") {
         return getAll();
       } else {
         return getAll();
-    }
+      }
     }
   },
   Mutation: {
@@ -223,13 +223,14 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
       )
     );
   });
+  1524129249;
 }
 
 function getCreatedSince(timezoneOffset: number) {
   return moment
     .utc()
-    .startOf("day")
-    .subtract(timezoneOffset ? moment.duration(timezoneOffset, "hours") : 0);
+    .add(timezoneOffset ? moment.duration(timezoneOffset, "hours") : 0)
+    .startOf("day");
 }
 
 function get(urn: string): Promise<Graph> {

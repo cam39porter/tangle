@@ -63,43 +63,43 @@ Final note: some of the below are my own quotes, but many are from others. I cho
 --- 
 Updated 2018-03-27
 
-Be present. Accept. Surrender.
-Meaning and reality are not fixed; continually reassess. Nebulous-yet-patterned.
-Life has asked of you, ‘what is your meaning?’ How will you choose to answer?
-Be impeccable with the Word.
-Love is the Mother of all Virtues. Pride is the Father of all Vices.
-The world is my country, all mankind are my brethren.
-Trust is the most valuable asset in the world.
-Seek understanding; don’t criticize, don’t assume.
-Be emphatic. Listen. Observe. Beginner’s mind.
-The greatest fool of all is the man who fools himself, and you are the easiest person to fool.
-Beliefs are hypotheses to be tested, not treasures to be guarded.
-I don’t know what I don’t know. Embrace uncertainty and humility.
-Experience::knowledge::ignorance.
-Be deliberate with your time and focus. Before every task ask, “is this worth my attention?”
-Produce. Finding work you love is difficult.
-Act => observe => learn => act => …
-Feedback loops enable sums greater than parts.
-Teaching is the best way to learn.
-Defeating The Struggle is where greatness comes from.
-Everything looks like a failure in the middle.
-Have self-compassion. I am enough.
-We, not I.
-Appreciate those around you; be grateful.
-Diversity is the basis for collective intelligence.
-A man is revealed by how he treats the powerless.
-Reputation comes from consistency.
-You must be willing in your heart to begin again every day. Commit willingly.
-Perfect is the enemy of done.
-Patience. There are always more opportunities.
-All in moderation.
-Power with brevity.
-Habits over choices. Reduce friction.
-What am I afraid of today? Be honest with yourself. Be vulnerable.
-Recognize the importance of the next task. Make today a positive feedback loop.
+Be present. Accept. Surrender.  
+Meaning and reality are not fixed; continually reassess. Nebulous-yet-patterned.  
+Life has asked of you, ‘what is your meaning?’ How will you choose to answer?  
+Be impeccable with the Word.  
+Love is the Mother of all Virtues. Pride is the Father of all Vices.  
+The world is my country, all mankind are my brethren.  
+Trust is the most valuable asset in the world.  
+Seek understanding; don’t criticize, don’t assume.  
+Be emphatic. Listen. Observe. Beginner’s mind.  
+The greatest fool of all is the man who fools himself, and you are the easiest person to fool.  
+Beliefs are hypotheses to be tested, not treasures to be guarded.  
+I don’t know what I don’t know. Embrace uncertainty and humility.  
+Experience::knowledge::ignorance.  
+Be deliberate with your time and focus. Before every task ask, “is this worth my attention?”  
+Produce. Finding work you love is difficult.  
+Act => observe => learn => act => …  
+Feedback loops enable sums greater than parts.  
+Teaching is the best way to learn.  
+Defeating The Struggle is where greatness comes from.  
+Everything looks like a failure in the middle.  
+Have self-compassion. I am enough.  
+We, not I.  
+Appreciate those around you; be grateful.  
+Diversity is the basis for collective intelligence.  
+A man is revealed by how he treats the powerless.  
+Reputation comes from consistency.  
+You must be willing in your heart to begin again every day. Commit willingly.  
+Perfect is the enemy of done.  
+Patience. There are always more opportunities.  
+All in moderation.  
+Power with brevity.  
+Habits over choices. Reduce friction.  
+What am I afraid of today? Be honest with yourself. Be vulnerable.  
+Recognize the importance of the next task. Make today a positive feedback loop.  
 
-Watch your thoughts for they become words,
-watch your words for they become actions,
-watch your actions for they become habits,
-watch your habits for they become your character,
-watch your character for it becomes your destiny.
+Watch your thoughts for they become words,  
+watch your words for they become actions,  
+watch your actions for they become habits,  
+watch your habits for they become your character,  
+watch your character for it becomes your destiny.  

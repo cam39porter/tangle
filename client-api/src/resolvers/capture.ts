@@ -115,10 +115,6 @@ function expandCaptures(userUrn: string): string {
   `;
 }
 
-function filterCaptures(captureName: string) {
-  return null;
-}
-
 function search(
   rawQuery: string,
   start: number,

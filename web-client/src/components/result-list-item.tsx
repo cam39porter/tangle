@@ -2,9 +2,14 @@
 import * as React from "react";
 
 // GraphQL
-import { ArchiveCaptureMutation as Response } from "../__generated__/types";
-import { ArchiveCapture as MUTATION } from "../queries";
-import { graphql, ChildProps } from "react-apollo";
+import {
+  ArchiveCaptureMutation,
+  ArchiveCaptureMutationVariables,
+  EditCaptureMutation,
+  EditCaptureMutationVariables
+} from "../__generated__/types";
+import { ArchiveCapture, EditCapture } from "../queries";
+import { graphql, compose, MutationFunc } from "react-apollo";
 
 // Components
 import {
@@ -12,14 +17,16 @@ import {
   MessageSquare,
   Trash,
   MoreVertical,
-  Share2
+  Crosshair
 } from "react-feather";
+import TextInput from "../components/text-input";
 
 // Config / Utils
+import config from "../cfg";
 
 const ICON_SIZE = 20;
 
-interface Props extends ChildProps<{}, Response> {
+interface Props {
   id: string;
   body: string;
   onClick?: () => void;
@@ -33,13 +40,43 @@ interface Props extends ChildProps<{}, Response> {
   showActionBar: boolean;
   onShowActionBarChange: (id: string) => void;
   handleRefetch: (id: string) => void;
+  archiveCapture: MutationFunc<
+    ArchiveCaptureMutation,
+    ArchiveCaptureMutationVariables
+  >;
+  editCapture: MutationFunc<EditCaptureMutation, EditCaptureMutationVariables>;
 }
 
-interface State {}
+interface State {
+  isEditing: boolean;
+  currentBody: string;
+}
 
 class ResultListItem extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+
+    this.handleIsEditing = this.handleIsEditing.bind(this);
+    this.handleStopEditing = this.handleStopEditing.bind(this);
+
+    this.state = {
+      isEditing: false,
+      currentBody: props.body
+    };
+  }
+
+  handleIsEditing() {
+    this.setState({
+      isEditing: !this.state.isEditing
+    });
+  }
+
+  handleStopEditing() {
+    if (this.state.isEditing) {
+      this.setState({
+        isEditing: false
+      });
+    }
   }
 
   render() {
@@ -48,29 +85,54 @@ class ResultListItem extends React.Component<Props, State> {
         <div
           className={`bg-${this.props.baseColor || "white"} w-100 pa2 ${
             this.props.showActionBar ? "" : "bb b--light-gray"
-          } dt pointer bg-animate-ns hover-bg-near-white-ns ${this.props
-            .textColor || "dark-gray"}  ${this.props.isFocus &&
-            `bg-${this.props.accentColor}`}`}
+          } dt bg-animate-ns hover-bg-near-white-ns ${this.props.textColor ||
+            "dark-gray"}`}
           onMouseEnter={this.props.onMouseEnter}
           onMouseLeave={this.props.onMouseLeave}
-          onClick={this.props.onClick}
           key={this.props.id}
         >
           <div className={`dt-row ma3 w-100`}>
-            <p
-              className={`dtc w-9 fl ma3 f6 overflow-hidden lh-copy`}
+            <div
+              className={`dtc w-9 w-100 fl ma2 f6 overflow-hidden lh-copy ${
+                this.state.isEditing ? "ba" : ""
+              } b--${config.captureAccentColor}`}
               style={{
-                maxHeight: this.props.maxHeight
+                maxHeight: this.props.maxHeight,
+                maxWidth: "30em"
               }}
             >
-              {this.props.body}
-            </p>
+              {this.state.isEditing ? (
+                <TextInput
+                  startingValue={this.props.body}
+                  handleChange={(newBody: string) => {
+                    this.setState({
+                      currentBody: newBody
+                    });
+                  }}
+                  handleEnterKey={() => {
+                    this.handleStopEditing();
+                    this.props
+                      .editCapture({
+                        variables: {
+                          id: this.props.id,
+                          body: this.state.currentBody
+                        }
+                      })
+                      .then(() => {
+                        this.props.handleRefetch(this.props.id);
+                      });
+                  }}
+                />
+              ) : (
+                <p>{this.state.currentBody}</p>
+              )}
+            </div>
             <div className={`dtc pv3 w-10 v-top tc`}>
               <div
-                className={`pt1 h2 w-100`}
+                className={`pt1 h2 w-100 pointer`}
                 onClick={(e: React.MouseEvent<HTMLDivElement>) => {
                   e.stopPropagation();
-
+                  this.handleStopEditing();
                   this.props.onShowActionBarChange(this.props.id);
                 }}
               >
@@ -85,27 +147,35 @@ class ResultListItem extends React.Component<Props, State> {
               "white"} bb b--light-gray ${
               this.props.baseColor === "white" ? "dark-gray" : "white"
             }`}
+            onMouseEnter={this.props.onMouseEnter}
+            onMouseLeave={this.props.onMouseLeave}
           >
+            <div
+              className={`dtc v-mid pointer`}
+              onClick={() => {
+                this.handleStopEditing();
+                if (this.props.onClick) {
+                  this.props.onClick();
+                }
+              }}
+            >
+              <Crosshair size={ICON_SIZE} />
+            </div>
             <div className={`dtc v-mid pointer`}>
               <MessageSquare size={ICON_SIZE} />
             </div>
-            <div className={`dtc v-mid pointer`}>
-              <Share2 size={ICON_SIZE} />
-            </div>
-            <div className={`dtc v-mid pointer`}>
+            <div className={`dtc v-mid pointer`} onClick={this.handleIsEditing}>
               <Edit size={ICON_SIZE} />
             </div>
             <div
               className={`dtc v-mid pointer`}
               onClick={() => {
-                if (!this.props.mutate) {
-                  return;
-                }
-
+                this.handleStopEditing();
                 this.props
-                  .mutate({
-                    // strip new lines from the value entered
-                    variables: { id: this.props.id }
+                  .archiveCapture({
+                    variables: {
+                      id: this.props.id
+                    }
                   })
                   .then(() => {
                     this.props.handleRefetch(this.props.id);
@@ -121,4 +191,11 @@ class ResultListItem extends React.Component<Props, State> {
   }
 }
 
-export default graphql<Response, Props>(MUTATION)(ResultListItem);
+export default compose(
+  graphql<ArchiveCaptureMutation, Props>(ArchiveCapture, {
+    name: "archiveCapture"
+  }),
+  graphql<EditCaptureMutation, Props>(EditCapture, {
+    name: "editCapture"
+  })
+)(ResultListItem);

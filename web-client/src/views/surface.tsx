@@ -703,9 +703,7 @@ class Surface extends React.Component<Props, State> {
             return;
           }}
           onMouseOut={e => {
-            this.setState({
-              hoverFocus: null
-            });
+            return;
           }}
           focusColor1={FOCUS_COLOR_1}
           focusColor2={FOCUS_COLOR_2}

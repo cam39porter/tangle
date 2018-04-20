@@ -26,6 +26,13 @@ export const ArchiveCapture = gql`
   }
 `;
 
+// Edit capture
+export const EditCapture = gql`
+  mutation EditCapture($id: String!, $body: String!) {
+    editCapture(id: $id, body: $body)
+  }
+`;
+
 // Search for captures
 export const Search = gql`
   query Search(

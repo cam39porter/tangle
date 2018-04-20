@@ -20,6 +20,10 @@ function toSessionUrn(id: string): string {
   return `${baseStr}:session:${id}`;
 }
 
+function toLinkUrn(id: string): string {
+  return `${baseStr}:link:${id}`;
+}
+
 function getUrnType(urn: string): string {
   return urn.split(":")[2];
 }
@@ -30,5 +34,6 @@ export {
   toEntityUrn,
   toTagUrn,
   toSessionUrn,
+  toLinkUrn,
   getUrnType
 };

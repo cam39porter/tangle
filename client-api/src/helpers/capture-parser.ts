@@ -14,4 +14,13 @@ function stripTags(str: string): string {
   return str.replace(regexp, "");
 }
 
-export { parseTags, stripTags };
+function parseLinks(str: string): string[] {
+  const regex = /(https?:\/\/[^\s]+)/g;
+  const ret = [];
+  let match;
+  while ((match = regex.exec(str))) {
+    ret.push(match[1]);
+  }
+  return ret;
+}
+export { parseTags, stripTags, parseLinks };

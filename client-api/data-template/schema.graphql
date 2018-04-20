@@ -22,12 +22,14 @@ enum NodeType {
   Entity
   Tag
   Session
+  Link
 }
 
 enum EdgeType {
   REFERENCES
   TAGGED_WITH
   INCLUDES
+  LINKS_TO
 }
 
 type SearchResults {

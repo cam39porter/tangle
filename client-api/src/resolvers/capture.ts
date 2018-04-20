@@ -16,9 +16,10 @@ import {
   createEntityNodeWithEdge,
   archiveCaptureNode,
   editCaptureNode,
-  createSession
+  createSession,
+  createLinkNodeWithEdge
 } from "../db/db";
-import { parseTags, stripTags } from "../helpers/tag";
+import { parseTags, stripTags, parseLinks } from "../helpers/capture-parser";
 import * as _ from "lodash";
 import * as moment from "moment";
 import { getAuthenticatedUser } from "../services/request-context";
@@ -91,7 +92,10 @@ function createRelations(captureId: string, body: string): Promise<boolean> {
         parseTags(body).map(tag => createTagNodeWithEdge(tag, captureId))
       );
       return tagCreates.then(tagCreateResults => {
-        return true;
+        const linkCreates = Promise.all(
+          parseLinks(body).map(link => createLinkNodeWithEdge(link, captureId))
+        );
+        return linkCreates.then(linkCreateResults => true);
       });
     });
   });
@@ -104,7 +108,7 @@ function createRelations(captureId: string, body: string): Promise<boolean> {
  */
 function expandCaptures(userUrn: string): string {
   return `OPTIONAL MATCH (roots:Capture)-[r1]-(firstDegree)
-  WHERE firstDegree:Tag OR firstDegree:Entity OR firstDegree:Session
+  WHERE firstDegree:Tag OR firstDegree:Entity OR firstDegree:Session OR firstDegree:Link
   OPTIONAL MATCH (firstDegree)-[r2]-(secondDegree:Capture)<-[:CREATED]-(u:User {id:"${userUrn}"})
   WHERE NOT EXISTS(secondDegree.archived) or secondDegree.archived = false
   WITH roots, collect(roots)+collect(firstDegree)+collect(secondDegree) AS nodes,
@@ -149,6 +153,7 @@ function getAllRandomCapture(): Promise<SearchResults> {
   const userId = getAuthenticatedUser().id;
   return executeQuery(
     `MATCH (roots:Capture)<-[created:CREATED]-(user:User {id:"${userId}"})
+    WHERE NOT EXISTS (roots.archived) OR roots.archived = false
     WITH roots, rand() as number
     ORDER BY number
     LIMIT 1
@@ -294,7 +299,10 @@ function buildGraph(
       new GraphNode(
         node.properties.id,
         node.labels[0],
-        node.properties.body || node.properties.name || node.properties.title,
+        node.properties.body ||
+          node.properties.name ||
+          node.properties.title ||
+          node.properties.url,
         getLevel(rootNodes, node.properties.id)
       )
   );

@@ -8,7 +8,8 @@ import {
   toTagUrn,
   toUserUrn,
   toEntityUrn,
-  toSessionUrn
+  toSessionUrn,
+  toLinkUrn
 } from "../helpers/urn-helpers";
 
 const driver = neo4j.driver(
@@ -141,6 +142,27 @@ function createTagNodeWithEdge(
   });
 }
 
+function createLinkNodeWithEdge(link: string, captureId: string) {
+  return executeQuery(`
+    MATCH (capture:Capture {id: "${captureId}"})
+    MERGE (link:Link {
+      id: "${toLinkUrn(link)}",
+      url: "${link}"
+    })
+    ON CREATE SET link.created = TIMESTAMP()
+    CREATE (link)<-[:LINKS_TO]-(capture)    
+    RETURN link
+  `).then((result: StatementResult) => {
+    const record = result.records[0].get("link");
+    return new GraphNode(
+      record.properties.id,
+      "Link",
+      record.properties.url,
+      null
+    );
+  });
+}
+
 function executeQuery(cypherQuery: string): Promise<StatementResult> {
   return session
     .run(cypherQuery)
@@ -163,5 +185,6 @@ export {
   createSession,
   editCaptureNode,
   createTagNodeWithEdge,
-  createEntityNodeWithEdge
+  createEntityNodeWithEdge,
+  createLinkNodeWithEdge
 };

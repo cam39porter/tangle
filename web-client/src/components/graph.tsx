@@ -3,7 +3,7 @@ import * as React from "react";
 
 // Components
 import ReactECharts from "echarts-for-react";
-
+// import externalLink from "../../images/external-link.svg";
 // Config / Utils
 import { isEqual } from "lodash";
 
@@ -86,6 +86,22 @@ class Graph extends React.Component<Props, object> {
               }
             }
           };
+        // Links
+        case "link":
+          return {
+            id: node.id,
+            name: `${node.name}`,
+            category: node.category,
+            symbolSize: 24,
+            label: {
+              show: true,
+              color: TAG_COLOR,
+              fontSize: 12,
+              emphasis: {
+                show: true
+              }
+            }
+          };
 
         // Captures
         default:
@@ -153,6 +169,14 @@ class Graph extends React.Component<Props, object> {
             color: "#FFFFFF"
           }
         }
+      },
+      {
+        name: "link",
+        itemStyle: {
+          normal: {
+            color: "#FFFFFF"
+          }
+        }
       }
     ];
   }
@@ -193,7 +217,8 @@ class Graph extends React.Component<Props, object> {
             case "node":
               if (
                 params.data.category === "entity" ||
-                params.data.category === "tag"
+                params.data.category === "tag" ||
+                params.data.category === "link"
               ) {
                 return "";
               }

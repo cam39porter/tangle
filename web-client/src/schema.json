@@ -367,6 +367,12 @@
               "description": "",
               "isDeprecated": false,
               "deprecationReason": null
+            },
+            {
+              "name": "Link",
+              "description": "",
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "possibleTypes": null
@@ -464,6 +470,12 @@
             },
             {
               "name": "INCLUDES",
+              "description": "",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "LINKS_TO",
               "description": "",
               "isDeprecated": false,
               "deprecationReason": null

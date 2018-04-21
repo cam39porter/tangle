@@ -376,6 +376,14 @@ class Surface extends React.Component<Props, State> {
             category: "tag"
           };
 
+        // Links
+        case NodeType.Link:
+          return {
+            id: node.id,
+            name: node.text,
+            category: "link"
+          };
+
         // Captures
         default:
           let graphNode = {

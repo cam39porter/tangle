@@ -403,7 +403,7 @@ class Capture extends React.Component<Props, State> {
                 this.handleUnfocusNode();
               }}
               accentColor={config.captureAccentColor}
-              baseColor={"white"}
+              baseColor={"gray"}
               isFocus={
                 (this.isLargeWindow() &&
                   (this.state.hoverFocus &&
@@ -544,7 +544,7 @@ class Capture extends React.Component<Props, State> {
             this.handleUnfocusNode();
           }}
           accentColor={config.captureAccentColor}
-          baseColor={"white"}
+          baseColor={"gray"}
           isFocus={false}
           showActionBar={this.state.resultOptionsIsOpenMap[node.id]}
           onShowActionBarChange={this.handleResultActionBarChange}

@@ -549,7 +549,7 @@ class Surface extends React.Component<Props, State> {
                 this.handleUnfocusNode();
               }}
               accentColor={config.surfaceAccentColor}
-              baseColor={"white"}
+              baseColor={"gray"}
               isFocus={
                 (this.isLargeWindow() &&
                   (this.state.hoverFocus &&
@@ -761,7 +761,7 @@ class Surface extends React.Component<Props, State> {
             this.handleUnfocusNode();
           }}
           accentColor={config.surfaceAccentColor}
-          baseColor={"white"}
+          baseColor={"gray"}
           isFocus={false}
           maxHeight={this.isLargeWindow() ? undefined : "4rem"}
           showActionBar={this.state.resultOptionsIsOpenMap[node.id]}

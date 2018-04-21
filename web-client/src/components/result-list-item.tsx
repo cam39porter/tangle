@@ -96,8 +96,8 @@ class ResultListItem extends React.Component<Props, State> {
   render() {
     return (
       <div
-        className={`bg-${this.props.baseColor ||
-          "white"} bb b--light-gray ${this.props.textColor || "dark-gray"}`}
+        className={`bg-white bb b--light-gray dark-gray ${this.props.isFocus &&
+          `ba bw1 b--${this.props.accentColor}`}`}
       >
         <div
           className={`w-100 pa2 dt`}
@@ -133,7 +133,7 @@ class ResultListItem extends React.Component<Props, State> {
             </div>
             <div className={`dtc pv3 w-10 v-top tc`}>
               <div
-                className={`pt1 h2 w-100 pointer`}
+                className={`pt1 h2 w-100 pointer ${this.props.baseColor}`}
                 onClick={(e: React.MouseEvent<HTMLDivElement>) => {
                   e.stopPropagation();
                   this.handleStopEditing();

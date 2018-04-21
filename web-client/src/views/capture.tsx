@@ -567,11 +567,11 @@ class Capture extends React.Component<Props, State> {
             renderBody={this.renderResults}
             renderFooter={this.renderHideList}
           />
-        ) : this.state.hoverFocus ? (
+        ) : (
           <div className={`fixed w-100 bottom-0 z-3`}>
             {this.renderDetailBar()}
           </div>
-        ) : null}
+        )}
 
         <div
           className={`

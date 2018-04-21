@@ -746,7 +746,6 @@ class Surface extends React.Component<Props, State> {
             this.state.hoverFocus !== null ||
             (!this.state.isSearch || !this.state.isDetail)) &&
             "shadow-1-l measure-l fixed-l bottom-2-l left-2-l"}`}
-          onClick={this.handleIsShowingList}
         >
           <ResultListItem
             key={node.id}

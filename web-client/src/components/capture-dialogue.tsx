@@ -95,7 +95,7 @@ class CaptureDialogue extends React.Component<Props, State> {
       <div>
         {/* Capture Box */}
         <div
-          className={`w-100 measure-narrow-l h-100 h5-l center fixed bottom-2-l right-2-l pa3 pa0-l shadow-1 br1 bg-white z-max overflow-hidden`}
+          className={`w-100 measure-narrow-l h-100 h5-l center fixed bottom-2-l right-2-l pa3 pa0-l shadow-1 br4 bg-white z-max overflow-hidden`}
         >
           {/* Mimimize Button */}
           {this.renderMinimizeButton()}

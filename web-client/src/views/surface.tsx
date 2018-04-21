@@ -437,7 +437,7 @@ class Surface extends React.Component<Props, State> {
         }}
       >
         <div
-          className={`relative w-100 ph1 dtc v-mid tc bg-white br1 bb bw1 b--${
+          className={`relative w-100 ph1 dtc v-mid tc bg-white br4 bb bw1 b--${
             config.surfaceAccentColor
           } shadow-1`}
         >
@@ -743,8 +743,8 @@ class Surface extends React.Component<Props, State> {
 
     return (
       <div
-        className={`dt w-100 bg-white pointer bt b--light-gray tl ${(!this.state
-          .isShowingList ||
+        className={`dt w-100 bg-white pointer br4 bt b--light-gray tl ${(!this
+          .state.isShowingList ||
           this.state.hoverFocus !== null ||
           (!this.state.isSearch || !this.state.isDetail)) &&
           "shadow-1-l measure-l fixed-l bottom-2-l left-2-l"}`}

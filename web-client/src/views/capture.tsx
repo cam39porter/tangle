@@ -326,7 +326,7 @@ class Capture extends React.Component<Props, State> {
               : dailyCaptureCount
                 ? `${config.captureAccentColor} white`
                 : `light-gray gray`
-          } br1 shadow-1`}
+          } br4 shadow-1`}
         >
           {!dailyCaptureCount
             ? "Make your first capture today!"
@@ -527,8 +527,8 @@ class Capture extends React.Component<Props, State> {
 
     return (
       <div
-        className={`dt w-100 bg-white pointer bt b--light-gray tl ${(!this.state
-          .isShowingList ||
+        className={`dt w-100 bg-white pointer br4 bt b--light-gray tl ${(!this
+          .state.isShowingList ||
           this.state.hoverFocus !== null) &&
           "shadow-1-l measure-l fixed-l bottom-2-l left-2-l"}`}
       >

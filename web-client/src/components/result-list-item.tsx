@@ -96,8 +96,8 @@ class ResultListItem extends React.Component<Props, State> {
   render() {
     return (
       <div
-        className={`bg-white bb b--light-gray dark-gray ${this.props.isFocus &&
-          `ba bw1 b--${this.props.accentColor}`}`}
+        className={`bg-white br4 bb b--light-gray dark-gray ${this.props
+          .isFocus && `ba bw1 b--${this.props.accentColor}`}`}
       >
         <div
           className={`w-100 pa2 dt`}

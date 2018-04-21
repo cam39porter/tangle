@@ -11,7 +11,7 @@ class Sidebar extends React.Component<Props, object> {
   render() {
     return (
       <div
-        className={`z-max w-100 w-third-l h-100 fixed top-0 left-0 bg-light-gray flex flex-column shadow-3`}
+        className={`z-max w-100 w-third-l h-100 fixed top-0 left-0 bg-light-gray flex flex-column shadow-3 br4`}
       >
         {/* Header */}
         <div>{this.props.renderHeader()}</div>

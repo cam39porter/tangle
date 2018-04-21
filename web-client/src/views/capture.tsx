@@ -422,11 +422,11 @@ class Capture extends React.Component<Props, State> {
   renderHideList() {
     return (
       <div
-        className={`dt w-100 bg-white pointer`}
+        className={`dt br4 br--bottom w-100 bg-white pointer`}
         onClick={this.handleIsShowingList}
       >
         <div className={`dtc v-mid w-100 h2 pa3 ttu f6 gray`}>
-          {"hide list"}
+          {this.state.isShowingList ? "hide list" : "show list"}
         </div>
       </div>
     );
@@ -527,8 +527,8 @@ class Capture extends React.Component<Props, State> {
 
     return (
       <div
-        className={`dt w-100 bg-white pointer br4 bt b--light-gray tl ${(!this
-          .state.isShowingList ||
+        className={`dt w-100 bg-white br4 bt b--light-gray tl ${(!this.state
+          .isShowingList ||
           this.state.hoverFocus !== null) &&
           "shadow-1-l measure-l fixed-l bottom-2-l left-2-l"}`}
       >
@@ -550,6 +550,7 @@ class Capture extends React.Component<Props, State> {
           onShowActionBarChange={this.handleResultActionBarChange}
           handleRefetch={this.handleResultListItemRefetch}
         />
+        {this.renderHideList()}
       </div>
     );
   }

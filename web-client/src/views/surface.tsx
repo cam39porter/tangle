@@ -146,11 +146,6 @@ class Surface extends React.Component<Props, State> {
   componentWillReceiveProps(nextProps: Props) {
     let nextState = {};
 
-    // update window size
-    if (this.props.windowWidth !== 0) {
-      nextState = assign(nextState, { isShowingList: this.isLargeWindow() });
-    }
-
     // update current query
     const query = getQuery(this.props.location.search);
     const nextQuery = getQuery(nextProps.location.search);
@@ -427,49 +422,51 @@ class Surface extends React.Component<Props, State> {
 
   renderSearchBar() {
     return (
-      <div
-        className={`fixed top-1 ph2 w-100 top-2-l center w-third-l dt pv0-l ph4-l z-5`}
-        style={{ cursor: "text", minHeight: "3rem", maxHeight: "3rem" }}
-        onClick={() => {
-          if (this.searchInput) {
-            this.searchInput.focus();
-          }
-        }}
-      >
+      <div>
         <div
-          className={`relative w-100 ph1 dtc v-mid tc bg-white br4 bb bw1 b--${
-            config.surfaceAccentColor
-          } shadow-1`}
+          className={`fixed top-1 ph2 w-100 top-2-l center w-third-l dt pv0-l ph4-l z-5`}
+          style={{ cursor: "text", minHeight: "3rem", maxHeight: "3rem" }}
+          onClick={() => {
+            if (this.searchInput) {
+              this.searchInput.focus();
+            }
+          }}
         >
-          <input
-            className={`pv2 ph3 f6 fl ${
-              this.state.isSearch || this.state.isDetail ? "w-80" : "w-90"
-            }`}
-            ref={input => {
-              this.searchInput = input;
-            }}
-            value={this.state.query || ""}
-            onChange={this.handleChange}
-            onKeyPress={this.handleKeyPress}
-            placeholder={"What are you looking for..."}
-            autoFocus={false}
-            onFocus={e => {
-              // focus on the end value in the input
-              var tempValue = e.target.value;
-              e.target.value = "";
-              e.target.value = tempValue;
-            }}
-          />
-          {this.state.isSearch || this.state.isDetail ? (
-            <div
-              className={`absolute right-0 h-100 w3 gray pt1 tc pointer`}
-              onClick={() => {
-                this.handleSurface();
+          <div
+            className={`relative w-100 ph1 dtc v-mid tc bg-white br4 bb bw1 b--${
+              config.surfaceAccentColor
+            } shadow-1`}
+          >
+            <input
+              className={`pv2 ph3 f6 fl ${
+                this.state.isSearch || this.state.isDetail ? "w-80" : "w-90"
+              }`}
+              ref={input => {
+                this.searchInput = input;
               }}
-            >
-              <X size={20} />
-            </div>
-          ) : null}
+              value={this.state.query || ""}
+              onChange={this.handleChange}
+              onKeyPress={this.handleKeyPress}
+              placeholder={"What are you looking for..."}
+              autoFocus={false}
+              onFocus={e => {
+                // focus on the end value in the input
+                var tempValue = e.target.value;
+                e.target.value = "";
+                e.target.value = tempValue;
+              }}
+            />
+            {this.state.isSearch || this.state.isDetail ? (
+              <div
+                className={`absolute right-0 h-100 w3 gray pt1 tc pointer`}
+                onClick={() => {
+                  this.handleSurface();
+                }}
+              >
+                <X size={20} />
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     );
@@ -629,11 +626,11 @@ class Surface extends React.Component<Props, State> {
   renderHideList() {
     return (
       <div
-        className={`dt w-100 bg-white pointer`}
+        className={`dt br4 br--bottom w-100 bg-white pointer`}
         onClick={this.handleIsShowingList}
       >
         <div className={`dtc v-mid w-100 h2 pa3 ttu f6 gray`}>
-          {this.state.isDetail ? "hide detail" : "hide list"}
+          {this.state.isShowingList ? "hide list" : "show list"}
         </div>
       </div>
     );
@@ -742,32 +739,36 @@ class Surface extends React.Component<Props, State> {
       this.state.hoverFocus !== null ? this.state.hoverFocus : nodes[0];
 
     return (
-      <div
-        className={`dt w-100 bg-white pointer br4 bt b--light-gray tl ${(!this
-          .state.isShowingList ||
-          this.state.hoverFocus !== null ||
-          (!this.state.isSearch || !this.state.isDetail)) &&
-          "shadow-1-l measure-l fixed-l bottom-2-l left-2-l"}`}
-      >
-        <ResultListItem
-          key={node.id}
-          id={node.id}
-          body={node.text}
+      <div>
+        <div
+          className={`dt w-100 bg-white br4 bt b--light-gray tl ${(!this.state
+            .isShowingList ||
+            this.state.hoverFocus !== null ||
+            (!this.state.isSearch || !this.state.isDetail)) &&
+            "shadow-1-l measure-l fixed-l bottom-2-l left-2-l"}`}
           onClick={this.handleIsShowingList}
-          onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
-            this.handleFocusNode(node.id);
-          }}
-          onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
-            this.handleUnfocusNode();
-          }}
-          accentColor={config.surfaceAccentColor}
-          baseColor={"gray"}
-          isFocus={false}
-          maxHeight={this.isLargeWindow() ? undefined : "4rem"}
-          showActionBar={this.state.resultOptionsIsOpenMap[node.id]}
-          onShowActionBarChange={this.handleResultActionBarChange}
-          handleRefetch={this.handleResultListItemRefetch}
-        />
+        >
+          <ResultListItem
+            key={node.id}
+            id={node.id}
+            body={node.text}
+            onClick={this.handleIsShowingList}
+            onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+              this.handleFocusNode(node.id);
+            }}
+            onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+              this.handleUnfocusNode();
+            }}
+            accentColor={config.surfaceAccentColor}
+            baseColor={"gray"}
+            isFocus={false}
+            maxHeight={this.isLargeWindow() ? undefined : "4rem"}
+            showActionBar={this.state.resultOptionsIsOpenMap[node.id]}
+            onShowActionBarChange={this.handleResultActionBarChange}
+            handleRefetch={this.handleResultListItemRefetch}
+          />
+          {this.renderHideList()}
+        </div>
       </div>
     );
   }
@@ -778,29 +779,21 @@ class Surface extends React.Component<Props, State> {
         {this.renderSearchBar()}
         {this.renderGraph()}
 
-        {this.state.isSearch || this.state.isDetail ? (
-          this.state.isShowingList ? (
-            <Sidebar
-              renderHeader={this.renderSearchBar}
-              renderBody={
-                !this.state.isDetail
-                  ? this.renderResults.bind(this)
-                  : this.renderDetail.bind(this)
-              }
-              renderFooter={this.renderHideList}
-            />
-          ) : (
-            <div className={`fixed w-100 bottom-0 z-3`}>
-              {this.renderDetailBar()}
-            </div>
-          )
-        ) : this.state.hoverFocus ||
-        (this.isLargeWindow() &&
-          (!this.state.isSearch || !this.state.isDetail)) ? (
+        {this.state.isShowingList ? (
+          <Sidebar
+            renderHeader={this.renderSearchBar}
+            renderBody={
+              !this.state.isDetail
+                ? this.renderResults.bind(this)
+                : this.renderDetail.bind(this)
+            }
+            renderFooter={this.renderHideList}
+          />
+        ) : (
           <div className={`fixed w-100 bottom-0 z-3`}>
             {this.renderDetailBar()}
           </div>
-        ) : null}
+        )}
       </div>
     );
   }

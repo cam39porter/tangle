@@ -11,6 +11,7 @@ interface Props extends RouteComponentProps<Object> {
   title: string;
   isActiveBackgroundColor: string;
   isInactiveColor: string;
+  borderCurve: "Left" | "Right" | "None";
 }
 
 interface State {
@@ -40,6 +41,21 @@ class NavigationBarTab extends React.Component<Props, State> {
   }
 
   render() {
+    let borderRadius = "";
+    switch (this.props.borderCurve) {
+      case "Right":
+        borderRadius = "br--right";
+        break;
+      case "Left":
+        borderRadius = "br--left";
+        break;
+      case "None":
+        borderRadius = "br--right br--left";
+        break;
+      default:
+        break;
+    }
+
     return (
       <div className={`dtc w-third`}>
         <Link
@@ -49,7 +65,7 @@ class NavigationBarTab extends React.Component<Props, State> {
           }}
         >
           <div
-            className={`dt tc pointer w-100 h2 pa3 bw1 b--${
+            className={`dt tc pointer w-100 h2 pa3 bw1 br4 ${borderRadius} b--${
               this.props.isActiveBackgroundColor
             } ttl ${this.isMatch() ? "bb" : ""}`}
           >

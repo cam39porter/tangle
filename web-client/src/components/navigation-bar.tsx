@@ -21,16 +21,19 @@ function NavigationBar(props: Props) {
         title="tangle"
         isInactiveColor={config.tangleAccentColor}
         isActiveBackgroundColor={config.tangleAccentColor}
+        borderCurve={"Left"}
       />
       <NavigationBarTab
         title="capture"
         isInactiveColor={config.captureAccentColor}
         isActiveBackgroundColor={config.captureAccentColor}
+        borderCurve={"None"}
       />
       <NavigationBarTab
         title="surface"
         isInactiveColor={config.surfaceAccentColor}
         isActiveBackgroundColor={config.surfaceAccentColor}
+        borderCurve={"Right"}
       />
     </div>
   );

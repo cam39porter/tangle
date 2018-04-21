@@ -23,6 +23,7 @@ import TextInput from "../components/text-input";
 
 // Config / Utils
 import config from "../cfg";
+import { isEqual } from "lodash";
 
 const ICON_SIZE = 20;
 
@@ -73,6 +74,19 @@ class ResultListItem extends React.Component<Props, State> {
 
   handleStopEditing() {
     if (this.state.isEditing) {
+      if (!isEqual(this.state.currentBody, this.props.body)) {
+        this.props
+          .editCapture({
+            variables: {
+              id: this.props.id,
+              body: this.state.currentBody
+            }
+          })
+          .then(() => {
+            this.props.handleRefetch(this.props.id);
+          });
+      }
+
       this.setState({
         isEditing: false
       });
@@ -81,12 +95,12 @@ class ResultListItem extends React.Component<Props, State> {
 
   render() {
     return (
-      <div>
+      <div
+        className={`bg-${this.props.baseColor ||
+          "white"} bb b--light-gray ${this.props.textColor || "dark-gray"}`}
+      >
         <div
-          className={`bg-${this.props.baseColor || "white"} w-100 pa2 ${
-            this.props.showActionBar ? "" : "bb b--light-gray"
-          } dt bg-animate-ns hover-bg-near-white-ns ${this.props.textColor ||
-            "dark-gray"}`}
+          className={`w-100 pa2 dt`}
           onMouseEnter={this.props.onMouseEnter}
           onMouseLeave={this.props.onMouseLeave}
           key={this.props.id}
@@ -111,16 +125,6 @@ class ResultListItem extends React.Component<Props, State> {
                   }}
                   handleEnterKey={() => {
                     this.handleStopEditing();
-                    this.props
-                      .editCapture({
-                        variables: {
-                          id: this.props.id,
-                          body: this.state.currentBody
-                        }
-                      })
-                      .then(() => {
-                        this.props.handleRefetch(this.props.id);
-                      });
                   }}
                 />
               ) : (
@@ -143,10 +147,7 @@ class ResultListItem extends React.Component<Props, State> {
         </div>
         {this.props.showActionBar ? (
           <div
-            className={`dt w-100 tc pa3 bg-${this.props.baseColor ||
-              "white"} bb b--light-gray ${
-              this.props.baseColor === "white" ? "dark-gray" : "white"
-            }`}
+            className={`dt w-100 tc pa3`}
             onMouseEnter={this.props.onMouseEnter}
             onMouseLeave={this.props.onMouseLeave}
           >
@@ -164,7 +165,14 @@ class ResultListItem extends React.Component<Props, State> {
             <div className={`dtc v-mid pointer`}>
               <MessageSquare size={ICON_SIZE} />
             </div>
-            <div className={`dtc v-mid pointer`} onClick={this.handleIsEditing}>
+            <div
+              className={`dtc v-mid pointer`}
+              onClick={
+                this.state.isEditing
+                  ? this.handleStopEditing
+                  : this.handleIsEditing
+              }
+            >
               <Edit size={ICON_SIZE} />
             </div>
             <div

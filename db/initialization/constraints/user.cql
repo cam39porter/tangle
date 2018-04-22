@@ -1,1 +1,4 @@
 CREATE CONSTRAINT ON (u:User) ASSERT exists(u.id)
+CREATE CONSTRAINT ON (u:User) ASSERT u.id IS UNIQUE
+CREATE CONSTRAINT ON (u:User) ASSERT exists(u.email)
+CREATE CONSTRAINT ON (u:User) ASSERT exists(u.name)

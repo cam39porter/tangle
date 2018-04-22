@@ -13,7 +13,7 @@ import {
 } from "../helpers/urn-helpers";
 
 const driver = neo4j.driver(
-  "bolt://35.197.102.210:7687",
+  "bolt://35.197.21.220:7687",
   neo4j.auth.basic("neo4j", "Z868sybiq7cGzFeA")
 );
 const session = driver.session();

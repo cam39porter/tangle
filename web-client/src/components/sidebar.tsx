@@ -1,13 +1,31 @@
 // React
 import * as React from "react";
 
+// Components
+import ScrollContainer from "../components/scroll-container";
+
 interface Props {
   renderHeader: () => JSX.Element | null;
   renderBody: () => JSX.Element | null;
   renderFooter: () => JSX.Element | null;
+  scrollToId?: string;
 }
 
 class Sidebar extends React.Component<Props, object> {
+  _scrollContainer: ScrollContainer | null = null;
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.scrollToId) {
+      this.scrollTo(nextProps.scrollToId);
+    }
+  }
+
+  scrollTo = (id: string) => {
+    if (this._scrollContainer) {
+      this._scrollContainer.scrollTo(id);
+    }
+  };
+
   render() {
     return (
       <div
@@ -19,11 +37,15 @@ class Sidebar extends React.Component<Props, object> {
         <div className={`flex-column`} style={{ minHeight: "6rem" }} />
 
         {/* Body */}
-        <div
-          className={`flex-column flex-grow w-100 bg-light-gray overflow-auto`}
+        <ScrollContainer
+          ref={scrollContainer => (this._scrollContainer = scrollContainer)}
         >
-          {this.props.renderBody()}
-        </div>
+          <div
+            className={`flex-column flex-grow w-100 bg-light-gray overflow-auto`}
+          >
+            {this.props.renderBody()}
+          </div>
+        </ScrollContainer>
 
         {/* Footer */}
         <div className={`flex-column flex-shrink bt b--light-gray`}>

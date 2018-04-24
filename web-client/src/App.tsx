@@ -55,7 +55,7 @@ class App extends React.Component<Props, State> {
         });
       })
       .catch(err => {
-        console.error(err);
+        alert(err);
       });
   }
   componentWillUnmount() {

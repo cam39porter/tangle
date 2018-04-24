@@ -70,21 +70,6 @@ class Capture extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.handleIsShowingList = this.handleIsShowingList.bind(this);
-    this.handleIsCapturing = this.handleIsCapturing.bind(this);
-    this.handleSurfaceDetail = this.handleSurfaceDetail.bind(this);
-    this.handleFocusInput = this.handleFocusInput.bind(this);
-
-    this.renderCaptureCount = this.renderCaptureCount.bind(this);
-    this.renderResults = this.renderResults.bind(this);
-    this.renderHideList = this.renderHideList.bind(this);
-    this.handleResultActionBarChange = this.handleResultActionBarChange.bind(
-      this
-    );
-    this.handleResultListItemRefetch = this.handleResultListItemRefetch.bind(
-      this
-    );
-
     this.state = {
       isShowingList: false,
       isCapturing: true,
@@ -124,11 +109,11 @@ class Capture extends React.Component<Props, State> {
     this.setState(nextState);
   }
 
-  handleResultListItemRefetch(id: string) {
+  handleResultListItemRefetch = (id: string) => {
     this.props.data && this.props.data.refetch();
-  }
+  };
 
-  handleResultActionBarChange(id: string) {
+  handleResultActionBarChange = (id: string) => {
     let nextResultOptionsIsOpenMap = this.state.resultOptionsIsOpenMap;
     const isOpen = nextResultOptionsIsOpenMap[id] ? true : false;
 
@@ -151,26 +136,26 @@ class Capture extends React.Component<Props, State> {
       resultOptionsIsOpenMap: nextResultOptionsIsOpenMap
     });
     return;
-  }
+  };
 
-  handleIsShowingList() {
+  handleIsShowingList = () => {
     this.setState({
       isShowingList: !this.state.isShowingList
     });
-  }
+  };
 
-  handleIsCapturing() {
+  handleIsCapturing = () => {
     this.setState({
       isCapturing: !this.state.isCapturing
     });
-  }
+  };
 
-  handleSurfaceDetail(id: string) {
+  handleSurfaceDetail = (id: string) => {
     this.props.history.push(`/surface?id=${encodeURIComponent(id)}`);
     this.handleUnfocusNode();
-  }
+  };
 
-  handleFocusNode(id: string) {
+  handleFocusNode = (id: string) => {
     if (this.eChart) {
       const eChartInstance = this.eChart.getEchartsInstance();
 
@@ -179,9 +164,9 @@ class Capture extends React.Component<Props, State> {
         dataIndex: this.state.nodeIdToIndex[id]
       });
     }
-  }
+  };
 
-  handleUnfocusNode() {
+  handleUnfocusNode = () => {
     if (this.eChart) {
       const eChartInstance = this.eChart.getEchartsInstance();
 
@@ -189,29 +174,29 @@ class Capture extends React.Component<Props, State> {
         type: "unfocusNodeAdjacency"
       });
     }
-  }
+  };
 
-  handleFocusInput(shouldFocus: boolean) {
+  handleFocusInput = (shouldFocus: boolean) => {
     const input = ReactDOM.findDOMNode(this).querySelector("input");
 
     if (input) {
       shouldFocus ? input.focus() : input.blur();
     }
-  }
+  };
 
-  isLargeWindow() {
+  isLargeWindow = () => {
     return this.props.windowWidth >= 1024;
-  }
+  };
 
-  isLoadedWithoutError() {
+  isLoadedWithoutError = () => {
     return (
       this.props.data &&
       this.props.data.loading === false &&
       this.props.data.error === undefined
     );
-  }
+  };
 
-  getGradientNumber() {
+  getGradientNumber = () => {
     if (!(this.props.data && this.props.data.getAll)) {
       return 2;
     }
@@ -227,9 +212,9 @@ class Capture extends React.Component<Props, State> {
     );
 
     return resultCount < 3 ? 2 : resultCount;
-  }
+  };
 
-  getNodeData(): Array<GraphNode> {
+  getNodeData = (): Array<GraphNode> => {
     if (!this.props.data) {
       return [];
     }
@@ -275,9 +260,9 @@ class Capture extends React.Component<Props, State> {
           };
       }
     });
-  }
+  };
 
-  getEdgeData(): Array<{ source: string; destination: string }> {
+  getEdgeData = (): Array<{ source: string; destination: string }> => {
     if (!this.props.data) {
       return [];
     }
@@ -294,9 +279,9 @@ class Capture extends React.Component<Props, State> {
         destination: edge.destination
       };
     });
-  }
+  };
 
-  renderCaptureCount() {
+  renderCaptureCount = () => {
     let dailyCaptureCount = 0;
 
     if (this.props.data && this.props.data.getAll) {
@@ -334,9 +319,9 @@ class Capture extends React.Component<Props, State> {
         </div>
       </div>
     );
-  }
+  };
 
-  renderResults(nodes?: Array<Node>) {
+  renderResults = (nodes?: Array<Node>) => {
     if (!this.isLoadedWithoutError) {
       return null;
     }
@@ -417,9 +402,9 @@ class Capture extends React.Component<Props, State> {
         })}
       </div>
     );
-  }
+  };
 
-  renderHideList() {
+  renderHideList = () => {
     return (
       <div
         className={`dt br4 br--bottom w-100 bg-white pointer`}
@@ -430,9 +415,9 @@ class Capture extends React.Component<Props, State> {
         </div>
       </div>
     );
-  }
+  };
 
-  renderGraph() {
+  renderGraph = () => {
     if (!this.isLoadedWithoutError()) {
       return null;
     }
@@ -501,9 +486,9 @@ class Capture extends React.Component<Props, State> {
         />
       </div>
     );
-  }
+  };
 
-  renderDetailBar() {
+  renderDetailBar = () => {
     let nodes: Array<Node> = [];
 
     if (!this.props.data) {
@@ -553,7 +538,7 @@ class Capture extends React.Component<Props, State> {
         {this.renderHideList()}
       </div>
     );
-  }
+  };
 
   render() {
     return (

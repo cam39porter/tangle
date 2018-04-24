@@ -99,25 +99,6 @@ class Surface extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.handleIsShowingList = this.handleIsShowingList.bind(this);
-    this.handleIsCapturing = this.handleIsCapturing.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.handleSurfaceDetail = this.handleSurfaceDetail.bind(this);
-    this.handleFocusInput = this.handleFocusInput.bind(this);
-    this.handleResultActionBarChange = this.handleResultActionBarChange.bind(
-      this
-    );
-    this.handleResultListItemRefetch = this.handleResultListItemRefetch.bind(
-      this
-    );
-
-    this.renderSearchBar = this.renderSearchBar.bind(this);
-    this.renderResults = this.renderResults.bind(this);
-    this.renderDetail = this.renderDetail.bind(this);
-    this.renderHideList = this.renderHideList.bind(this);
-    this.renderGraph = this.renderGraph.bind(this);
-
     const query = getQuery(this.props.location.search);
     const isSearch = query.length !== 0;
 
@@ -194,16 +175,16 @@ class Surface extends React.Component<Props, State> {
     this.setState(nextState);
   }
 
-  handleResultListItemRefetch(id: string) {
+  handleResultListItemRefetch = (id: string) => {
     if (this.state.id === id) {
       this.handleSurface();
       return;
     }
 
     this.props.data && this.props.data.refetch();
-  }
+  };
 
-  handleResultActionBarChange(id: string) {
+  handleResultActionBarChange = (id: string) => {
     let nextResultOptionsIsOpenMap = this.state.resultOptionsIsOpenMap;
     const isOpen = nextResultOptionsIsOpenMap[id] ? true : false;
 
@@ -226,35 +207,35 @@ class Surface extends React.Component<Props, State> {
       resultOptionsIsOpenMap: nextResultOptionsIsOpenMap
     });
     return;
-  }
+  };
 
-  handleIsShowingList() {
+  handleIsShowingList = () => {
     this.setState({
       isShowingList: !this.state.isShowingList
     });
-  }
+  };
 
-  handleIsCapturing() {
+  handleIsCapturing = () => {
     this.setState({
       isCapturing: !this.state.isCapturing
     });
-  }
+  };
 
-  handleChange(e: React.FormEvent<HTMLInputElement>): void {
+  handleChange = (e: React.FormEvent<HTMLInputElement>): void => {
     const query = e.currentTarget.value;
 
     this.setState({
       query
     });
-  }
+  };
 
-  handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
+  handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       this.handleSurface(this.state.query);
     }
-  }
+  };
 
-  handleSurface(query?: string) {
+  handleSurface = (query?: string) => {
     this.setState(
       {
         isShowingList: false,
@@ -270,9 +251,9 @@ class Surface extends React.Component<Props, State> {
     this.props.history.push(
       `/surface?query=${encodeURIComponent(query || "")}`
     );
-  }
+  };
 
-  handleSurfaceDetail(id: string) {
+  handleSurfaceDetail = (id: string) => {
     this.setState({
       hoverFocus: null
     });
@@ -283,9 +264,9 @@ class Surface extends React.Component<Props, State> {
       )}&id=${encodeURIComponent(id)}`
     );
     this.handleUnfocusNode();
-  }
+  };
 
-  handleFocusNode(id: string) {
+  handleFocusNode = (id: string) => {
     if (this.eChart) {
       const eChartInstance = this.eChart.getEchartsInstance();
 
@@ -294,9 +275,9 @@ class Surface extends React.Component<Props, State> {
         dataIndex: this.state.nodeIdToIndex[id]
       });
     }
-  }
+  };
 
-  handleUnfocusNode() {
+  handleUnfocusNode = () => {
     if (this.eChart) {
       const eChartInstance = this.eChart.getEchartsInstance();
 
@@ -304,29 +285,29 @@ class Surface extends React.Component<Props, State> {
         type: "unfocusNodeAdjacency"
       });
     }
-  }
+  };
 
-  handleFocusInput(shouldFocus: boolean) {
+  handleFocusInput = (shouldFocus: boolean) => {
     const input = ReactDOM.findDOMNode(this).querySelector("input");
 
     if (input) {
       shouldFocus ? input.focus() : input.blur();
     }
-  }
+  };
 
-  isLargeWindow() {
+  isLargeWindow = () => {
     return this.props.windowWidth >= 1024;
-  }
+  };
 
-  isLoadedWithoutError() {
+  isLoadedWithoutError = () => {
     return (
       this.props.data &&
       this.props.data.loading === false &&
       this.props.data.error === undefined
     );
-  }
+  };
 
-  getGradientNumber() {
+  getGradientNumber = () => {
     if (!(this.props.data && this.props.data.search)) {
       return 2;
     }
@@ -342,9 +323,9 @@ class Surface extends React.Component<Props, State> {
     );
 
     return resultCount < 3 ? 2 : resultCount;
-  }
+  };
 
-  getNodeData(): Array<GraphNode> {
+  getNodeData = (): Array<GraphNode> => {
     if (!this.props.data) {
       return [];
     }
@@ -404,9 +385,9 @@ class Surface extends React.Component<Props, State> {
           return graphNode;
       }
     });
-  }
+  };
 
-  getEdgeData(): Array<{ source: string; destination: string }> {
+  getEdgeData = (): Array<{ source: string; destination: string }> => {
     if (!this.props.data) {
       return [];
     }
@@ -427,9 +408,9 @@ class Surface extends React.Component<Props, State> {
         destination: edge.destination
       };
     });
-  }
+  };
 
-  renderSearchBar() {
+  renderSearchBar = () => {
     return (
       <div>
         <div
@@ -479,9 +460,9 @@ class Surface extends React.Component<Props, State> {
         </div>
       </div>
     );
-  }
+  };
 
-  renderResults(nodes?: Array<Node>) {
+  renderResults = (nodes?: Array<Node>) => {
     if (!this.isLoadedWithoutError) {
       return null;
     }
@@ -571,9 +552,9 @@ class Surface extends React.Component<Props, State> {
         })}
       </div>
     );
-  }
+  };
 
-  renderDetail() {
+  renderDetail = () => {
     if (!(this.props.data && this.props.data.get)) {
       return null;
     }
@@ -632,9 +613,9 @@ class Surface extends React.Component<Props, State> {
         {this.renderResults(captureNodes)}
       </div>
     );
-  }
+  };
 
-  renderHideList() {
+  renderHideList = () => {
     return (
       <div
         className={`dt br4 br--bottom w-100 bg-white pointer`}
@@ -645,9 +626,9 @@ class Surface extends React.Component<Props, State> {
         </div>
       </div>
     );
-  }
+  };
 
-  renderGraph() {
+  renderGraph = () => {
     if (!this.isLoadedWithoutError()) {
       return null;
     }
@@ -721,9 +702,9 @@ class Surface extends React.Component<Props, State> {
         />
       </div>
     );
-  }
+  };
 
-  renderDetailBar() {
+  renderDetailBar = () => {
     let nodes: Array<Node> = [];
 
     if (!this.props.data) {
@@ -781,7 +762,7 @@ class Surface extends React.Component<Props, State> {
         </div>
       </div>
     );
-  }
+  };
 
   render() {
     return (

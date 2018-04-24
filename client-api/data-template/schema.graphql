@@ -59,6 +59,7 @@ enum GetAllUseCase {
 }
 
 type Mutation {
+  login: Boolean
   createCapture(body: String!, sessionId: String): Graph!
   createSession(title: String!): Node!
   archiveCapture(id: String!): Boolean

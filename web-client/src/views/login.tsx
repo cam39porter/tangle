@@ -2,7 +2,7 @@
 import * as React from "react";
 
 // GraphQL
-import { LoginMutation, LoginMutationVariables } from "../__generated__/types";
+import { LoginMutation } from "../__generated__/types";
 import { Login as LoginGql } from "../queries";
 import { graphql, MutationFunc } from "react-apollo";
 
@@ -10,14 +10,14 @@ import { graphql, MutationFunc } from "react-apollo";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 
 // Route
-import { RouteProps, Redirect } from "react-router";
+import { RouteComponentProps } from "react-router";
 
 // Config / Utils
 import { firebaseAuth } from "../utils";
 import * as firebase from "firebase";
 
-interface Props extends RouteProps {
-  login: MutationFunc<LoginMutation, LoginMutationVariables>;
+interface Props extends RouteComponentProps<{}> {
+  login: MutationFunc<LoginMutation, {}>;
 }
 
 interface State {
@@ -33,19 +33,20 @@ class Login extends React.Component<Props, State> {
     };
   }
 
-  render() {
-    if (this.state.loginSuccess) {
-      return (
-        <Redirect
-          to={`${
-            this.props.location
-              ? this.props.location.pathname + this.props.location.search
-              : "/"
-          }`}
-        />
-      );
-    }
+  handleLoginSuccess = (user: firebase.User) => {
+    user.getIdToken(true).then(idToken => {
+      localStorage.setItem("idToken", idToken);
+      this.props.login({}).catch(err => {
+        alert(err);
+        localStorage.removeItem("idToken");
+        if (this.props.history) {
+          this.props.history.push("/login");
+        }
+      });
+    });
+  };
 
+  render() {
     return (
       <div className={`dt vh-100 w-100`}>
         <div className={`dtc v-mid`}>
@@ -62,27 +63,14 @@ class Login extends React.Component<Props, State> {
                     ? this.props.location.pathname + this.props.location.search
                     : "/"
                 }`,
-                signInSuccessWithAuthResult: (authResult, redirectUrl) => {
-                  let user: firebase.User = authResult.user;
+                callbacks: {
+                  signInSuccessWithAuthResult: (authResult, redirectUrl) => {
+                    let user: firebase.User = authResult.user;
 
-                  user.getIdToken(true).then(idToken => {
-                    user.getIdToken(true).then(idToken => {
-                      localStorage.setItem("idToken", idToken);
-                    });
-                    this.props
-                      .login()
-                      .then(() => {
-                        this.setState({
-                          loginSuccess: true
-                        });
-                      })
-                      .catch(err => {
-                        alert(err);
-                      });
-                  });
+                    this.handleLoginSuccess(user);
 
-                  // Handle the redirect
-                  return false;
+                    return true;
+                  }
                 }
               }}
             />

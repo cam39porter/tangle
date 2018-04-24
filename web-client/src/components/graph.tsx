@@ -86,6 +86,7 @@ class Graph extends React.Component<Props, object> {
               }
             }
           };
+
         // Links
         case "link":
           return {

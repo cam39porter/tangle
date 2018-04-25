@@ -59,7 +59,7 @@ class Graph extends React.Component<Props, object> {
             id: node.id,
             name: node.name,
             category: node.category,
-            symbolSize: 24,
+            symbolSize: 36,
             label: {
               show: true,
               color: ENTITY_COLOR,

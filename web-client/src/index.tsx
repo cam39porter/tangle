@@ -20,9 +20,10 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 // Config / Utils
 import { firebaseAuth } from "./utils";
+import config from "./cfg/env";
 
 const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_GRAPHQL_URI
+  uri: config.REACT_APP_GRAPHQL_URI
 });
 
 const authLink = setContext((_, { headers }) => {

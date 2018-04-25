@@ -11,9 +11,6 @@ resources:
   memory_gb: 0.5
   disk_size_gb: 10
 
-env_variables:
-  REACT_APP_GRAPHQL_URI: "https://client-api-prod-dot-opit-193719.appspot.com/graphql"
-  NODE_ENV: "production"
 # [END runtime]
 
 # [START handlers]

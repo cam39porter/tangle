@@ -7,7 +7,6 @@
       "request": "launch",
       "program": "${workspaceFolder}/client-api/.compiled/index.js",
       "sourceMaps": true,
-      "envFile": "${workspaceRoot}/client-api/.env",
       "env": {
         "NODE_ENV": "development",
         "NEO4J_ENDPOINT": "bolt+routing://35.197.60.182:7687",
@@ -20,7 +19,12 @@
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}/web-client"
+      "webRoot": "${workspaceFolder}/web-client",
+      "env": {
+        "NODE_ENV": "development",
+        "REACT_APP_GRAPHQL_URI":
+          "https://client-api-dev-dot-opit-193719.appspot.com/graphql"
+      }
     }
   ]
 }

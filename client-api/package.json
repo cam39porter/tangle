@@ -3,14 +3,15 @@
   "version": "0.0.1",
   "description": "graphql server",
   "main": "index.js",
+  "engine": "8.9.4",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc -w",
     "start:dev": "yarn build && NODE_ENV=development node .compiled/index.js",
     "build": "tsc",
     "start": "node .compiled/index.js",
-    "deploy:dev": "yarn build && gcloud -q app deploy ./dev.yaml",
-    "deploy:prod": "yarn build && gcloud -q app deploy ./prod.yaml"
+    "deploy:api:dev": "yarn build && gcloud -q app deploy ./dev.yaml",
+    "deploy:api:prod": "yarn build && gcloud -q app deploy ./prod.yaml"
   },
   "author": "",
   "license": "ISC",

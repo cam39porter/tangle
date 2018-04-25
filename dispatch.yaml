@@ -1,0 +1,16 @@
+dispatch:
+  # Send all prod web traffic to the web client prod.
+  - url: "web-client-prod-dot-opit-193719.appspot.com/*"
+    service: web-client-prod
+
+    # Send all dev web traffic to the web client dev.
+  - url: "web-client-dev-dot-opit-193719.appspot.com/*"
+    service: web-client-dev
+
+  # Send all dev api traffic to client api dev
+  - url: "client-api-dev-dot-opit-193719.appspot.com/*"
+    service: client-api-dev
+
+    # Send all prod api traffic to client api prod
+  - url: "client-api-prod-dot-opit-193719.appspot.com/*"
+    service: client-api-prod

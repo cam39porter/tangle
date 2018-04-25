@@ -3,7 +3,8 @@
   "productName": "Tangle",
   "version": "0.1.0",
   "engine": "8.9.4",
-  "description": "A web client for empowering people to capture and connect thoughts to create big ideas",
+  "description":
+    "A web client for empowering people to capture and connect thoughts to create big ideas",
   "private": true,
   "dependencies": {
     "apollo-cache-inmemory": "1.1.9",
@@ -37,13 +38,18 @@
   "homepage": "./",
   "main": "server.js",
   "scripts": {
-    "start": "react-scripts-ts start",
+    "start": "REACT_APP_ENV=development react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "schema": "apollo-codegen introspect-schema ../client-api/data-template/schema.graphql --output ./src/schema.json",
-    "types": "rm -rf ./src/__generated__ && mkdir ./src/__generated__ && apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
-    "deploy": "yarn build && gcloud -q app deploy ./app.yaml"
+    "schema":
+      "apollo-codegen introspect-schema ../client-api/data-template/schema.graphql --output ./src/schema.json",
+    "types":
+      "rm -rf ./src/__generated__ && mkdir ./src/__generated__ && apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
+    "deploy:web:dev":
+      "REACT_APP_ENV=development yarn build && gcloud -q app deploy ./dev.yaml",
+    "deploy:web:prod":
+      "REACT_APP_ENV=production yarn build && gcloud -q app deploy ./prod.yaml"
   },
   "devDependencies": {
     "@firebase/app-types": "0.1.2",

@@ -13,9 +13,10 @@ import {
 } from "../helpers/urn-helpers";
 
 const driver = neo4j.driver(
-  "bolt+routing://35.197.60.182:7687",
-  neo4j.auth.basic("neo4j", "mz6bJV6YC9irutUo")
+  process.env.NEO4J_ENDPOINT,
+  neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
+
 const session = driver.session();
 
 function createUser(user: User) {

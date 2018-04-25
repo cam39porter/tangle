@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { getUser } from "../db/db";
+import { getUser, createUser } from "../db/db";
 import { User } from "../models";
 import { setAuthenticatedUser } from "../services/request-context";
 import { toUserUrn } from "../helpers/urn-helpers";
@@ -21,8 +21,10 @@ function authFilter(req, res, next) {
     verify(encodedToken)
       .then(token => {
         const user = new User(toUserUrn(token.uid), token.email, token.name);
-        setAuthenticatedUser(user);
-        next();
+        createUser(user).then(res => {
+          setAuthenticatedUser(user);
+          next();
+        });
       })
       .catch(error => {
         console.log(error);

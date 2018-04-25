@@ -26,9 +26,7 @@ function createUser(user: User) {
     email:"${user.email}"
   })
   ON CREATE SET u.created=TIMESTAMP()
-  RETURN u`).then(result => {
-    console.log(result);
-  });
+  RETURN u`);
 }
 
 function createSession(userId: string, title: string): Promise<GraphNode> {

@@ -1,12 +1,5 @@
 import gql from "graphql-tag";
 
-//  Login
-export const Login = gql`
-  mutation Login {
-    login
-  }
-`;
-
 // Create a capture
 export const CreateCapture = gql`
   mutation CreateCapture($body: String!) {

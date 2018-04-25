@@ -27,7 +27,7 @@ import config from "../cfg";
 import { assign, mapKeys } from "lodash";
 import windowSize from "react-window-size";
 
-const FOCUS_COLOR_1 = "#19A974";
+const FOCUS_COLOR_1 = "#A463F2";
 const FOCUS_COLOR_2 = "#9EEBCF";
 
 interface Node {
@@ -309,7 +309,7 @@ class Capture extends React.Component<Props, State> {
             this.state.isShowingList
               ? `white gray`
               : dailyCaptureCount
-                ? `${config.captureAccentColor} white`
+                ? `white ${config.captureAccentColor}`
                 : `light-gray gray`
           } br4 shadow-1`}
         >

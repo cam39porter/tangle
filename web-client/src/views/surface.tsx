@@ -31,7 +31,7 @@ import windowSize from "react-window-size";
 
 const COUNT = 5; // number of results to return
 
-const FOCUS_COLOR_1 = "#357EDD";
+const FOCUS_COLOR_1 = "#A463F2";
 const FOCUS_COLOR_2 = "#CDECFF";
 
 interface Node {
@@ -428,9 +428,7 @@ class Surface extends React.Component<Props, State> {
             } shadow-1`}
           >
             <input
-              className={`pv2 ph3 f6 fl ${
-                this.state.isSearch || this.state.isDetail ? "w-80" : "w-90"
-              }`}
+              className={`pv2 ph3 f6 fl w-80`}
               ref={input => {
                 this.searchInput = input;
               }}

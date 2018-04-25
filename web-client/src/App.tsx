@@ -44,6 +44,7 @@ class App extends React.Component<Props, State> {
             user.getIdToken(true).then(idToken => {
               localStorage.setItem("idToken", idToken);
             });
+
             this.setState({
               isAuthenticated: true
             });

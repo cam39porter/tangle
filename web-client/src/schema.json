@@ -558,18 +558,6 @@
           "description": "",
           "fields": [
             {
-              "name": "login",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "createCapture",
               "description": "",
               "args": [

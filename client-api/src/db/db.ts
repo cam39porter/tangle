@@ -13,10 +13,23 @@ import {
 } from "../helpers/urn-helpers";
 
 const driver = neo4j.driver(
-  "bolt://35.197.21.220:7687",
-  neo4j.auth.basic("neo4j", "Z868sybiq7cGzFeA")
+  "bolt+routing://35.197.60.182:7687",
+  neo4j.auth.basic("neo4j", "mz6bJV6YC9irutUo")
 );
 const session = driver.session();
+
+function createUser(user: User) {
+  return executeQuery(`
+  MERGE (u:User {
+    id:"${user.id}",
+    name:"${user.name}",
+    email:"${user.email}"
+  })
+  ON CREATE SET u.created=TIMESTAMP()
+  RETURN u`).then(result => {
+    console.log(result);
+  });
+}
 
 function createSession(userId: string, title: string): Promise<GraphNode> {
   const uuid = uuidv4();
@@ -183,6 +196,7 @@ export {
   archiveCaptureNode,
   createCaptureNode,
   createSession,
+  createUser,
   editCaptureNode,
   createTagNodeWithEdge,
   createEntityNodeWithEdge,

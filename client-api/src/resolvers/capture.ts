@@ -17,6 +17,7 @@ import {
   archiveCaptureNode,
   editCaptureNode,
   createSession,
+  createUser,
   createLinkNodeWithEdge
 } from "../db/db";
 import { parseTags, stripTags, parseLinks } from "../helpers/capture-parser";
@@ -56,6 +57,10 @@ export default {
     }
   },
   Mutation: {
+    login(): Promise<Boolean> {
+      const user: User = getAuthenticatedUser();
+      return createUser(user).then(() => true);
+    },
     archiveCapture(parent, { id }, context, info): Promise<boolean> {
       const userId: string = getAuthenticatedUser().id;
       return archiveCaptureNode(userId, id).then(() => true);

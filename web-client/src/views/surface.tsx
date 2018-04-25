@@ -524,28 +524,30 @@ class Surface extends React.Component<Props, State> {
         )}
         {relatedCaptures.map((capture, index) => {
           return (
-            <ResultListItem
-              key={capture.id}
-              id={capture.id}
-              body={capture.text}
-              onClick={this.handleSurfaceDetail.bind(null, capture.id)}
-              onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
-                this.handleFocusNode(capture.id);
-              }}
-              onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
-                this.handleUnfocusNode();
-              }}
-              accentColor={config.surfaceAccentColor}
-              baseColor={"gray"}
-              isFocus={
-                (this.isLargeWindow() &&
-                  (this.state.hoverFocus &&
-                    this.state.hoverFocus.id === capture.id)) === true
-              }
-              showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
-              onShowActionBarChange={this.handleResultActionBarChange}
-              handleRefetch={this.handleResultListItemRefetch}
-            />
+            <ScrollContainerElement key={capture.id} name={capture.id}>
+              <ResultListItem
+                key={capture.id}
+                id={capture.id}
+                body={capture.text}
+                onClick={this.handleSurfaceDetail.bind(null, capture.id)}
+                onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                  this.handleFocusNode(capture.id);
+                }}
+                onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                  this.handleUnfocusNode();
+                }}
+                accentColor={config.surfaceAccentColor}
+                baseColor={"gray"}
+                isFocus={
+                  (this.isLargeWindow() &&
+                    (this.state.hoverFocus &&
+                      this.state.hoverFocus.id === capture.id)) === true
+                }
+                showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
+                onShowActionBarChange={this.handleResultActionBarChange}
+                handleRefetch={this.handleResultListItemRefetch}
+              />
+            </ScrollContainerElement>
           );
         })}
       </div>
@@ -580,31 +582,36 @@ class Surface extends React.Component<Props, State> {
         {detailNodes !== undefined
           ? detailNodes.map(detailNode => {
               return (
-                <ResultListItem
+                <ScrollContainerElement
                   key={detailNode.id}
-                  id={detailNode.id}
-                  body={detailNode.text}
-                  onClick={this.handleSurfaceDetail.bind(null, detailNode.id)}
-                  onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
-                    this.handleFocusNode(detailNode.id);
-                  }}
-                  onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
-                    this.handleUnfocusNode();
-                  }}
-                  accentColor={config.surfaceAccentColor}
-                  baseColor={config.surfaceBaseColor}
-                  textColor={"near-white"}
-                  isFocus={
-                    (this.isLargeWindow() &&
-                      (this.state.hoverFocus &&
-                        this.state.hoverFocus.id === detailNode.id)) === true
-                  }
-                  showActionBar={
-                    this.state.resultOptionsIsOpenMap[detailNode.id]
-                  }
-                  onShowActionBarChange={this.handleResultActionBarChange}
-                  handleRefetch={this.handleResultListItemRefetch}
-                />
+                  name={detailNode.id}
+                >
+                  <ResultListItem
+                    key={detailNode.id}
+                    id={detailNode.id}
+                    body={detailNode.text}
+                    onClick={this.handleSurfaceDetail.bind(null, detailNode.id)}
+                    onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                      this.handleFocusNode(detailNode.id);
+                    }}
+                    onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                      this.handleUnfocusNode();
+                    }}
+                    accentColor={config.surfaceAccentColor}
+                    baseColor={config.surfaceBaseColor}
+                    textColor={"near-white"}
+                    isFocus={
+                      (this.isLargeWindow() &&
+                        (this.state.hoverFocus &&
+                          this.state.hoverFocus.id === detailNode.id)) === true
+                    }
+                    showActionBar={
+                      this.state.resultOptionsIsOpenMap[detailNode.id]
+                    }
+                    onShowActionBarChange={this.handleResultActionBarChange}
+                    handleRefetch={this.handleResultListItemRefetch}
+                  />
+                </ScrollContainerElement>
               );
             })
           : null}

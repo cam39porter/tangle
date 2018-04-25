@@ -21,6 +21,7 @@ import { GraphNode } from "../components/graph";
 import GraphButtons from "../components/graph-buttons";
 import Sidebar from "../components/sidebar";
 import SidebarSectionHeader from "../components/sidebar-section-header";
+import ScrollContainerElement from "../components/scroll-container-element";
 
 // Config / Utils
 import config from "../cfg";
@@ -348,56 +349,60 @@ class Capture extends React.Component<Props, State> {
         <SidebarSectionHeader title={"today's captures"} />
         {detailNodes.map((capture, index) => {
           return (
-            <ResultListItem
-              key={capture.id}
-              id={capture.id}
-              body={capture.text}
-              onClick={this.handleSurfaceDetail.bind(null, capture.id)}
-              onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
-                this.handleFocusNode(capture.id);
-              }}
-              onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
-                this.handleUnfocusNode();
-              }}
-              accentColor={config.captureAccentColor}
-              baseColor={config.captureBaseColor}
-              textColor={"near-white"}
-              isFocus={
-                (this.isLargeWindow() &&
-                  (this.state.hoverFocus &&
-                    this.state.hoverFocus.id === capture.id)) === true
-              }
-              showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
-              onShowActionBarChange={this.handleResultActionBarChange}
-              handleRefetch={this.handleResultListItemRefetch}
-            />
+            <ScrollContainerElement key={capture.id} name={capture.id}>
+              <ResultListItem
+                key={capture.id}
+                id={capture.id}
+                body={capture.text}
+                onClick={this.handleSurfaceDetail.bind(null, capture.id)}
+                onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                  this.handleFocusNode(capture.id);
+                }}
+                onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                  this.handleUnfocusNode();
+                }}
+                accentColor={config.captureAccentColor}
+                baseColor={config.captureBaseColor}
+                textColor={"near-white"}
+                isFocus={
+                  (this.isLargeWindow() &&
+                    (this.state.hoverFocus &&
+                      this.state.hoverFocus.id === capture.id)) === true
+                }
+                showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
+                onShowActionBarChange={this.handleResultActionBarChange}
+                handleRefetch={this.handleResultListItemRefetch}
+              />
+            </ScrollContainerElement>
           );
         })}
         <SidebarSectionHeader title={"related captures"} />
         {captureNodes.map((capture, index) => {
           return (
-            <ResultListItem
-              key={capture.id}
-              id={capture.id}
-              body={capture.text}
-              onClick={this.handleSurfaceDetail.bind(null, capture.id)}
-              onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
-                this.handleFocusNode(capture.id);
-              }}
-              onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
-                this.handleUnfocusNode();
-              }}
-              accentColor={config.captureAccentColor}
-              baseColor={"gray"}
-              isFocus={
-                (this.isLargeWindow() &&
-                  (this.state.hoverFocus &&
-                    this.state.hoverFocus.id === capture.id)) === true
-              }
-              showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
-              onShowActionBarChange={this.handleResultActionBarChange}
-              handleRefetch={this.handleResultListItemRefetch}
-            />
+            <ScrollContainerElement key={capture.id} name={capture.id}>
+              <ResultListItem
+                key={capture.id}
+                id={capture.id}
+                body={capture.text}
+                onClick={this.handleSurfaceDetail.bind(null, capture.id)}
+                onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                  this.handleFocusNode(capture.id);
+                }}
+                onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                  this.handleUnfocusNode();
+                }}
+                accentColor={config.captureAccentColor}
+                baseColor={"gray"}
+                isFocus={
+                  (this.isLargeWindow() &&
+                    (this.state.hoverFocus &&
+                      this.state.hoverFocus.id === capture.id)) === true
+                }
+                showActionBar={this.state.resultOptionsIsOpenMap[capture.id]}
+                onShowActionBarChange={this.handleResultActionBarChange}
+                handleRefetch={this.handleResultListItemRefetch}
+              />
+            </ScrollContainerElement>
           );
         })}
       </div>
@@ -551,6 +556,9 @@ class Capture extends React.Component<Props, State> {
             renderHeader={this.renderCaptureCount}
             renderBody={this.renderResults}
             renderFooter={this.renderHideList}
+            scrollToId={
+              this.state.hoverFocus ? this.state.hoverFocus.id : undefined
+            }
           />
         ) : (
           <div className={`fixed w-100 bottom-0 z-3`}>

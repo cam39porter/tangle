@@ -1,0 +1,5 @@
+CREATE CONSTRAINT ON (tag:Tag) ASSERT exists(tag.id)
+CREATE CONSTRAINT ON (tag:Tag) ASSERT tag.id IS UNIQUE
+CREATE CONSTRAINT ON (tag:Tag) ASSERT exists(tag.name)
+CREATE CONSTRAINT ON (tag:Tag) ASSERT tag.name IS UNIQUE
+CREATE CONSTRAINT ON (tag:Tag) ASSERT exists(tag.created)

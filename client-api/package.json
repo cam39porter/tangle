@@ -9,7 +9,8 @@
     "start:dev": "yarn build && NODE_ENV=development node .compiled/index.js",
     "build": "tsc",
     "start": "node .compiled/index.js",
-    "deploy": "yarn build && gcloud -q app deploy ./app.yaml"
+    "deploy": "yarn build && gcloud -q app deploy ./app.yaml",
+    "deploy:prod": "yarn build && gcloud -q app deploy ./prod.yaml"
   },
   "author": "",
   "license": "ISC",

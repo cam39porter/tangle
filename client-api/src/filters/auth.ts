@@ -21,10 +21,15 @@ function authFilter(req, res, next) {
     verify(encodedToken)
       .then(token => {
         const user = new User(toUserUrn(token.uid), token.email, token.name);
-        createUser(user).then(res => {
-          setAuthenticatedUser(user);
-          next();
-        });
+        createUser(user)
+          .then(res => {
+            setAuthenticatedUser(user);
+            next();
+          })
+          .catch(error => {
+            console.log(error);
+            res.send(500, error);
+          });
       })
       .catch(error => {
         console.log(error);

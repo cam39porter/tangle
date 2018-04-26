@@ -40,18 +40,13 @@ const PORT = 8080;
 const app = express();
 
 if (process.env.NODE_ENV === "production") {
-  // app.use(
-  //   cors({
-  //     origin: [
-  //       "https://desktop-client-dot-opit-193719.appspot.com",
-  //       "https://web-client-dot-opit-193719.appspot.com",
-  //     ],
-  //     methods: ["GET", "POST"],
-  //     optionsSuccessStatus: 200
-  //   })
-  // );
-  // TODO cole differentiate this in prod/ei/dev
-  app.use(cors());
+  app.use(
+    cors({
+      origin: ["https://web-client-prod-dot-opit-193719.appspot.com"],
+      methods: ["GET", "POST"],
+      optionsSuccessStatus: 200
+    })
+  );
 } else {
   app.use(cors());
 }

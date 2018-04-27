@@ -21,7 +21,7 @@ It was a great conversation and made me rethink my initial reluctance to join th
 
 >  *Guys, I read not only the blog and the article but ended up spending the whole day reading and writing about other articles that I discovered because of them. I really want to start a thread in which we can easily share thoughts on these kinds of writings.*
 
-Of course, we agreed to his proposal, and Julian sent us his reaction to another Popova article on [Erich Fromm’s “paradox of freedom,”](https://www.brainpickings.org/2018/04/17/erich-fromm-escape-from-freedom/) an article he found on brainpickings.org. If you’d like, you can see what Julian wrote [here](), my response, and another response from Cole.
+Of course, we agreed to his proposal, and Julian sent us his reaction to another Popova article on [Erich Fromm’s “paradox of freedom,”](https://www.brainpickings.org/2018/04/17/erich-fromm-escape-from-freedom/) an article he found on brainpickings.org. If you’d like, you can see what Julian wrote [here](https://hex-ventures.github.io/hex-ventures/blog/paradox-of-freedom/), my response, and another response from Cole.
 
 What started out as a book discussion turned into a much deeper dialogue on how each of us curates our inputs. I asked myself, what inputs am I consuming daily? How can I ensure these inputs are the highest quality? From whom and where do the best inputs originate? How can I get closer to them? And, what inputs are most influential to my outputs?
 

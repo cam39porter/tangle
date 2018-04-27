@@ -1,3 +1,5 @@
+import { urlencoded } from "express";
+
 const baseStr: string = "urn:hex";
 
 function toUserUrn(id: string): string {
@@ -24,6 +26,10 @@ function toLinkUrn(id: string): string {
   return `${baseStr}:link:${id}`;
 }
 
+function toEvernoteNoteUrn(id: string): string {
+  return `${baseStr}:evernoteNote:${id}`;
+}
+
 function getUrnType(urn: string): string {
   return urn.split(":")[2];
 }
@@ -35,5 +41,6 @@ export {
   toTagUrn,
   toSessionUrn,
   toLinkUrn,
+  toEvernoteNoteUrn,
   getUrnType
 };

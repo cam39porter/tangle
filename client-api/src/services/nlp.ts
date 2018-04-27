@@ -3,10 +3,13 @@ import { NLPEntityResponse, NLPEntity } from "../models/nlp";
 
 const client = new language.LanguageServiceClient();
 
-function getNLPResponse(body: string): Promise<NLPEntityResponse> {
+function getNLPResponse(
+  body: string,
+  contentType: string
+): Promise<NLPEntityResponse> {
   const document = {
     content: body,
-    type: "PLAIN_TEXT"
+    type: contentType
   };
   return client
     .analyzeEntitySentiment({ document: document })

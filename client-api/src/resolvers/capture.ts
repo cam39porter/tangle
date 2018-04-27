@@ -9,6 +9,7 @@ import {
   User
 } from "../models";
 import { getNLPResponse } from "../services/nlp";
+import { createCapture, editCapture } from "../services/capture";
 import {
   executeQuery,
   createCaptureNode,
@@ -62,18 +63,11 @@ export default {
       return archiveCaptureNode(userId, id).then(() => true);
     },
     editCapture(parent, { id, body }, context, info): Promise<boolean> {
-      const userId = getAuthenticatedUser().id;
-      return editCaptureNode(userId, id, body).then(() =>
-        createRelations(id, body)
-      );
+      return editCapture(id, body);
     },
     createCapture(parent, { body, sessionId }, context, info): Promise<Graph> {
-      const user: User = getAuthenticatedUser();
-      return createCaptureNode(user, body, sessionId).then(
-        (captureNode: GraphNode) =>
-          createRelations(captureNode.id, body).then(data =>
-            getAllCapturedToday(null).then(results => results.graph)
-          )
+      return createCapture(body, sessionId).then(data =>
+        getAllCapturedToday(null).then(results => results.graph)
       );
     },
     createSession(parent, { title }, context, info): Promise<GraphNode> {
@@ -82,25 +76,6 @@ export default {
     }
   }
 };
-
-function createRelations(captureId: string, body: string): Promise<boolean> {
-  return getNLPResponse(stripTags(body)).then(nlp => {
-    const nlpCreates = Promise.all(
-      nlp.entities.map(entity => createEntityNodeWithEdge(captureId, entity))
-    );
-    return nlpCreates.then(nlpCreateResults => {
-      const tagCreates = Promise.all(
-        parseTags(body).map(tag => createTagNodeWithEdge(tag, captureId))
-      );
-      return tagCreates.then(tagCreateResults => {
-        const linkCreates = Promise.all(
-          parseLinks(body).map(link => createLinkNodeWithEdge(link, captureId))
-        );
-        return linkCreates.then(linkCreateResults => true);
-      });
-    });
-  });
-}
 
 /**
  * Generates a piece of a cypher query that will expand a set of captures, called "roots" to their second degree connections

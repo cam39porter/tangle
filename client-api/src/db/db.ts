@@ -83,20 +83,20 @@ function editCaptureNode(
 function createCaptureNode(
   user: User,
   body: string,
-  sessionId: string
+  parentId: string
 ): Promise<GraphNode> {
   const uuid = uuidv4();
   const captureUrn = toCaptureUrn(uuid);
   const userUrn = user.id;
-  const sessionQuery = sessionId
-    ? `OPTIONAL MATCH (u)-[:CREATED]-(s:Session {id:"${sessionId}"})`
+  const parentQuery = parentId
+    ? `OPTIONAL MATCH (u)-[:CREATED]-(parent {id:"${parentId}"}) WHERE parent:Session OR parent:EvernoteNote`
     : ``;
   const query = `MATCH (u:User {id:"${userUrn}"})
-  ${sessionQuery}
+  ${parentQuery}
   CREATE (u)-[created:CREATED]->(n:Capture {id:"${captureUrn}",
   body:"${escape(body)}", 
   created:TIMESTAMP()})
-  ${sessionId ? "CREATE (n)<-[:INCLUDES]-(s)" : ""}
+  ${parentId ? "CREATE (n)<-[:INCLUDES]-(parent)" : ""}
   RETURN n`;
   return executeQuery(query).then((result: StatementResult) => {
     const record = result.records[0].get("n");

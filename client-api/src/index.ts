@@ -14,6 +14,7 @@ import { authFilter, initAuth } from "./filters/auth";
 import * as fs from "fs";
 import * as path from "path";
 import { importEvernoteNote } from "./upload/services/evernote-import";
+
 const formidable = require("express-formidable");
 
 const schema = fs.readFileSync(
@@ -32,10 +33,10 @@ const executableSchema: GraphQLSchema = makeExecutableSchema({
   resolvers: resolvers
 });
 
+initAuth();
+
 const PORT = 8080;
 const app = express();
-
-initAuth();
 
 if (process.env.NODE_ENV === "production") {
   app.use(
@@ -49,10 +50,19 @@ if (process.env.NODE_ENV === "production") {
   app.use(cors());
 }
 
+app.use(requestContext.middleware("request"));
+app.use(authFilter);
+
+// bodyParser is needed just for POST.
+app.use(
+  "/graphql",
+  bodyParser.json(),
+  graphqlExpress({ schema: executableSchema })
+);
 app.use(formidable());
 app.post("/uploadHtml", (req, res) => {
-  fs.readFile(req["file"].path, (err, data) => {
-    if (req["file"].type !== "text/html") {
+  fs.readFile(req["files"]["file"].path, (err, data) => {
+    if (req["files"]["file"].type !== "text/html") {
       res.status(400).end("Unsupported content type");
     }
     importEvernoteNote(data)
@@ -69,16 +79,6 @@ app.post("/uploadHtml", (req, res) => {
       });
   });
 });
-app.use(requestContext.middleware("request"));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(authFilter);
-
-// bodyParser is needed just for POST.
-app.use(
-  "/graphql",
-  bodyParser.json(),
-  graphqlExpress({ schema: executableSchema })
-);
 
 app.get("/graphiql", graphiqlExpress({ endpointURL: "/graphql" })); // if you want GraphiQL enabled
 

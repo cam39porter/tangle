@@ -1,5 +1,3 @@
-import { urlencoded } from "express";
-
 const baseStr: string = "urn:hex";
 
 function toUserUrn(id: string): string {

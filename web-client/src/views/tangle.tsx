@@ -3,6 +3,7 @@ import * as React from "react";
 
 // Components
 import Button from "../components/button";
+import BulkImport from "../components/bulk-import";
 
 // Firebase
 import { firebaseAuth } from "../utils";
@@ -27,6 +28,9 @@ class Tangle extends React.Component<Props, State> {
               firebaseAuth().signOut();
             }}
           />
+        </div>
+        <div className={`fixed bottom-2 left-2`}>
+          <BulkImport />
         </div>
       </div>
     );

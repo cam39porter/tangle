@@ -12,6 +12,7 @@
     "apollo-link-context": "1.0.7",
     "apollo-link-error": "1.0.9",
     "apollo-link-http": "1.5.2",
+    "axios": "0.18.0",
     "echarts": "^4.0.4",
     "echarts-for-react": "^2.0.8",
     "firebase": "4.12.1",
@@ -39,6 +40,7 @@
   "main": "server.js",
   "scripts": {
     "start": "REACT_APP_ENV=development react-scripts-ts start",
+    "debug": "REACT_APP_ENV=local react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
@@ -53,6 +55,7 @@
   },
   "devDependencies": {
     "@firebase/app-types": "0.1.2",
+    "@types/axios": "0.14.0",
     "@types/echarts": "^0.0.12",
     "@types/graphql": "0.12.4",
     "@types/jest": "^22.1.3",

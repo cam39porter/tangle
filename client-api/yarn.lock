@@ -203,6 +203,13 @@
     "@types/express" "*"
     "@types/node" "*"
 
+"@types/body-parser@1.17.0":
+  version "1.17.0"
+  resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.17.0.tgz#9f5c9d9bd04bb54be32d5eb9fc0d8c974e6cf58c"
+  dependencies:
+    "@types/connect" "*"
+    "@types/node" "*"
+
 "@types/caseless@*":
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/@types/caseless/-/caseless-0.12.1.tgz#9794c69c8385d0192acc471a540d1f8e0d16218a"
@@ -211,9 +218,22 @@
   version "0.22.7"
   resolved "https://registry.yarnpkg.com/@types/cheerio/-/cheerio-0.22.7.tgz#4a92eafedfb2b9f4437d3a4410006d81114c66ce"
 
+"@types/connect@*":
+  version "3.4.32"
+  resolved "https://registry.yarnpkg.com/@types/connect/-/connect-3.4.32.tgz#aa0e9616b9435ccad02bc52b5b454ffc2c70ba28"
+  dependencies:
+    "@types/node" "*"
+
 "@types/events@*":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
+
+"@types/express-formidable@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@types/express-formidable/-/express-formidable-1.0.3.tgz#1d764aed0cc7175e87cf8be1507f34039c66b1c9"
+  dependencies:
+    "@types/express" "*"
+    "@types/formidable" "*"
 
 "@types/express-serve-static-core@*":
   version "4.11.1"
@@ -236,7 +256,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/formidable@1.0.31":
+"@types/formidable@*":
   version "1.0.31"
   resolved "https://registry.yarnpkg.com/@types/formidable/-/formidable-1.0.31.tgz#274f9dc2d0a1a9ce1feef48c24ca0859e7ec947b"
   dependencies:
@@ -1226,6 +1246,12 @@ expand-brackets@^2.1.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
+express-formidable@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/express-formidable/-/express-formidable-1.0.0.tgz#dc922f0455132322458a9ec1a301d891b3ffca8d"
+  dependencies:
+    formidable "^1.0.17"
+
 express@4.16.2:
   version "4.16.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.2.tgz#e35c6dfe2d64b7dca0a5cd4f21781be3299e076c"
@@ -1398,7 +1424,7 @@ form-data@~2.3.1:
     combined-stream "1.0.6"
     mime-types "^2.1.12"
 
-formidable@1.2.1:
+formidable@^1.0.17:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/formidable/-/formidable-1.2.1.tgz#70fb7ca0290ee6ff961090415f4b3df3d2082659"
 

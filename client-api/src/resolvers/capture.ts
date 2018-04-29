@@ -17,10 +17,10 @@ import {
   createEntityNodeWithEdge,
   archiveCaptureNode,
   editCaptureNode,
-  createSession,
   createUser,
   createLinkNodeWithEdge
 } from "../db/db";
+import { createSession } from "../db/services/session";
 import { parseTags, stripTags, parseLinks } from "../helpers/capture-parser";
 import * as _ from "lodash";
 import * as moment from "moment";

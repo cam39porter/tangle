@@ -194,7 +194,6 @@ export {
   executeQuery,
   archiveCaptureNode,
   createCaptureNode,
-  createSession,
   createUser,
   editCaptureNode,
   createTagNodeWithEdge,

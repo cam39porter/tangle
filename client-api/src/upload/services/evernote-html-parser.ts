@@ -1,7 +1,6 @@
-import { EvernoteNote } from "../models/evernote-note";
-import { toEvernoteNoteUrn } from "../../helpers/urn-helpers";
 import * as cheerio from "cheerio";
-import * as moment from "moment";
+import { toEvernoteNoteUrn } from "../../helpers/urn-helpers";
+import { EvernoteNote } from "../models/evernote-note";
 
 export function parseEvernoteHtml(data): EvernoteNote {
   const $ = cheerio.load(data);
@@ -19,10 +18,10 @@ export function parseEvernoteHtml(data): EvernoteNote {
       .slice(0, -5)
   );
   const contents: string[] = $("body div")
-    .filter((i, element) => {
+    .filter((_, element) => {
       return !isBreak(element);
     })
-    .map((i, element) => {
+    .map((_, element) => {
       return getData($, element);
     })
     .toArray()

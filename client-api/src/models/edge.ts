@@ -1,8 +1,8 @@
 export class Edge {
-  source: string;
-  destination: string;
-  type: string;
-  salience: number;
+  public source: string;
+  public destination: string;
+  public type: string;
+  public salience: number;
   constructor(data) {
     this.source = data.source;
     this.destination = data.destination;

@@ -1,16 +1,8 @@
-import { GraphNode, User } from "../../models";
-import { v1 as neo4j } from "neo4j-driver";
-import { v4 as uuidv4 } from "uuid/v4";
 import { StatementResult } from "neo4j-driver/types/v1";
+import { v4 as uuidv4 } from "uuid/v4";
+import { GraphNode } from "../../models";
 
-import {
-  toCaptureUrn,
-  toTagUrn,
-  toUserUrn,
-  toEntityUrn,
-  toSessionUrn,
-  toLinkUrn
-} from "../../helpers/urn-helpers";
+import { toSessionUrn } from "../../helpers/urn-helpers";
 
 import { executeQuery } from "../db";
 

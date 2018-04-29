@@ -1,51 +1,35 @@
-import {
-  PageInfo,
-  NLPEntityResponse,
-  SearchResults,
-  Graph,
-  GraphNode,
-  Edge,
-  NLPEntity,
-  User
-} from "../models";
-import { getNLPResponse } from "../services/nlp";
-import { createCapture, editCapture } from "../services/capture";
-import {
-  executeQuery,
-  createCaptureNode,
-  createTagNodeWithEdge,
-  createEntityNodeWithEdge,
-  archiveCaptureNode,
-  editCaptureNode,
-  createUser,
-  createLinkNodeWithEdge
-} from "../db/db";
-import { createSession } from "../db/services/session";
-import { parseTags, stripTags, parseLinks } from "../helpers/capture-parser";
 import * as _ from "lodash";
 import * as moment from "moment";
+import { archiveCaptureNode, executeQuery } from "../db/db";
+import { createSession } from "../db/services/session";
+import { getUrnType } from "../helpers/urn-helpers";
+import { Edge, Graph, GraphNode, PageInfo, SearchResults } from "../models";
+import { createCapture, editCapture } from "../services/capture";
 import { getAuthenticatedUser } from "../services/request-context";
-import { toEntityUrn, toUserUrn, getUrnType } from "../helpers/urn-helpers";
-
-const dedupe = require("dedupe");
-
 export default {
   Query: {
     search(
+      // @ts-ignore
       parent,
       { rawQuery, start, count },
+      // @ts-ignore
       context,
+      // @ts-ignore
       info
     ): Promise<SearchResults> {
       return search(rawQuery, start, count);
     },
+    // @ts-ignore
     get(parent, { id }, context, info): Promise<Graph> {
       return get(id);
     },
     getAll(
+      // @ts-ignore
       parent,
       { useCase, timezoneOffset },
+      // @ts-ignore
       context,
+      // @ts-ignore
       info
     ): Promise<SearchResults> {
       if (useCase === "CAPTURED_TODAY") {
@@ -58,18 +42,22 @@ export default {
     }
   },
   Mutation: {
+    // @ts-ignore
     archiveCapture(parent, { id }, context, info): Promise<boolean> {
       const userId: string = getAuthenticatedUser().id;
       return archiveCaptureNode(userId, id).then(() => true);
     },
+    // @ts-ignore
     editCapture(parent, { id, body }, context, info): Promise<boolean> {
       return editCapture(id, body);
     },
+    // @ts-ignore
     createCapture(parent, { body, sessionId }, context, info): Promise<Graph> {
-      return createCapture(body, sessionId).then(data =>
+      return createCapture(body, sessionId).then(() =>
         getAllCapturedToday(null).then(results => results.graph)
       );
     },
+    // @ts-ignore
     createSession(parent, { title }, context, info): Promise<GraphNode> {
       const userId = getAuthenticatedUser().id;
       return createSession(userId, title);
@@ -78,7 +66,8 @@ export default {
 };
 
 /**
- * Generates a piece of a cypher query that will expand a set of captures, called "roots" to their second degree connections
+ * Generates a piece of a cypher query that will expand a set of captures,
+ * called "roots" to their second degree connections
  * @param userUrn the id of the user requesting
  * @returns two collections in cypher, called "nodes", and "relationship". The caller is responsible for returning these
  */
@@ -185,7 +174,7 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
   return executeQuery(
     `MATCH (roots:Capture)<-[created:CREATED]-(user:User {id:"${userId}"})
     WHERE roots.created > ${since} AND NOT EXISTS (roots.archived)
-    WITH roots 
+    WITH roots
     ORDER BY roots.created DESC
     LIMIT 50
     ${expandCaptures(userId)}
@@ -265,7 +254,7 @@ function buildGraph(
     "properties.id"
   );
 
-  let rootNodes = neoRoots.map(node => node.properties.id);
+  const rootNodes = neoRoots.map(node => node.properties.id);
   if (startUrn) {
     rootNodes.push(startUrn);
   }

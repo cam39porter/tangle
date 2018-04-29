@@ -1,15 +1,13 @@
-import { GraphNode, User, NLPEntity } from "../models";
 import { v1 as neo4j } from "neo4j-driver";
-import { v4 as uuidv4 } from "uuid/v4";
 import { StatementResult } from "neo4j-driver/types/v1";
+import { v4 as uuidv4 } from "uuid/v4";
+import { GraphNode, NLPEntity, User } from "../models";
 
 import {
   toCaptureUrn,
-  toTagUrn,
-  toUserUrn,
   toEntityUrn,
-  toSessionUrn,
-  toLinkUrn
+  toLinkUrn,
+  toTagUrn
 } from "../helpers/urn-helpers";
 
 const driver = neo4j.driver(
@@ -30,24 +28,6 @@ function createUser(user: User) {
   RETURN u`);
 }
 
-function createSession(userId: string, title: string): Promise<GraphNode> {
-  const uuid = uuidv4();
-  const sessionUrn = toSessionUrn(uuid);
-  return executeQuery(`
-  MATCH (u:User {id:"${userId}"})
-  CREATE (session:Session {id:"${sessionUrn}", title:"${title}", created:TIMESTAMP()})
-  CREATE (session)<-[:CREATED]-(u)
-  RETURN session`).then((result: StatementResult) => {
-    const record = result.records[0].get("session");
-    return new GraphNode(
-      record.properties.id,
-      "Session",
-      record.properties.title,
-      null
-    );
-  });
-}
-
 function getUser(urn: string): Promise<User> {
   return executeQuery(`
   MATCH (u:User {id:"${urn}"})
@@ -61,7 +41,7 @@ function archiveCaptureNode(id: string, captureId: string): Promise<void> {
     `MATCH (c:Capture {id:"${captureId}"})<-[:CREATED]-(u:User {id:"${id}"})
     SET c.archived = true
     `
-  ).then(result => null);
+  ).then(() => null);
 }
 
 function editCaptureNode(
@@ -75,7 +55,7 @@ function editCaptureNode(
   WHERE type(r)<>"CREATED"
   DELETE r
   SET n.body="${escape(body)}"
-  RETURN n`).then((result: StatementResult) => {
+  RETURN n`).then(() => {
     return true;
   });
 }
@@ -94,7 +74,7 @@ function createCaptureNode(
   const query = `MATCH (u:User {id:"${userUrn}"})
   ${parentQuery}
   CREATE (u)-[created:CREATED]->(n:Capture {id:"${captureUrn}",
-  body:"${escape(body)}", 
+  body:"${escape(body)}",
   created:TIMESTAMP()})
   ${parentId ? "CREATE (n)<-[:INCLUDES]-(parent)" : ""}
   RETURN n`;
@@ -162,7 +142,7 @@ function createLinkNodeWithEdge(link: string, captureId: string) {
       url: "${link}"
     })
     ON CREATE SET link.created = TIMESTAMP()
-    CREATE (link)<-[:LINKS_TO]-(capture)    
+    CREATE (link)<-[:LINKS_TO]-(capture)
     RETURN link
   `).then((result: StatementResult) => {
     const record = result.records[0].get("link");

@@ -1,34 +1,16 @@
-import {
-  PageInfo,
-  NLPEntityResponse,
-  SearchResults,
-  Graph,
-  GraphNode,
-  Edge,
-  NLPEntity,
-  User
-} from "../models";
+import { GraphNode, User } from "../models";
 
-import { getNLPResponse } from "../services/nlp";
 import {
-  executeQuery,
   createCaptureNode,
-  createTagNodeWithEdge,
   createEntityNodeWithEdge,
-  archiveCaptureNode,
-  editCaptureNode,
-  createUser,
-  createLinkNodeWithEdge
+  createLinkNodeWithEdge,
+  createTagNodeWithEdge,
+  editCaptureNode
 } from "../db/db";
+import { getNLPResponse } from "../services/nlp";
 
-import { createSession } from "../db/services/session";
-
-import { parseTags, stripTags, parseLinks } from "../helpers/capture-parser";
-import * as moment from "moment";
+import { parseLinks, parseTags, stripTags } from "../helpers/capture-parser";
 import { getAuthenticatedUser } from "../services/request-context";
-import { toEntityUrn, toUserUrn, getUrnType } from "../helpers/urn-helpers";
-
-const dedupe = require("dedupe");
 
 export function editCapture(id: string, body: string) {
   const userId = getAuthenticatedUser().id;
@@ -58,15 +40,15 @@ function createRelations(
     const nlpCreates = Promise.all(
       nlp.entities.map(entity => createEntityNodeWithEdge(captureId, entity))
     );
-    return nlpCreates.then(nlpCreateResults => {
+    return nlpCreates.then(() => {
       const tagCreates = Promise.all(
         parseTags(body).map(tag => createTagNodeWithEdge(tag, captureId))
       );
-      return tagCreates.then(tagCreateResults => {
+      return tagCreates.then(() => {
         const linkCreates = Promise.all(
           parseLinks(body).map(link => createLinkNodeWithEdge(link, captureId))
         );
-        return linkCreates.then(linkCreateResults => true);
+        return linkCreates.then(() => true);
       });
     });
   });

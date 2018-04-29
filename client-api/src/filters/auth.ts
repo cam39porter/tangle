@@ -1,8 +1,8 @@
 import * as admin from "firebase-admin";
-import { getUser, createUser } from "../db/db";
+import { createUser, getUser } from "../db/db";
+import { toUserUrn } from "../helpers/urn-helpers";
 import { User } from "../models";
 import { setAuthenticatedUser } from "../services/request-context";
-import { toUserUrn } from "../helpers/urn-helpers";
 
 function initAuth() {
   admin.initializeApp({
@@ -22,7 +22,7 @@ function authFilter(req, res, next) {
       .then(token => {
         const user = new User(toUserUrn(token.uid), token.email, token.name);
         createUser(user)
-          .then(res => {
+          .then(() => {
             setAuthenticatedUser(user);
             next();
           })

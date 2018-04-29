@@ -1,7 +1,7 @@
 export class PageInfo {
-  start: number;
-  count: number;
-  total: number;
+  public start: number;
+  public count: number;
+  public total: number;
   constructor(start: number, count: number, total: number) {
     this.start = start;
     this.count = count;

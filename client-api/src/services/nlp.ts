@@ -1,5 +1,5 @@
 import language from "@google-cloud/language";
-import { NLPEntityResponse, NLPEntity } from "../models/nlp";
+import { NLPEntity, NLPEntityResponse } from "../models/nlp";
 
 const client = new language.LanguageServiceClient();
 
@@ -12,9 +12,9 @@ function getNLPResponse(
     type: contentType
   };
   return client
-    .analyzeEntitySentiment({ document: document })
+    .analyzeEntitySentiment({ document })
     .then(results => {
-      let resp = new NLPEntityResponse();
+      const resp = new NLPEntityResponse();
       results[0].entities.forEach(element => {
         const entity = new NLPEntity(element);
         resp.entities.push(entity);

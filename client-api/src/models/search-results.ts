@@ -1,9 +1,9 @@
-import { Graph } from "./graph";
 import { PageInfo } from ".";
+import { Graph } from "./graph";
 
 export class SearchResults {
-  graph: Graph;
-  pageInfo: PageInfo;
+  public graph: Graph;
+  public pageInfo: PageInfo;
   constructor(graph: Graph, pageInfo: PageInfo) {
     this.graph = graph;
     this.pageInfo = pageInfo;

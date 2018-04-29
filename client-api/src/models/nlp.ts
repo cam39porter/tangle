@@ -1,16 +1,16 @@
 export class NLPEntityResponse {
-  entities: NLPEntity[];
+  public entities: NLPEntity[];
   constructor() {
     this.entities = [];
   }
 }
 
 export class NLPEntity {
-  name: string;
-  type: string;
-  metadata: NLPMetadata;
-  sentiment: NLPSentiment;
-  salience: number;
+  public name: string;
+  public type: string;
+  public metadata: NLPMetadata;
+  public sentiment: NLPSentiment;
+  public salience: number;
   constructor(data) {
     this.name = data.name;
     this.type = data.type;
@@ -21,8 +21,8 @@ export class NLPEntity {
 }
 
 class NLPMetadata {
-  wikipedia: string;
-  mid: string;
+  public wikipedia: string;
+  public mid: string;
   constructor(data) {
     this.wikipedia = data.wikipedia_url;
     this.mid = data.mid;
@@ -30,8 +30,8 @@ class NLPMetadata {
 }
 
 class NLPSentiment {
-  magnitude: number;
-  score: number;
+  public magnitude: number;
+  public score: number;
   constructor(data) {
     this.magnitude = data.magnitude;
     this.score = data.score;

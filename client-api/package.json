@@ -32,7 +32,7 @@
     "moment": "2.22.0",
     "neo4j-driver": "1.5.3",
     "request-context": "2.0.0",
-    "typescript": "2.7.2",
+    "typescript": "2.8.3",
     "uuid": "3.2.1"
   },
   "devDependencies": {

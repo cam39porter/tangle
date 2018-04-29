@@ -1,28 +1,26 @@
 /*!
  * GraphQL Express Server
  */
-import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
+import * as express from "express";
 import * as requestContext from "request-context";
 
 import { makeExecutableSchema } from "graphql-tools";
 
-import resolvers from "./resolvers/capture";
-import { GraphQLSchema, formatError } from "graphql";
-import { authFilter, initAuth } from "./filters/auth";
+import { graphiqlExpress, graphqlExpress } from "apollo-server-express";
+import * as formidable from "express-formidable";
 import * as fs from "fs";
+import { GraphQLSchema } from "graphql";
 import * as path from "path";
+import { authFilter, initAuth } from "./filters/auth";
+import resolvers from "./resolvers/capture";
 import { importEvernoteNote } from "./upload/services/evernote-import";
-
-const formidable = require("express-formidable");
 
 const schema = fs.readFileSync(
   path.join(__dirname, "../data-template/schema.graphql"),
   "utf8"
 );
-
-const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 
 /*!
  * Make the schema executable
@@ -30,7 +28,7 @@ const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 
 const executableSchema: GraphQLSchema = makeExecutableSchema({
   typeDefs: schema,
-  resolvers: resolvers
+  resolvers
 });
 
 initAuth();
@@ -61,8 +59,11 @@ app.use(
 );
 app.use(formidable());
 app.post("/uploadHtml", (req, res) => {
-  fs.readFile(req["files"]["file"].path, (err, data) => {
-    if (req["files"]["file"].type !== "text/html") {
+  fs.readFile(req["files"].file.path, (err, data) => {
+    if (err) {
+      res.status(500).end("Could not read file");
+    }
+    if (req["files"].file.type !== "text/html") {
       res.status(400).end("Unsupported content type");
     }
     importEvernoteNote(data)
@@ -73,8 +74,8 @@ app.post("/uploadHtml", (req, res) => {
           res.status(409).end("Object already exists, please delete it first");
         }
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        console.log(error);
         res.sendStatus(500);
       });
   });

@@ -24,12 +24,8 @@ import SidebarSectionHeader from "../components/sidebar-section-header";
 import ScrollContainerElement from "../components/scroll-container-element";
 
 // Config / Utils
-import config from "../cfg";
 import { assign, mapKeys } from "lodash";
 import windowSize from "react-window-size";
-
-const FOCUS_COLOR_1 = "#A463F2";
-const FOCUS_COLOR_2 = "#9EEBCF";
 
 interface Node {
   __typename: "Node";
@@ -309,9 +305,7 @@ class Capture extends React.Component<Props, State> {
           className={`w-100 f6 dtc v-mid tc bg-${
             this.state.isShowingList
               ? `white gray`
-              : dailyCaptureCount
-                ? `white ${config.captureAccentColor}`
-                : `light-gray gray`
+              : dailyCaptureCount ? `white accent` : `light-gray gray`
           } br4 shadow-1`}
         >
           {!dailyCaptureCount
@@ -361,8 +355,8 @@ class Capture extends React.Component<Props, State> {
                 onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
                   this.handleUnfocusNode();
                 }}
-                accentColor={config.captureAccentColor}
-                baseColor={config.captureBaseColor}
+                accentColor={"accent"}
+                baseColor={"accent"}
                 textColor={"near-white"}
                 isFocus={
                   (this.isLargeWindow() &&
@@ -391,7 +385,7 @@ class Capture extends React.Component<Props, State> {
                 onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
                   this.handleUnfocusNode();
                 }}
-                accentColor={config.captureAccentColor}
+                accentColor={"accent"}
                 baseColor={"gray"}
                 isFocus={
                   (this.isLargeWindow() &&
@@ -483,8 +477,6 @@ class Capture extends React.Component<Props, State> {
           onMouseOut={e => {
             return;
           }}
-          focusColor1={FOCUS_COLOR_1}
-          focusColor2={FOCUS_COLOR_2}
           gradientNumber={this.getGradientNumber()}
           focusNodeAdjacency={false}
           showTooltip={false}
@@ -533,7 +525,7 @@ class Capture extends React.Component<Props, State> {
           onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
             this.handleUnfocusNode();
           }}
-          accentColor={config.captureAccentColor}
+          accentColor={"accent"}
           baseColor={"gray"}
           isFocus={false}
           showActionBar={this.state.resultOptionsIsOpenMap[node.id]}

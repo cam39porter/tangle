@@ -22,7 +22,6 @@ import {
 import TextInput from "../components/text-input";
 
 // Config / Utils
-import config from "../cfg";
 import { isEqual } from "lodash";
 
 const ICON_SIZE = 20;
@@ -109,7 +108,7 @@ class ResultListItem extends React.Component<Props, State> {
             <div
               className={`dtc w-9 w-100 fl ma2 f6 overflow-hidden lh-copy ${
                 this.state.isEditing ? "ba" : ""
-              } b--${config.captureAccentColor}`}
+              } b--accent`}
               style={{
                 maxHeight: this.props.maxHeight,
                 maxWidth: "30em"

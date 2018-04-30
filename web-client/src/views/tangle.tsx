@@ -8,9 +8,6 @@ import BulkImport from "../components/bulk-import";
 // Firebase
 import { firebaseAuth } from "../utils";
 
-// Config
-import config from "../cfg";
-
 interface Props {}
 
 interface State {}
@@ -21,7 +18,7 @@ class Tangle extends React.Component<Props, State> {
       <div>
         <div className={`fixed top-2 left-2`}>
           <Button
-            accentColor={config.tangleAccentColor}
+            accentColor={"accent"}
             title={"sign out"}
             onClick={() => {
               localStorage.removeItem("idToken");

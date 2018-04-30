@@ -23,16 +23,12 @@ import SidebarSectionHeader from "../components/sidebar-section-header";
 import ScrollContainerElement from "../components/scroll-container-element";
 
 // Config / Utils
-import config from "../cfg";
 import qs from "qs";
 import { assign, mapKeys } from "lodash";
 import { X } from "react-feather";
 import windowSize from "react-window-size";
 
 const COUNT = 5; // number of results to return
-
-const FOCUS_COLOR_1 = "#A463F2";
-const FOCUS_COLOR_2 = "#CDECFF";
 
 interface Node {
   __typename: "Node";
@@ -423,9 +419,7 @@ class Surface extends React.Component<Props, State> {
           }}
         >
           <div
-            className={`relative w-100 ph1 dtc v-mid tc bg-white br4 bb bw1 b--${
-              config.surfaceAccentColor
-            } shadow-1`}
+            className={`relative w-100 ph1 dtc v-mid tc bg-white br4 bb bw1 b--accent shadow-1`}
           >
             <input
               className={`pv2 ph3 f6 fl w-80`}
@@ -504,8 +498,8 @@ class Surface extends React.Component<Props, State> {
                 onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
                   this.handleUnfocusNode();
                 }}
-                accentColor={config.surfaceAccentColor}
-                baseColor={config.surfaceBaseColor}
+                accentColor={"accent"}
+                baseColor={"accent"}
                 textColor={"white"}
                 isFocus={
                   (this.isLargeWindow() &&
@@ -536,7 +530,7 @@ class Surface extends React.Component<Props, State> {
                 onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
                   this.handleUnfocusNode();
                 }}
-                accentColor={config.surfaceAccentColor}
+                accentColor={"accent"}
                 baseColor={"gray"}
                 isFocus={
                   (this.isLargeWindow() &&
@@ -597,8 +591,8 @@ class Surface extends React.Component<Props, State> {
                     onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
                       this.handleUnfocusNode();
                     }}
-                    accentColor={config.surfaceAccentColor}
-                    baseColor={config.surfaceBaseColor}
+                    accentColor={"accent"}
+                    baseColor={"accent"}
                     textColor={"near-white"}
                     isFocus={
                       (this.isLargeWindow() &&
@@ -699,8 +693,6 @@ class Surface extends React.Component<Props, State> {
           onMouseOut={e => {
             return;
           }}
-          focusColor1={FOCUS_COLOR_1}
-          focusColor2={FOCUS_COLOR_2}
           gradientNumber={this.getGradientNumber()}
           focusNodeAdjacency={false}
           showTooltip={false}
@@ -755,7 +747,7 @@ class Surface extends React.Component<Props, State> {
             onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
               this.handleUnfocusNode();
             }}
-            accentColor={config.surfaceAccentColor}
+            accentColor={"accent"}
             baseColor={"gray"}
             isFocus={false}
             maxHeight={this.isLargeWindow() ? undefined : "4rem"}

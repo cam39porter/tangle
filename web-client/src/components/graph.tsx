@@ -4,7 +4,9 @@ import * as React from "react";
 // Components
 import ReactECharts from "echarts-for-react";
 // import externalLink from "../../images/external-link.svg";
+
 // Config / Utils
+import config from "../cfg";
 import { isEqual } from "lodash";
 
 const BLUR_COLOR = "#CCCCCC";
@@ -36,8 +38,6 @@ interface Props {
   onClick: (e: GraphEvent) => void;
   onMouseOver: (e: GraphEvent) => void;
   onMouseOut: (e: GraphEvent) => void;
-  focusColor1: string;
-  focusColor2: string;
   gradientNumber: number;
   focusNodeAdjacency: boolean;
   showTooltip: boolean;
@@ -143,7 +143,7 @@ class Graph extends React.Component<Props, object> {
         name: `detail`,
         itemStyle: {
           normal: {
-            color: this.props.focusColor1
+            color: config.accentColor
           }
         }
       },

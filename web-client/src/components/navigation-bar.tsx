@@ -4,9 +4,6 @@ import * as React from "react";
 // Components
 import NavigationBarTab from "./navigation-bar-tab";
 
-// Config / utils
-import config from "../cfg";
-
 interface Props {}
 
 function NavigationBar(props: Props) {
@@ -19,20 +16,20 @@ function NavigationBar(props: Props) {
     >
       <NavigationBarTab
         title="tangle"
-        isInactiveColor={config.tangleAccentColor}
-        isActiveBackgroundColor={config.tangleAccentColor}
+        isInactiveColor={"accent"}
+        isActiveBackgroundColor={"accent"}
         borderCurve={"Left"}
       />
       <NavigationBarTab
         title="capture"
-        isInactiveColor={config.captureAccentColor}
-        isActiveBackgroundColor={config.captureAccentColor}
+        isInactiveColor={"accent"}
+        isActiveBackgroundColor={"accent"}
         borderCurve={"None"}
       />
       <NavigationBarTab
         title="surface"
-        isInactiveColor={config.surfaceAccentColor}
-        isActiveBackgroundColor={config.surfaceAccentColor}
+        isInactiveColor={"accent"}
+        isActiveBackgroundColor={"accent"}
         borderCurve={"Right"}
       />
     </div>

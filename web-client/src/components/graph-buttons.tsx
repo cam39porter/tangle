@@ -5,9 +5,6 @@ import * as React from "react";
 import CaptureDialogue from "./capture-dialogue";
 import { MessageSquare } from "react-feather";
 
-// Config / Utils
-import config from "../cfg";
-
 interface Props {
   isCapturing: boolean;
   handleIsCapturing: () => void;
@@ -27,9 +24,7 @@ class GraphButtons extends React.Component<Props, object> {
 
     return (
       <div
-        className={`dt h3 w3 white br4 bg-${
-          config.captureAccentColor
-        } shadow-1 pointer`}
+        className={`dt h3 w3 white br4 bg-accent shadow-1 pointer`}
         onClick={this.props.handleIsCapturing}
       >
         <div className={`dtc tc v-mid pt1 f3`}>

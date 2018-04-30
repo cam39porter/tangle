@@ -13,7 +13,6 @@ import { graphql, ChildProps } from "react-apollo";
 
 // Config / Utils
 import { trimEnd } from "lodash";
-import config from "../cfg";
 
 interface Props extends ChildProps<{}, Response> {
   handleMinimize: () => void;
@@ -80,9 +79,7 @@ class CaptureDialogue extends React.Component<Props, State> {
   renderMinimizeButton() {
     return (
       <div
-        className={`absolute tc h2 w2 f3 b top-1 right-1 pointer ${
-          config.captureAccentColor
-        }`}
+        className={`absolute tc h2 w2 f3 b top-1 right-1 pointer accent`}
         onClick={this.props.handleMinimize}
       >
         <Minus />
@@ -104,9 +101,7 @@ class CaptureDialogue extends React.Component<Props, State> {
           <div className={`dt pa3 w-100 h-100`}>
             <div className={`t-row w-100 h-50 h-100-l`}>
               <div className={`h-100 w-100 dt`}>
-                <div
-                  className={`v-btm dtc bb bw1 b--${config.captureAccentColor}`}
-                >
+                <div className={`v-btm dtc bb bw1 b--accent`}>
                   <TextInput
                     handleChange={this.handleChange}
                     handleEnterKey={this.handleCapture}
@@ -122,7 +117,7 @@ class CaptureDialogue extends React.Component<Props, State> {
                 <Button
                   onClick={this.handleCapture}
                   title="capture"
-                  accentColor={config.captureAccentColor}
+                  accentColor={"accent"}
                 />
               </div>
             </div>

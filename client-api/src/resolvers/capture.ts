@@ -1,7 +1,8 @@
 import * as _ from "lodash";
 import * as moment from "moment";
 import { archiveCaptureNode, executeQuery } from "../db/db";
-import { createSession } from "../db/services/session";
+import { Session } from "../db/models/session";
+import { create as createSession } from "../db/services/session";
 import { getUrnType } from "../helpers/urn-helpers";
 import { Edge } from "../models/edge";
 import { Graph } from "../models/graph";
@@ -10,6 +11,7 @@ import { PageInfo } from "../models/page-info";
 import { SearchResults } from "../models/search-results";
 import { createCapture, editCapture } from "../services/capture";
 import { getAuthenticatedUser } from "../services/request-context";
+
 export default {
   Query: {
     search(
@@ -64,7 +66,9 @@ export default {
     // @ts-ignore
     createSession(parent, { title }, context, info): Promise<GraphNode> {
       const userId = getAuthenticatedUser().id;
-      return createSession(userId, title);
+      return createSession(userId, title).then((session: Session) => {
+        return new GraphNode(session.id, "Session", session.title, null);
+      });
     }
   }
 };

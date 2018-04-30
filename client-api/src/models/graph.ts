@@ -1,4 +1,5 @@
-import { Edge, GraphNode } from ".";
+import { Edge } from "./edge";
+import { GraphNode } from "./graph-node";
 
 export class Graph {
   public nodes: GraphNode[];

@@ -8,7 +8,7 @@ import {
   createLinkNodeWithEdge,
   editCaptureNode
 } from "../db/db";
-import { getNLPResponse } from "../services/nlp";
+import { getNLPResponse } from "../nlp/services/nlp";
 
 import { parseLinks, parseTags, stripTags } from "../helpers/capture-parser";
 import { getAuthenticatedUser } from "../services/request-context";

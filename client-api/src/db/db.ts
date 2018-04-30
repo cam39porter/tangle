@@ -2,15 +2,10 @@ import { v1 as neo4j } from "neo4j-driver";
 import { StatementResult } from "neo4j-driver/types/v1";
 import { v4 as uuidv4 } from "uuid/v4";
 import { GraphNode } from "../models/graph-node";
-import { NLPEntity } from "../models/nlp";
+import { NLPEntity } from "../nlp/models/nlp";
 import { User } from "./models/user";
 
-import {
-  toCaptureUrn,
-  toEntityUrn,
-  toLinkUrn,
-  toTagUrn
-} from "../helpers/urn-helpers";
+import { toCaptureUrn, toEntityUrn, toLinkUrn } from "../helpers/urn-helpers";
 
 const driver = neo4j.driver(
   process.env.NEO4J_ENDPOINT,

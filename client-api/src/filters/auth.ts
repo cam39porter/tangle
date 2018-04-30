@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
 import { createUser, getUser } from "../db/db";
+import { User } from "../db/models/user";
 import { toUserUrn } from "../helpers/urn-helpers";
-import { User } from "../models";
 import { setAuthenticatedUser } from "../services/request-context";
 
 function initAuth() {

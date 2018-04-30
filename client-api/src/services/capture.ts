@@ -1,4 +1,5 @@
-import { GraphNode, User } from "../models";
+import { User } from "../db/models/user";
+import { GraphNode } from "../models/graph";
 
 import {
   createCaptureNode,

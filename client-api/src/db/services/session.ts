@@ -1,9 +1,7 @@
 import { StatementResult } from "neo4j-driver/types/v1";
 import { v4 as uuidv4 } from "uuid/v4";
-import { GraphNode } from "../../models";
-
 import { toSessionUrn } from "../../helpers/urn-helpers";
-
+import { GraphNode } from "../../models/graph-node";
 import { executeQuery } from "../db";
 
 export function createSession(

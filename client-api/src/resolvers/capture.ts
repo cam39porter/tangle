@@ -3,7 +3,11 @@ import * as moment from "moment";
 import { archiveCaptureNode, executeQuery } from "../db/db";
 import { createSession } from "../db/services/session";
 import { getUrnType } from "../helpers/urn-helpers";
-import { Edge, Graph, GraphNode, PageInfo, SearchResults } from "../models";
+import { Edge } from "../models/edge";
+import { Graph } from "../models/graph";
+import { GraphNode } from "../models/graph-node";
+import { PageInfo } from "../models/page-info";
+import { SearchResults } from "../models/search-results";
 import { createCapture, editCapture } from "../services/capture";
 import { getAuthenticatedUser } from "../services/request-context";
 export default {

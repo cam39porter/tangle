@@ -112,30 +112,6 @@ function createEntityNodeWithEdge(
   `);
 }
 
-function createTagNodeWithEdge(
-  tag: string,
-  toNodeUrn: string
-): Promise<GraphNode> {
-  return executeQuery(`
-    MATCH (to {id: "${toNodeUrn}"})
-    MERGE (tag:Tag {
-      id: "${toTagUrn(tag)}",
-      name: "${tag}"
-    })
-    ON CREATE SET tag.created = TIMESTAMP()
-    CREATE (tag)<-[r:TAGGED_WITH]-(to)
-    RETURN tag
-  `).then((result: StatementResult) => {
-    const record = result.records[0].get("tag");
-    return new GraphNode(
-      record.properties.id,
-      "Tag",
-      record.properties.name,
-      null
-    );
-  });
-}
-
 function createLinkNodeWithEdge(link: string, captureId: string) {
   return executeQuery(`
     MATCH (capture:Capture {id: "${captureId}"})
@@ -171,14 +147,31 @@ function executeQuery(cypherQuery: string): Promise<StatementResult> {
     });
 }
 
+function executeQueryWithParams(
+  cypherQuery: string,
+  params: object
+): Promise<StatementResult> {
+  return session
+    .run(cypherQuery, params)
+    .then(result => {
+      session.close();
+      return result;
+    })
+    .catch(error => {
+      session.close();
+      console.log(error);
+      throw error;
+    });
+}
+
 export {
   getUser,
   executeQuery,
+  executeQueryWithParams,
   archiveCaptureNode,
   createCaptureNode,
   createUser,
   editCaptureNode,
-  createTagNodeWithEdge,
   createEntityNodeWithEdge,
   createLinkNodeWithEdge
 };

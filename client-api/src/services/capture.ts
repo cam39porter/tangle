@@ -1,11 +1,11 @@
 import { User } from "../db/models/user";
-import { GraphNode } from "../models/graph";
+import { upsert as upsertTag } from "../db/services/tag";
+import { GraphNode } from "../models/graph-node";
 
 import {
   createCaptureNode,
   createEntityNodeWithEdge,
   createLinkNodeWithEdge,
-  createTagNodeWithEdge,
   editCaptureNode
 } from "../db/db";
 import { getNLPResponse } from "../services/nlp";
@@ -43,7 +43,7 @@ function createRelations(
     );
     return nlpCreates.then(() => {
       const tagCreates = Promise.all(
-        parseTags(body).map(tag => createTagNodeWithEdge(tag, captureId))
+        parseTags(body).map(tag => upsertTag(tag, captureId))
       );
       return tagCreates.then(() => {
         const linkCreates = Promise.all(

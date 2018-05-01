@@ -16,6 +16,20 @@
       }
     },
     {
+      "name": "client-api debug tests",
+      "type": "node",
+      "request": "launch",
+      "port": 58585,
+      "cwd": "${workspaceRoot}/client-api",
+      "runtimeArgs": [
+        "--inspect-brk=58585",
+        "${workspaceRoot}/client-api/node_modules/.bin/jest",
+        "--runInBand"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
       "name": "Launch Chrome against localhost web client",
       "type": "chrome",
       "request": "launch",

@@ -13,8 +13,9 @@ import * as formidable from "express-formidable";
 import * as fs from "fs";
 import { GraphQLSchema } from "graphql";
 import * as path from "path";
+import captureResolvers from "./capture/resolver";
 import { authFilter, initAuth } from "./filters/auth";
-import resolvers from "./resolvers/capture";
+import surfaceResolvers from "./surface/resolver";
 import { importEvernoteNote } from "./upload/services/evernote-import";
 
 const schema = fs.readFileSync(
@@ -28,7 +29,7 @@ const schema = fs.readFileSync(
 
 const executableSchema: GraphQLSchema = makeExecutableSchema({
   typeDefs: schema,
-  resolvers
+  resolvers: [captureResolvers, surfaceResolvers]
 });
 
 initAuth();

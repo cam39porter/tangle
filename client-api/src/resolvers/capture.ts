@@ -5,13 +5,13 @@ import { Session } from "../db/models/session";
 import { archiveCaptureNode } from "../db/services/capture";
 import { create as createSession } from "../db/services/session";
 import { getUrnType } from "../helpers/urn-helpers";
-import { Edge } from "../models/edge";
-import { Graph } from "../models/graph";
-import { GraphNode } from "../models/graph-node";
-import { PageInfo } from "../models/page-info";
-import { SearchResults } from "../models/search-results";
-import { createCapture, editCapture } from "../services/capture";
-import { getAuthenticatedUser } from "../services/request-context";
+import { Edge } from "../surface/models/edge";
+import { Graph } from "../surface/models/graph";
+import { GraphNode } from "../surface/models/graph-node";
+import { PageInfo } from "../surface/models/page-info";
+import { SearchResults } from "../surface/models/search-results";
+import { createCapture, editCapture } from "../capture/services/capture";
+import { getAuthenticatedUser } from "../filters/request-context";
 
 export default {
   Query: {

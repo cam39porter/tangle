@@ -1,8 +1,8 @@
 import { StatementResult } from "neo4j-driver/types/v1";
 import { executeQuery } from "../../db/db";
 import { User } from "../../db/models/user";
-import { createCapture } from "../../services/capture";
-import { getAuthenticatedUser } from "../../services/request-context";
+import { createCapture } from "../../capture/services/capture";
+import { getAuthenticatedUser } from "../../filters/request-context";
 import { EvernoteNote } from "../models/evernote-note";
 import { parseEvernoteHtml } from "./evernote-html-parser";
 // import { save as saveFile } from "./file-db";

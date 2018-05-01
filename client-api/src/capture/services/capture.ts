@@ -1,17 +1,17 @@
-import { User } from "../db/models/user";
-import { upsert as upsertLink } from "../db/services/link";
-import { upsert as upsertTag } from "../db/services/tag";
+import { User } from "../../db/models/user";
+import { upsert as upsertLink } from "../../db/services/link";
+import { upsert as upsertTag } from "../../db/services/tag";
 
 import {
   createCaptureNode,
   editCaptureNodeAndDeleteRelationships
-} from "../db/services/capture";
-import { getNLPResponse } from "../nlp/services/nlp";
+} from "../../db/services/capture";
+import { getNLPResponse } from "../../nlp/services/nlp";
 
-import { Capture } from "../db/models/capture";
-import { upsertEntity } from "../db/services/entity";
-import { parseLinks, parseTags, stripTags } from "../helpers/capture-parser";
-import { getAuthenticatedUser } from "../services/request-context";
+import { Capture } from "../../db/models/capture";
+import { upsertEntity } from "../../db/services/entity";
+import { getAuthenticatedUser } from "../../filters/request-context";
+import { parseLinks, parseTags, stripTags } from "../../helpers/capture-parser";
 
 export function editCapture(id: string, body: string) {
   const userId = getAuthenticatedUser().id;

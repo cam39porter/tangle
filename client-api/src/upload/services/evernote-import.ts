@@ -51,7 +51,7 @@ function createEvernoteNode(
   });
 }
 
-function getEvernoteNode(userId: string, noteId: string) {
+function getEvernoteNode(userId: string, noteId: string): Promise<any> {
   return executeQuery(`
   MATCH (u:User {id:"${userId}"})-[:CREATED]->(note:EvernoteNote {id:"${noteId}"})
   RETURN note`).then((result: StatementResult) => {

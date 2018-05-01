@@ -13,7 +13,7 @@ import { upsertEntity } from "../../db/services/entity";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { parseLinks, parseTags, stripTags } from "../../helpers/capture-parser";
 
-export function editCapture(id: string, body: string) {
+export function editCapture(id: string, body: string): Promise<boolean> {
   const userId = getAuthenticatedUser().id;
   return editCaptureNodeAndDeleteRelationships(userId, id, body).then(() =>
     createRelations(id, body, "PLAIN_TEXT")

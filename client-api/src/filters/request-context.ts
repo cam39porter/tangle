@@ -1,7 +1,7 @@
 import * as requestContext from "request-context";
 import { User } from "../db/models/user";
 
-function setAuthenticatedUser(user: User) {
+function setAuthenticatedUser(user: User): void {
   requestContext.set("request:user", user);
 }
 

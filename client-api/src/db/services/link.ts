@@ -3,7 +3,7 @@ import { toLinkUrn } from "../../helpers/urn-helpers";
 import { executeQueryWithParams } from "../db";
 import { Link } from "../models/link";
 
-export function upsert(url: string, captureId: string) {
+export function upsert(url: string, captureId: string): Promise<Link> {
   const params = { id: toLinkUrn(url), url };
   const query = `
     MATCH (capture:Capture {id: "${captureId}"})

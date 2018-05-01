@@ -1,6 +1,6 @@
 import { Graph } from "../surface/models/graph";
 import { SearchResults } from "../surface/models/search-results";
-import { getAllByUseCase, getNode } from "./services/capture";
+import { getAllByUseCase, getNode } from "./services/graph";
 import { search } from "./services/search";
 
 export default {

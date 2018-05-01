@@ -2,6 +2,7 @@
   "compilerOptions": {
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noImplicitReturns": true,
     "target": "es6",
     "module": "commonjs",
     "outDir": "./.compiled",

@@ -4,14 +4,14 @@ import { createUser, getUser } from "../db/services/user";
 import { toUserUrn } from "../helpers/urn-helpers";
 import { setAuthenticatedUser } from "./request-context";
 
-function initAuth() {
+function initAuth(): void {
   admin.initializeApp({
     credential: admin.credential.applicationDefault(),
     databaseURL: "https://opit-193719.firebaseio.com"
   });
 }
 
-function authFilter(req, res, next) {
+function authFilter(req, res, next): void {
   if (process.env.NODE_ENV === "development" && req.get("dev-override-id")) {
     setDevOverride(req.get("dev-override-id"))
       .then(() => next())
@@ -19,7 +19,7 @@ function authFilter(req, res, next) {
   } else if (req.get("authorization")) {
     const encodedToken = parseAuthorization(req.get("authorization"));
     verify(encodedToken)
-      .then(token => {
+      .then((token: admin.auth.DecodedIdToken) => {
         const user = new User(toUserUrn(token.uid), token.email, token.name);
         createUser(user)
           .then(() => {
@@ -44,7 +44,7 @@ function setDevOverride(urn: string): Promise<void> {
   return getUser(urn).then(setAuthenticatedUser);
 }
 
-function verify(encodedToken) {
+function verify(encodedToken): Promise<admin.auth.DecodedIdToken> {
   return admin.auth().verifyIdToken(encodedToken);
 }
 

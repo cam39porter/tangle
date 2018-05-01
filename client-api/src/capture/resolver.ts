@@ -4,7 +4,7 @@ import { create as createSession } from "../db/services/session";
 import { getAuthenticatedUser } from "../filters/request-context";
 import { Graph } from "../surface/models/graph";
 import { GraphNode } from "../surface/models/graph-node";
-import { getAllByUseCase } from "../surface/services/capture";
+import { getAllByUseCase } from "../surface/services/graph";
 import { createCapture, editCapture } from "./services/capture";
 
 export default {

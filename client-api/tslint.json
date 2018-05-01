@@ -10,6 +10,8 @@
     "no-console": false,
     "no-string-literal": false,
     "max-classes-per-file": false,
+    "typedef": [true, "call-signature", "property-declaration"],
+
     "no-conditional-assignment": false
   },
   "rulesDirectory": []

@@ -1,5 +1,7 @@
 import { StatementResult } from "neo4j-driver/types/v1";
 import { executeQueryWithParams } from "../../db/db";
+import { buildGraph } from "../formatters/graph";
+import { Graph } from "../models/graph";
 
 /**
  * TODO instead of providing a cypher query, this function should perform the db lookup
@@ -24,8 +26,9 @@ export function expandCaptures(userUrn: string): string {
 
 export function expandCapturesFetch(
   userUrn: string,
-  captureIds: string[]
-): Promise<StatementResult> {
+  captureIds: string[],
+  startUrn = null
+): Promise<Graph> {
   const params = { userUrn, captureIds };
   const query = `
   MATCH (roots:Capture)
@@ -41,5 +44,14 @@ export function expandCapturesFetch(
   UNWIND relationships as rel
   RETURN collect(distinct roots) as roots, collect(distinct node) as nodes, collect(distinct rel) as relationships
   `;
-  return executeQueryWithParams(query, params);
+  return executeQueryWithParams(query, params).then(
+    (result: StatementResult) => {
+      return buildGraph(
+        result.records[0].get("nodes"),
+        result.records[0].get("relationships"),
+        startUrn,
+        result.records[0].get("roots")
+      );
+    }
+  );
 }

@@ -5,20 +5,60 @@ import { toCaptureUrn } from "../../helpers/urn-helpers";
 import { executeQueryWithParams } from "../db";
 import { Capture } from "../models/capture";
 
+export function getAllSince(userId: string, since: number): Promise<Capture[]> {
+  const params = { userId, since };
+  const query = `MATCH (roots:Capture)<-[created:CREATED]-(user:User {id:{userId}})
+  WHERE roots.created > {since} AND NOT EXISTS (roots.archived)
+  WITH roots
+  ORDER BY roots.created DESC
+  LIMIT 50`;
+  return executeQueryWithParams(query, params).then(formatCaptureArray);
+}
+
+export function getCapture(
+  userId: string,
+  captureId: string
+): Promise<Capture> {
+  const params = { userId, captureId };
+  const query = `
+    MATCH (capture:Capture {id:{captureId}})<-[created:CREATED]-(user:User {id:{userId}})
+    RETURN capture
+  `;
+  return executeQueryWithParams(query, params).then(formatCaptureResult);
+}
+
+export function getCapturesByRelatedNode(
+  userId: string,
+  nodeId: string
+): Promise<Capture[]> {
+  const params = { userId, nodeId };
+  const query = `MATCH (other {id:{nodeId}})-[r]-(capture:Capture)<-[:CREATED]-(u:User {id:{userId}})
+  WHERE NOT EXISTS(capture.archived) OR capture.archived = false
+  RETURN capture
+  `;
+  return executeQueryWithParams(query, params).then(formatCaptureArray);
+}
+
+export function getRandomCapture(userId: string): Promise<Capture> {
+  const params = { userId };
+  const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
+  WHERE NOT EXISTS (capture.archived) OR capture.archived = false
+  RETURN capture, rand() as number
+  ORDER BY number
+  LIMIT 1`;
+  return executeQueryWithParams(query, params).then(formatCaptureResult);
+}
+
 export function archiveCaptureNode(
   userId: string,
   captureId: string
 ): Promise<Capture> {
   const params = { userId, captureId };
-  const query = `MATCH (c:Capture {id:{captureId}})<-[:CREATED]-(u:User {id:{userId}})
-  SET c.archived = true
-  RETURN c
+  const query = `MATCH (capture:Capture {id:{captureId}})<-[:CREATED]-(u:User {id:{userId}})
+  SET capture.archived = true
+  RETURN capture
   `;
-  return executeQueryWithParams(query, params).then(
-    (result: StatementResult) => {
-      return result.records[0].get("c").properties as Capture;
-    }
-  );
+  return executeQueryWithParams(query, params).then(formatCaptureResult);
 }
 
 export function editCaptureNodeAndDeleteRelationships(
@@ -28,17 +68,13 @@ export function editCaptureNodeAndDeleteRelationships(
 ): Promise<Capture> {
   const params = { captureId, userId, body: escape(body) };
   const query = `
-    MATCH (c:Capture {id:{captureId}})<-[:CREATED]-(u:User {id:{userId}})
-    MATCH (c)-[r]-(other)
+    MATCH (capture:Capture {id:{captureId}})<-[:CREATED]-(u:User {id:{userId}})
+    MATCH (capture)-[r]-(other)
     WHERE type(r)<>"CREATED"
     DELETE r
-    SET c.body={body}
-    RETURN c`;
-  return executeQueryWithParams(query, params).then(
-    (result: StatementResult) => {
-      return result.records[0].get("c").properties as Capture;
-    }
-  );
+    SET capture.body={body}
+    RETURN capture`;
+  return executeQueryWithParams(query, params).then(formatCaptureResult);
 }
 
 export function createCaptureNode(
@@ -53,16 +89,24 @@ export function createCaptureNode(
     : ``;
   const query = `MATCH (u:User {id:{userId}})
     ${parentQuery}
-    CREATE (u)-[created:CREATED]->(n:Capture {
+    CREATE (u)-[created:CREATED]->(capture:Capture {
       id:{captureUrn},
       body:{body},
       created:TIMESTAMP()})
-    ${parentId ? "CREATE (n)<-[:INCLUDES]-(parent)" : ""}
-    RETURN n`;
+    ${parentId ? "CREATE (capture)<-[:INCLUDES]-(parent)" : ""}
+    RETURN capture`;
   const params = { userId, body: escape(body), parentId, captureUrn };
-  return executeQueryWithParams(query, params).then(
-    (result: StatementResult) => {
-      return result.records[0].get("n").properties as Capture;
-    }
-  );
+  return executeQueryWithParams(query, params).then(formatCaptureResult);
+}
+
+function formatCaptureArray(result: StatementResult): Capture[] {
+  return result.records.map(formatCaptureRecord);
+}
+
+function formatCaptureResult(result: StatementResult): Capture {
+  return formatCaptureRecord(result.records[0]);
+}
+
+function formatCaptureRecord(record: any): Capture {
+  return record.get("capture").properties as Capture;
 }

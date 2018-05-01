@@ -1,9 +1,10 @@
 import { executeQuery } from "../../db/db";
 import { getAuthenticatedUser } from "../../filters/request-context";
+import { search as searchClient } from "../clients/search";
 import { buildGraph } from "../formatters/graph";
 import { PageInfo } from "../models/page-info";
 import { SearchResults } from "../models/search-results";
-import { expandCaptures } from "./expand";
+import { expandCaptures, expandCapturesFetch } from "./expand";
 
 export function search(
   rawQuery: string,
@@ -14,24 +15,19 @@ export function search(
   if (!rawQuery || rawQuery.length === 0) {
     return getAllRandomCapture();
   } else {
-    return executeQuery(`CALL apoc.index.search("captures", "${rawQuery}~") YIELD node as c, weight
-    MATCH (c:Capture)<-[created:CREATED]-(u:User {id:"${userId}"})
-    WHERE NOT EXISTS (c.archived) OR c.archived = false
-    WITH c as roots, weight
-    SKIP ${start} LIMIT ${count}
-    ${expandCaptures(userId)}
-    RETURN roots, nodes, relationships
-`).then(res => {
-      return new SearchResults(
-        buildGraph(
-          res.records[0].get("nodes"),
-          res.records[0].get("relationships"),
-          null,
-          res.records[0].get("roots")
-        ),
-        new PageInfo(start, count, start + count)
-      );
-    });
+    return searchClient(rawQuery, start, count)
+      .then(captureIds => expandCapturesFetch(userId, captureIds))
+      .then(res => {
+        return new SearchResults(
+          buildGraph(
+            res.records[0].get("nodes"),
+            res.records[0].get("relationships"),
+            null,
+            res.records[0].get("roots")
+          ),
+          new PageInfo(start, count, start + count)
+        );
+      });
   }
 }
 

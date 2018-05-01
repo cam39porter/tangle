@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "graphql server",
   "main": "index.js",
-  "engine": "8.9.4",
+  "engine": {
+    "node":"8.9.4"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc -w",

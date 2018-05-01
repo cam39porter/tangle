@@ -1,0 +1,25 @@
+/* [START] Colors */
+.accent {
+  color: #ff9e37;
+}
+
+.bg-accent {
+  background-color: #ff9e37;
+}
+
+.b--accent {
+  border-color: #ff9e37;
+}
+
+.base {
+  color: #111c77;
+}
+
+.bg-base {
+  background-color: #111c77;
+}
+
+.b--base {
+  border-color: #111c77;
+}
+/* [END] Colors */

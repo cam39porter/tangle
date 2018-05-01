@@ -10,7 +10,7 @@ function parseTags(str: string): string[] {
 
 function stripTags(str: string): string {
   const regexp = new RegExp("#([^\\s]*)", "g");
-  return str.replace(regexp, "");
+  return str.replace(regexp, "").trim();
 }
 
 function parseLinks(str: string): string[] {

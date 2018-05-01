@@ -1,11 +1,11 @@
 import { User } from "../db/models/user";
+import { upsert as upsertLink } from "../db/services/link";
 import { upsert as upsertTag } from "../db/services/tag";
 import { GraphNode } from "../models/graph-node";
 
 import {
   createCaptureNode,
   createEntityNodeWithEdge,
-  createLinkNodeWithEdge,
   editCaptureNode
 } from "../db/db";
 import { getNLPResponse } from "../nlp/services/nlp";
@@ -37,20 +37,39 @@ function createRelations(
   body: string,
   contentType: string
 ): Promise<boolean> {
-  return getNLPResponse(stripTags(body), contentType).then(nlp => {
-    const nlpCreates = Promise.all(
-      nlp.entities.map(entity => createEntityNodeWithEdge(captureId, entity))
-    );
-    return nlpCreates.then(() => {
-      const tagCreates = Promise.all(
-        parseTags(body).map(tag => upsertTag(tag, captureId))
-      );
-      return tagCreates.then(() => {
-        const linkCreates = Promise.all(
-          parseLinks(body).map(link => createLinkNodeWithEdge(link, captureId))
-        );
-        return linkCreates.then(() => true);
-      });
+  const promises = [
+    createTags(captureId, body),
+    createLinks(captureId, body),
+    createEntities(captureId, body, contentType)
+  ];
+  return Promise.all(promises)
+    .then(() => true)
+    .catch(err => {
+      console.log(err);
+      throw err;
     });
+}
+
+function createTags(captureId: string, body: string): Promise<boolean> {
+  return Promise.all(
+    parseTags(body).map(tag => upsertTag(tag, captureId))
+  ).then(() => true);
+}
+
+function createLinks(captureId: string, body: string): Promise<boolean> {
+  return Promise.all(
+    parseLinks(body).map(link => upsertLink(link, captureId))
+  ).then(() => true);
+}
+
+function createEntities(
+  captureId: string,
+  body: string,
+  contentType: string
+): Promise<boolean> {
+  return getNLPResponse(stripTags(body), contentType).then(nlp => {
+    return Promise.all(
+      nlp.entities.map(entity => createEntityNodeWithEdge(captureId, entity))
+    ).then(() => true);
   });
 }

@@ -107,27 +107,6 @@ function createEntityNodeWithEdge(
   `);
 }
 
-function createLinkNodeWithEdge(link: string, captureId: string) {
-  return executeQuery(`
-    MATCH (capture:Capture {id: "${captureId}"})
-    MERGE (link:Link {
-      id: "${toLinkUrn(link)}",
-      url: "${link}"
-    })
-    ON CREATE SET link.created = TIMESTAMP()
-    CREATE (link)<-[:LINKS_TO]-(capture)
-    RETURN link
-  `).then((result: StatementResult) => {
-    const record = result.records[0].get("link");
-    return new GraphNode(
-      record.properties.id,
-      "Link",
-      record.properties.url,
-      null
-    );
-  });
-}
-
 function executeQuery(cypherQuery: string): Promise<StatementResult> {
   return session
     .run(cypherQuery)
@@ -167,6 +146,5 @@ export {
   createCaptureNode,
   createUser,
   editCaptureNode,
-  createEntityNodeWithEdge,
-  createLinkNodeWithEdge
+  createEntityNodeWithEdge
 };

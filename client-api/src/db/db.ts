@@ -5,7 +5,7 @@ import { GraphNode } from "../models/graph-node";
 import { NLPEntity } from "../nlp/models/nlp";
 import { User } from "./models/user";
 
-import { toCaptureUrn, toEntityUrn, toLinkUrn } from "../helpers/urn-helpers";
+import { toCaptureUrn, toEntityUrn } from "../helpers/urn-helpers";
 
 const driver = neo4j.driver(
   process.env.NEO4J_ENDPOINT,

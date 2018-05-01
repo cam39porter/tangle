@@ -1,5 +1,5 @@
-import { PageInfo } from ".";
 import { Graph } from "./graph";
+import { PageInfo } from "./page-info";
 
 export class SearchResults {
   public graph: Graph;

@@ -1,7 +1,8 @@
 import * as _ from "lodash";
 import * as moment from "moment";
-import { archiveCaptureNode, executeQuery } from "../db/db";
+import { executeQuery } from "../db/db";
 import { Session } from "../db/models/session";
+import { archiveCaptureNode } from "../db/services/capture";
 import { create as createSession } from "../db/services/session";
 import { getUrnType } from "../helpers/urn-helpers";
 import { Edge } from "../models/edge";

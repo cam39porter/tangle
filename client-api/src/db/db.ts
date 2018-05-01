@@ -1,10 +1,5 @@
 import { v1 as neo4j } from "neo4j-driver";
 import { StatementResult } from "neo4j-driver/types/v1";
-import { v4 as uuidv4 } from "uuid/v4";
-import { GraphNode } from "../models/graph-node";
-import { User } from "./models/user";
-
-import { toCaptureUrn } from "../helpers/urn-helpers";
 
 const driver = neo4j.driver(
   process.env.NEO4J_ENDPOINT,
@@ -12,63 +7,6 @@ const driver = neo4j.driver(
 );
 
 const session = driver.session();
-
-function archiveCaptureNode(id: string, captureId: string): Promise<void> {
-  return executeQuery(
-    `MATCH (c:Capture {id:"${captureId}"})<-[:CREATED]-(u:User {id:"${id}"})
-    SET c.archived = true
-    `
-  ).then(() => null);
-}
-
-function editCaptureNode(
-  userId: string,
-  captureId: string,
-  body: string
-): Promise<boolean> {
-  return executeQuery(`
-  MATCH (n:Capture {id:"${captureId}"})<-[:CREATED]-(u:User {id:"${userId}"})
-  MATCH (n)-[r]-(other)
-  WHERE type(r)<>"CREATED"
-  DELETE r
-  SET n.body="${escape(body)}"
-  RETURN n`).then(() => {
-    return true;
-  });
-}
-
-function createCaptureNode(
-  user: User,
-  body: string,
-  parentId: string
-): Promise<GraphNode> {
-  const uuid = uuidv4();
-  const captureUrn = toCaptureUrn(uuid);
-  const userUrn = user.id;
-  const parentQuery = parentId
-    ? `OPTIONAL MATCH (u)-[:CREATED]-(parent {id:"${parentId}"}) WHERE parent:Session OR parent:EvernoteNote`
-    : ``;
-  const query = `MATCH (u:User {id:"${userUrn}"})
-  ${parentQuery}
-  CREATE (u)-[created:CREATED]->(n:Capture {id:"${captureUrn}",
-  body:"${escape(body)}",
-  created:TIMESTAMP()})
-  ${parentId ? "CREATE (n)<-[:INCLUDES]-(parent)" : ""}
-  RETURN n`;
-  return executeQuery(query).then((result: StatementResult) => {
-    const record = result.records[0].get("n");
-    return new GraphNode(
-      record.properties.id,
-      "Capture",
-      record.properties.body,
-      0
-    );
-  });
-}
-
-function escape(text: string): string {
-  return text.replace(/\"/g, '\\"');
-}
 
 function executeQuery(cypherQuery: string): Promise<StatementResult> {
   return session
@@ -101,10 +39,4 @@ function executeQueryWithParams(
     });
 }
 
-export {
-  executeQuery,
-  executeQueryWithParams,
-  archiveCaptureNode,
-  createCaptureNode,
-  editCaptureNode
-};
+export { executeQuery, executeQueryWithParams };

@@ -23,7 +23,7 @@ export function upsertEntity(
 `;
   return executeQueryWithParams(query, params).then(
     (result: StatementResult) => {
-      return result.records[0].get("entity") as Entity;
+      return result.records[0].get("entity").properties as Entity;
     }
   );
 }

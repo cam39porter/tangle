@@ -1,5 +1,6 @@
 import "jest";
 import {
+  escape,
   parseLinks,
   parseTags,
   stripTags
@@ -71,5 +72,27 @@ describe("test parseLinks", () => {
       "http://one.com",
       "https://two.com"
     ]);
+  });
+});
+
+describe("test escape", () => {
+  test("escape no quotes", () => {
+    expect(escape("No quotes")).toEqual("No quotes");
+  });
+
+  test("escape empty string", () => {
+    expect(escape("")).toEqual("");
+  });
+
+  test("escape one pair of quotes", () => {
+    expect(escape('in here are some "quotes"')).toEqual(
+      'in here are some \\"quotes\\"'
+    );
+  });
+
+  test("escape two pairs of quotes", () => {
+    expect(escape('"one" quote "two" quote')).toEqual(
+      '\\"one\\" quote \\"two\\" quote'
+    );
   });
 });

@@ -22,4 +22,9 @@ function parseLinks(str: string): string[] {
   }
   return ret;
 }
-export { parseTags, stripTags, parseLinks };
+
+function escape(text: string): string {
+  return text.replace(/\"/g, '\\"');
+}
+
+export { escape, parseTags, stripTags, parseLinks };

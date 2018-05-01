@@ -1,5 +1,6 @@
 import { StatementResult } from "neo4j-driver/types/v1";
 import { v4 as uuidv4 } from "uuid/v4";
+import { escape } from "../../helpers/capture-parser";
 import { toCaptureUrn } from "../../helpers/urn-helpers";
 import { executeQueryWithParams } from "../db";
 import { Capture } from "../models/capture";
@@ -64,8 +65,4 @@ export function createCaptureNode(
       return result.records[0].get("n").properties as Capture;
     }
   );
-}
-
-function escape(text: string): string {
-  return text.replace(/\"/g, '\\"');
 }

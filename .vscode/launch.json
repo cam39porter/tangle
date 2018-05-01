@@ -25,6 +25,9 @@
         "--inspect-brk=58585",
         "${workspaceRoot}/client-api/node_modules/.bin/jest",
         "--runInBand"
+        // uncomment below to run for single test
+        // "-t",
+        // "test string"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"

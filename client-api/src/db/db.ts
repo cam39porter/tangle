@@ -13,25 +13,6 @@ const driver = neo4j.driver(
 
 const session = driver.session();
 
-function createUser(user: User) {
-  return executeQuery(`
-  MERGE (u:User {
-    id:"${user.id}",
-    name:"${user.name}",
-    email:"${user.email}"
-  })
-  ON CREATE SET u.created=TIMESTAMP()
-  RETURN u`);
-}
-
-function getUser(urn: string): Promise<User> {
-  return executeQuery(`
-  MATCH (u:User {id:"${urn}"})
-  RETURN u`).then((result: StatementResult) => {
-    return result.records[0].get("u").properties as User;
-  });
-}
-
 function archiveCaptureNode(id: string, captureId: string): Promise<void> {
   return executeQuery(
     `MATCH (c:Capture {id:"${captureId}"})<-[:CREATED]-(u:User {id:"${id}"})
@@ -121,11 +102,9 @@ function executeQueryWithParams(
 }
 
 export {
-  getUser,
   executeQuery,
   executeQueryWithParams,
   archiveCaptureNode,
   createCaptureNode,
-  createUser,
   editCaptureNode
 };

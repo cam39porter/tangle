@@ -3,13 +3,10 @@ import { upsert as upsertLink } from "../db/services/link";
 import { upsert as upsertTag } from "../db/services/tag";
 import { GraphNode } from "../models/graph-node";
 
-import {
-  createCaptureNode,
-  createEntityNodeWithEdge,
-  editCaptureNode
-} from "../db/db";
+import { createCaptureNode, editCaptureNode } from "../db/db";
 import { getNLPResponse } from "../nlp/services/nlp";
 
+import { upsertEntity } from "../db/services/entity";
 import { parseLinks, parseTags, stripTags } from "../helpers/capture-parser";
 import { getAuthenticatedUser } from "../services/request-context";
 
@@ -69,7 +66,9 @@ function createEntities(
 ): Promise<boolean> {
   return getNLPResponse(stripTags(body), contentType).then(nlp => {
     return Promise.all(
-      nlp.entities.map(entity => createEntityNodeWithEdge(captureId, entity))
+      nlp.entities.map(entity =>
+        upsertEntity(entity.name, entity.type, entity.salience, captureId)
+      )
     ).then(() => true);
   });
 }

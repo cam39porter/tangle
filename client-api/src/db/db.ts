@@ -2,10 +2,9 @@ import { v1 as neo4j } from "neo4j-driver";
 import { StatementResult } from "neo4j-driver/types/v1";
 import { v4 as uuidv4 } from "uuid/v4";
 import { GraphNode } from "../models/graph-node";
-import { NLPEntity } from "../nlp/models/nlp";
 import { User } from "./models/user";
 
-import { toCaptureUrn, toEntityUrn } from "../helpers/urn-helpers";
+import { toCaptureUrn } from "../helpers/urn-helpers";
 
 const driver = neo4j.driver(
   process.env.NEO4J_ENDPOINT,
@@ -90,23 +89,6 @@ function escape(text: string): string {
   return text.replace(/\"/g, '\\"');
 }
 
-function createEntityNodeWithEdge(
-  captureUrn: string,
-  entity: NLPEntity
-): Promise<any> {
-  const urn = toEntityUrn(`${entity.name};${entity.type}`);
-  return executeQuery(`
-    MATCH (capture {id: "${captureUrn}"})
-    MERGE (entity:Entity {
-      id: "${urn}",
-      name: "${entity.name}",
-      type: "${entity.type}"
-    })
-    CREATE (entity)<-[r:REFERENCES { salience: ${entity.salience} }]-(capture)
-    RETURN entity
-  `);
-}
-
 function executeQuery(cypherQuery: string): Promise<StatementResult> {
   return session
     .run(cypherQuery)
@@ -145,6 +127,5 @@ export {
   archiveCaptureNode,
   createCaptureNode,
   createUser,
-  editCaptureNode,
-  createEntityNodeWithEdge
+  editCaptureNode
 };

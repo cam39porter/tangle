@@ -1,5 +1,5 @@
 import { StatementResult } from "neo4j-driver/types/v1";
-import { executeQueryWithParams } from "../db";
+import { executeQuery } from "../db";
 import { User } from "../models/user";
 
 export function createUser(user: User): Promise<User> {
@@ -16,7 +16,7 @@ export function createUser(user: User): Promise<User> {
     })
     ON CREATE SET u.created=TIMESTAMP()
     RETURN u`;
-  return executeQueryWithParams(query, params).then(formatUser);
+  return executeQuery(query, params).then(formatUser);
 }
 
 export function getUser(urn: string): Promise<User> {
@@ -24,7 +24,7 @@ export function getUser(urn: string): Promise<User> {
   const query = `
     MATCH (u:User {id:{urn}})
     RETURN u`;
-  return executeQueryWithParams(query, params).then(formatUser);
+  return executeQuery(query, params).then(formatUser);
 }
 
 function formatUser(result: StatementResult): User {

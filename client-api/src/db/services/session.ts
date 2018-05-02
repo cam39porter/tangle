@@ -1,7 +1,7 @@
 import { StatementResult } from "neo4j-driver/types/v1";
 import { v4 as uuidv4 } from "uuid/v4";
 import { toSessionUrn } from "../../helpers/urn-helpers";
-import { executeQueryWithParams } from "../db";
+import { executeQuery } from "../db";
 import { Session } from "../models/session";
 
 export function create(userId: string, title: string): Promise<Session> {
@@ -13,9 +13,7 @@ export function create(userId: string, title: string): Promise<Session> {
     CREATE (session)<-[:CREATED]-(u)
     RETURN session`;
   const params = { userId, sessionUrn, title };
-  return executeQueryWithParams(query, params).then(
-    (result: StatementResult) => {
-      return result.records[0].get("session").properties as Session;
-    }
-  );
+  return executeQuery(query, params).then((result: StatementResult) => {
+    return result.records[0].get("session").properties as Session;
+  });
 }

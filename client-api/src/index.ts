@@ -17,6 +17,7 @@ import captureResolvers from "./capture/resolver";
 import { authFilter, initAuth } from "./filters/auth";
 import surfaceResolvers from "./surface/resolver";
 import { importEvernoteNote } from "./upload/services/evernote-import";
+import { ConflictError } from "./util/exceptions/confict-error";
 
 const schema = fs.readFileSync(
   path.join(__dirname, "../data-template/schema.graphql"),
@@ -68,16 +69,16 @@ app.post("/uploadHtml", (req, res) => {
       res.status(400).end("Unsupported content type");
     }
     importEvernoteNote(data)
-      .then(b => {
-        if (b) {
-          res.sendStatus(200);
-        } else {
-          res.status(409).end("Object already exists, please delete it first");
-        }
+      .then(() => {
+        res.sendStatus(200);
       })
       .catch(error => {
-        console.log(error);
-        res.sendStatus(500);
+        if (error instanceof ConflictError) {
+          res.status(409).end("Object already exists, please delete it first");
+        } else {
+          console.log(error);
+          res.sendStatus(500);
+        }
       });
   });
 });

@@ -1,8 +1,8 @@
 import * as cheerio from "cheerio";
 import { toEvernoteNoteUrn } from "../../helpers/urn-helpers";
-import { EvernoteNote } from "../models/evernote-note";
+import { EvernoteUpload } from "../models/evernote-upload";
 
-export function parseEvernoteHtml(data): EvernoteNote {
+export function parseEvernoteHtml(data): EvernoteUpload {
   const $ = cheerio.load(data);
   const tagString = $("meta[name=keywords]").attr("content");
   const tags = tagString ? tagString.split(", ") : [];
@@ -29,7 +29,7 @@ export function parseEvernoteHtml(data): EvernoteNote {
       return element.toString();
     });
 
-  return new EvernoteNote(
+  return new EvernoteUpload(
     toEvernoteNoteUrn(
       `${created.toString()};${$("meta[name=author]").attr("content")}`
     ),

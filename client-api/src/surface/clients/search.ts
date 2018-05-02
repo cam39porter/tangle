@@ -1,4 +1,4 @@
-import { executeQueryWithParams } from "../../db/db";
+import { executeQuery } from "../../db/db";
 import { getAuthenticatedUser } from "../../filters/request-context";
 
 export function search(
@@ -16,7 +16,7 @@ export function search(
     SKIP {start} LIMIT {count}
     RETURN c.id as captureId
   `;
-  return executeQueryWithParams(query, params).then(res => {
+  return executeQuery(query, params).then(res => {
     return res.records.map(record => record.get("captureId"));
   });
 }

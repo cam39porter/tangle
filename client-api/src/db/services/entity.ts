@@ -1,6 +1,6 @@
 import { StatementResult } from "neo4j-driver/types/v1";
 import { toEntityUrn } from "../../helpers/urn-helpers";
-import { executeQueryWithParams } from "../db";
+import { executeQuery } from "../db";
 import { Entity } from "../models/entity";
 
 export function upsertEntity(
@@ -21,9 +21,7 @@ export function upsertEntity(
   CREATE (entity)<-[r:REFERENCES {salience: {salience}}]-(capture)
   RETURN entity
 `;
-  return executeQueryWithParams(query, params).then(
-    (result: StatementResult) => {
-      return result.records[0].get("entity").properties as Entity;
-    }
-  );
+  return executeQuery(query, params).then((result: StatementResult) => {
+    return result.records[0].get("entity").properties as Entity;
+  });
 }

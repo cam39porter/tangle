@@ -1,6 +1,6 @@
 import { StatementResult } from "neo4j-driver/types/v1";
 import { toLinkUrn } from "../../helpers/urn-helpers";
-import { executeQueryWithParams } from "../db";
+import { executeQuery } from "../db";
 import { Link } from "../models/link";
 
 export function upsert(url: string, captureId: string): Promise<Link> {
@@ -14,9 +14,7 @@ export function upsert(url: string, captureId: string): Promise<Link> {
     ON CREATE SET link.created = TIMESTAMP()
     CREATE (link)<-[:LINKS_TO]-(capture)
     RETURN link`;
-  return executeQueryWithParams(query, params).then(
-    (result: StatementResult) => {
-      return result.records[0].get("link") as Link;
-    }
-  );
+  return executeQuery(query, params).then((result: StatementResult) => {
+    return result.records[0].get("link") as Link;
+  });
 }

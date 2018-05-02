@@ -1,5 +1,5 @@
 import { StatementResult } from "neo4j-driver/types/v1";
-import { executeQueryWithParams } from "../../db/db";
+import { executeQuery } from "../../db/db";
 import { buildGraph } from "../formatters/graph";
 import { Graph } from "../models/graph";
 
@@ -44,14 +44,12 @@ export function expandCapturesFetch(
   UNWIND relationships as rel
   RETURN collect(distinct roots) as roots, collect(distinct node) as nodes, collect(distinct rel) as relationships
   `;
-  return executeQueryWithParams(query, params).then(
-    (result: StatementResult) => {
-      return buildGraph(
-        result.records[0].get("nodes"),
-        result.records[0].get("relationships"),
-        startUrn,
-        result.records[0].get("roots")
-      );
-    }
-  );
+  return executeQuery(query, params).then((result: StatementResult) => {
+    return buildGraph(
+      result.records[0].get("nodes"),
+      result.records[0].get("relationships"),
+      startUrn,
+      result.records[0].get("roots")
+    );
+  });
 }

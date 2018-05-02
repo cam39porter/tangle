@@ -2,17 +2,17 @@ import { StatementResult } from "neo4j-driver/types/v1";
 import { v4 as uuidv4 } from "uuid/v4";
 import { escape } from "../../helpers/capture-parser";
 import { toCaptureUrn } from "../../helpers/urn-helpers";
-import { executeQueryWithParams } from "../db";
+import { executeQuery } from "../db";
 import { Capture } from "../models/capture";
 
 export function getAllSince(userId: string, since: number): Promise<Capture[]> {
   const params = { userId, since };
-  const query = `MATCH (roots:Capture)<-[created:CREATED]-(user:User {id:{userId}})
-  WHERE roots.created > {since} AND NOT EXISTS (roots.archived)
-  WITH roots
-  ORDER BY roots.created DESC
+  const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
+  WHERE capture.created > {since} AND NOT EXISTS (capture.archived)
+  RETURN capture
+  ORDER BY capture.created DESC
   LIMIT 50`;
-  return executeQueryWithParams(query, params).then(formatCaptureArray);
+  return executeQuery(query, params).then(formatCaptureArray);
 }
 
 export function getCapture(
@@ -24,7 +24,7 @@ export function getCapture(
     MATCH (capture:Capture {id:{captureId}})<-[created:CREATED]-(user:User {id:{userId}})
     RETURN capture
   `;
-  return executeQueryWithParams(query, params).then(formatCaptureResult);
+  return executeQuery(query, params).then(formatCaptureResult);
 }
 
 export function getCapturesByRelatedNode(
@@ -36,7 +36,7 @@ export function getCapturesByRelatedNode(
   WHERE NOT EXISTS(capture.archived) OR capture.archived = false
   RETURN capture
   `;
-  return executeQueryWithParams(query, params).then(formatCaptureArray);
+  return executeQuery(query, params).then(formatCaptureArray);
 }
 
 export function getRandomCapture(userId: string): Promise<Capture> {
@@ -46,7 +46,7 @@ export function getRandomCapture(userId: string): Promise<Capture> {
   RETURN capture, rand() as number
   ORDER BY number
   LIMIT 1`;
-  return executeQueryWithParams(query, params).then(formatCaptureResult);
+  return executeQuery(query, params).then(formatCaptureResult);
 }
 
 export function archiveCaptureNode(
@@ -58,7 +58,7 @@ export function archiveCaptureNode(
   SET capture.archived = true
   RETURN capture
   `;
-  return executeQueryWithParams(query, params).then(formatCaptureResult);
+  return executeQuery(query, params).then(formatCaptureResult);
 }
 
 export function editCaptureNodeAndDeleteRelationships(
@@ -74,7 +74,7 @@ export function editCaptureNodeAndDeleteRelationships(
     DELETE r
     SET capture.body={body}
     RETURN capture`;
-  return executeQueryWithParams(query, params).then(formatCaptureResult);
+  return executeQuery(query, params).then(formatCaptureResult);
 }
 
 export function createCaptureNode(
@@ -96,7 +96,7 @@ export function createCaptureNode(
     ${parentId ? "CREATE (capture)<-[:INCLUDES]-(parent)" : ""}
     RETURN capture`;
   const params = { userId, body: escape(body), parentId, captureUrn };
-  return executeQueryWithParams(query, params).then(formatCaptureResult);
+  return executeQuery(query, params).then(formatCaptureResult);
 }
 
 function formatCaptureArray(result: StatementResult): Capture[] {

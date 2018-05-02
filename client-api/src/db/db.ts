@@ -8,21 +8,7 @@ const driver = neo4j.driver(
 
 const session = driver.session();
 
-function executeQuery(cypherQuery: string): Promise<StatementResult> {
-  return session
-    .run(cypherQuery)
-    .then(result => {
-      session.close();
-      return result;
-    })
-    .catch(error => {
-      session.close();
-      console.log(error);
-      throw error;
-    });
-}
-
-function executeQueryWithParams(
+function executeQuery(
   cypherQuery: string,
   params: object
 ): Promise<StatementResult> {
@@ -39,4 +25,4 @@ function executeQueryWithParams(
     });
 }
 
-export { executeQuery, executeQueryWithParams };
+export { executeQuery };

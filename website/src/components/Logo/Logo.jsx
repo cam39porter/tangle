@@ -12,7 +12,7 @@ const Logo = props => {
         evalScripts="always"
         svgClassName="svg-class-name"
         svgStyle={{ height: "2.5em" }}
-        className="wrapper-class-name"
+        className={``}
       />
     </div>
   );

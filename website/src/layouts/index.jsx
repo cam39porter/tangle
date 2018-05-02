@@ -24,10 +24,10 @@ export default class MainLayout extends React.Component {
       title = "Tags";
     } else if (currentPath === "categories/") {
       title = "Categories";
-    } else if (currentPath === "about/") {
+    } else if (currentPath === "team/") {
       title = "About";
     } else if (currentPath.indexOf("posts")) {
-      title = "Article";
+      title = "Team";
     } else if (currentPath.indexOf("tags/")) {
       const tag = currentPath
         .replace("tags/", "")

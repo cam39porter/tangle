@@ -18,7 +18,7 @@ const Alpha = props => {
           <div
             className={`dt center bg-accent white bg-accent white br4 pa3 pointer`}
           >
-            <div className={`dtc`}>
+            <div className={`dtc pt1`}>
               <span className={`f4`}>Get early access</span>
             </div>
             <div className={`dtc v-mid`}>

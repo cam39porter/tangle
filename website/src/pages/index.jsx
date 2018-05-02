@@ -39,11 +39,12 @@ class Home extends Component {
             <div className={`w-50-l w-100 fl pt4`}>
               <div className={`measure`}>
                 <div className={`f3 lh-copy dark-gray fw4 pb4`}>
-                  Connect your thoughts.
+                  Connect your dots.
                 </div>
                 <div className={`f3 lh-copy gray fw1 pb4`}>
                   It's hard to know everything you know. Effortlessly surface
-                  the connections between your notes with the power of Tangle.
+                  the connections between your thoughts with the power of
+                  Tangle.
                 </div>
                 <div className={`dt pb5`}>
                   <a href={`http://eepurl.com/dtlCKD`} className={`link`}>
@@ -71,10 +72,10 @@ class Home extends Component {
               <div className={`ttu accent lh-copy pb4`}>what is it?</div>
               <div className={`f4 fw2 gray lh-copy`}>
                 Tangle is your personal knowledge graph. Capture your thoughts,
-                jot down ideas or take notes without worrying about how to
-                organize them. Tangle does that for you. Easily surface
-                interesting linkages between what you know when you search your
-                tangle.
+                jot down ideas or import your notes from your favorite service
+                without worrying about how to organize them. Tangle does that
+                for you. Easily surface useful connections between what you know
+                when you build your tangle.
               </div>
             </div>
           </div>
@@ -114,6 +115,25 @@ class Home extends Component {
           </div>
         </div>
 
+        {/* Feature 3 */}
+        <div className={`dt-row w-100`}>
+          <div className={`dt vh-75 w-100 mt6-l mt5 br4 b--light-gray ba`}>
+            <div className={`dt-row w-100`}>
+              <div className={`f3 measure-narrow center lh-copy pa4`}>
+                <div className={`f3 dark-gray fw4 pb4`}>
+                  Make your old thoughts new again.
+                </div>
+                <div className={`f4 gray fw2`}>
+                  Don’t let the great ideas you had a year ago slip through the
+                  cracks again. As you capture more and more, Tangle
+                  automatically connects your current thinking to the past.
+                </div>
+              </div>
+            </div>
+            <div className={`dtc-l dt-row w-50`} />
+          </div>
+        </div>
+
         {/* Mission */}
         <div className={`dt-row w-100`}>
           <div className={`measure-wide center pt6`}>
@@ -127,7 +147,12 @@ class Home extends Component {
 
         {/* Subscribe */}
         <div className={`dt-row w-100`}>
-          <Alpha title={"Be one of the first to unleash your knowledge."} body={"There are limited spots open for early access. We want to collaborate with those who are passionate about creating the future of personal knowledge management."} />
+          <Alpha
+            title={"Be one of the first to unleash your knowledge."}
+            body={
+              "There are limited spots open for early access. We want to collaborate with those who are passionate about creating the future of personal knowledge management."
+            }
+          />
         </div>
 
         {/* Data ownwership */}
@@ -135,9 +160,8 @@ class Home extends Component {
           <div className={`measure-wide center mv6 pa4 br4 b--accent ba`}>
             <div className={`ttu accent lh-copy pb4`}>PS.</div>
             <div className={`f4 fw2 gray lh-copy`}>
-              We know ownership of your data is important to you. We also know
-              we are the new kid on the block. Tangle will always allow you to
-              export your data, no questions asked.
+              We know ownership of your data is important to you. Tangle will
+              always allow you to export your data, no questions asked.
             </div>
           </div>
         </div>

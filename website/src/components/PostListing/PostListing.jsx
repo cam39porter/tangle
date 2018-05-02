@@ -23,7 +23,7 @@ class PostListing extends React.Component {
     const postList = this.getPostList();
     return (
       <div className={`w-90 center`}>
-        <Alpha title={"The blog is just the beginning."} body={"If you enjoy what you see here, we bet you will love what we are building. Just click the button and not only will you be at the front of the line for exclusive access to Tangle, we will send you updates on our progress and new content"}/>
+        <Alpha title={"The blog is just the beginning."} body={"If you enjoy what you see here, we bet you will love what we are building. Just click the button and not only will you be at the front of the line for exclusive access to Tangle, we will send you updates on our progress and new content."}/>
         {/* List of Posts */
         postList.map((post, index) => (
           <div

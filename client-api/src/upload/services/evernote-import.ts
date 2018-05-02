@@ -10,7 +10,7 @@ export function importEvernoteNote(data): Promise<boolean> {
   const note: EvernoteUpload = parseEvernoteHtml(data);
   const user: User = getAuthenticatedUser();
   // return saveFile(data).then(() => {
-  return createEvernoteNode(user.id, note).then(() => {
+  return createIfAbsent(user.id, note).then(() => {
     return createEvernoteCaptures(note).then(() => true);
   });
   // });
@@ -23,11 +23,4 @@ function createEvernoteCaptures(note: EvernoteUpload): Promise<void> {
     })
   );
   return batchCreates.then(() => null);
-}
-
-function createEvernoteNode(
-  userId: string,
-  note: EvernoteUpload
-): Promise<boolean> {
-  return createIfAbsent(userId, note).then(() => true);
 }

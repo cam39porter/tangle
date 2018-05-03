@@ -16,7 +16,7 @@ class PostTags extends Component {
                 to={`/tags/${_.kebabCase(tag)}`}
               >
                 <div
-                  className={`ttl dib fl pv1 ph2 ma2 white f5 fw3 bg-accent br4`}
+                  className={`ttl dib fl pv1 ph2 ma2 white f5 fw5 bg-accent br4`}
                 >{`#${tag}`}</div>
               </Link>
             </div>

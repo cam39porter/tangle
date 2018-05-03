@@ -72,10 +72,10 @@ class Home extends Component {
               <div className={`ttu accent lh-copy pb4`}>what is it?</div>
               <div className={`f4 fw2 gray lh-copy`}>
                 Tangle is your personal knowledge graph. Capture your thoughts,
-                jot down ideas or import your notes from your favorite service
-                without worrying about how to organize them. Tangle does that
-                for you. Easily surface useful connections between what you know
-                when you build your tangle.
+                jot down ideas, and import your notes from your favorite service
+                without worrying about how to organize them. Easily surface
+                useful connections between what you know when you build your
+                tangle.
               </div>
             </div>
           </div>
@@ -317,12 +317,12 @@ class Home extends Component {
             <div className={`dt-row w-100`}>
               <div className={`f3 measure-narrow center lh-copy pa4`}>
                 <div className={`f3 dark-gray fw4 pb4`}>
-                  Make your old thoughts new again.
+                  Make your old thoughts new.
                 </div>
                 <div className={`f4 gray fw2`}>
                   Don’t let the great ideas you had a year ago slip through the
-                  cracks again. As you capture more and more, Tangle
-                  automatically connects your current thinking to the past.
+                  cracks again. Tangle sparks your creativity by automatically
+                  connects your current thinking to the past.
                 </div>
               </div>
             </div>

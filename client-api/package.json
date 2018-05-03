@@ -22,7 +22,12 @@
       "^.+\\.ts$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts)$",
-    "moduleFileExtensions": ["ts", "js", "json", "node"]
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json",
+      "node"
+    ]
   },
   "license": "ISC",
   "dependencies": {
@@ -60,6 +65,8 @@
     "ngrok": "3.0.0",
     "nodemon": "1.14.12",
     "sleep": "5.1.1",
-    "ts-jest": "22.4.4"
+    "ts-jest": "22.4.4",
+    "tsc": "1.20150623.0",
+    "tslint": "5.9.1"
   }
 }

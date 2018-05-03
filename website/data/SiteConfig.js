@@ -9,7 +9,7 @@ module.exports = {
     "Tangle is the personal knowledge graph. Tangle empowers everyone to capture and connect thoughts to create big ideas.", // Website description used for RSS feeds/meta description tag.
   siteRss: "/rss.xml", // Path to the RSS file.
   siteFBAppID: "", // FB Application ID for using app insights
-  googleAnalyticsID: "UA-47311644-5", // GA tracking ID.
+  googleAnalyticsID: "UA-118657525-1", // GA tracking ID.
   disqusShortname: "tangle-1", // Disqus shortname.
   postDefaultCategoryID: "Tangle", // Default category for posts.
   userName: "Tangle Community Member", // Username to display in the author segment.

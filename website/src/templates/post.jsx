@@ -38,7 +38,7 @@ export default class PostTemplate extends React.Component {
             <PostTags tags={post.tags} />
             <SocialLinks postPath={slug} postNode={postNode} />
           </div>
-          <Disqus postNode={postNode} />
+          {/* <Disqus postNode={postNode} /> */}
         </div>
       </div>
     );

@@ -16,7 +16,7 @@ class Home extends Component {
         <div className={`dt-row vh-50 w-100`}>
           <div className={`h-100 w-100`}>
             <div
-              className={`w-50-l w-100 fr pa2 br4 shadow-1`}
+              className={`w-50-l w-100 fr pa2 mt4-l br4 shadow-1`}
               style={{ pointerEvents: "none" }}
             >
               <div style={{ padding: "54.09% 0 0 0", position: "relative" }}>
@@ -37,7 +37,7 @@ class Home extends Component {
               <script src="https://player.vimeo.com/api/player.js" />
             </div>
             <div className={`w-50-l w-100 fl pt4`}>
-              <div className={`measure`}>
+              <div className={`measure mt4-l mr4-l`}>
                 <div className={`f3 lh-copy dark-gray fw4 pb4`}>
                   Connect your dots.
                 </div>
@@ -83,12 +83,12 @@ class Home extends Component {
 
         {/* Feature 1 */}
         <div className={`dt-row w-100`}>
-          <div
-            className={`dt vh-75 vh-50-l w-100 mt6-l mt5 ba br4 b--light-gray`}
-          >
+          <div className={`dt w-100 mt6-l pv4 mt5 ba br4 b--light-gray`}>
             <div className={`dt-row dtc-l v-mid w-100 w-50-l`}>
-              <div className={`f3 measure-narrow lh-copy pa4 fr-l`}>
-                <div className={`f3 dark-gray fw4 pb4`}>Stop taking notes.</div>
+              <div className={`f3 measure-narrow lh-copy pa4 fr-l mv6-l`}>
+                <div className={`f3 dark-gray fw4 pb4`}>
+                  Stop organizing notes.
+                </div>
                 <div className={`f4 gray fw2`}>
                   Spend more time capturing thoughts and less time organizing
                   them.
@@ -121,9 +121,25 @@ class Home extends Component {
           </div>
         </div>
 
+        {/* Steve Jobs */}
+        <div className={`dt-row w-100`}>
+          <div className={`w-100 pt6-l pt4`}>
+            <div className={`measure-wide center`}>
+              <div className={`f4 fw2 gray lh-copy pb4`}>
+                Creativity is just connecting things. When you ask creative
+                people how they did something, they feel a little guilty because
+                they didn’t really do it, they just saw something. It seemed
+                obvious to them after a while. That’s because they were able to
+                connect experiences they’ve had and synthesize new things.
+              </div>
+              <div className={`fr ttu accent lh-copy`}>- steve jobs</div>
+            </div>
+          </div>
+        </div>
+
         {/* Feature 2 */}
         <div className={`dt-row w-100`}>
-          <div className={`dt vh-75-l w-100 mt6-l mt5 ba br4 b--light-gray`}>
+          <div className={`dt h-100 w-100 mt6-l mt5 ba br4 b--light-gray`}>
             <div className={`dtc-l dt-row w-50 h-100`}>
               <div
                 className={`pa1 pa4-l w-100 h-100-l h5`}
@@ -299,7 +315,7 @@ class Home extends Component {
               </div>
             </div>
             <div className={`dtc-l dt-row w-50 v-mid`}>
-              <div className={`f3 measure-narrow center lh-copy pa4`}>
+              <div className={`f3 pv7-l measure-narrow center lh-copy pa4`}>
                 <div className={`f3 dark-gray fw4 pb4`}>Explore your mind.</div>
                 <div className={`f4 gray fw2`}>
                   Don’t hold your ideas hostage in files and folders. Tangle
@@ -311,9 +327,23 @@ class Home extends Component {
           </div>
         </div>
 
+        {/* Steven Johnson */}
+        <div className={`dt-row w-100`}>
+          <div className={`w-100 pt6-l pt4`}>
+            <div className={`measure-wide center`}>
+              <div className={`f4 fw2 gray lh-copy pb4`}>
+                The role of the imagination is to create new meanings and to
+                discover connections that, even if obvious, seem to escape
+                detection.
+              </div>
+              <div className={`fr ttu accent lh-copy`}>- Paul Rand</div>
+            </div>
+          </div>
+        </div>
+
         {/* Feature 3 */}
         <div className={`dt-row w-100`}>
-          <div className={`dt vh-75 w-100 mt6-l mt5 br4 b--light-gray ba`}>
+          <div className={`dt w-100 mt6-l mt5 br4 b--light-gray ba`}>
             <div className={`dt-row w-100`}>
               <div className={`f3 measure-narrow center lh-copy pa4`}>
                 <div className={`f3 dark-gray fw4 pb4`}>
@@ -363,7 +393,7 @@ class Home extends Component {
 
         {/* Data ownwership */}
         <div className={`dt-row w-100`}>
-          <div className={`measure-wide center mv6 pa4 br4 b--accent ba`}>
+          <div className={`measure-wide center mv6`}>
             <div className={`ttu accent lh-copy pb4`}>PS.</div>
             <div className={`f4 fw2 gray lh-copy`}>
               We know ownership of your data is important to you. Tangle will

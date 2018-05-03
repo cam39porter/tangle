@@ -191,7 +191,7 @@ class Graph extends React.Component {
           cursor: "pointer",
           lineStyle: {
             curveness: 0.3,
-            opacity: 0.2,
+            opacity: 0.5,
             type: "solid"
           },
           categories: this.getCategories(),

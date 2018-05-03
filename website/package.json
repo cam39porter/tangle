@@ -64,7 +64,7 @@
     "serve": "gatsby serve",
     "build": "gatsby build",
     "deploy":
-      "npm run clean && npm run build && gsutil rsync -R ./public gs://www.usetangle.com && gsutil acl ch -R -u AllUsers:R gs://www.usetangle.com && gsutil web set -m index.html gs://www.usetangle.com",
+      "npm run clean && npm run build && gsutil rsync -R ./public gs://usetangle.com && gsutil acl ch -R -u AllUsers:R gs://usetangle.com && gsutil web set -m index.html gs://usetangle.com",
     "clean": "rm -rf public",
     "lint:js": "eslint --ext .js,.jsx .",
     "lint:md": "remark content/posts/",

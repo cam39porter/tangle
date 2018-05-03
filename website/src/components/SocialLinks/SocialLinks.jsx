@@ -18,7 +18,6 @@ import {
   RedditIcon
 } from "react-share";
 import config from "../../../data/SiteConfig";
-import "./SocialLinks.css";
 
 class SocialLinks extends Component {
   render() {
@@ -31,32 +30,41 @@ class SocialLinks extends Component {
     const filter = count => (count > 0 ? count : "");
 
     return (
-      <div className="social-links">
-        <RedditShareButton url={url} title={post.title}>
-          <RedditIcon round size={iconSize} />
-          <RedditShareCount url={url}>
-            {count => <div className="share-count">{filter(count)}</div>}
-          </RedditShareCount>
-        </RedditShareButton>
-        <TwitterShareButton url={url} title={post.title}>
-          <TwitterIcon round size={iconSize} />
-        </TwitterShareButton>
-        <FacebookShareButton url={url} quote={postNode.excerpt}>
-          <FacebookIcon round size={iconSize} />
-          <FacebookShareCount url={url}>
-            {count => <div className="share-count">{filter(count)}</div>}
-          </FacebookShareCount>
-        </FacebookShareButton>
-        <LinkedinShareButton
-          url={url}
-          title={post.title}
-          description={postNode.excerpt}
-        >
-          <LinkedinIcon round size={iconSize} />
-          <LinkedinShareCount url={url}>
-            {count => <div className="share-count">{filter(count)}</div>}
-          </LinkedinShareCount>
-        </LinkedinShareButton>
+      <div className={`w-100 dt pa4`}>
+        <div className={`dtc`}>
+          <RedditShareButton url={url} title={post.title}>
+            <RedditIcon round size={iconSize} />
+            <RedditShareCount url={url}>
+              {count => <div className={``}>{filter(count)}</div>}
+            </RedditShareCount>
+          </RedditShareButton>
+        </div>
+        <div className={`dtc`}>
+          <TwitterShareButton url={url} title={post.title}>
+            <TwitterIcon round size={iconSize} />
+          </TwitterShareButton>
+        </div>
+
+        <div className={`dtc`}>
+          <FacebookShareButton url={url} quote={postNode.excerpt}>
+            <FacebookIcon round size={iconSize} />
+            <FacebookShareCount url={url}>
+              {count => <div className={``}>{filter(count)}</div>}
+            </FacebookShareCount>
+          </FacebookShareButton>
+        </div>
+        <div className={`dtc`}>
+          <LinkedinShareButton
+            url={url}
+            title={post.title}
+            description={postNode.excerpt}
+          >
+            <LinkedinIcon round size={iconSize} />
+            <LinkedinShareCount url={url}>
+              {count => <div className={``}>{filter(count)}</div>}
+            </LinkedinShareCount>
+          </LinkedinShareButton>
+        </div>
       </div>
     );
   }

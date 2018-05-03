@@ -99,7 +99,7 @@ class Home extends Component {
               <div
                 className={`dt center h5 shadow-1 ba br4 b--light-gray bg-white`}
                 style={{
-                  minWidth: "20em"
+                  minWidth: "17.5em"
                 }}
               >
                 <div className={`h-100 w-100 pa4`}>
@@ -123,13 +123,13 @@ class Home extends Component {
 
         {/* Feature 2 */}
         <div className={`dt-row w-100`}>
-          <div
-            className={`dt vh-75-l vh-100 w-100 mt6-l mt5 ba br4 b--light-gray`}
-          >
-            <div className={`dtc-l dt-row w-50`}>
+          <div className={`dt vh-75-l w-100 mt6-l mt5 ba br4 b--light-gray`}>
+            <div className={`dtc-l dt-row w-50 h-100`}>
               <div
-                className={`pa4 w-100 h-100`}
-                style={{ pointerEvents: "none" }}
+                className={`pa1 pa4-l w-100 h-100-l h5`}
+                style={{
+                  pointerEvents: "none"
+                }}
               >
                 <Graph
                   nodeData={[
@@ -299,7 +299,7 @@ class Home extends Component {
               </div>
             </div>
             <div className={`dtc-l dt-row w-50 v-mid`}>
-              <div className={`f3 measure-narrow center lh-copy pt4 ph4`}>
+              <div className={`f3 measure-narrow center lh-copy pa4`}>
                 <div className={`f3 dark-gray fw4 pb4`}>Explore your mind.</div>
                 <div className={`f4 gray fw2`}>
                   Don’t hold your ideas hostage in files and folders. Tangle

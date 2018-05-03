@@ -15,7 +15,7 @@ const teamMembers = [
     subtitle: "Lead Barista",
     link: "https://www.linkedin.com/in/cam39porter/",
     bitmoji:
-      "https://storage.googleapis.com/tangle-website/team-bitmojis/cameron-porter.png"
+      "https://storage.googleapis.com/usetangle-static-assets/team-bitmojis/cameron-porter.png"
   },
   {
     name: "Myles McGinley",
@@ -24,7 +24,7 @@ const teamMembers = [
     founder: true,
     link: "https://www.linkedin.com/in/myles-mcginley-10708954/",
     bitmoji:
-      "https://storage.googleapis.com/tangle-website/team-bitmojis/myles-mcginley.png"
+      "https://storage.googleapis.com/usetangle-static-assets/team-bitmojis/myles-mcginley.png"
   },
   {
     name: "Cole McCracken",
@@ -33,7 +33,7 @@ const teamMembers = [
     founder: true,
     link: "https://www.linkedin.com/in/colemccracken/",
     bitmoji:
-      "https://storage.googleapis.com/tangle-website/team-bitmojis/cole-mccracken.png"
+      "https://storage.googleapis.com/usetangle-static-assets/team-bitmojis/cole-mccracken.png"
   },
   {
     name: "Will Minshew",
@@ -41,7 +41,7 @@ const teamMembers = [
     subtitle: "The Philosopher",
     link: "https://www.linkedin.com/in/william-minshew/",
     bitmoji:
-      "https://storage.googleapis.com/tangle-website/team-bitmojis/will-minshew.png"
+      "https://storage.googleapis.com/usetangle-static-assets/team-bitmojis/will-minshew.png"
   }
 ];
 

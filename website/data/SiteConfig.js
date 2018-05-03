@@ -4,7 +4,7 @@ module.exports = {
   siteTitleAlt: "Tangle | Connect your thoughts", // Alternative site title for SEO.
   siteLogo: "/logos/logo-1024.png", // Logo used for SEO and manifest.
   siteUrl: "https://www.usetangle.com", // Domain of your website without pathPrefix.
-  pathPrefix: "/tangle", // Prefixes all links. For cases when deployed to example.github.io/gatsby-advanced-starter/.
+  pathPrefix: "./", // Prefixes all links. For cases when deployed to example.github.io/gatsby-advanced-starter/.
   siteDescription:
     "Tangle is the personal knowledge graph. Tangle empowers everyone to capture and connect thoughts to create big ideas.", // Website description used for RSS feeds/meta description tag.
   siteRss: "/rss.xml", // Path to the RSS file.

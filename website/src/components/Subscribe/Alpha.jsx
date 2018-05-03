@@ -4,9 +4,7 @@ import { ChevronRight } from "react-feather";
 
 const Alpha = props => {
   return (
-    <div
-      className={`dt vh-25 w-100 ba br4 bg-light-gray b--light-gray pa4 mt6`}
-    >
+    <div className={`dt vh-25 w-100 ba br4 bg-light-gray b--light-gray pa4`}>
       <div className={`dtc-l dt-row`}>
         <div className={`f3 measure-wide lh-copy pv4`}>
           <div className={`f3 dark-gray fw4 pb4`}>{props.title}</div>

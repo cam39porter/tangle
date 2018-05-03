@@ -56,7 +56,7 @@ class TeamPage extends Component {
             "We could not be more excited to share Tangle with you. We believe you will enjoy building your own tangle as much as we have."
           }
         />
-        <div className={`mw7 center pt6`}>
+        <div className={`mw7 pt6 center`}>
           {shuffle(teamMembers).map(teamMember => (
             <div key={teamMember.name} className={`fl w-100 w-50-l`}>
               <Profile {...teamMember} />

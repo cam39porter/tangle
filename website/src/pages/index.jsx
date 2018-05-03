@@ -9,7 +9,7 @@ import config from "../../data/SiteConfig";
 class Home extends Component {
   render() {
     return (
-      <div className={`dt w-90 center pt6-l pt5`}>
+      <div className={`dt w-90 center`}>
         <Helmet title={config.siteTitle} />
 
         {/* Header */}
@@ -342,7 +342,7 @@ class Home extends Component {
 
         {/* Mission */}
         <div className={`dt-row w-100`}>
-          <div className={`measure-wide center pt6`}>
+          <div className={`measure-wide center pv6`}>
             <div className={`ttu accent lh-copy pb4`}>Why build Tangle?</div>
             <div className={`f4 fw2 gray lh-copy`}>
               Because we believe in empowering everyone to capture and connect

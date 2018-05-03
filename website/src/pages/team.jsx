@@ -58,7 +58,7 @@ class TeamPage extends Component {
         />
         <div className={`mw7 center pt6`}>
           {shuffle(teamMembers).map(teamMember => (
-            <div className={`fl w-100 w-50-l`}>
+            <div key={teamMember.name} className={`fl w-100 w-50-l`}>
               <Profile {...teamMember} />
             </div>
           ))}

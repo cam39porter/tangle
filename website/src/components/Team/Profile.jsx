@@ -26,7 +26,7 @@ const Profile = props => {
                 {props.title}
               </div>
               {props.founder && (
-                <div className={`pl2 dtc f5 fw3 accent v-mid bl b--accent`}>
+                <div className={`pl2 dtc f5 fw5 accent v-mid bl b--accent`}>
                   <span className={``}>{`founder`}</span>
                 </div>
               )}

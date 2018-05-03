@@ -322,7 +322,7 @@ class Home extends Component {
                 <div className={`f4 gray fw2`}>
                   Don’t let the great ideas you had a year ago slip through the
                   cracks again. Tangle sparks your creativity by automatically
-                  connects your current thinking to the past.
+                  connecting your current thinking to the past.
                 </div>
               </div>
             </div>

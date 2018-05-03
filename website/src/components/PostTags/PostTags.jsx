@@ -9,7 +9,7 @@ class PostTags extends Component {
       <div className={``}>
         {tags &&
           tags.map(tag => (
-            <div className={``}>
+            <div key={tag} className={``}>
               <Link
                 key={tag}
                 style={{ textDecoration: "none" }}

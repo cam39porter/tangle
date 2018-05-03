@@ -333,7 +333,7 @@ class Home extends Component {
                   style={{
                     maxWidth: "80%"
                   }}
-                  src={`https://storage.googleapis.com/tangle-website/albert-einstein.png`}
+                  src={`https://storage.googleapis.com/usetangle-static-assets/albert-einstein.png`}
                 />
               </div>
             </div>

@@ -123,7 +123,7 @@ class Home extends Component {
 
         {/* Steve Jobs */}
         <div className={`dt-row w-100`}>
-          <div className={`w-100 pt6-l pt4`}>
+          <div className={`w-100 pt6`}>
             <div className={`measure-wide center`}>
               <div className={`f4 fw2 gray lh-copy pb4`}>
                 Creativity is just connecting things. When you ask creative
@@ -329,7 +329,7 @@ class Home extends Component {
 
         {/* Steven Johnson */}
         <div className={`dt-row w-100`}>
-          <div className={`w-100 pt6-l pt4`}>
+          <div className={`w-100 pt6`}>
             <div className={`measure-wide center`}>
               <div className={`f4 fw2 gray lh-copy pb4`}>
                 The role of the imagination is to create new meanings and to

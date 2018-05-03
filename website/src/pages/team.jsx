@@ -38,7 +38,7 @@ const teamMembers = [
   {
     name: "Will Minshew",
     title: "Adviser",
-    subtitle: "Crypto King",
+    subtitle: "The Philosopher",
     link: "https://www.linkedin.com/in/william-minshew/",
     bitmoji:
       "https://storage.googleapis.com/tangle-website/team-bitmojis/will-minshew.png"
@@ -48,7 +48,7 @@ const teamMembers = [
 class TeamPage extends Component {
   render() {
     return (
-      <div className={`w-100`}>
+      <div className={`w-90 center`}>
         <Helmet title={`Team | ${config.siteTitle}`} />
         <Alpha
           title={"Join us on the journey of the lifelong brainstorm."}
@@ -56,7 +56,7 @@ class TeamPage extends Component {
             "We could not be more excited to share Tangle with you. We believe you will enjoy building your own tangle as much as we have."
           }
         />
-        <div className={`w-100 center pt6`}>
+        <div className={`mw7 center pt6`}>
           {shuffle(teamMembers).map(teamMember => (
             <div className={`fl w-100 w-50-l`}>
               <Profile {...teamMember} />

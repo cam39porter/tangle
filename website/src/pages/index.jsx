@@ -3,13 +3,13 @@ import Helmet from "react-helmet";
 
 import { ChevronRight } from "react-feather";
 import Alpha from "../components/Subscribe/Alpha";
-
+import Graph from "../components/Graph/Graph";
 import config from "../../data/SiteConfig";
 
 class Home extends Component {
   render() {
     return (
-      <div className={`dt w-100 pt6-l pt4`}>
+      <div className={`dt w-90 center pt6-l pt5`}>
         <Helmet title={config.siteTitle} />
 
         {/* Header */}
@@ -83,13 +83,38 @@ class Home extends Component {
 
         {/* Feature 1 */}
         <div className={`dt-row w-100`}>
-          <div className={`dt vh-75 w-100 mt6-l mt5 ba br4 b--light-gray`}>
-            <div className={`dt-row w-100`}>
-              <div className={`f3 measure-narrow lh-copy pa4`}>
+          <div
+            className={`dt vh-75 vh-50-l w-100 mt6-l mt5 ba br4 b--light-gray`}
+          >
+            <div className={`dt-row dtc-l v-mid w-100 w-50-l`}>
+              <div className={`f3 measure-narrow lh-copy pa4 fr-l`}>
                 <div className={`f3 dark-gray fw4 pb4`}>Stop taking notes.</div>
                 <div className={`f4 gray fw2`}>
                   Spend more time capturing thoughts and less time organizing
                   them.
+                </div>
+              </div>
+            </div>
+            <div className={`dt-row dtc-l v-mid w-100 w-50-l`}>
+              <div
+                className={`dt center h5 shadow-1 ba br4 b--light-gray bg-white`}
+                style={{
+                  minWidth: "20em"
+                }}
+              >
+                <div className={`h-100 w-100 pa4`}>
+                  <div
+                    className={`relative dt h-100 w-100 bb bw1 b--accent`}
+                    style={{ pointerEvents: "none" }}
+                  >
+                    <div
+                      className={`absolute top-0 right-0 bb bw1 b--accent`}
+                      style={{ minWidth: "1.5rem" }}
+                    />
+                    <div className={`dtc pb2 f6 gray v-btm h-100 i`}>
+                      What's on your mind?
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -98,13 +123,184 @@ class Home extends Component {
 
         {/* Feature 2 */}
         <div className={`dt-row w-100`}>
-          <div className={`dt vh-75 w-100 mt6-l mt5 ba br4 b--light-gray`}>
-            <div className={`dtc-l dt-row w-50`} />
+          <div
+            className={`dt vh-75-l vh-100 w-100 mt6-l mt5 ba br4 b--light-gray`}
+          >
             <div className={`dtc-l dt-row w-50`}>
-              <div className={`f3 measure-narrow center lh-copy pa4`}>
-                <div className={`f3 dark-gray fw4 pb4`}>
-                  Explore your mind like Google Maps.
-                </div>
+              <div
+                className={`pa4 w-100 h-100`}
+                style={{ pointerEvents: "none" }}
+              >
+                <Graph
+                  nodeData={[
+                    {
+                      id:
+                        "urn:hex:capture:efea42bb-04bf-4c6b-96ed-44129aa90b2e",
+                      name: "Tangle would have been used by Steve Jobs",
+                      category: "detail"
+                    },
+                    {
+                      id: "urn:hex:entity:Steve Jobs;PERSON",
+                      name: "Steve Jobs",
+                      category: "entity"
+                    },
+                    {
+                      id: "urn:hex:entity:Tangle;OTHER",
+                      name: "Tangle",
+                      category: "entity"
+                    },
+                    {
+                      id:
+                        "urn:hex:capture:8e43c9ed-3d1f-47e6-a907-c9a9629c1694",
+                      name:
+                        "Tangle would have been used by Albert Einstein and Steve Jobs",
+                      category: "detail"
+                    },
+                    {
+                      id:
+                        "urn:hex:capture:63878d7a-7871-4c0d-8137-de7229624447",
+                      name: "What would Steve Jobs say to Albert Einstein",
+                      category: "blur"
+                    },
+                    {
+                      id:
+                        "urn:hex:capture:e92e5fa1-8624-4986-8eaa-7486e126e14a",
+                      name: "Tangle gives everyone the power of connection\n",
+                      category: "detail"
+                    },
+                    {
+                      id:
+                        "urn:hex:capture:29745222-d446-4046-be18-afaa86d92a02",
+                      name: "Tangle automatically connects your thoughts",
+                      category: "detail"
+                    },
+                    {
+                      id: "urn:hex:entity:connection;OTHER",
+                      name: "connection",
+                      category: "entity"
+                    },
+                    {
+                      id: "urn:hex:entity:power;OTHER",
+                      name: "power",
+                      category: "entity"
+                    },
+                    {
+                      id: "urn:hex:entity:everyone;PERSON",
+                      name: "everyone",
+                      category: "entity"
+                    },
+                    {
+                      id:
+                        "urn:hex:capture:ad419354-dfc3-4703-87c8-083c78e6d1c1",
+                      name:
+                        "It can even find connection to people, like Albert Einstein\n",
+                      category: "blur"
+                    },
+                    {
+                      id: "urn:hex:entity:Albert Einstein;PERSON",
+                      name: "Albert Einstein",
+                      category: "entity"
+                    },
+                    {
+                      id:
+                        "urn:hex:capture:89e5d7ba-badd-4d10-a3b3-451ab6a94cf9",
+                      name: "Albert Einstein loved physics\n",
+                      category: "blur"
+                    },
+                    {
+                      id: "urn:hex:entity:thoughts;OTHER",
+                      name: "thoughts",
+                      category: "entity"
+                    }
+                  ]}
+                  edgeData={[
+                    {
+                      source:
+                        "urn:hex:capture:efea42bb-04bf-4c6b-96ed-44129aa90b2e",
+                      destination: "urn:hex:entity:Steve Jobs;PERSON"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:efea42bb-04bf-4c6b-96ed-44129aa90b2e",
+                      destination: "urn:hex:entity:Tangle;OTHER"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:8e43c9ed-3d1f-47e6-a907-c9a9629c1694",
+                      destination: "urn:hex:entity:Steve Jobs;PERSON"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:63878d7a-7871-4c0d-8137-de7229624447",
+                      destination: "urn:hex:entity:Steve Jobs;PERSON"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:8e43c9ed-3d1f-47e6-a907-c9a9629c1694",
+                      destination: "urn:hex:entity:Tangle;OTHER"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:e92e5fa1-8624-4986-8eaa-7486e126e14a",
+                      destination: "urn:hex:entity:Tangle;OTHER"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:29745222-d446-4046-be18-afaa86d92a02",
+                      destination: "urn:hex:entity:Tangle;OTHER"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:e92e5fa1-8624-4986-8eaa-7486e126e14a",
+                      destination: "urn:hex:entity:connection;OTHER"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:e92e5fa1-8624-4986-8eaa-7486e126e14a",
+                      destination: "urn:hex:entity:power;OTHER"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:e92e5fa1-8624-4986-8eaa-7486e126e14a",
+                      destination: "urn:hex:entity:everyone;PERSON"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:ad419354-dfc3-4703-87c8-083c78e6d1c1",
+                      destination: "urn:hex:entity:connection;OTHER"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:8e43c9ed-3d1f-47e6-a907-c9a9629c1694",
+                      destination: "urn:hex:entity:Albert Einstein;PERSON"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:89e5d7ba-badd-4d10-a3b3-451ab6a94cf9",
+                      destination: "urn:hex:entity:Albert Einstein;PERSON"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:ad419354-dfc3-4703-87c8-083c78e6d1c1",
+                      destination: "urn:hex:entity:Albert Einstein;PERSON"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:63878d7a-7871-4c0d-8137-de7229624447",
+                      destination: "urn:hex:entity:Albert Einstein;PERSON"
+                    },
+                    {
+                      source:
+                        "urn:hex:capture:29745222-d446-4046-be18-afaa86d92a02",
+                      destination: "urn:hex:entity:thoughts;OTHER"
+                    }
+                  ]}
+                />
+              </div>
+            </div>
+            <div className={`dtc-l dt-row w-50 v-mid`}>
+              <div className={`f3 measure-narrow center lh-copy pt4 ph4`}>
+                <div className={`f3 dark-gray fw4 pb4`}>Explore your mind.</div>
                 <div className={`f4 gray fw2`}>
                   Don’t hold your ideas hostage in files and folders. Tangle
                   creates a network of thoughts and connects the dots for you.
@@ -130,7 +326,17 @@ class Home extends Component {
                 </div>
               </div>
             </div>
-            <div className={`dtc-l dt-row w-50`} />
+            <div className={`dtc-l dt-row w-50`}>
+              <div className={`w-100 tc`}>
+                <img
+                  className={`pa4`}
+                  style={{
+                    maxWidth: "80%"
+                  }}
+                  src={`https://storage.googleapis.com/tangle-website/albert-einstein.png`}
+                />
+              </div>
+            </div>
           </div>
         </div>
 

@@ -2,7 +2,8 @@
 import * as React from "react";
 
 // Style
-import "tachyons";
+import "./custom.css";
+import "./index.css";
 
 // Routing
 import { RouteProps } from "react-router";

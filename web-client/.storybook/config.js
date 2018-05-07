@@ -2,6 +2,10 @@
 
 import { configure } from "@storybook/react";
 
+// styles
+import "../src/custom.css";
+import "../src/index.css";
+
 const req = require.context("../stories", true, /\.tsx?$/);
 
 function loadStories() {

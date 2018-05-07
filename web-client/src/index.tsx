@@ -4,7 +4,6 @@ import * as ReactDOM from "react-dom";
 import { unregister as unregisterServiceWorker } from "./registerServiceWorker";
 
 // Components
-import "./index.css";
 import App from "./App";
 
 // Apollo

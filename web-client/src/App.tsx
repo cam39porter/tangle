@@ -3,7 +3,7 @@ import * as React from "react";
 
 // Style
 import "./custom.css";
-import "./index.css";
+import "./tachyons.css";
 
 // Routing
 import { RouteProps } from "react-router";

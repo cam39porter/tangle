@@ -4,7 +4,7 @@ import { configure } from "@storybook/react";
 
 // styles
 import "../src/custom.css";
-import "../src/index.css";
+import "../src/tachyons.css";
 
 const req = require.context("../stories", true, /\.tsx?$/);
 

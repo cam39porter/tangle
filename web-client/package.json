@@ -54,7 +54,7 @@
       "REACT_APP_ENV=production yarn build && gcloud -q app deploy ./prod.yaml",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "css": "tachyons src/css/app.css > src/index.css --minify",
+    "css": "tachyons src/css/app.css > src/tachyons.css --minify",
     "prestart": "npm run css",
     "prebuild": "npm run css"
   },

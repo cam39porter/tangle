@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots Button in accent color 1`] = `
+<span
+  className="dt pa2 f6 tc pointer ttl br4 ba b--base base"
+  onClick={[Function]}
+>
+  <div
+    className="dtc v-mid h-100 w-100"
+  >
+    button
+  </div>
+</span>
+`;

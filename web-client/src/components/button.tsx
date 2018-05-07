@@ -11,7 +11,7 @@ class Button extends React.Component<Props, object> {
   render() {
     return (
       <span
-        className={`dt center pa2 f6 tc pointer ttl br4 ba b--${
+        className={`dt pa2 f6 tc pointer ttl br4 ba b--${
           this.props.accentColor
         } ${this.props.accentColor}`}
         onClick={this.props.onClick}

@@ -61,26 +61,21 @@ app.use(
 );
 app.use(formidable());
 app.post("/uploadHtml", (req, res) => {
-  fs.readFile(req["files"].file.path, (err, data) => {
-    if (err) {
-      res.status(500).end("Could not read file");
-    }
-    if (req["files"].file.type !== "text/html") {
-      res.status(400).end("Unsupported content type");
-    }
-    importEvernoteNote(data)
-      .then(() => {
-        res.sendStatus(200);
-      })
-      .catch(error => {
-        if (error instanceof ConflictError) {
-          res.status(409).end("Object already exists, please delete it first");
-        } else {
-          console.log(error);
-          res.sendStatus(500);
-        }
-      });
-  });
+  if (req["files"].file.type !== "text/html") {
+    res.status(400).send("Unsupported content type");
+  }
+  importEvernoteNote(req["files"].file)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(error => {
+      if (error instanceof ConflictError) {
+        res.status(409).end("Object already exists, please delete it first");
+      } else {
+        console.log(error);
+        res.sendStatus(500);
+      }
+    });
 });
 
 app.get("/graphiql", graphiqlExpress({ endpointURL: "/graphql" })); // if you want GraphiQL enabled

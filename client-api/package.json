@@ -12,7 +12,8 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "build": "tsc",
     "prepush": "yarn build && yarn lint && yarn test",
-    "start": "node .compiled/index.js",
+    "start":
+      "echo 'THIS DOES NOT WORK IN DEV PLEASE USE DEBUGGER WITH CONF SETTINGS FROM COLE' && node .compiled/index.js",
     "deploy:api:dev": "yarn build && gcloud -q app deploy ./dev.yaml",
     "deploy:api:prod": "yarn build && gcloud -q app deploy ./prod.yaml"
   },
@@ -22,12 +23,7 @@
       "^.+\\.ts$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts)$",
-    "moduleFileExtensions": [
-      "ts",
-      "js",
-      "json",
-      "node"
-    ]
+    "moduleFileExtensions": ["ts", "js", "json", "node"]
   },
   "license": "ISC",
   "dependencies": {

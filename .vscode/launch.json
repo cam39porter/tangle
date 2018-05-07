@@ -12,7 +12,9 @@
         "NEO4J_ENDPOINT": "bolt+routing://35.197.60.182:7687",
         "NEO4J_USER": "neo4j",
         "NEO4J_PASSWORD": "mz6bJV6YC9irutUo",
-        "GCLOUD_PROJECT": "opit-193719"
+        "GCLOUD_PROJECT": "opit-193719",
+        "GCLOUD_APPLICATION_CREDENTIALS":
+          "/Users/colemccracken/Downloads/opit-9afec94eb5d9.json"
       }
     },
     {

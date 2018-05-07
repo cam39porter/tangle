@@ -50,5 +50,7 @@ release-builds/
 build/
 __generated__/
 
+.vscode/launch.json
+
 # Emacs #
 *~

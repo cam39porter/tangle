@@ -1,7 +1,11 @@
 import language from "@google-cloud/language";
 import { NLPEntity, NLPEntityResponse } from "../models/nlp";
 
-const client = new language.LanguageServiceClient();
+const client = process.env.GCLOUD_APPLICATION_CREDENTIALS
+  ? new language.LanguageServiceClient({
+      keyFilename: process.env.GCLOUD_APPLICATION_CREDENTIALS
+    })
+  : new language.LanguageServiceClient();
 
 function getNLPResponse(
   body: string,

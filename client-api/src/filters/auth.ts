@@ -12,7 +12,7 @@ function initAuth(): void {
 }
 
 function authFilter(req, res, next): void {
-  if (process.env.NODE_ENV === "development" && req.get("dev-override-id")) {
+  if (process.env.NODE_ENV !== "production" && req.get("dev-override-id")) {
     setDevOverride(req.get("dev-override-id"))
       .then(() => next())
       .catch(err => res.send(500, err));

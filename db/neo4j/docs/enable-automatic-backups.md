@@ -27,5 +27,3 @@ This guide assumes you have a cluster running.
 > sudo crontab -e
 > Add the line "0 3 \* \* \* /etc/cron.daily/backup.sh" (For a daily backup) For other time frames check out
 > https://awc.com.my/uploadnew/5ffbd639c5e6eccea359cb1453a02bed_Setting%20Up%20Cron%20Job%20Using%20crontab.pdf
-
-6.  Done!

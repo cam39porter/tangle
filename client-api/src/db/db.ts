@@ -20,7 +20,7 @@ function executeQuery(
     })
     .catch(error => {
       session.close();
-      console.log(error);
+      console.error(error);
       throw error;
     });
 }

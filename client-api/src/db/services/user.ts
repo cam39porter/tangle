@@ -11,8 +11,8 @@ export function createUser(user: User): Promise<User> {
   const query = `
     MERGE (u:User {
       id:{id},
-      name:{user.name},
-      email:{user.email}
+      name:{name},
+      email:{email}
     })
     ON CREATE SET u.created=TIMESTAMP()
     RETURN u`;

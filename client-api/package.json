@@ -12,8 +12,7 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "build": "tsc",
     "prepush": "yarn build && yarn lint && yarn test",
-    "start":
-      "echo 'THIS DOES NOT WORK IN DEV PLEASE USE DEBUGGER WITH CONF SETTINGS FROM COLE' && node .compiled/index.js",
+    "start": "node .compiled/index.js",
     "deploy:api:dev": "yarn build && gcloud -q app deploy ./dev.yaml",
     "deploy:api:prod": "yarn build && gcloud -q app deploy ./prod.yaml"
   },

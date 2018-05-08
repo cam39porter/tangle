@@ -18,9 +18,14 @@ stories.add("capture", () => (
   <InputCapture
     handleCapture={action("captured")}
     handleExpand={action("expanded")}
+    handleTextChange={action("text changed")}
   />
 ));
 
-stories.add("session", () => (
-  <InputSurface handleSurface={action("surfaced")} />
+stories.add("surface", () => (
+  <InputSurface
+    handleSurface={action("surfaced")}
+    handleClear={action("clear")}
+    handleTextChange={action("text changed")}
+  />
 ));

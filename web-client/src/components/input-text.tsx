@@ -9,7 +9,7 @@ require("react-quill/dist/quill.bubble.css");
 import { assign } from "lodash";
 
 interface Props {
-  handleEnterKey?: (text: string) => void;
+  handleEnterKey?: () => void;
   handleChange?: (text: string) => void;
   updateClearValue?: (newClearValue: boolean) => void;
   clearValue?: boolean;
@@ -22,6 +22,7 @@ interface State {
   text: string;
   editorHtml: string;
   modules: Object;
+  shiftIsPressed: boolean;
 }
 
 class InputText extends React.Component<Props, State> {
@@ -52,7 +53,8 @@ class InputText extends React.Component<Props, State> {
     this.state = {
       text: "",
       editorHtml: "",
-      modules
+      modules,
+      shiftIsPressed: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -75,7 +77,7 @@ class InputText extends React.Component<Props, State> {
     }
   }
 
-  handleClearValue() {
+  handleClearValue = () => {
     if (this.reactQuillRef !== null) {
       this.reactQuillRef.getEditor().setText("");
     }
@@ -83,9 +85,9 @@ class InputText extends React.Component<Props, State> {
     if (this.props.updateClearValue) {
       this.props.updateClearValue(false);
     }
-  }
+  };
 
-  handleChange(html: string): void {
+  handleChange = (html: string): void => {
     if (this.reactQuillRef) {
       const editor = this.reactQuillRef.getEditor();
       const text = editor.getText();
@@ -93,19 +95,36 @@ class InputText extends React.Component<Props, State> {
       this.props.handleChange && this.props.handleChange(text);
       this.setState({ text: text, editorHtml: html });
     }
-  }
+  };
 
-  handleKeyDown(e: React.KeyboardEvent<KeyUsage>) {
+  handleKeyDown = (e: React.KeyboardEvent<KeyUsage>) => {
+    if (e.key === "Shift") {
+      this.setState({
+        shiftIsPressed: true
+      });
+    }
+
     // Map the enter to key to anther action provided by parent
     if (e.key === "Enter") {
       if (this.props.handleEnterKey) {
-        this.props.handleEnterKey(this.state.text);
-        if (this.reactQuillRef) {
-          this.reactQuillRef.getEditor().setText("");
+        if (!this.state.shiftIsPressed) {
+          this.props.handleEnterKey();
+          if (this.reactQuillRef) {
+            this.reactQuillRef.getEditor().setText("");
+          }
         }
       }
     }
-  }
+  };
+
+  handleKeyUp = (e: React.KeyboardEvent<KeyUsage>) => {
+    if (e.key === "Shift") {
+      this.setState({
+        shiftIsPressed: false
+      });
+    }
+  };
+
   render() {
     return (
       <ReactQuill
@@ -116,6 +135,7 @@ class InputText extends React.Component<Props, State> {
         theme={"bubble"}
         modules={this.state.modules}
         onKeyDown={this.handleKeyDown}
+        onKeyUp={this.handleKeyUp}
         onChange={this.handleChange}
       />
     );

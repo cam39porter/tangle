@@ -24,8 +24,12 @@ function toLinkUrn(id: string): string {
   return `${baseStr}:link:${id}`;
 }
 
-function toEvernoteNoteUrn(id: string): string {
-  return `${baseStr}:evernoteNote:${id}`;
+function toEvernoteNoteUrn(
+  userId: string,
+  title: string,
+  created: number
+): string {
+  return `${userId};${title};${created.toString()}`;
 }
 
 function getUrnType(urn: string): string {

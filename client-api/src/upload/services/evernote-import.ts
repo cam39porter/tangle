@@ -12,9 +12,17 @@ const readFileAsync = promisify(fs.readFile);
 
 export function importEvernoteNote(file): Promise<boolean> {
   return readFileAsync(file.path).then(data => {
-    return saveFile(file).then(() => {
-      const note: EvernoteUpload = parseEvernoteHtml(data);
-      const user: User = getAuthenticatedUser();
+    const user: User = getAuthenticatedUser();
+    let note: EvernoteUpload = null;
+    try {
+      note = parseEvernoteHtml(user.id, data);
+    } catch (err) {
+      console.error(err);
+      throw new Error(
+        "Could not parse html. Please email cole@usetangle.com with your issue"
+      );
+    }
+    return saveFile(note.id, file).then(() => {
       return createIfAbsent(user.id, note).then(() => {
         return createEvernoteCaptures(note).then(() => true);
       });

@@ -2,7 +2,7 @@ import * as cheerio from "cheerio";
 import { toEvernoteNoteUrn } from "../../helpers/urn-helpers";
 import { EvernoteUpload } from "../models/evernote-upload";
 
-export function parseEvernoteHtml(data): EvernoteUpload {
+export function parseEvernoteHtml(userId: string, data): EvernoteUpload {
   const $ = cheerio.load(data);
   const tagString = $("meta[name=keywords]").attr("content");
   const tags = tagString ? tagString.split(", ") : [];
@@ -30,9 +30,7 @@ export function parseEvernoteHtml(data): EvernoteUpload {
     });
 
   return new EvernoteUpload(
-    toEvernoteNoteUrn(
-      `${created.toString()};${$("meta[name=author]").attr("content")}`
-    ),
+    toEvernoteNoteUrn(userId, title, created),
     created,
     lastModified,
     tags,

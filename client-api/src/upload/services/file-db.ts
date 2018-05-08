@@ -8,14 +8,14 @@ const bucketName =
     ? "tangle-prod-bulk-import"
     : "tangle-dev-bulk-import";
 
-export function save(file): Promise<void> {
+export function save(id: string, file): Promise<void> {
   const userId = getAuthenticatedUser().id;
-  const dest = `users/${userId}/${file.name}`;
+  const dest = `users/${userId}/${id}`;
   return storage
     .bucket(bucketName)
     .getFiles({ prefix: dest })
     .then(results => {
-      if ((results.length as number) === 0) {
+      if (results[0].length === 0) {
         return storage
           .bucket(bucketName)
           .upload(`${file.path}`, { destination: dest })

@@ -3,6 +3,7 @@ import * as React from "react";
 
 // Quill
 import ReactQuill from "react-quill";
+require("react-quill/dist/quill.bubble.css");
 
 // Random
 import { assign } from "lodash";
@@ -10,8 +11,8 @@ import { assign } from "lodash";
 interface Props {
   handleChange?: (value: string) => void;
   handleEnterKey?: () => void;
-  clearValue?: boolean;
   updateClearValue?: (newClearValue: boolean) => void;
+  clearValue?: boolean;
   startingValue?: string;
   placeholder?: string;
 }
@@ -21,7 +22,7 @@ interface State {
   modules: Object;
 }
 
-class TextInput extends React.Component<Props, State> {
+class InputText extends React.Component<Props, State> {
   // reference to quill element
   reactQuillRef: ReactQuill | null = null;
 
@@ -113,4 +114,4 @@ class TextInput extends React.Component<Props, State> {
   }
 }
 
-export default TextInput;
+export default InputText;

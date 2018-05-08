@@ -7,19 +7,17 @@ interface Props {
   accentColor: string;
 }
 
-class Button extends React.Component<Props, object> {
-  render() {
-    return (
-      <span
-        className={`dt pa2 f6 tc pointer ttl br4 ba b--${
-          this.props.accentColor
-        } ${this.props.accentColor}`}
-        onClick={this.props.onClick}
-      >
-        <div className={`dtc v-mid h-100 w-100`}>{this.props.title}</div>
-      </span>
-    );
-  }
-}
+const Button = (props: Props) => {
+  return (
+    <span
+      className={`dt pa2 f6 tc pointer ttl br4 ba b--${props.accentColor} ${
+        props.accentColor
+      }`}
+      onClick={props.onClick}
+    >
+      <div className={`dtc v-mid h-100 w-100`}>{props.title}</div>
+    </span>
+  );
+};
 
 export default Button;

@@ -8,3 +8,7 @@ import Button from "../src/components/button";
 storiesOf("Button", module).add("in accent color", () => (
   <Button title={"button"} onClick={action("clicked")} accentColor={"accent"} />
 ));
+
+storiesOf("Button", module).add("in base color", () => (
+  <Button title={"button"} onClick={action("clicked")} accentColor={"base"} />
+));

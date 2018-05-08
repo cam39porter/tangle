@@ -4,6 +4,7 @@ import * as React from "react";
 // Style
 import "./custom.css";
 import "./tachyons.css";
+import "react-quill/dist/quill.bubble.css";
 
 // Routing
 import { RouteProps } from "react-router";

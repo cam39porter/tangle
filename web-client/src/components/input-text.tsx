@@ -9,15 +9,17 @@ require("react-quill/dist/quill.bubble.css");
 import { assign } from "lodash";
 
 interface Props {
-  handleChange?: (value: string) => void;
-  handleEnterKey?: () => void;
+  handleEnterKey?: (text: string) => void;
+  handleChange?: (text: string) => void;
   updateClearValue?: (newClearValue: boolean) => void;
   clearValue?: boolean;
   startingValue?: string;
   placeholder?: string;
+  allowToolbar?: boolean;
 }
 
 interface State {
+  text: string;
   editorHtml: string;
   modules: Object;
 }
@@ -30,7 +32,7 @@ class InputText extends React.Component<Props, State> {
     super(props);
 
     let modules: Object = {
-      toolbar: false
+      toolbar: props.allowToolbar
     };
 
     if (this.props.handleEnterKey) {
@@ -48,6 +50,7 @@ class InputText extends React.Component<Props, State> {
     }
 
     this.state = {
+      text: "",
       editorHtml: "",
       modules
     };
@@ -83,18 +86,23 @@ class InputText extends React.Component<Props, State> {
   }
 
   handleChange(html: string): void {
-    if (this.props.handleChange && this.reactQuillRef !== null) {
-      this.props.handleChange(this.reactQuillRef.getEditor().getText());
-    }
+    if (this.reactQuillRef) {
+      const editor = this.reactQuillRef.getEditor();
+      const text = editor.getText();
 
-    this.setState({ editorHtml: html });
+      this.props.handleChange && this.props.handleChange(text);
+      this.setState({ text: text, editorHtml: html });
+    }
   }
 
   handleKeyDown(e: React.KeyboardEvent<KeyUsage>) {
     // Map the enter to key to anther action provided by parent
     if (e.key === "Enter") {
       if (this.props.handleEnterKey) {
-        this.props.handleEnterKey();
+        this.props.handleEnterKey(this.state.text);
+        if (this.reactQuillRef) {
+          this.reactQuillRef.getEditor().setText("");
+        }
       }
     }
   }
@@ -107,8 +115,8 @@ class InputText extends React.Component<Props, State> {
         placeholder={this.props.placeholder ? this.props.placeholder : ""}
         theme={"bubble"}
         modules={this.state.modules}
-        onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}
+        onChange={this.handleChange}
       />
     );
   }

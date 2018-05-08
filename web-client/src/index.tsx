@@ -11,6 +11,7 @@ import { ApolloClient } from "apollo-client";
 import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import { onError } from "apollo-link-error";
+import { RetryLink } from "apollo-link-retry";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloProvider } from "react-apollo";
 
@@ -56,9 +57,21 @@ const logoutLink = onError(({ networkError, graphQLErrors }) => {
   }
 });
 
+const retryLink = new RetryLink({
+  delay: {
+    initial: 0,
+    max: 5000,
+    jitter: false
+  },
+  attempts: {
+    max: 2,
+    retryIf: (error, _operation) => error["statusCode"] === 401
+  }
+});
+
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: logoutLink.concat(authLink.concat(httpLink))
+  link: retryLink.concat(logoutLink.concat(authLink.concat(httpLink)))
 });
 
 class ApolloWrappedApp extends React.Component<object, object> {

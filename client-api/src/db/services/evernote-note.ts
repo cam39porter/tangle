@@ -28,10 +28,13 @@ export function createIfAbsent(
       };
       const query = `
         MATCH (u:User {id:{userId}})
-        CREATE (note:EvernoteNote {id:{noteId},
-        created:{created},
-        lastModified:{lastModified},
-        title:{title}})<-[:CREATED]-(u)
+        CREATE (note:EvernoteNote {
+          id:{noteId},
+          created:{created},
+          lastModified:{lastModified},
+          title:{title},
+          owner:{userId}
+        })<-[:CREATED]-(u)
         RETURN note`;
       return executeQuery(query, params).then(formatNote);
     }

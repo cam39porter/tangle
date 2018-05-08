@@ -92,7 +92,9 @@ export function createCaptureNode(
     CREATE (u)-[created:CREATED]->(capture:Capture {
       id:{captureUrn},
       body:{body},
-      created:TIMESTAMP()})
+      created:TIMESTAMP(),
+      owner:{userId}
+    })
     ${parentId ? "CREATE (capture)<-[:INCLUDES]-(parent)" : ""}
     RETURN capture`;
   const params = { userId, body: escape(body), parentId, captureUrn };

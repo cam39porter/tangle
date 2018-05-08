@@ -4,19 +4,21 @@ import { executeQuery } from "../db";
 import { Entity } from "../models/entity";
 
 export function upsertEntity(
+  userId: string,
   name: string,
   type: string,
   salience: number,
   captureUrn: string
 ): Promise<Entity> {
-  const entityUrn = toEntityUrn(`${name};${type}`);
-  const params = { entityUrn, name, type, captureUrn, salience };
+  const entityUrn = toEntityUrn(userId, name, type);
+  const params = { userId, entityUrn, name, type, captureUrn, salience };
   const query = `
   MATCH (capture {id: {captureUrn}})
   MERGE (entity:Entity {
     id: {entityUrn},
     name: {name},
-    type: {type}
+    type: {type},
+    owner: {userId}
   })
   CREATE (entity)<-[r:REFERENCES {salience: {salience}}]-(capture)
   RETURN entity

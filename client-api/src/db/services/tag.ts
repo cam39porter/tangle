@@ -3,18 +3,23 @@ import { toTagUrn } from "../../helpers/urn-helpers";
 import { executeQuery } from "../db";
 import { Tag } from "../models/tag";
 
-export function upsert(name: string, captureId: string): Promise<Tag> {
-  const id = toTagUrn(name);
+export function upsert(
+  userId: string,
+  name: string,
+  captureId: string
+): Promise<Tag> {
+  const id = toTagUrn(userId, name);
   const query = `MERGE (tag:Tag {
     id: {id},
-    name: {name}
+    name: {name},
+    owner: {userId}
   })
   ON CREATE SET tag.created = TIMESTAMP()
   WITH tag
   MATCH (capture:Capture {id:{captureId}})
   CREATE (tag)<-[:TAGGED_WITH]-(capture)
   RETURN tag`;
-  const params = { id, name, captureId };
+  const params = { userId, id, name, captureId };
   return executeQuery(query, params).then((result: StatementResult) => {
     return result.records[0].get("tag").properties as Tag;
   });

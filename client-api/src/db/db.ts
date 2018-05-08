@@ -20,6 +20,7 @@ function executeQuery(
     })
     .catch(error => {
       session.close();
+      console.log(cypherQuery);
       console.error(error);
       throw error;
     });

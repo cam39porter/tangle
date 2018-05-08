@@ -8,20 +8,20 @@ function toCaptureUrn(id: string): string {
   return `${baseStr}:capture:${id}`;
 }
 
-function toEntityUrn(id: string): string {
-  return `${baseStr}:entity:${id}`;
+function toEntityUrn(userId: string, name: string, type: string): string {
+  return `${baseStr}:entity:(${userId};${name};${type})`;
 }
 
-function toTagUrn(id: string): string {
-  return `${baseStr}:tag:${id}`;
+function toTagUrn(userId: string, name: string): string {
+  return `${baseStr}:tag:(${userId};${name})`;
 }
 
 function toSessionUrn(id: string): string {
   return `${baseStr}:session:${id}`;
 }
 
-function toLinkUrn(id: string): string {
-  return `${baseStr}:link:${id}`;
+function toLinkUrn(userId: string, url: string): string {
+  return `${baseStr}:link:${userId};${url}`;
 }
 
 function toEvernoteNoteUrn(
@@ -29,7 +29,7 @@ function toEvernoteNoteUrn(
   title: string,
   created: number
 ): string {
-  return `${userId};${title};${created.toString()}`;
+  return `${baseStr}:evernoteNote:(${userId};${title};${created.toString()})`;
 }
 
 function getUrnType(urn: string): string {

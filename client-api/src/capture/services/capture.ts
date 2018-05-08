@@ -50,14 +50,16 @@ function createRelations(
 }
 
 function createTags(captureId: string, body: string): Promise<boolean> {
+  const user: User = getAuthenticatedUser();
   return Promise.all(
-    parseTags(body).map(tag => upsertTag(tag, captureId))
+    parseTags(body).map(tag => upsertTag(user.id, tag, captureId))
   ).then(() => true);
 }
 
 function createLinks(captureId: string, body: string): Promise<boolean> {
+  const user: User = getAuthenticatedUser();
   return Promise.all(
-    parseLinks(body).map(link => upsertLink(link, captureId))
+    parseLinks(body).map(link => upsertLink(user.id, link, captureId))
   ).then(() => true);
 }
 
@@ -67,9 +69,16 @@ function createEntities(
   contentType: string
 ): Promise<boolean> {
   return getNLPResponse(stripTags(body), contentType).then(nlp => {
+    const user: User = getAuthenticatedUser();
     return Promise.all(
       nlp.entities.map(entity =>
-        upsertEntity(entity.name, entity.type, entity.salience, captureId)
+        upsertEntity(
+          user.id,
+          entity.name,
+          entity.type,
+          entity.salience,
+          captureId
+        )
       )
     ).then(() => true);
   });

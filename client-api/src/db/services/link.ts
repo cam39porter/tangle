@@ -3,13 +3,18 @@ import { toLinkUrn } from "../../helpers/urn-helpers";
 import { executeQuery } from "../db";
 import { Link } from "../models/link";
 
-export function upsert(url: string, captureId: string): Promise<Link> {
-  const params = { id: toLinkUrn(url), url };
+export function upsert(
+  userId: string,
+  url: string,
+  captureId: string
+): Promise<Link> {
+  const params = { userId, id: toLinkUrn(userId, url), url };
   const query = `
     MATCH (capture:Capture {id: "${captureId}"})
     MERGE (link:Link {
       id: {id},
-      url: {url}
+      url: {url},
+      owner: {userId}
     })
     ON CREATE SET link.created = TIMESTAMP()
     CREATE (link)<-[:LINKS_TO]-(capture)

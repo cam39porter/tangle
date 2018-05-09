@@ -31,6 +31,7 @@ enum EdgeType {
   INCLUDES
   LINKS_TO
   COMMENTED_ON
+  PREVIOUS
 }
 
 type SearchResults {
@@ -61,6 +62,7 @@ enum GetAllUseCase {
 
 enum CaptureRelationType {
   COMMENTED_ON
+  PREVIOUS
 }
 
 input CaptureRelation {
@@ -74,7 +76,7 @@ type Mutation {
     sessionId: String
     captureRelation: CaptureRelation
   ): Graph!
-  createSession(title: String!): Node!
+  createSession(title: String): Node!
   archiveCapture(id: String!): Boolean
   editCapture(id: String!, body: String!): Boolean
 }

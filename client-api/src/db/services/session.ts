@@ -9,11 +9,17 @@ export function create(userId: string, title: string): Promise<Session> {
   const sessionUrn = toSessionUrn(uuid);
   const query = `
     MATCH (u:User {id:{userId}})
-    CREATE (session:Session {id:{sessionUrn}, title:{title}, created:TIMESTAMP()})
+    CREATE (session:Session {id:{sessionUrn},
+      ${title ? "title:{title}," : ""}
+      created:TIMESTAMP()})
     CREATE (session)<-[:CREATED]-(u)
     RETURN session`;
   const params = { userId, sessionUrn, title };
   return executeQuery(query, params).then((result: StatementResult) => {
-    return result.records[0].get("session").properties as Session;
+    const session = result.records[0].get("session").properties as Session;
+    if (!session.title) {
+      session.title = "Untitled brainstorm";
+    }
+    return session;
   });
 }

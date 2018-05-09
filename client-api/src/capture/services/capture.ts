@@ -9,6 +9,7 @@ import {
 } from "../../db/services/capture";
 import { getNLPResponse } from "../../nlp/services/nlp";
 
+import { GraphQLError } from "graphql";
 import { Capture } from "../../db/models/capture";
 import { upsertEntity } from "../../db/services/entity";
 import { getAuthenticatedUser } from "../../filters/request-context";
@@ -29,6 +30,11 @@ export function createCapture(
   captureRelation: CaptureRelation
 ): Promise<boolean> {
   const user: User = getAuthenticatedUser();
+  if (captureRelation.relationshipType === "PREVIOUS" && !parentId) {
+    throw new GraphQLError(
+      "Malformed request. SessionId is required if captureRelation is present and of type PREVIOUS"
+    );
+  }
   return createCaptureNode(user.id, body, parentId)
     .then((capture: Capture) => {
       if (captureRelation) {

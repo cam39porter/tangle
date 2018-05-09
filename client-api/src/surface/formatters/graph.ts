@@ -27,7 +27,8 @@ export function buildGraph(
         node.properties.body ||
           node.properties.name ||
           node.properties.title ||
-          node.properties.url,
+          node.properties.url ||
+          "Untitled",
         getLevel(rootNodes, node.properties.id)
       )
   );

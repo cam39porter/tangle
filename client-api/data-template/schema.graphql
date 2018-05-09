@@ -30,6 +30,7 @@ enum EdgeType {
   TAGGED_WITH
   INCLUDES
   LINKS_TO
+  COMMENTED_ON
 }
 
 type SearchResults {

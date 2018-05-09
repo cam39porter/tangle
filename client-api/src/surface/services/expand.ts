@@ -14,7 +14,7 @@ export function expandCapturesFetch(
   WHERE roots.id IN {captureIds}
   WITH roots
   OPTIONAL MATCH (roots)-[r1]-(firstDegree)
-  WHERE firstDegree:Tag OR firstDegree:Entity OR firstDegree:Session OR firstDegree:Link
+  WHERE firstDegree:Tag OR firstDegree:Entity OR firstDegree:Session OR firstDegree:Link OR firstDegree:Capture
   OPTIONAL MATCH (firstDegree)-[r2]-(secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
   WHERE NOT EXISTS(secondDegree.archived) or secondDegree.archived = false
   WITH collect(roots) as roots, collect(roots)+collect(firstDegree)+collect(secondDegree) AS nodes,

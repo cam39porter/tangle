@@ -10,10 +10,11 @@ import { assign } from "lodash";
 
 interface Props {
   handleEnterKey?: () => void;
+  clearOnEnter?: boolean;
   handleChange?: (text: string) => void;
-  updateClearValue?: (newClearValue: boolean) => void;
-  clearValue?: boolean;
-  startingValue?: string;
+  updateClearText?: (newClearText: boolean) => void;
+  clearText?: boolean;
+  startingText?: string;
   placeholder?: string;
   allowToolbar?: boolean;
 }
@@ -65,14 +66,14 @@ class InputText extends React.Component<Props, State> {
     // focus on editor on load and register functionality
     if (this.reactQuillRef) {
       const editor = this.reactQuillRef.getEditor();
-      editor.setText(this.props.startingValue || "");
+      editor.setText(this.props.startingText || "");
       editor.focus();
     }
   }
 
   componentWillReceiveProps(nextProps: Props) {
     // clear value if directed by parent
-    if (nextProps.clearValue) {
+    if (nextProps.clearText) {
       this.handleClearValue();
     }
   }
@@ -82,8 +83,8 @@ class InputText extends React.Component<Props, State> {
       this.reactQuillRef.getEditor().setText("");
     }
     // inform parent that editor has been cleared
-    if (this.props.updateClearValue) {
-      this.props.updateClearValue(false);
+    if (this.props.updateClearText) {
+      this.props.updateClearText(false);
     }
   };
 
@@ -109,7 +110,7 @@ class InputText extends React.Component<Props, State> {
       if (this.props.handleEnterKey) {
         if (!this.state.shiftIsPressed) {
           this.props.handleEnterKey();
-          if (this.reactQuillRef) {
+          if (this.reactQuillRef && !!this.props.clearOnEnter) {
             this.reactQuillRef.getEditor().setText("");
           }
         }

@@ -23,7 +23,7 @@ const ListHeader = (props: Props) => {
     <div
       className={`flex pa2 w-100 shadow-1 br4 bb b--${
         props.isCapturing ? "accent" : "base"
-      }`}
+      } bg-white`}
     >
       <div className={`flex-grow`}>
         {props.isCapturing ? (
@@ -31,6 +31,7 @@ const ListHeader = (props: Props) => {
             handleTextChange={props.handleCaptureTextChange}
             handleCapture={props.handleCapture}
             handleExpand={props.handleExpand}
+            clearOnEnter={true}
           />
         ) : (
           <InputSurface

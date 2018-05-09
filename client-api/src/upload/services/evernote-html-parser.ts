@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import * as h2p from "html2plaintext";
 import { toEvernoteNoteUrn } from "../../helpers/urn-helpers";
 import { EvernoteUpload } from "../models/evernote-upload";
 
@@ -17,17 +18,8 @@ export function parseEvernoteHtml(userId: string, data): EvernoteUpload {
       .attr("content")
       .slice(0, -5)
   );
-  const contents: string[] = $("body div")
-    .filter((_, element) => {
-      return !isBreak(element);
-    })
-    .map((_, element) => {
-      return getData($, element);
-    })
-    .toArray()
-    .map(element => {
-      return element.toString();
-    });
+
+  const contents = parseBody($("body").html());
 
   return new EvernoteUpload(
     toEvernoteNoteUrn(userId, title, created),
@@ -39,10 +31,25 @@ export function parseEvernoteHtml(userId: string, data): EvernoteUpload {
   );
 }
 
-function isBreak(element: CheerioElement): boolean {
-  return element.firstChild.name && element.firstChild.name === "br";
+function parseBody(html: string): string[] {
+  const noDivs = html.replace(/(<div>|<\/div>)/gi, "</br>");
+  const lines = h2p(noDivs).split("\n");
+  const noEmpties = lines.filter(line => line !== "");
+  const contents = [];
+  noEmpties.forEach(element => {
+    if (isLetter(element.substring(0, 1))) {
+      contents.push(element);
+    } else {
+      if (contents.length === 0) {
+        contents.push(element);
+      } else {
+        contents[contents.length - 1] += `\n${element}`;
+      }
+    }
+  });
+  return contents;
 }
 
-function getData($, element: CheerioElement): string {
-  return $.html(element.firstChild);
+function isLetter(str): boolean {
+  return str.length === 1 && str.match(/[a-z]/i);
 }

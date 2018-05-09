@@ -16,7 +16,7 @@ import * as path from "path";
 import captureResolvers from "./capture/resolver";
 import { authFilter, initAuth } from "./filters/auth";
 import surfaceResolvers from "./surface/resolver";
-import { importEvernoteNote } from "./upload/services/evernote-import";
+import { importEvernoteNoteUpload } from "./upload/services/evernote-import";
 import { ConflictError } from "./util/exceptions/confict-error";
 
 const schema = fs.readFileSync(
@@ -64,7 +64,7 @@ app.post("/uploadHtml", (req, res) => {
   if (req["files"].file.type !== "text/html") {
     res.status(400).send("Unsupported content type");
   }
-  importEvernoteNote(req["files"].file)
+  importEvernoteNoteUpload(req["files"].file)
     .then(() => {
       res.sendStatus(200);
     })

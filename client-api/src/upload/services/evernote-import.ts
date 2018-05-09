@@ -67,7 +67,7 @@ function createEvernoteNote(
 function createEvernoteCaptures(note: EvernoteUpload): Promise<void> {
   const batchCreates = Promise.all(
     note.contents.map(content => {
-      return createCapture(content, note.id, "HTML");
+      return createCapture(content, note.id, "HTML", null);
     })
   );
   return batchCreates.then(() => null);

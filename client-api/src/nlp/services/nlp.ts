@@ -30,6 +30,4 @@ function getNLPResponse(
     });
 }
 
-// Detects the sentiment of the text
-
 export { getNLPResponse };

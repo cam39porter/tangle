@@ -24,11 +24,15 @@ export function expandCapturesFetch(
   RETURN roots, collect(distinct node) as nodes, collect(distinct relationship) as relationships
   `;
   return executeQuery(query, params).then((result: StatementResult) => {
-    return buildGraph(
-      result.records[0].get("nodes"),
-      result.records[0].get("relationships"),
-      startUrn,
-      result.records[0].get("roots")
-    );
+    if (result.records.length === 0) {
+      return new Graph([], []);
+    } else {
+      return buildGraph(
+        result.records[0].get("nodes"),
+        result.records[0].get("relationships"),
+        startUrn,
+        result.records[0].get("roots")
+      );
+    }
   });
 }

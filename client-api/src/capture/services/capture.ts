@@ -1,5 +1,6 @@
 import { User } from "../../db/models/user";
 import { upsert as upsertLink } from "../../db/services/link";
+import { create as createRelationship } from "../../db/services/relationship";
 import { upsert as upsertTag } from "../../db/services/tag";
 
 import {
@@ -12,6 +13,7 @@ import { Capture } from "../../db/models/capture";
 import { upsertEntity } from "../../db/services/entity";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { parseLinks, parseTags, stripTags } from "../../helpers/capture-parser";
+import { CaptureRelation } from "../models/capture-relation";
 
 export function editCapture(id: string, body: string): Promise<boolean> {
   const userId = getAuthenticatedUser().id;
@@ -23,12 +25,25 @@ export function editCapture(id: string, body: string): Promise<boolean> {
 export function createCapture(
   body: string,
   parentId: string,
-  contentType: string = "PLAIN_TEXT"
+  contentType: string,
+  captureRelation: CaptureRelation
 ): Promise<boolean> {
   const user: User = getAuthenticatedUser();
-  return createCaptureNode(user.id, body, parentId).then((capture: Capture) =>
-    createRelations(capture.id, body, contentType)
-  );
+  return createCaptureNode(user.id, body, parentId)
+    .then((capture: Capture) => {
+      if (captureRelation) {
+        return createRelationship(
+          capture.id,
+          "Capture",
+          captureRelation.captureId,
+          "Capture",
+          captureRelation.relationshipType
+        ).then(() => capture);
+      } else {
+        return Promise.resolve(capture);
+      }
+    })
+    .then((capture: Capture) => createRelations(capture.id, body, contentType));
 }
 
 function createRelations(

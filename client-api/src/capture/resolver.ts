@@ -19,9 +19,19 @@ export default {
       return editCapture(id, body);
     },
     // @ts-ignore
-    createCapture(parent, { body, sessionId }, context, info): Promise<Graph> {
-      return createCapture(body, sessionId).then(() =>
-        getAllByUseCase("CAPTURED_TODAY", null).then(results => results.graph)
+    createCapture(
+      // @ts-ignore
+      parent,
+      // @ts-ignore
+      { body, sessionId, captureRelation },
+      // @ts-ignore
+      context,
+      // @ts-ignore
+      info
+    ): Promise<Graph> {
+      return createCapture(body, sessionId, "PLAIN_TEXT", captureRelation).then(
+        () =>
+          getAllByUseCase("CAPTURED_TODAY", null).then(results => results.graph)
       );
     },
     // @ts-ignore

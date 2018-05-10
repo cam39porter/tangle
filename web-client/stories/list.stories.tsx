@@ -1,10 +1,13 @@
 import * as React from "react";
 
+import { Node, Edge } from "../src/types";
+
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 import { withKnobs, boolean, select } from "@storybook/addon-knobs/react";
 
 import ListHeader from "../src/components/list-header";
+import ListSectionHeader from "../src/components/list-section-header";
 import ListCapture from "../src/components/list-capture";
 import List from "../src/components/list";
 
@@ -23,6 +26,10 @@ stories.add("header", () => (
     handleSurface={action("handleSurface")}
     handleClear={action("handleClear")}
   />
+));
+
+stories.add("section header", () => (
+  <ListSectionHeader title={"example header"} />
 ));
 
 stories.add("capture", () => (
@@ -61,10 +68,15 @@ stories.add("list", () => (
     handleSurface={action("handleSurface")}
     handleSurfaceClear={action("handleClear")}
     // List
+    isLevel0Capture={false}
     isHidden={boolean("isHidden", false)}
     nodes={nodes}
     edges={edges}
     // Captures
+    handleIsShowingRelated={(id: string) =>
+      action(`handleIsShowingRelated ${id}`)
+    }
+    isShowingRelated={(id: string) => boolean(`isShowingRelated ${id}`, true)}
     handleMore={(id: string) => action(`handleMore ${id}`)}
     isMore={(id: string) => boolean(`isMore ${id}`, false)}
     handleComment={(id: string) => action(`handleComment ${id}`)}
@@ -574,7 +586,7 @@ let nodes = [
     text: "reflex",
     level: 1
   }
-];
+] as Array<Node>;
 let edges = [
   {
     source: "urn:hex:capture:b3bf7f3a-849e-4d20-97d9-9b231561fade",
@@ -1100,4 +1112,4 @@ let edges = [
     type: "REFERENCES",
     salience: 0.5878483653068542
   }
-];
+] as Array<Edge>;

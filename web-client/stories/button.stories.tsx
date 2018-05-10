@@ -15,6 +15,7 @@ import ButtonComment from "../src/components/button-comment";
 import ButtonEdit from "../src/components/button-edit";
 import ButtonArchive from "../src/components/button-archive";
 import ButtonFocus from "../src/components/button-focus";
+import ButtonRelated from "../src/components/button-related";
 
 const stories = storiesOf("Button", module);
 
@@ -45,6 +46,9 @@ stories.add("expand", () => <ButtonExpand onClick={action("clicked")} />);
 stories.add("focus", () => <ButtonFocus onClick={action("clicked")} />);
 stories.add("more", () => (
   <ButtonMore onClick={action("clicked")} isMore={boolean("isMore", true)} />
+));
+stories.add("related", () => (
+  <ButtonRelated onClick={action("clicked")} isUp={boolean("isUp", true)} />
 ));
 stories.add("surface", () => <ButtonSurface onClick={action("clicked")} />);
 stories.add("toggle", () => (

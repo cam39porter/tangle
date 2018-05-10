@@ -28,7 +28,7 @@ interface Props {
 const ListCapture = (props: Props) => {
   return (
     <div>
-      <div className={`flex flex-wrap pa2 w-100 br4 ba b--light-gray bg-white`}>
+      <div className={`flex flex-wrap pa3 w-100 br4 ba b--light-gray bg-white`}>
         <div className={`flex-grow pa2`}>
           {props.isEditing ? (
             <InputCapture

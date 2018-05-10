@@ -23,6 +23,21 @@ interface Props {
   handleArchive: () => void;
   handleTextChange: (text: string) => void;
   handleCapture: () => void;
+  highlightTerms?: Array<string>;
+}
+
+function highlightedText(text: string, terms: Array<string>): string {
+  let highlightedText = text;
+
+  terms.forEach(term => {
+    let regex = new RegExp(term, "g");
+    highlightedText = highlightedText.replace(
+      regex,
+      `<span class="accent">${term}</span>`
+    );
+  });
+
+  return highlightedText;
 }
 
 const ListCapture = (props: Props) => {
@@ -38,9 +53,15 @@ const ListCapture = (props: Props) => {
               clearOnEnter={false}
             />
           ) : (
-            <div onDoubleClick={props.handleEdit} className={`lh-copy`}>
-              {props.text}
-            </div>
+            <div
+              onDoubleClick={props.handleEdit}
+              className={`lh-copy`}
+              dangerouslySetInnerHTML={{
+                __html: props.highlightTerms
+                  ? highlightedText(props.text, props.highlightTerms)
+                  : props.text
+              }}
+            />
           )}
         </div>
         <div className={`flex flex-column pa2`}>

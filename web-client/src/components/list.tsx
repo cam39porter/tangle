@@ -269,6 +269,7 @@ class List extends React.Component<Props, State> {
                                 handleCapture={this.props.handleCapture(
                                   relatedCapture.id
                                 )}
+                                highlightTerms={entry.contains}
                               />
                             )}
                           </div>

@@ -1,5 +1,5 @@
 import { StatementResult } from "neo4j-driver/types/v1";
-import { toLinkUrn } from "../../helpers/urn-helpers";
+import { toLinkUrn } from "../helpers/urn-helpers";
 import { executeQuery } from "../db";
 import { Link } from "../models/link";
 

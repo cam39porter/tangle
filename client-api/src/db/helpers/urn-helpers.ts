@@ -1,3 +1,6 @@
+import { MalformedUrnError } from "../../util/exceptions/malformed-urn-error";
+import { UnsupportedUrnError } from "../../util/exceptions/unsupported-urn-error";
+
 const baseStr: string = "urn:hex";
 
 function toUserUrn(id: string): string {
@@ -33,8 +36,31 @@ function toEvernoteNoteUrn(
 }
 
 function getUrnType(urn: string): string {
-  return urn.split(":")[2];
+  const type = urn.split(":")[2];
+  if (!type) {
+    throw new MalformedUrnError(`${urn} is malformed`);
+  }
+  return type;
 }
+
+function getLabel(urn: string): string {
+  const urnType = getUrnType(urn);
+  const label = urnTypeToLabel[getUrnType(urn)];
+  if (!label) {
+    throw new UnsupportedUrnError(`${urnType} is not supported`);
+  }
+  return label;
+}
+
+const urnTypeToLabel = {
+  capture: "Capture",
+  link: "Link",
+  session: "Session",
+  user: "User",
+  tag: "Tag",
+  entity: "Entity",
+  evernoteNote: "EvernoteNote"
+};
 
 export {
   toUserUrn,
@@ -44,5 +70,6 @@ export {
   toSessionUrn,
   toLinkUrn,
   toEvernoteNoteUrn,
-  getUrnType
+  getUrnType,
+  getLabel
 };

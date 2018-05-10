@@ -1,5 +1,5 @@
 import { StatementResult } from "neo4j-driver/types/v1";
-import { toTagUrn } from "../../helpers/urn-helpers";
+import { toTagUrn } from "../helpers/urn-helpers";
 import { executeQuery } from "../db";
 import { Tag } from "../models/tag";
 

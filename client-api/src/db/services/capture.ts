@@ -1,8 +1,8 @@
 import { StatementResult } from "neo4j-driver/types/v1";
 import { v4 as uuidv4 } from "uuid/v4";
 import { escape } from "../../helpers/capture-parser";
-import { getUrnType, toCaptureUrn } from "../../helpers/urn-helpers";
 import { executeQuery } from "../db";
+import { getLabel, toCaptureUrn } from "../helpers/urn-helpers";
 import { Capture } from "../models/capture";
 
 export function getAllSince(userId: string, since: number): Promise<Capture[]> {
@@ -31,7 +31,7 @@ export function getCapturesByRelatedNode(
   userId: string,
   nodeId: string
 ): Promise<Capture[]> {
-  const label = getUrnType(nodeId).replace(/^\w/, chr => chr.toUpperCase());
+  const label = getLabel(nodeId);
   const params = { userId, nodeId };
   const query = `MATCH (other:${label} {id:{nodeId}})-[r]-(capture:Capture)<-[:CREATED]-(u:User {id:{userId}})
   WHERE NOT EXISTS(capture.archived) OR capture.archived = false

@@ -1,6 +1,6 @@
 import { StatementResult } from "neo4j-driver/types/v1";
-import { toEntityUrn } from "../../helpers/urn-helpers";
 import { executeQuery } from "../db";
+import { toEntityUrn } from "../helpers/urn-helpers";
 import { Entity } from "../models/entity";
 
 export function upsertEntity(

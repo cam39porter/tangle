@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio";
 import * as h2p from "html2plaintext";
-import { toEvernoteNoteUrn } from "../../helpers/urn-helpers";
+import { toEvernoteNoteUrn } from "../../db/helpers/urn-helpers";
 import { EvernoteUpload } from "../models/evernote-upload";
 
 export function parseEvernoteHtml(userId: string, data): EvernoteUpload {

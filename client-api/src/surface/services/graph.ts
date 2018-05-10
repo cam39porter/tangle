@@ -5,7 +5,7 @@ import {
   getCapturesByRelatedNode
 } from "../../db/services/capture";
 import { getAuthenticatedUser } from "../../filters/request-context";
-import { getUrnType } from "../../helpers/urn-helpers";
+import { getUrnType } from "../../db/helpers/urn-helpers";
 import { NotImplementedError } from "../../util/exceptions/not-implemented-error";
 import { Graph } from "../models/graph";
 import { PageInfo } from "../models/page-info";

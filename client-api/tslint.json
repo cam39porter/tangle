@@ -6,6 +6,7 @@
     "trailing-comma": false,
     "arrow-parens": false,
     "object-literal-sort-keys": false,
+    "ordered-imports": false,
     // TODO REMOVE THIS
     "no-console": false,
     "no-string-literal": false,

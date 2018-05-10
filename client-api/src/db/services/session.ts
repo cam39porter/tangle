@@ -1,6 +1,6 @@
 import { StatementResult } from "neo4j-driver/types/v1";
 import { v4 as uuidv4 } from "uuid/v4";
-import { toSessionUrn } from "../../helpers/urn-helpers";
+import { toSessionUrn } from "../helpers/urn-helpers";
 import { executeQuery } from "../db";
 import { Session } from "../models/session";
 

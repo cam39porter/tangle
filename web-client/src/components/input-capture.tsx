@@ -13,6 +13,7 @@ interface Props {
   handleExpand?: () => void;
   startingText?: string;
   clearOnEnter: boolean;
+  allowToolbar?: boolean;
 }
 
 const InputCapture = (props: Props) => {
@@ -25,7 +26,7 @@ const InputCapture = (props: Props) => {
         <InputText
           placeholder={`Capture a thought...`}
           handleEnterKey={props.handleCapture}
-          allowToolbar={false}
+          allowToolbar={props.allowToolbar}
           handleChange={props.handleTextChange}
           startingText={props.startingText}
           clearOnEnter={props.clearOnEnter}

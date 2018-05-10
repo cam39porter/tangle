@@ -10,6 +10,7 @@ import ListHeader from "../src/components/list-header";
 import ListSectionHeader from "../src/components/list-section-header";
 import ListCapture from "../src/components/list-capture";
 import List from "../src/components/list";
+import ListSession from "../src/components/list-session";
 
 const stories = storiesOf("List", module);
 
@@ -76,7 +77,7 @@ stories.add("list", () => (
     handleIsShowingRelated={(id: string) =>
       action(`handleIsShowingRelated ${id}`)
     }
-    isShowingRelated={(id: string) => boolean(`isShowingRelated ${id}`, true)}
+    isShowingRelated={(id: string) => boolean(`isShowingRelated ${id}`, false)}
     handleMore={(id: string) => action(`handleMore ${id}`)}
     isMore={(id: string) => boolean(`isMore ${id}`, false)}
     handleComment={(id: string) => action(`handleComment ${id}`)}
@@ -88,6 +89,8 @@ stories.add("list", () => (
     handleCapture={(id: string) => action(`handleCapture ${id}`)}
   />
 ));
+
+stories.add("session", () => <ListSession />);
 
 let nodes = [
   {

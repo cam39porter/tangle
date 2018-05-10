@@ -28,7 +28,6 @@ interface Props {
 
 function highlightedText(text: string, terms: Array<string>): string {
   let highlightedText = text;
-
   terms.forEach(term => {
     let regex = new RegExp(term, "g");
     highlightedText = highlightedText.replace(

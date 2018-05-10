@@ -45,10 +45,10 @@ stories.add("edit", () => <ButtonEdit onClick={action("clicked")} />);
 stories.add("expand", () => <ButtonExpand onClick={action("clicked")} />);
 stories.add("focus", () => <ButtonFocus onClick={action("clicked")} />);
 stories.add("more", () => (
-  <ButtonMore onClick={action("clicked")} isMore={boolean("isMore", true)} />
+  <ButtonMore onClick={action("clicked")} isMore={boolean("isMore", false)} />
 ));
 stories.add("related", () => (
-  <ButtonRelated onClick={action("clicked")} isUp={boolean("isUp", true)} />
+  <ButtonRelated onClick={action("clicked")} isUp={boolean("isUp", false)} />
 ));
 stories.add("surface", () => <ButtonSurface onClick={action("clicked")} />);
 stories.add("toggle", () => (

@@ -233,50 +233,51 @@ class List extends React.Component<Props, State> {
                       </div>
                     </div>
                   )}
-                  {this.props.isShowingRelated(capture.id) && (
-                    <div className={`pb4`}>
-                      {entry.related.map(relatedId => {
-                        const relatedCapture = this.nodeMap.get(relatedId);
-                        return (
-                          <div className={`pl4`}>
-                            {relatedCapture && (
-                              <ListCapture
-                                key={relatedCapture.id}
-                                text={relatedCapture.text}
-                                handleExpand={this.props.handleExpand}
-                                handleMore={this.props.handleMore(
-                                  relatedCapture.id
-                                )}
-                                isMore={this.props.isMore(relatedCapture.id)}
-                                handleComment={this.props.handleComment(
-                                  relatedCapture.id
-                                )}
-                                handleFocus={this.props.handleFocus(
-                                  relatedCapture.id
-                                )}
-                                handleEdit={this.props.handleEdit(
-                                  relatedCapture.id
-                                )}
-                                isEditing={this.props.isEditing(
-                                  relatedCapture.id
-                                )}
-                                handleArchive={this.props.handleArchive(
-                                  relatedCapture.id
-                                )}
-                                handleTextChange={this.props.handleTextChange(
-                                  relatedCapture.id
-                                )}
-                                handleCapture={this.props.handleCapture(
-                                  relatedCapture.id
-                                )}
-                                highlightTerms={entry.contains}
-                              />
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+                  {entry.related.length > 0 &&
+                    this.props.isShowingRelated(capture.id) && (
+                      <div className={`pb4`}>
+                        {entry.related.map(relatedId => {
+                          const relatedCapture = this.nodeMap.get(relatedId);
+                          return (
+                            <div className={`pl4`}>
+                              {relatedCapture && (
+                                <ListCapture
+                                  key={relatedCapture.id}
+                                  text={relatedCapture.text}
+                                  handleExpand={this.props.handleExpand}
+                                  handleMore={this.props.handleMore(
+                                    relatedCapture.id
+                                  )}
+                                  isMore={this.props.isMore(relatedCapture.id)}
+                                  handleComment={this.props.handleComment(
+                                    relatedCapture.id
+                                  )}
+                                  handleFocus={this.props.handleFocus(
+                                    relatedCapture.id
+                                  )}
+                                  handleEdit={this.props.handleEdit(
+                                    relatedCapture.id
+                                  )}
+                                  isEditing={this.props.isEditing(
+                                    relatedCapture.id
+                                  )}
+                                  handleArchive={this.props.handleArchive(
+                                    relatedCapture.id
+                                  )}
+                                  handleTextChange={this.props.handleTextChange(
+                                    relatedCapture.id
+                                  )}
+                                  handleCapture={this.props.handleCapture(
+                                    relatedCapture.id
+                                  )}
+                                  highlightTerms={entry.contains}
+                                />
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                 </div>
               )
             );

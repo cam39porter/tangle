@@ -11,11 +11,14 @@ interface Props {
   handleTextChange: (text: string) => void;
   handleCapture: () => void;
   handleExpand?: () => void;
+  startingText?: string;
+  clearOnEnter: boolean;
+  allowToolbar?: boolean;
 }
 
 const InputCapture = (props: Props) => {
   return (
-    <div className={`w-100 flex`}>
+    <div className={`flex w-100`}>
       <div className={`pa1`} data-tip={"add to your tangle"}>
         <ButtonCapture onClick={props.handleCapture} />
       </div>
@@ -23,11 +26,11 @@ const InputCapture = (props: Props) => {
         <InputText
           placeholder={`Capture a thought...`}
           handleEnterKey={props.handleCapture}
-          allowToolbar={false}
+          allowToolbar={props.allowToolbar}
           handleChange={props.handleTextChange}
         />
       </div>
-      <div className={`pa1`} data-tip={"start a session"}>
+      <div className={`pa1`} data-tip={"enter a brainstorm"}>
         {props.handleExpand && <ButtonExpand onClick={props.handleExpand} />}
       </div>
       <ReactTooltip />

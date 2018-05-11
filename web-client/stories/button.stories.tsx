@@ -10,6 +10,12 @@ import ButtonCapture from "../src/components/button-capture";
 import ButtonSurface from "../src/components/button-surface";
 import ButtonExit from "../src/components/button-exit";
 import ButtonToggle from "../src/components/button-toggle";
+import ButtonMore from "../src/components/button-more";
+import ButtonComment from "../src/components/button-comment";
+import ButtonEdit from "../src/components/button-edit";
+import ButtonArchive from "../src/components/button-archive";
+import ButtonFocus from "../src/components/button-focus";
+import ButtonRelated from "../src/components/button-related";
 
 const stories = storiesOf("Button", module);
 
@@ -31,9 +37,19 @@ stories.add("basic", () => (
   />
 ));
 
+stories.add("archive", () => <ButtonArchive onClick={action("clicked")} />);
 stories.add("capture", () => <ButtonCapture onClick={action("clicked")} />);
 stories.add("clear", () => <ButtonExit onClick={action("clicked")} />);
+stories.add("comment", () => <ButtonComment onClick={action("clicked")} />);
+stories.add("edit", () => <ButtonEdit onClick={action("clicked")} />);
 stories.add("expand", () => <ButtonExpand onClick={action("clicked")} />);
+stories.add("focus", () => <ButtonFocus onClick={action("clicked")} />);
+stories.add("more", () => (
+  <ButtonMore onClick={action("clicked")} isMore={boolean("isMore", false)} />
+));
+stories.add("related", () => (
+  <ButtonRelated onClick={action("clicked")} isUp={boolean("isUp", false)} />
+));
 stories.add("surface", () => <ButtonSurface onClick={action("clicked")} />);
 stories.add("toggle", () => (
   <ButtonToggle

@@ -11,7 +11,6 @@ interface Props {
   handleTextChange: (text: string) => void;
   handleSurface: () => void;
   handleClear?: () => void;
-  startingText?: string;
 }
 
 const InputSurface = (props: Props) => {
@@ -26,8 +25,6 @@ const InputSurface = (props: Props) => {
           handleEnterKey={props.handleSurface}
           allowToolbar={false}
           handleChange={props.handleTextChange}
-          startingText={props.startingText}
-          clearOnEnter={false}
         />
       </div>
       <div className={`pa1`} data-tip={"exit your search"}>

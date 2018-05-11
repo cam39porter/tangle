@@ -15,6 +15,7 @@ export function create(
     MATCH (from:${srcLabel} {id:{src}})
     MATCH (to:${destLabel} {id:{dest}})
     CREATE (from)-[r:${relationshipType}]->(to)
+    SET r.created = TIMESTAMP()
     RETURN r`;
 
   return executeQuery(query, params).then(() => null);

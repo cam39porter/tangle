@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
-import { withKnobs, boolean } from "@storybook/addon-knobs/react";
+import { withKnobs } from "@storybook/addon-knobs/react";
 
 import InputText from "../src/components/input-text";
 import InputCapture from "../src/components/input-capture";
@@ -19,7 +19,6 @@ stories.add("capture", () => (
     handleCapture={action("captured")}
     handleExpand={action("expanded")}
     handleTextChange={action("text changed")}
-    clearOnEnter={boolean("clearOnEnter", true)}
   />
 ));
 

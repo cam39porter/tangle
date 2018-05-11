@@ -30,7 +30,11 @@ export function createCapture(
   captureRelation: CaptureRelation
 ): Promise<boolean> {
   const user: User = getAuthenticatedUser();
-  if (captureRelation.relationshipType === "PREVIOUS" && !parentId) {
+  if (
+    captureRelation &&
+    captureRelation.relationshipType === "PREVIOUS" &&
+    !parentId
+  ) {
     throw new GraphQLError(
       "Malformed request. SessionId is required if captureRelation is present and of type PREVIOUS"
     );

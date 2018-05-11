@@ -1,13 +1,57 @@
-type Edge {
-  source: String!
-  destination: String!
-  type: EdgeType!
-  salience: Float
+type SearchResults {
+  graph: Graph! # for generating the graph visualization,
+  list: [ListItem]! # for generating list results
+  pageInfo: PageInfo!
+}
+
+type ListItem {
+  id: String!
+  text: AnnotatedText!
+  reasons: [RecommendationReason]! # empty if root item
+  relatedItems: [ListItem]
+}
+
+type RecommendationReason {
+  reasonType: ReasonType!
+  pivot: String
+}
+
+enum ReasonType {
+  SHARES_TAG
+  SHARES_ENTITY
+  SHARES_LINK
+  SHARES_SESSION
+  SHARES_IMPORT_NOTE
+  PREVIOUS
+  COMMENTED_ON
+  DEFAULT
+}
+
+type AnnotatedText {
+  text: String!
+  annotations: [Annotation]!
+}
+
+type Annotation {
+  type: AnnotationType
+  start: Int!
+  end: Int!
+}
+
+enum AnnotationType {
+  HIGHLIGHT
 }
 
 type Graph {
   nodes: [Node!]!
   edges: [Edge!]!
+}
+
+type Edge {
+  source: String!
+  destination: String!
+  type: EdgeType!
+  salience: Float
 }
 
 type Node {
@@ -34,11 +78,6 @@ enum EdgeType {
   PREVIOUS
 }
 
-type SearchResults {
-  graph: Graph! # for generating the graph visualization,
-  pageInfo: PageInfo!
-}
-
 type PageInfo {
   start: Int!
   count: Int!
@@ -53,6 +92,7 @@ schema {
 type Query {
   search(rawQuery: String!, start: Int = 0, count: Int = 10): SearchResults!
   get(id: String!): Graph!
+  getDetailed(id: String!): SearchResults!
   getAll(useCase: String!, timezoneOffset: Int): SearchResults!
 }
 
@@ -79,4 +119,8 @@ type Mutation {
   createSession(title: String): Node!
   archiveCapture(id: String!): Boolean
   editCapture(id: String!, body: String!): Boolean
+  dismissCaptureRelation(
+    rootCaptureId: String!
+    relatedCaptureId: String!
+  ): Boolean
 }

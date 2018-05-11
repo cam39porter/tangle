@@ -2,34 +2,36 @@ import * as _ from "lodash";
 import { Edge } from "../models/edge";
 import { Graph } from "../models/graph";
 import { GraphNode } from "../models/graph-node";
+import { Capture } from "../../db/models/capture";
+import { Node, Relationship } from "neo4j-driver/types/v1";
 
 export function buildGraph(
-  neoNodes: any,
-  neoRelationships: any,
+  neoNodes: Node[],
+  neoRelationships: Relationship[],
   startUrn: string,
-  neoRoots: any
+  neoRoots: Capture[]
 ): Graph {
   const neoIdToNodeId = _.mapValues(
     _.keyBy(neoNodes, "identity"),
     "properties.id"
   );
 
-  const rootNodes = neoRoots.map(node => node.properties.id);
+  const captureRoots = neoRoots.map(capture => capture.id);
   if (startUrn) {
-    rootNodes.push(startUrn);
+    captureRoots.push(startUrn);
   }
 
   const nodes: GraphNode[] = neoNodes.map(
     node =>
       new GraphNode(
-        node.properties.id,
+        node.properties["id"],
         node.labels[0],
-        node.properties.body ||
-          node.properties.name ||
-          node.properties.title ||
-          node.properties.url ||
+        node.properties["body"] ||
+          node.properties["name"] ||
+          node.properties["title"] ||
+          node.properties["url"] ||
           "Untitled",
-        getLevel(rootNodes, node.properties.id)
+        getLevel(captureRoots, node.properties["id"])
       )
   );
   const edges: Edge[] = neoRelationships.map(
@@ -38,7 +40,7 @@ export function buildGraph(
         source: neoIdToNodeId[edge.start],
         destination: neoIdToNodeId[edge.end],
         type: edge.type,
-        salience: edge.properties.salience
+        salience: edge.properties["salience"]
       })
   );
   return new Graph(nodes, edges);

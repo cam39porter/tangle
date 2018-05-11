@@ -1,16 +1,11 @@
 import * as React from "react";
 
-import { Node, Edge } from "../src/types";
-
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 import { withKnobs, boolean, select } from "@storybook/addon-knobs/react";
 
 import ListHeader from "../src/components/list-header";
-import ListSectionHeader from "../src/components/list-section-header";
 import ListCapture from "../src/components/list-capture";
-import List from "../src/components/list";
-import ListSession from "../src/components/list-session";
 
 const stories = storiesOf("List", module);
 
@@ -29,8 +24,8 @@ stories.add("header", () => (
   />
 ));
 
-stories.add("section header", () => (
-  <ListSectionHeader title={"example header"} />
+stories.add("item", () => (
+  <ListCapture text={select("text", { "This is a short capture.": "short", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.": "long" }, "listcapture")} />
 ));
 
 stories.add("capture", () => (

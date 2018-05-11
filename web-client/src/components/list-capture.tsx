@@ -1,6 +1,7 @@
 // React
 import * as React from "react";
 
+<<<<<<< HEAD
 // Components
 import ButtonExpand from "./button-expand";
 import ButtonMore from "./button-more";
@@ -40,10 +41,15 @@ function highlightedText(text: string, terms: Array<string>): string {
   });
 
   return highlightedText;
+=======
+interface Props {
+  text: string;
+>>>>>>> parent of 881a327... sessions;
 }
 
 const ListCapture = (props: Props) => {
   return (
+<<<<<<< HEAD
     <div>
       <div
         className={`flex flex-wrap pa3 pb0 w-100 br4 ba b--light-gray bg-white`}
@@ -132,6 +138,10 @@ const ListCapture = (props: Props) => {
       </div>
       <ReactTooltip />
     </div>
+=======
+    <div className={`flex w-100 pa3 br4 ba b--light-gray`}>
+    {props.text}</div>
+>>>>>>> parent of 881a327... sessions;
   );
 };
 

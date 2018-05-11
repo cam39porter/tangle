@@ -4,6 +4,22 @@ import { toSessionUrn } from "../helpers/urn-helpers";
 import { executeQuery } from "../db";
 import { Session } from "../models/session";
 
+export function edit(
+  userId: string,
+  sessionId: string,
+  title: string
+): Promise<Session> {
+  const query = `
+    MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
+    SET session.title = {title}
+    RETURN session`;
+  const params = { userId, sessionId, title };
+  return executeQuery(query, params).then((result: StatementResult) => {
+    const session = result.records[0].get("session").properties as Session;
+    return session;
+  });
+}
+
 export function create(userId: string, title: string): Promise<Session> {
   const uuid = uuidv4();
   const sessionUrn = toSessionUrn(uuid);

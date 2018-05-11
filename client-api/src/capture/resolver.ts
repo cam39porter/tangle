@@ -1,6 +1,9 @@
 import { Session } from "../db/models/session";
 import { archiveCaptureNode } from "../db/services/capture";
-import { create as createSession } from "../db/services/session";
+import {
+  edit as editSession,
+  create as createSession
+} from "../db/services/session";
 import { getAuthenticatedUser } from "../filters/request-context";
 import { Graph } from "../surface/models/graph";
 import { GraphNode } from "../surface/models/graph-node";
@@ -42,6 +45,13 @@ export default {
     createSession(parent, { title }, context, info): Promise<GraphNode> {
       const userId = getAuthenticatedUser().id;
       return createSession(userId, title).then((session: Session) => {
+        return new GraphNode(session.id, "Session", session.title, null);
+      });
+    },
+    // @ts-ignore
+    editSession(parent, { id, title }, context, info): Promise<GraphNode> {
+      const userId = getAuthenticatedUser().id;
+      return editSession(userId, id, title).then((session: Session) => {
         return new GraphNode(session.id, "Session", session.title, null);
       });
     },

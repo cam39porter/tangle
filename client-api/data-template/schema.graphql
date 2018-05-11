@@ -117,6 +117,7 @@ type Mutation {
     captureRelation: CaptureRelation
   ): Graph!
   createSession(title: String): Node!
+  editSession(id: String!, title: String!): Node!
   archiveCapture(id: String!): Boolean
   editCapture(id: String!, body: String!): Boolean
   dismissCaptureRelation(fromId: String!, toId: String!): Boolean

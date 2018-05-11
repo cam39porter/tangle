@@ -73,7 +73,7 @@ stories.add("list", () => (
     handleIsShowingRelated={(id: string) =>
       action(`handleIsShowingRelated ${id}`)
     }
-    isShowingRelated={(id: string) => boolean(`isShowingRelated ${id}`, false)}
+    isShowingRelated={(id: string) => boolean(`isShowingRelated ${id}`, true)}
     handleMore={(id: string) => action(`handleMore ${id}`)}
     isMore={(id: string) => boolean(`isMore ${id}`, false)}
     handleComment={(id: string) => action(`handleComment ${id}`)}

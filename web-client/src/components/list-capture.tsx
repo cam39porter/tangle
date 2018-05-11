@@ -12,6 +12,9 @@ import ButtonRelated from "./button-related";
 import InputCapture from "./input-capture";
 import ReactTooltip from "react-tooltip";
 
+// Types
+import { AnnotationFieldsFragment } from "../__generated__/types";
+
 interface Props {
   text: string;
   handleExpand: () => void;
@@ -26,20 +29,23 @@ interface Props {
   handleCapture: () => void;
   handleIsShowingRelated?: () => void;
   isShowingRelated?: boolean;
-  highlightTerms?: Array<string>;
+  annotations?: Array<AnnotationFieldsFragment>;
 }
 
-function highlightedText(text: string, terms: Array<string>): string {
-  let highlightedText = text;
-  terms.forEach(term => {
-    let regex = new RegExp(term, "g");
-    highlightedText = highlightedText.replace(
-      regex,
-      `<span class="accent">${term}</span>`
-    );
-  });
+function annotate(
+  text: string,
+  annotations: Array<AnnotationFieldsFragment>
+): string {
+  let annotatedText = text;
+  // annotations.forEach(term => {
+  //   let regex = new RegExp(term, "g");
+  //   highlightedText = highlightedText.replace(
+  //     regex,
+  //     `<span class="accent">${term}</span>`
+  //   );
+  // });
 
-  return highlightedText;
+  return annotatedText;
 }
 
 const ListCapture = (props: Props) => {
@@ -61,8 +67,8 @@ const ListCapture = (props: Props) => {
               onDoubleClick={props.handleEdit}
               className={`lh-copy`}
               dangerouslySetInnerHTML={{
-                __html: props.highlightTerms
-                  ? highlightedText(props.text, props.highlightTerms)
+                __html: props.annotations
+                  ? annotate(props.text, props.annotations)
                   : props.text
               }}
             />

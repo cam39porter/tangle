@@ -1,22 +1,75 @@
 import gql from "graphql-tag";
 
+// Fragments
+const annotationFragment = gql`
+  fragment AnnotationFields on Annotation {
+    start
+    end
+    type
+  }
+`;
+
+const reasonFragment = gql`
+  fragment ReasonFields on RecommendationReason {
+    pivot
+    reasonType
+  }
+`;
+
+const graphFragment = gql`
+  fragment GraphFields on Graph {
+    nodes {
+      id
+      type
+      text
+      level
+    }
+    edges {
+      source
+      destination
+      type
+      salience
+    }
+  }
+`;
+
+const listFragment = gql`
+  fragment ListFields on ListItem {
+    id
+    text {
+      text
+      annotations {
+        ...AnnotationFields
+      }
+    }
+    reasons {
+      ...ReasonFields
+    }
+    relatedItems {
+      id
+      text {
+        text
+        annotations {
+          ...AnnotationFields
+        }
+      }
+      reasons {
+        ...ReasonFields
+      }
+    }
+  }
+  ${annotationFragment}
+  ${reasonFragment}
+`;
+
 // Create a capture
 export const CreateCapture = gql`
   mutation CreateCapture($body: String!) {
     createCapture(body: $body) {
-      nodes {
-        id
-        type
-        text
-      }
-      edges {
-        source
-        destination
-        type
-        salience
-      }
+      ...GraphFields
     }
   }
+  ${graphFragment}
 `;
 
 // Archive capture
@@ -45,64 +98,31 @@ export const Search = gql`
     search(rawQuery: $query, start: $start, count: $count)
       @skip(if: $isDetail) {
       graph {
-        nodes {
-          id
-          type
-          text
-          level
-        }
-        edges {
-          source
-          destination
-          type
-          salience
-        }
+        ...GraphFields
       }
-      pageInfo {
-        start
-        count
-        total
+      list {
+        ...ListFields
       }
     }
     get(id: $detailId) @include(if: $isDetail) {
-      nodes {
-        id
-        type
-        text
-        level
-      }
-      edges {
-        source
-        destination
-        type
-        salience
-      }
+      ...GraphFields
     }
   }
+  ${graphFragment}
+  ${listFragment}
 `;
 
 export const DailyCaptures = gql`
   query DailyCaptures($timezoneOffset: Int!) {
     getAll(useCase: "CAPTURED_TODAY", timezoneOffset: $timezoneOffset) {
       graph {
-        nodes {
-          id
-          type
-          text
-          level
-        }
-        edges {
-          source
-          destination
-          type
-          salience
-        }
+        ...GraphFields
       }
-      pageInfo {
-        count
-        total
-        start
+      list {
+        ...ListFields
       }
     }
   }
+  ${graphFragment}
+  ${listFragment}
 `;

@@ -6,25 +6,15 @@ import ListHeader from "./list-header";
 import ListCapture from "./list-capture";
 
 // Utils
-import {
-  constructNodeMap,
-  constructEdgeMap,
-  doesEdgeContainNode,
-  getNodesAdjacentToNode,
-  getEdgesOtherNodeId
-} from "../utils";
-import { uniq } from "lodash";
 
 // Types
-import { Node, Edge, ListData, id } from "../types";
-import { EdgeType } from "../__generated__/types";
+import { ListFieldsFragment } from "../__generated__/types";
 
 interface Props {
   // List
   isHidden: boolean;
   handleIsHidden: () => void;
-  nodes: Array<Node>;
-  edges: Array<Edge>;
+  listData: Array<ListFieldsFragment>;
   // Session
   isSession: boolean;
 
@@ -52,81 +42,12 @@ interface Props {
   handleCapture: (id: string) => (() => void);
 }
 
-interface State {
-  listData: ListData;
-}
+interface State {}
 
 class List extends React.Component<Props, State> {
-  // map ids to objects
-  nodeMap: Map<string, Node> = new Map();
-  edgeMap: Map<string, Edge> = new Map();
-
   constructor(props: Props) {
     super(props);
-
-    this.nodeMap = constructNodeMap(props.nodes);
-    this.edgeMap = constructEdgeMap(props.edges);
-
-    this.state = {
-      listData: this.constructListData(props.nodes, props.edges)
-    };
   }
-
-  componentWillReceiveProps(nextProps: Props) {
-    this.nodeMap = constructNodeMap(nextProps.nodes);
-    this.edgeMap = constructEdgeMap(nextProps.edges);
-
-    this.setState({
-      listData: this.constructListData(nextProps.nodes, nextProps.edges)
-    });
-  }
-
-  constructListData = (nodes: Array<Node>, edges: Array<Edge>): ListData => {
-    let listData: ListData = [];
-
-    const levelZeroNodes = nodes.filter(node => node.level === 0);
-
-    levelZeroNodes.forEach(node => {
-      let connectedEdges = edges.filter(edge =>
-        doesEdgeContainNode(edge, node)
-      );
-
-      // captures related through an entity or model
-      let relatedCaptures: Array<id> = [];
-      // entity or tags contained in capture
-      let contains: Array<string> = [];
-
-      connectedEdges.forEach(edge => {
-        switch (edge.type) {
-          case EdgeType.REFERENCES || EdgeType.TAGGED_WITH:
-            const entityOrTagNodeId = getEdgesOtherNodeId(edge, node);
-            const entityOrTagNode = this.nodeMap.get(entityOrTagNodeId);
-            if (entityOrTagNode) {
-              contains = contains.concat(entityOrTagNode.text);
-              let adjacentNodes = getNodesAdjacentToNode(
-                entityOrTagNode,
-                this.props.edges
-              ).filter(adjacentNodeId => {
-                const adjacentNode = this.nodeMap.get(adjacentNodeId);
-                return adjacentNode && adjacentNode.level !== 0;
-              });
-              relatedCaptures = uniq(relatedCaptures.concat(adjacentNodes));
-            }
-            break;
-          default:
-            break;
-        }
-      });
-
-      listData = listData.concat({
-        id: node.id,
-        contains: contains,
-        related: relatedCaptures
-      });
-    });
-
-    return listData;
-  };
 
   renderPadding = () => (
     <div className={`pa4`}>
@@ -197,78 +118,64 @@ class List extends React.Component<Props, State> {
             />
           </div>
 
-          {this.state.listData.map(entry => {
-            const capture = this.nodeMap.get(entry.id);
-            return (
-              capture && (
-                <div className={`relative`}>
-                  <ListCapture
-                    key={capture.id}
-                    text={capture.text}
-                    handleExpand={this.props.handleExpand(capture.id)}
-                    handleMore={this.props.handleMore(capture.id)}
-                    isMore={this.props.isMore(capture.id)}
-                    handleComment={this.props.handleComment(capture.id)}
-                    handleFocus={this.props.handleFocus(capture.id)}
-                    handleEdit={this.props.handleEdit(capture.id)}
-                    isEditing={this.props.isEditing(capture.id)}
-                    handleArchive={this.props.handleArchive(capture.id)}
-                    handleTextChange={this.props.handleTextChange(capture.id)}
-                    handleCapture={this.props.handleCapture(capture.id)}
-                    handleIsShowingRelated={this.props.handleIsShowingRelated(
-                      capture.id
-                    )}
-                    isShowingRelated={this.props.isShowingRelated(capture.id)}
-                  />
-                  {entry.related.length > 0 &&
-                    this.props.isShowingRelated(capture.id) && (
-                      <div className={`pb4`}>
-                        {entry.related.map(relatedId => {
-                          const relatedCapture = this.nodeMap.get(relatedId);
-                          return (
-                            <div className={`pl4`}>
-                              {relatedCapture && (
-                                <ListCapture
-                                  key={relatedCapture.id}
-                                  text={relatedCapture.text}
-                                  handleExpand={this.props.handleHeaderExpand}
-                                  handleMore={this.props.handleMore(
-                                    relatedCapture.id
-                                  )}
-                                  isMore={this.props.isMore(relatedCapture.id)}
-                                  handleComment={this.props.handleComment(
-                                    relatedCapture.id
-                                  )}
-                                  handleFocus={this.props.handleFocus(
-                                    relatedCapture.id
-                                  )}
-                                  handleEdit={this.props.handleEdit(
-                                    relatedCapture.id
-                                  )}
-                                  isEditing={this.props.isEditing(
-                                    relatedCapture.id
-                                  )}
-                                  handleArchive={this.props.handleArchive(
-                                    relatedCapture.id
-                                  )}
-                                  handleTextChange={this.props.handleTextChange(
-                                    relatedCapture.id
-                                  )}
-                                  handleCapture={this.props.handleCapture(
-                                    relatedCapture.id
-                                  )}
-                                  highlightTerms={entry.contains}
-                                />
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                </div>
-              )
-            );
-          })}
+          {this.props.listData.map(listItem => (
+            <div>
+              <ListCapture
+                key={listItem.id}
+                text={listItem.text.text}
+                handleExpand={this.props.handleExpand(listItem.id)}
+                handleMore={this.props.handleMore(listItem.id)}
+                isMore={this.props.isMore(listItem.id)}
+                handleComment={this.props.handleComment(listItem.id)}
+                handleFocus={this.props.handleFocus(listItem.id)}
+                handleEdit={this.props.handleEdit(listItem.id)}
+                isEditing={this.props.isEditing(listItem.id)}
+                handleArchive={this.props.handleArchive(listItem.id)}
+                handleTextChange={this.props.handleTextChange(listItem.id)}
+                handleCapture={this.props.handleCapture(listItem.id)}
+                handleIsShowingRelated={this.props.handleIsShowingRelated(
+                  listItem.id
+                )}
+                isShowingRelated={this.props.isShowingRelated(listItem.id)}
+              />
+              {this.props.isShowingRelated(listItem.id) &&
+                listItem.relatedItems &&
+                listItem.relatedItems.length > 0 && (
+                  <div className={`pl4 pb4`}>
+                    {listItem.relatedItems.map(relatedItem => {
+                      if (!relatedItem) {
+                        return null;
+                      }
+                      return (
+                        <ListCapture
+                          key={relatedItem.id}
+                          text={relatedItem.text.text}
+                          handleExpand={this.props.handleHeaderExpand}
+                          handleMore={this.props.handleMore(relatedItem.id)}
+                          isMore={this.props.isMore(relatedItem.id)}
+                          handleComment={this.props.handleComment(
+                            relatedItem.id
+                          )}
+                          handleFocus={this.props.handleFocus(relatedItem.id)}
+                          handleEdit={this.props.handleEdit(relatedItem.id)}
+                          isEditing={this.props.isEditing(relatedItem.id)}
+                          handleArchive={this.props.handleArchive(
+                            relatedItem.id
+                          )}
+                          handleTextChange={this.props.handleTextChange(
+                            relatedItem.id
+                          )}
+                          handleCapture={this.props.handleCapture(
+                            relatedItem.id
+                          )}
+                          annotations={relatedItem.text.annotations}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+            </div>
+          ))}
         </div>
       </div>
     );

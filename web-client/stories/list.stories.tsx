@@ -59,21 +59,24 @@ stories.add("capture", () => (
 
 stories.add("list", () => (
   <List
+    // List
+    isHidden={boolean("isHidden", false)}
+    handleIsHidden={action(`handleIsHidden`)}
+    nodes={nodes}
+    edges={edges}
+    // Session
+    isSession={boolean("isSession", false)}
     // Header
     handleHeaderCaptureTextChange={action("handleCaptureTextChange")}
     handleHeaderCapture={action("handleCapture")}
-    handleExpand={action("handleExpand")}
+    handleHeaderExpand={action("handleExpand")}
     isHeaderCapturing={boolean("isCapturing", true)}
     handleHeaderIsCapturing={action("handleIsCapture")}
     handleSurfaceTextChange={action("handleSurfaceTextChange")}
     handleSurface={action("handleSurface")}
     handleSurfaceClear={action("handleClear")}
-    // List
-    isLevel0Capture={false}
-    isHidden={boolean("isHidden", false)}
-    nodes={nodes}
-    edges={edges}
     // Captures
+    handleExpand={(id: string) => action(`handleExpand ${id}`)}
     handleIsShowingRelated={(id: string) =>
       action(`handleIsShowingRelated ${id}`)
     }

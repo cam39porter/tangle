@@ -32,39 +32,27 @@ interface Props {
   annotations?: Array<AnnotationFieldsFragment>;
 }
 
-function replaceBetween(
-  start: number,
-  end: number,
-  offset: number,
-  withThis: string,
-  inThis: string
-): string {
-  return (
-    inThis.substring(0, start + offset) +
-    withThis +
-    inThis.substring(end + offset)
-  );
-}
-
 function annotate(
   text: string,
   annotations: Array<AnnotationFieldsFragment>
 ): string {
-  let annotatedText = text;
-  const annotationHtmlLength = `<span class="accent"></span>`.length;
-  const sortedAnnotations = annotations.sort((a, b) => a.start - b.start);
-  sortedAnnotations.forEach((annotation, index) => {
-    const { start, end } = annotation;
-    const offset = annotationHtmlLength * index;
-    const term = text.substring(start, end);
-    annotatedText = replaceBetween(
-      start,
-      end,
-      offset,
-      `<span class="accent">${term}</span>`,
-      annotatedText
-    );
-  });
+  let annotatedText = "";
+
+  for (let i = 0; i < text.length; i++) {
+    let starts = annotations.filter(a => a.start === i);
+    let ends = annotations.filter(a => a.end === i);
+    let nextCharacter = text.charAt(i);
+    let nextAnnotations = "";
+
+    ends.forEach(a => {
+      nextAnnotations = nextAnnotations + `</span>`;
+    });
+    starts.forEach(a => {
+      nextAnnotations = nextAnnotations + `<span class="accent">`;
+    });
+
+    annotatedText = annotatedText + nextAnnotations + nextCharacter;
+  }
 
   return annotatedText;
 }

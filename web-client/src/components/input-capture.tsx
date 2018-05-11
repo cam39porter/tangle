@@ -28,6 +28,7 @@ const InputCapture = (props: Props) => {
           handleEnterKey={props.handleCapture}
           allowToolbar={props.allowToolbar}
           handleChange={props.handleTextChange}
+          startingText={props.startingText}
         />
       </div>
       <div className={`pa1`} data-tip={"enter a brainstorm"}>

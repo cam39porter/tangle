@@ -133,10 +133,16 @@ class List extends React.Component<Props, State> {
                 handleArchive={this.props.handleArchive(listItem.id)}
                 handleTextChange={this.props.handleTextChange(listItem.id)}
                 handleCapture={this.props.handleCapture(listItem.id)}
-                handleIsShowingRelated={this.props.handleIsShowingRelated(
-                  listItem.id
-                )}
-                isShowingRelated={this.props.isShowingRelated(listItem.id)}
+                handleIsShowingRelated={
+                  listItem.relatedItems && listItem.relatedItems.length > 0
+                    ? this.props.handleIsShowingRelated(listItem.id)
+                    : undefined
+                }
+                isShowingRelated={
+                  listItem.relatedItems && listItem.relatedItems.length > 0
+                    ? this.props.isShowingRelated(listItem.id)
+                    : undefined
+                }
               />
               {this.props.isShowingRelated(listItem.id) &&
                 listItem.relatedItems &&

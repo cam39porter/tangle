@@ -20,21 +20,25 @@ import { Node, Edge, ListData, id } from "../types";
 import { EdgeType } from "../__generated__/types";
 
 interface Props {
-  // Header Props
+  // List
+  isHidden: boolean;
+  handleIsHidden: () => void;
+  nodes: Array<Node>;
+  edges: Array<Edge>;
+  // Session
+  isSession: boolean;
+
+  // Header
   handleHeaderCaptureTextChange: (text: string) => void;
   handleHeaderCapture: () => void;
-  handleExpand: () => void;
+  handleHeaderExpand: () => void;
   isHeaderCapturing: boolean;
   handleHeaderIsCapturing: () => void;
   handleSurfaceTextChange: (text: string) => void;
   handleSurface: () => void;
   handleSurfaceClear: () => void;
-  // List
-  isLevel0Capture: boolean;
-  isHidden: boolean;
-  nodes: Array<Node>;
-  edges: Array<Edge>;
   // Captures
+  handleExpand: (id: string) => (() => void);
   handleIsShowingRelated: (id: string) => (() => void) | undefined;
   isShowingRelated: (id: string) => boolean | undefined;
   handleMore: (id: string) => (() => void);
@@ -129,7 +133,7 @@ class List extends React.Component<Props, State> {
       <ListHeader
         handleCaptureTextChange={this.props.handleHeaderCaptureTextChange}
         handleCapture={this.props.handleHeaderCapture}
-        handleExpand={this.props.handleExpand}
+        handleExpand={this.props.handleHeaderExpand}
         isCapturing={this.props.isHeaderCapturing}
         handleIsCapturing={this.props.handleHeaderIsCapturing}
         handleSurfaceTextChange={this.props.handleSurfaceTextChange}
@@ -146,7 +150,7 @@ class List extends React.Component<Props, State> {
           <ListHeader
             handleCaptureTextChange={this.props.handleHeaderCaptureTextChange}
             handleCapture={this.props.handleHeaderCapture}
-            handleExpand={this.props.handleExpand}
+            handleExpand={this.props.handleHeaderExpand}
             isCapturing={this.props.isHeaderCapturing}
             handleIsCapturing={this.props.handleHeaderIsCapturing}
             handleSurfaceTextChange={this.props.handleSurfaceTextChange}
@@ -164,7 +168,7 @@ class List extends React.Component<Props, State> {
           <ListHeader
             handleCaptureTextChange={this.props.handleHeaderCaptureTextChange}
             handleCapture={this.props.handleHeaderCapture}
-            handleExpand={this.props.handleExpand}
+            handleExpand={this.props.handleHeaderExpand}
             isCapturing={this.props.isHeaderCapturing}
             handleIsCapturing={this.props.handleHeaderIsCapturing}
             handleSurfaceTextChange={this.props.handleSurfaceTextChange}
@@ -184,7 +188,7 @@ class List extends React.Component<Props, State> {
             <ListHeader
               handleCaptureTextChange={this.props.handleHeaderCaptureTextChange}
               handleCapture={this.props.handleHeaderCapture}
-              handleExpand={this.props.handleExpand}
+              handleExpand={this.props.handleHeaderExpand}
               isCapturing={this.props.isHeaderCapturing}
               handleIsCapturing={this.props.handleHeaderIsCapturing}
               handleSurfaceTextChange={this.props.handleSurfaceTextChange}
@@ -201,7 +205,7 @@ class List extends React.Component<Props, State> {
                   <ListCapture
                     key={capture.id}
                     text={capture.text}
-                    handleExpand={this.props.handleExpand}
+                    handleExpand={this.props.handleExpand(capture.id)}
                     handleMore={this.props.handleMore(capture.id)}
                     isMore={this.props.isMore(capture.id)}
                     handleComment={this.props.handleComment(capture.id)}
@@ -227,7 +231,7 @@ class List extends React.Component<Props, State> {
                                 <ListCapture
                                   key={relatedCapture.id}
                                   text={relatedCapture.text}
-                                  handleExpand={this.props.handleExpand}
+                                  handleExpand={this.props.handleHeaderExpand}
                                   handleMore={this.props.handleMore(
                                     relatedCapture.id
                                   )}

@@ -18,6 +18,10 @@ export default {
     },
     // @ts-ignore
     get(parent, { id }, context, info): Promise<Graph> {
+      return getNode(id).then(searchResults => searchResults.graph);
+    },
+    // @ts-ignore
+    getDetailed(parent, { id }, context, info): Promise<SearchResults> {
       return getNode(id);
     },
     getAll(

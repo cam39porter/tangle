@@ -7,12 +7,10 @@ import {
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { getUrnType } from "../../db/helpers/urn-helpers";
 import { NotImplementedError } from "../../util/exceptions/not-implemented-error";
-import { Graph } from "../models/graph";
-import { PageInfo } from "../models/page-info";
 import { SearchResults } from "../models/search-results";
-import { expandCapturesFetch } from "./expand";
+import { expandCaptures } from "./expand";
 
-export function getNode(urn: string): Promise<Graph> {
+export function getNode(urn: string): Promise<SearchResults> {
   if (getUrnType(urn) === "capture") {
     return getCapture(urn);
   } else {
@@ -36,27 +34,23 @@ export function getAllByUseCase(
 function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
   const userId = getAuthenticatedUser().id;
   const since = getCreatedSince(timezoneOffset);
-  return getAllSince(userId, since).then(captures =>
-    expandCapturesFetch(userId, captures.map(c => c.id)).then(graph => {
-      return new SearchResults(
-        graph,
-        new PageInfo(0, graph.nodes.length, graph.nodes.length)
-      );
-    })
-  );
+  return getAllSince(userId, since).then(captures => {
+    const captureIds = captures.map(c => c.id);
+    return expandCaptures(userId, captureIds);
+  });
 }
 
-function getOthers(urn: string): Promise<Graph> {
+function getOthers(urn: string): Promise<SearchResults> {
   const userUrn = getAuthenticatedUser().id;
   return getCapturesByRelatedNode(userUrn, urn).then(captures =>
-    expandCapturesFetch(userUrn, captures.map(c => c.id))
+    expandCaptures(userUrn, captures.map(c => c.id))
   );
 }
 
-function getCapture(urn: string): Promise<Graph> {
+function getCapture(urn: string): Promise<SearchResults> {
   const userUrn = getAuthenticatedUser().id;
   return getCaptureClient(userUrn, urn).then(capture =>
-    expandCapturesFetch(userUrn, [capture.id])
+    expandCaptures(userUrn, [capture.id])
   );
 }
 

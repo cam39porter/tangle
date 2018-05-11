@@ -8,6 +8,7 @@ import ButtonFocus from "./button-focus";
 import ButtonArchive from "./button-archive";
 import ButtonEdit from "./button-edit";
 import ButtonComment from "./button-comment";
+import ButtonRelated from "./button-related";
 import InputCapture from "./input-capture";
 import ReactTooltip from "react-tooltip";
 
@@ -23,6 +24,8 @@ interface Props {
   handleArchive: () => void;
   handleTextChange: (text: string) => void;
   handleCapture: () => void;
+  handleIsShowingRelated?: () => void;
+  isShowingRelated?: boolean;
   highlightTerms?: Array<string>;
 }
 
@@ -42,7 +45,9 @@ function highlightedText(text: string, terms: Array<string>): string {
 const ListCapture = (props: Props) => {
   return (
     <div>
-      <div className={`flex flex-wrap pa3 w-100 br4 ba b--light-gray bg-white`}>
+      <div
+        className={`flex flex-wrap pa3 pb0 w-100 br4 ba b--light-gray bg-white`}
+      >
         <div className={`flex-grow pa2`}>
           {props.isEditing ? (
             <InputCapture
@@ -105,6 +110,24 @@ const ListCapture = (props: Props) => {
               </div>
             </div>
           </div>
+        )}
+        {props.handleIsShowingRelated ? (
+          <div className={`w-100`}>
+            <div
+              className={`center pa2 w2`}
+              data-tip={`${
+                props.isShowingRelated ? "hide" : "show"
+              } related captures`}
+            >
+              <ButtonRelated
+                isUp={!!props.isShowingRelated}
+                onClick={props.handleIsShowingRelated}
+              />
+            </div>
+          </div>
+        ) : (
+          // this adds padding to the bottom of the card when the show related button is not rendered
+          <div className={`w-100 pb3`} />
         )}
       </div>
       <ReactTooltip />

@@ -3,9 +3,7 @@ import * as React from "react";
 
 // Components
 import ListHeader from "./list-header";
-// import ListSectionHeader from "./list-section-header";
 import ListCapture from "./list-capture";
-import ButtonRelated from "./button-related";
 
 // Utils
 import {
@@ -37,8 +35,8 @@ interface Props {
   nodes: Array<Node>;
   edges: Array<Edge>;
   // Captures
-  handleIsShowingRelated: (id: string) => (() => void);
-  isShowingRelated: (id: string) => boolean;
+  handleIsShowingRelated: (id: string) => (() => void) | undefined;
+  isShowingRelated: (id: string) => boolean | undefined;
   handleMore: (id: string) => (() => void);
   isMore: (id: string) => boolean;
   handleComment: (id: string) => (() => void);
@@ -213,26 +211,11 @@ class List extends React.Component<Props, State> {
                     handleArchive={this.props.handleArchive(capture.id)}
                     handleTextChange={this.props.handleTextChange(capture.id)}
                     handleCapture={this.props.handleCapture(capture.id)}
+                    handleIsShowingRelated={this.props.handleIsShowingRelated(
+                      capture.id
+                    )}
+                    isShowingRelated={this.props.isShowingRelated(capture.id)}
                   />
-                  {entry.related.length > 0 && (
-                    <div className={`w-100`}>
-                      <div
-                        className={`center pa2 w2`}
-                        data-tip={`${
-                          this.props.isShowingRelated(capture.id)
-                            ? "hide"
-                            : "show"
-                        } related captures`}
-                      >
-                        <ButtonRelated
-                          isUp={this.props.isShowingRelated(capture.id)}
-                          onClick={this.props.handleIsShowingRelated(
-                            capture.id
-                          )}
-                        />
-                      </div>
-                    </div>
-                  )}
                   {entry.related.length > 0 &&
                     this.props.isShowingRelated(capture.id) && (
                       <div className={`pb4`}>

@@ -16,6 +16,20 @@ import { getAuthenticatedUser } from "../../filters/request-context";
 import { parseLinks, parseTags, stripTags } from "../../helpers/capture-parser";
 import { CaptureRelation } from "../models/capture-relation";
 
+export function dismissCaptureRelation(
+  fromId: string,
+  toId: string
+): Promise<boolean> {
+  return createRelationship(
+    getAuthenticatedUser().id,
+    fromId,
+    "Capture",
+    toId,
+    "Capture",
+    "DISMISSED_RELATION"
+  ).then(() => true);
+}
+
 export function editCapture(id: string, body: string): Promise<boolean> {
   const userId = getAuthenticatedUser().id;
   return editCaptureNodeAndDeleteRelationships(userId, id, body).then(() =>
@@ -43,6 +57,7 @@ export function createCapture(
     .then((capture: Capture) => {
       if (captureRelation) {
         return createRelationship(
+          user.id,
           capture.id,
           "Capture",
           captureRelation.captureId,

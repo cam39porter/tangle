@@ -50,10 +50,14 @@ function formatRelatedListItems(
   relatedCaptures.forEach((value, key) => {
     const annotations = [];
     const capture = allRelatedCaptureMap.get(key);
+    let skip = false;
     const reasons = value.map(element => {
       const rel = element[0];
       const node = element[1];
       if (rel.type === "PREVIOUS" || rel.type === "COMMENTED_ON") {
+        return new RecommendationReason(rel.type, null);
+      } else if (rel.type === "DISMISSED_RELATION") {
+        skip = true;
         return new RecommendationReason(rel.type, null);
       } else if (rel.type === "INCLUDES") {
         if (node.labels[0] === "EvernoteNote") {
@@ -75,7 +79,7 @@ function formatRelatedListItems(
         return new RecommendationReason("DEFAULT", null);
       }
     });
-    if (!rootCaptureMap.has(key)) {
+    if (!rootCaptureMap.has(key) && !skip) {
       listItems.push(
         new ListItem(
           key,

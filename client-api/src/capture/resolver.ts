@@ -5,7 +5,11 @@ import { getAuthenticatedUser } from "../filters/request-context";
 import { Graph } from "../surface/models/graph";
 import { GraphNode } from "../surface/models/graph-node";
 import { getAllByUseCase } from "../surface/services/graph";
-import { createCapture, editCapture } from "./services/capture";
+import {
+  createCapture,
+  editCapture,
+  dismissCaptureRelation
+} from "./services/capture";
 
 export default {
   Mutation: {
@@ -40,6 +44,19 @@ export default {
       return createSession(userId, title).then((session: Session) => {
         return new GraphNode(session.id, "Session", session.title, null);
       });
+    },
+    // @ts-ignore
+    dismissCaptureRelation(
+      // @ts-ignore
+      parent,
+      // @ts-ignore
+      { fromId, toId },
+      // @ts-ignore
+      context,
+      // @ts-ignore
+      info
+    ): Promise<boolean> {
+      return dismissCaptureRelation(fromId, toId);
     }
   }
 };

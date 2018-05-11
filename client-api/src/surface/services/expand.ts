@@ -72,14 +72,13 @@ function expandList(
   MATCH (roots:Capture)
     WHERE roots.id IN {captureIds}
   WITH roots
-  OPTIONAL MATCH (roots)-[r1:TAGGED_WITH|INCLUDES|REFERENCES|LINKS_TO|PREVIOUS|COMMENTED_ON]-
+  OPTIONAL MATCH (roots)-[r1:TAGGED_WITH|INCLUDES|REFERENCES|LINKS_TO|PREVIOUS|COMMENTED_ON|DISMISSED_RELATION]-
     (firstDegree)
   WHERE (firstDegree:Tag OR firstDegree:Entity OR firstDegree:Session OR firstDegree:Link OR firstDegree:Capture)
+  AND (NOT EXISTS(firstDegree.archived) or firstDegree.archived = false)
   OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|INCLUDES|REFERENCES|LINKS_TO]-
     (secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
-    WHERE (firstDegree:Tag OR firstDegree:Entity OR firstDegree:Session OR firstDegree:Link OR firstDegree:Capture)
-    AND (NOT EXISTS(firstDegree.archived) or firstDegree.archived = false)
-    AND (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)
+    WHERE (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)
   RETURN roots, r1, firstDegree, r2, secondDegree
   `;
   return executeQuery(query, params).then((result: StatementResult) => {

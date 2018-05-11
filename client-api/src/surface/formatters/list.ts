@@ -9,25 +9,30 @@ import { Entity } from "../../db/models/entity";
 export function buildList(
   paths: Array<[Capture, Relationship, Node, Relationship, Capture]>
 ): ListItem[] {
-  const captureMap = new Map();
+  const relatedCaptureMap = new Map();
+  const rootCaptureMap = new Map();
   paths.forEach(path => {
-    captureMap.set(path[0].id, path[0]);
+    rootCaptureMap.set(path[0].id, path[0]);
     if (path[2] && path[2].labels[0] === "Capture") {
       const capture = path[2].properties as Capture;
-      captureMap.set(capture.id, capture);
+      relatedCaptureMap.set(capture.id, capture);
     }
     if (path[4]) {
-      captureMap.set(path[4].id, path[4]);
+      relatedCaptureMap.set(path[4].id, path[4]);
     }
   });
   const tree = buildTree(paths);
   const listItems = [];
   tree.forEach((value, key) => {
-    const relatedCaptures = formatRelatedListItems(value, captureMap);
+    const relatedCaptures = formatRelatedListItems(
+      value,
+      rootCaptureMap,
+      relatedCaptureMap
+    );
     listItems.push(
       new ListItem(
         key,
-        new AnnotatedText(captureMap.get(key).body, []),
+        new AnnotatedText(relatedCaptureMap.get(key).body, []),
         [],
         relatedCaptures
       )
@@ -38,12 +43,13 @@ export function buildList(
 
 function formatRelatedListItems(
   relatedCaptures: Map<string, Array<[Relationship, Node]>>,
-  captureMap: Map<string, Capture>
+  rootCaptureMap: Map<string, Capture>,
+  allRelatedCaptureMap: Map<string, Capture>
 ): ListItem[] {
   const listItems = [];
   relatedCaptures.forEach((value, key) => {
     const annotations = [];
-    const capture = captureMap.get(key);
+    const capture = allRelatedCaptureMap.get(key);
     const reasons = value.map(element => {
       const rel = element[0];
       const node = element[1];
@@ -69,15 +75,17 @@ function formatRelatedListItems(
         return new RecommendationReason("DEFAULT", null);
       }
     });
-    listItems.push(
-      new ListItem(
-        key,
-        // TODO add annotations
-        new AnnotatedText(capture.body, annotations),
-        reasons,
-        []
-      )
-    );
+    if (!rootCaptureMap.has(key)) {
+      listItems.push(
+        new ListItem(
+          key,
+          // TODO add annotations
+          new AnnotatedText(capture.body, annotations),
+          reasons,
+          []
+        )
+      );
+    }
   });
   return listItems;
 }
@@ -96,21 +104,25 @@ function buildTree(
       Array<[Relationship, Node]>
     > = tree.get(root.id);
     let reasons: Array<[Relationship, Node]> = null;
-    if (path[2] && path[2].labels[0] === "Capture") {
-      const capture = path[2].properties as Capture;
+    let capture: Capture = null;
+    if (
+      path[2] &&
+      path[2].labels[0] === "Capture" &&
+      path[2].properties.id !== root.id
+    ) {
+      capture = path[2].properties as Capture;
+    } else if (path[4] && path[4].id !== root.id) {
+      capture = path[4];
+    }
+    if (capture) {
       reasons = relatedCaptureMap.get(capture.id);
       if (!reasons) {
         reasons = [];
       }
-      reasons.push([path[1], path[2]]);
-      relatedCaptureMap.set(capture.id, reasons);
-    } else if (path[4]) {
-      reasons = relatedCaptureMap.get(path[4].id);
-      if (!reasons) {
-        reasons = [];
+      if (capture.id !== root.id) {
+        reasons.push([path[1], path[2]]);
+        relatedCaptureMap.set(capture.id, reasons);
       }
-      reasons.push([path[1], path[2]]);
-      relatedCaptureMap.set(path[4].id, reasons);
     }
   });
   return tree;

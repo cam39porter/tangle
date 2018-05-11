@@ -32,7 +32,7 @@ export function buildList(
     listItems.push(
       new ListItem(
         key,
-        new AnnotatedText(relatedCaptureMap.get(key).body, []),
+        new AnnotatedText(rootCaptureMap.get(key).body, []),
         [],
         relatedCaptures
       )

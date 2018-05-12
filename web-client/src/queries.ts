@@ -16,21 +16,35 @@ const reasonFragment = gql`
   }
 `;
 
+const nodeFragment = gql`
+  fragment NodeFields on Node {
+    id
+    type
+    text
+    level
+  }
+`;
+
+const edgeFragment = gql`
+  fragment EdgeFields on Edge {
+    source
+    destination
+    type
+    salience
+  }
+`;
+
 const graphFragment = gql`
   fragment GraphFields on Graph {
     nodes {
-      id
-      type
-      text
-      level
+      ...NodeFields
     }
     edges {
-      source
-      destination
-      type
-      salience
+      ...EdgeFields
     }
   }
+  ${nodeFragment}
+  ${edgeFragment}
 `;
 
 const listFragment = gql`

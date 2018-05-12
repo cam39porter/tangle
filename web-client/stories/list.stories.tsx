@@ -7,6 +7,8 @@ import { action } from "@storybook/addon-actions";
 import { withKnobs, boolean, select } from "@storybook/addon-knobs/react";
 
 import ListHeader from "../src/components/list-header";
+import ListSessionTitle from "../src/components/list-session-title";
+import ListSessionTags from "../src/components/list-session-tags";
 import ListCapture from "../src/components/list-capture";
 import List from "../src/components/list";
 
@@ -25,6 +27,34 @@ stories.add("header", () => (
     handleSurface={action("handleSurface")}
     handleClear={action("handleClear")}
   />
+));
+
+stories.add("session title", () => (
+  <div>
+    <ListSessionTitle
+      handleEdit={action("handleEdit")}
+      isEditing={boolean("isEditing", false)}
+    />
+    <ListSessionTitle
+      handleEdit={action("handleEdit")}
+      isEditing={boolean("isEditing", false)}
+      title={`This is an example title`}
+    />
+  </div>
+));
+
+stories.add("session tags", () => (
+  <div>
+    <ListSessionTags
+      handleEdit={action("handleEdit")}
+      isEditing={boolean("isEditing", false)}
+    />
+    <ListSessionTags
+      handleEdit={action("handleEdit")}
+      isEditing={boolean("isEditing", false)}
+      tags={["tag1", "tag2", "tag3"]}
+    />
+  </div>
 ));
 
 stories.add("capture", () => (
@@ -58,7 +88,42 @@ stories.add("list", () => (
     handleIsHidden={action(`handleIsHidden`)}
     listData={listData}
     // Session
-    isSession={boolean("isSession", false)}
+    sessionId={undefined}
+    // Header
+    handleHeaderCaptureTextChange={action("handleCaptureTextChange")}
+    handleHeaderCapture={action("handleCapture")}
+    handleHeaderExpand={action("handleExpand")}
+    isHeaderCapturing={boolean("isCapturing", true)}
+    handleHeaderIsCapturing={action("handleIsCapture")}
+    handleSurfaceTextChange={action("handleSurfaceTextChange")}
+    handleSurface={action("handleSurface")}
+    handleSurfaceClear={action("handleClear")}
+    // Captures
+    handleExpand={(id: string) => action(`handleExpand ${id}`)}
+    handleIsShowingRelated={(id: string) =>
+      action(`handleIsShowingRelated ${id}`)
+    }
+    isShowingRelated={(id: string) => boolean(`isShowingRelated ${id}`, false)}
+    handleMore={(id: string) => action(`handleMore ${id}`)}
+    isMore={(id: string) => boolean(`isMore ${id}`, false)}
+    handleComment={(id: string) => action(`handleComment ${id}`)}
+    handleFocus={(id: string) => action(`handleFocus ${id}`)}
+    handleEdit={(id: string) => action(`handleEdit ${id}`)}
+    isEditing={(id: string) => boolean(`isEditing ${id}`, false)}
+    handleArchive={(id: string) => action(`handleArchive ${id}`)}
+    handleTextChange={(id: string) => action("handleTextChange")}
+    handleCapture={(id: string) => action(`handleCapture ${id}`)}
+  />
+));
+
+stories.add("session", () => (
+  <List
+    // List
+    isHidden={boolean("isHidden", false)}
+    handleIsHidden={action(`handleIsHidden`)}
+    listData={listData}
+    // Session
+    sessionId={"sessionId"}
     // Header
     handleHeaderCaptureTextChange={action("handleCaptureTextChange")}
     handleHeaderCapture={action("handleCapture")}

@@ -4,6 +4,7 @@ import * as React from "react";
 // Components
 import ListHeader from "./list-header";
 import ListCapture from "./list-capture";
+import InputCapture from "./input-capture";
 
 // Utils
 
@@ -16,7 +17,7 @@ interface Props {
   handleIsHidden: () => void;
   listData: Array<ListFieldsFragment>;
   // Session
-  isSession: boolean;
+  sessionId?: string;
 
   // Header
   handleHeaderCaptureTextChange: (text: string) => void;
@@ -49,18 +50,37 @@ class List extends React.Component<Props, State> {
     super(props);
   }
 
-  renderPadding = () => (
-    <div className={`pa4`}>
-      <ListHeader
-        handleCaptureTextChange={this.props.handleHeaderCaptureTextChange}
-        handleCapture={this.props.handleHeaderCapture}
-        handleExpand={this.props.handleHeaderExpand}
-        isCapturing={this.props.isHeaderCapturing}
-        handleIsCapturing={this.props.handleHeaderIsCapturing}
-        handleSurfaceTextChange={this.props.handleSurfaceTextChange}
-        handleSurface={this.props.handleSurface}
-        handleClear={this.props.handleSurfaceClear}
-      />
+  renderHeaderPadding = () => (
+    <div>
+      {this.props.sessionId ? null : (
+        <div className={`pa4`}>
+          <ListHeader
+            handleCaptureTextChange={this.props.handleHeaderCaptureTextChange}
+            handleCapture={this.props.handleHeaderCapture}
+            handleExpand={this.props.handleHeaderExpand}
+            isCapturing={this.props.isHeaderCapturing}
+            handleIsCapturing={this.props.handleHeaderIsCapturing}
+            handleSurfaceTextChange={this.props.handleSurfaceTextChange}
+            handleSurface={this.props.handleSurface}
+            handleClear={this.props.handleSurfaceClear}
+          />
+          }
+        </div>
+      )}
+    </div>
+  );
+
+  renderFooterPadding = () => (
+    <div>
+      {this.props.sessionId ? (
+        <div className={`pv2`}>
+          <InputCapture
+            handleCapture={this.props.handleHeaderCapture}
+            handleTextChange={this.props.handleHeaderCaptureTextChange}
+            clearOnEnter={true}
+          />
+        </div>
+      ) : null}
     </div>
   );
 
@@ -85,24 +105,7 @@ class List extends React.Component<Props, State> {
     return (
       <div className={`relative w-100 vh-100`}>
         {/* This is the list header that is actually seen when the list is not hidden */}
-        <div className={`z-max absolute top-0 left-0 pa4 w-100 bg-light-gray`}>
-          <ListHeader
-            handleCaptureTextChange={this.props.handleHeaderCaptureTextChange}
-            handleCapture={this.props.handleHeaderCapture}
-            handleExpand={this.props.handleHeaderExpand}
-            isCapturing={this.props.isHeaderCapturing}
-            handleIsCapturing={this.props.handleHeaderIsCapturing}
-            handleSurfaceTextChange={this.props.handleSurfaceTextChange}
-            handleSurface={this.props.handleSurface}
-            handleClear={this.props.handleSurfaceClear}
-          />
-        </div>
-
-        <div
-          className={`flex flex-column overflow-auto w-100 vh-100 bg-light-gray`}
-        >
-          {/* This is a hack to make scrolling with fixed header work. This serves as padding. The padding needs to be the same height as the fixed bar or else it will  */}
-          {this.renderPadding()}
+        {this.props.sessionId ? null : (
           <div
             className={`z-max absolute top-0 left-0 pa4 w-100 bg-light-gray`}
           >
@@ -117,6 +120,13 @@ class List extends React.Component<Props, State> {
               handleClear={this.props.handleSurfaceClear}
             />
           </div>
+        )}
+
+        <div
+          className={`flex flex-column overflow-auto w-100 vh-100 bg-light-gray`}
+        >
+          {/* This is a hack to make scrolling with fixed header work. This serves as padding. The padding needs to be the same height as the fixed bar or else it will  */}
+          {this.renderHeaderPadding()}
 
           {this.props.listData.map(listItem => (
             <div>
@@ -143,6 +153,7 @@ class List extends React.Component<Props, State> {
                     ? this.props.isShowingRelated(listItem.id)
                     : undefined
                 }
+                annotations={listItem.text.annotations}
               />
               {this.props.isShowingRelated(listItem.id) &&
                 listItem.relatedItems &&
@@ -182,7 +193,20 @@ class List extends React.Component<Props, State> {
                 )}
             </div>
           ))}
+          {/* This is a hack to make scrolling with fixed footer work. This serves as padding. The padding needs to be the same height as the fixed bar or else it will  */}
+          {this.renderFooterPadding()}
         </div>
+        {this.props.sessionId ? (
+          <div
+            className={`z-max absolute bottom-0 left-0 pv2 w-100 bt b--light-gray bg-white`}
+          >
+            <InputCapture
+              handleCapture={this.props.handleHeaderCapture}
+              handleTextChange={this.props.handleHeaderCaptureTextChange}
+              clearOnEnter={true}
+            />
+          </div>
+        ) : null}
       </div>
     );
   }

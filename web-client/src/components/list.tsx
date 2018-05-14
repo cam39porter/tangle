@@ -25,6 +25,7 @@ interface Props {
   sessionHandleEditTags: () => void;
   sessionIsEditingTitle: boolean;
   sessionIsEditingTags: boolean;
+  sessionHandleClose: () => void;
   // Header
   handleHeaderCaptureTextChange: (text: string) => void;
   handleHeaderCapture: () => void;
@@ -66,6 +67,7 @@ class List extends React.Component<Props, State> {
           isEditingTitle={this.props.sessionIsEditingTitle}
           handleEditTags={this.props.sessionHandleEditTags}
           handleEditTitle={this.props.sessionHandleEditTitle}
+          handleClose={this.props.sessionHandleClose}
         />
       ) : (
         <div className={`pa4`}>
@@ -88,7 +90,7 @@ class List extends React.Component<Props, State> {
   renderFooterPadding = () => (
     <div>
       {this.props.sessionId ? (
-        <div className={`pv2`}>
+        <div className={`pv4`}>
           <InputCapture
             handleCapture={this.props.handleHeaderCapture}
             handleTextChange={this.props.handleHeaderCaptureTextChange}
@@ -129,6 +131,7 @@ class List extends React.Component<Props, State> {
               isEditingTitle={this.props.sessionIsEditingTitle}
               handleEditTags={this.props.sessionHandleEditTags}
               handleEditTitle={this.props.sessionHandleEditTitle}
+              handleClose={this.props.sessionHandleClose}
             />
           </div>
         ) : (
@@ -224,12 +227,13 @@ class List extends React.Component<Props, State> {
         </div>
         {this.props.sessionId ? (
           <div
-            className={`z-max absolute bottom-0 left-0 pv2 w-100 bt b--light-gray bg-white`}
+            className={`z-max absolute bottom-0 left-0 pv4 w-100 bt b--light-gray bg-white`}
           >
             <InputCapture
               handleCapture={this.props.handleHeaderCapture}
               handleTextChange={this.props.handleHeaderCaptureTextChange}
               clearOnEnter={true}
+              allowToolbar={false}
             />
           </div>
         ) : null}

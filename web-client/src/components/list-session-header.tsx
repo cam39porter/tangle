@@ -6,6 +6,7 @@ import ListSessionTitle from "./list-session-title";
 import ListSessionTags from "./list-session-tags";
 import ButtonEdit from "./button-edit";
 import ButtonCheck from "./button-check";
+import ButtonContract from "./button-contract";
 import ReactTooltip from "react-tooltip";
 
 // Utils
@@ -17,6 +18,7 @@ interface Props {
   tags?: Array<string>;
   handleEditTags: () => void;
   isEditingTags: boolean;
+  handleClose: () => void;
 }
 
 const ListSessionHeader = (props: Props) => {
@@ -43,7 +45,7 @@ const ListSessionHeader = (props: Props) => {
           </div>
         )}
       </div>
-      <div className={`pa2`}>
+      <div className={`flex-grow pa2`}>
         <div className={`pv2`}>
           <ListSessionTitle
             title={props.title}
@@ -57,6 +59,11 @@ const ListSessionHeader = (props: Props) => {
             handleEdit={props.handleEditTags}
             isEditing={props.isEditingTags}
           />
+        </div>
+      </div>
+      <div className={`ma2 pv1 w2`}>
+        <div data-tip={`close the brainstorm`}>
+          <ButtonContract onClick={props.handleClose} />
         </div>
       </div>
       <ReactTooltip />

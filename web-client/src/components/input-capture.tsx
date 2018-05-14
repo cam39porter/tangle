@@ -26,7 +26,7 @@ const InputCapture = (props: Props) => {
         <InputText
           placeholder={`Capture a thought...`}
           handleEnterKey={props.handleCapture}
-          allowToolbar={props.allowToolbar}
+          allowToolbar={props.allowToolbar ? true : false}
           handleChange={props.handleTextChange}
           startingText={props.startingText}
         />

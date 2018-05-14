@@ -62,7 +62,7 @@ const ListSessionHeader = (props: Props) => {
         </div>
       </div>
       <div className={`ma2 pv1 w2`}>
-        <div data-tip={`close the brainstorm`}>
+        <div data-tip={`exit the brainstorm`}>
           <ButtonContract onClick={props.handleClose} />
         </div>
       </div>

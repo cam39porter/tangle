@@ -17,7 +17,7 @@ import { RouteComponentProps } from "react-router";
 // Components
 import ResultListItem from "../components/result-list-item";
 import Graph from "../components/graph";
-import { GraphNode } from "../components/graph";
+import { GraphNode } from "../types";
 import Sidebar from "../components/sidebar";
 import SidebarSectionHeader from "../components/sidebar-section-header";
 import ScrollContainerElement from "../components/scroll-container-element";

@@ -95,6 +95,7 @@ class List extends React.Component<Props, State> {
             handleCapture={this.props.handleHeaderCapture}
             handleTextChange={this.props.handleHeaderCaptureTextChange}
             clearOnEnter={true}
+            allowToolbar={false}
           />
         </div>
       ) : null}

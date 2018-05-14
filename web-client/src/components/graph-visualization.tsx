@@ -9,42 +9,51 @@ import config from "../cfg";
 import { isEqual } from "lodash";
 
 // Types
-import { GraphNode, GraphEdge, GraphEvent } from "../types";
+import { GraphEvent } from "../types";
+import {
+  NodeFieldsFragment,
+  EdgeFieldsFragment,
+  NodeType
+} from "../__generated__/types";
 
-const BLUR_COLOR = "#CCCCCC";
+const NOT_FOCUS_COLOR = "#CCCCCC";
 const TAG_COLOR = "#333333";
 const ENTITY_COLOR = "#777777";
+const OTHER_COLOR = "#FFFFFF";
+
+const TEXT_COLOR = "#777777";
+
+const FOCUS_TYPE = "focus";
+const NOT_FOCUS_TYPE = "not_focus";
 
 interface Props {
   refEChart?: (eChart: ReactECharts) => void;
-  nodeData: Array<GraphNode>;
-  edgeData: Array<GraphEdge>;
-  layout?: "circular" | "force";
-  tooltipPosition?: Array<String> | String;
+  nodes: Array<NodeFieldsFragment>;
+  edges: Array<EdgeFieldsFragment>;
   onClick: (e: GraphEvent) => void;
   onMouseOver: (e: GraphEvent) => void;
   onMouseOut: (e: GraphEvent) => void;
-  gradientNumber: number;
-  focusNodeAdjacency: boolean;
   showTooltip: boolean;
 }
 
-class Graph extends React.Component<Props, object> {
+interface State {}
+
+class Graph extends React.Component<Props, State> {
   eChart: ReactECharts | null = null;
 
   shouldComponentUpdate(nextProps: Props) {
-    return !isEqual(nextProps.nodeData, this.props.nodeData);
+    return !isEqual(nextProps.nodes, this.props.nodes);
   }
 
   getNodes() {
-    return this.props.nodeData.map((node, index) => {
-      switch (node.category) {
+    return this.props.nodes.map((node, index) => {
+      switch (node.type) {
         // Entities
-        case "entity":
+        case NodeType.Entity:
           return {
             id: node.id,
-            name: node.name,
-            category: node.category,
+            name: node.text,
+            category: node.type,
             symbolSize: 36,
             label: {
               show: true,
@@ -56,11 +65,11 @@ class Graph extends React.Component<Props, object> {
           };
 
         // Tags
-        case "tag":
+        case NodeType.Tag:
           return {
             id: node.id,
-            name: `#${node.name}`,
-            category: node.category,
+            name: `#${node.text}`,
+            category: node.type,
             symbolSize: 24,
             label: {
               show: true,
@@ -74,11 +83,11 @@ class Graph extends React.Component<Props, object> {
           };
 
         // Links
-        case "link":
+        case NodeType.Link:
           return {
             id: node.id,
-            name: `${node.name}`,
-            category: node.category,
+            name: `${node.text}`,
+            category: node.type,
             symbolSize: 24,
             label: {
               show: true,
@@ -94,8 +103,8 @@ class Graph extends React.Component<Props, object> {
         default:
           return {
             id: node.id,
-            name: node.name,
-            category: node.category,
+            name: node.text,
+            category: node.level === 0 ? FOCUS_TYPE : NOT_FOCUS_TYPE,
             symbolSize: 24,
             label: {
               show: false,
@@ -109,7 +118,7 @@ class Graph extends React.Component<Props, object> {
   }
 
   getEdges() {
-    return this.props.edgeData.map(edge => {
+    return this.props.edges.map(edge => {
       return {
         source: edge.source,
         target: edge.destination,
@@ -126,7 +135,7 @@ class Graph extends React.Component<Props, object> {
   getCategories() {
     return [
       {
-        name: `detail`,
+        name: FOCUS_TYPE,
         itemStyle: {
           normal: {
             color: config.accentColor
@@ -134,34 +143,34 @@ class Graph extends React.Component<Props, object> {
         }
       },
       {
-        name: "blur",
+        name: NOT_FOCUS_TYPE,
         itemStyle: {
           normal: {
-            color: BLUR_COLOR
+            color: NOT_FOCUS_COLOR
           }
         }
       },
       {
-        name: "entity",
+        name: NodeType.Entity,
         itemStyle: {
           normal: {
-            color: "#FFFFFF"
+            color: OTHER_COLOR
           }
         }
       },
       {
-        name: "tag",
+        name: NodeType.Tag,
         itemStyle: {
           normal: {
-            color: "#FFFFFF"
+            color: OTHER_COLOR
           }
         }
       },
       {
-        name: "link",
+        name: NodeType.Link,
         itemStyle: {
           normal: {
-            color: "#FFFFFF"
+            color: OTHER_COLOR
           }
         }
       }
@@ -192,9 +201,7 @@ class Graph extends React.Component<Props, object> {
         trigger: "item",
         showContent: true,
         confine: true,
-        position: this.props.tooltipPosition
-          ? this.props.tooltipPosition
-          : "top",
+        position: "top",
         formatter: (params: {
           dataType: string;
           name: string;
@@ -232,16 +239,16 @@ class Graph extends React.Component<Props, object> {
               return "";
           }
         },
-        backgroundColor: "#FFFFFF",
+        backgroundColor: OTHER_COLOR,
         textStyle: {
-          color: "#777777"
+          color: TEXT_COLOR
         }
       },
       series: [
         {
           type: "graph",
-          id: "network-id",
-          name: "network-name",
+          id: "tangle-visualization",
+          name: "tangle",
           legendHoverLink: false,
           coordinateSystem: null,
           xAxisIndex: 0,
@@ -250,7 +257,7 @@ class Graph extends React.Component<Props, object> {
           geoIndex: 0,
           calendarIndex: 0,
           hoverAnimation: false,
-          layout: this.props.layout || "force",
+          layout: "force",
           circular: {
             rotateLabel: false
           },
@@ -263,7 +270,7 @@ class Graph extends React.Component<Props, object> {
           roam: true,
           nodeScaleRation: 0.5,
           draggable: false,
-          focusNodeAdjacency: this.props.focusNodeAdjacency,
+          focusNodeAdjacency: true,
           cursor: "pointer",
           lineStyle: {
             curveness: 0.3,
@@ -282,15 +289,13 @@ class Graph extends React.Component<Props, object> {
 
   render() {
     return (
-      <div className={`w-100 h-100`}>
-        <ReactECharts
-          ref={this.props.refEChart}
-          style={{ height: "100%", width: "100%" }}
-          option={this.getOption()}
-          opts={{ renderer: "canvas" }}
-          onEvents={this.getEvents()}
-        />
-      </div>
+      <ReactECharts
+        ref={this.props.refEChart}
+        style={{ height: "100%", width: "100%" }}
+        option={this.getOption()}
+        opts={{ renderer: "canvas" }}
+        onEvents={this.getEvents()}
+      />
     );
   }
 }

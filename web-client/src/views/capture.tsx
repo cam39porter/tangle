@@ -17,7 +17,7 @@ import { RouteComponentProps } from "react-router";
 // Components
 import ResultListItem from "../components/result-list-item";
 import Graph from "../components/graph";
-import { GraphNode } from "../components/graph";
+import { GraphNode } from "../types";
 import GraphButtons from "../components/graph-buttons";
 import Sidebar from "../components/sidebar";
 import SidebarSectionHeader from "../components/sidebar-section-header";
@@ -305,7 +305,9 @@ class Capture extends React.Component<Props, State> {
           className={`w-100 f6 dtc v-mid tc bg-${
             this.state.isShowingList
               ? `white gray`
-              : dailyCaptureCount ? `white accent` : `light-gray gray`
+              : dailyCaptureCount
+                ? `white accent`
+                : `light-gray gray`
           } br4 shadow-1`}
         >
           {!dailyCaptureCount

@@ -5,9 +5,14 @@ import * as React from "react";
 import {
   capturedTodayQuery as capturedTodayResponse,
   capturedTodayQueryVariables,
-  ListFieldsFragment
+  searchQuery as searchResponse,
+  searchQueryVariables,
+  SearchResultsFieldsFragment,
+  ListFieldsFragment,
+  NodeFieldsFragment,
+  EdgeFieldsFragment
 } from "../__generated__/types";
-import { capturedToday } from "../queries";
+import { capturedToday, search } from "../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Router
@@ -18,11 +23,12 @@ import List from "../components/list";
 import GraphVisualization from "../components/graph-visualization";
 
 // Utils
-import { getIsLargeWindow } from "../utils";
+import { getIsLargeWindow, getCurrentLocation, getQuery } from "../utils";
 import { noop } from "lodash";
 import windowSize from "react-window-size";
 
 // Types
+import { Location } from "../types";
 
 interface RouteProps extends RouteComponentProps<{}> {}
 
@@ -30,27 +36,74 @@ interface Props extends RouteProps {
   // Queries
   capturedToday: QueryProps<capturedTodayQueryVariables> &
     capturedTodayResponse;
+  search: QueryProps<searchQueryVariables> & searchResponse;
 
   // Window Size
   windowWidth: number;
   windowHeight: number;
 }
 
-interface State {}
+interface State {
+  isCapturing: boolean;
+  list: Array<ListFieldsFragment>;
+  nodes: Array<NodeFieldsFragment>;
+  edges: Array<EdgeFieldsFragment>;
+}
 
 // Class
 class Main extends React.Component<Props, State> {
-  render() {
-    let capturedTodayList = this.props.capturedToday.getAll
-      ? this.props.capturedToday.getAll.list
-      : [];
-    let capturedTodayNodes = this.props.capturedToday.getAll
-      ? this.props.capturedToday.getAll.graph.nodes
-      : [];
-    let capturedTodayEdges = this.props.capturedToday.getAll
-      ? this.props.capturedToday.getAll.graph.edges
-      : [];
+  constructor(props: Props) {
+    super(props);
 
+    this.state = {
+      isCapturing: true,
+      ...this.getData(props.location.search)
+    };
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    this.setState({
+      ...this.getData(nextProps.location.search)
+    });
+  }
+
+  getData = (
+    queryString: string
+  ): {
+    list: Array<ListFieldsFragment>;
+    nodes: Array<NodeFieldsFragment>;
+    edges: Array<EdgeFieldsFragment>;
+  } => {
+    let data: SearchResultsFieldsFragment | undefined;
+    let currentLocation = getCurrentLocation(queryString);
+
+    switch (currentLocation) {
+      case Location.CapturedToday:
+        data = this.props.capturedToday.getAll;
+        break;
+      case Location.Search:
+        data = this.props.search.search;
+        break;
+      default:
+        break;
+    }
+
+    if (data) {
+      return {
+        list: data.list as Array<ListFieldsFragment>,
+        nodes: data.graph.nodes as Array<NodeFieldsFragment>,
+        edges: data.graph.edges as Array<EdgeFieldsFragment>
+      };
+    }
+
+    return {
+      list: [] as Array<ListFieldsFragment>,
+      nodes: [] as Array<NodeFieldsFragment>,
+      edges: [] as Array<EdgeFieldsFragment>
+    };
+  };
+
+  render() {
     let isLargeWindow = getIsLargeWindow(this.props.windowWidth);
 
     return (
@@ -67,7 +120,7 @@ class Main extends React.Component<Props, State> {
             // List
             isHidden={false}
             handleIsHidden={noop}
-            listData={capturedTodayList as Array<ListFieldsFragment>}
+            listData={this.state.list}
             // Session
             sessionId={undefined}
             sessionTitle={undefined}
@@ -81,8 +134,12 @@ class Main extends React.Component<Props, State> {
             handleHeaderCaptureTextChange={noop}
             handleHeaderCapture={noop}
             handleHeaderExpand={noop}
-            isHeaderCapturing={true}
-            handleHeaderIsCapturing={noop}
+            isHeaderCapturing={this.state.isCapturing}
+            handleHeaderIsCapturing={() => {
+              this.setState({
+                isCapturing: !this.state.isCapturing
+              });
+            }}
             handleSurfaceTextChange={noop}
             handleSurface={noop}
             handleSurfaceClear={noop}
@@ -107,8 +164,8 @@ class Main extends React.Component<Props, State> {
           <div className={`flex-grow`}>
             <GraphVisualization
               refEChart={noop}
-              nodes={capturedTodayNodes}
-              edges={capturedTodayEdges}
+              nodes={this.state.nodes}
+              edges={this.state.edges}
               onClick={noop}
               onMouseOver={noop}
               onMouseOut={noop}
@@ -125,7 +182,8 @@ class Main extends React.Component<Props, State> {
 const withCapturedToday = graphql<capturedTodayResponse, Props>(capturedToday, {
   name: "capturedToday",
   alias: "withCapturedToday",
-  skip: (props: Props) => false,
+  skip: (props: Props) =>
+    getCurrentLocation(props.location.search) !== Location.CapturedToday,
   options: {
     variables: {
       timezoneOffset: new Date().getTimezoneOffset() / 60 * -1
@@ -133,7 +191,19 @@ const withCapturedToday = graphql<capturedTodayResponse, Props>(capturedToday, {
   }
 });
 
-const MainWithData = compose(withCapturedToday)(Main);
+const withSearch = graphql<searchResponse, Props>(search, {
+  name: "search",
+  alias: "withSearch",
+  skip: (props: Props) =>
+    getCurrentLocation(props.location.search) !== Location.Search,
+  options: (props: Props) => ({
+    variables: {
+      rawQuery: getQuery(props.location.search)
+    }
+  })
+});
+
+const MainWithData = compose(withCapturedToday, withSearch)(Main);
 
 const MainWithDataWithWindowSize = windowSize(MainWithData);
 

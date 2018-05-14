@@ -17,3 +17,10 @@ export interface GraphEvent {
   dataType: string;
   data: { id: string; category: string };
 }
+
+// Location
+export enum Location {
+  CapturedToday,
+  Search,
+  Detail
+}

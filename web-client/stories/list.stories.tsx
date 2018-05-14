@@ -9,6 +9,7 @@ import { withKnobs, boolean, select } from "@storybook/addon-knobs/react";
 import ListHeader from "../src/components/list-header";
 import ListSessionTitle from "../src/components/list-session-title";
 import ListSessionTags from "../src/components/list-session-tags";
+import ListSessionHeader from "../src/components/list-session-header";
 import ListCapture from "../src/components/list-capture";
 import List from "../src/components/list";
 
@@ -52,6 +53,19 @@ stories.add("session tags", () => (
     <ListSessionTags
       handleEdit={action("handleEdit")}
       isEditing={boolean("isEditing", false)}
+      tags={["tag1", "tag2", "tag3"]}
+    />
+  </div>
+));
+
+stories.add("session header", () => (
+  <div>
+    <ListSessionHeader
+      title={"This is a title"}
+      handleEditTitle={action("handleEditTitle")}
+      isEditingTitle={boolean("isEditingTitle", false)}
+      handleEditTags={action("handleEditTags")}
+      isEditingTags={boolean("isEditingTags", false)}
       tags={["tag1", "tag2", "tag3"]}
     />
   </div>

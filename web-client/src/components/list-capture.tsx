@@ -7,6 +7,7 @@ import ButtonMore from "./button-more";
 import ButtonFocus from "./button-focus";
 import ButtonArchive from "./button-archive";
 import ButtonEdit from "./button-edit";
+import ButtonCheck from "./button-check";
 import ButtonComment from "./button-comment";
 import ButtonRelated from "./button-related";
 import InputCapture from "./input-capture";
@@ -115,9 +116,15 @@ const ListCapture = (props: Props) => {
               </div>
             </div>
             <div className={`flex-grow`}>
-              <div data-tip={`edit this capture`}>
-                <ButtonEdit onClick={props.handleEdit} />
-              </div>
+              {props.isEditing ? (
+                <div data-tip={`save your changes`}>
+                  <ButtonCheck onClick={props.handleEdit} />
+                </div>
+              ) : (
+                <div data-tip={`edit this capture`}>
+                  <ButtonEdit onClick={props.handleEdit} />
+                </div>
+              )}
             </div>
             <div className={`flex-grow`}>
               <div data-tip={`delete this capture`}>

@@ -16,6 +16,7 @@ import ButtonEdit from "../src/components/button-edit";
 import ButtonArchive from "../src/components/button-archive";
 import ButtonFocus from "../src/components/button-focus";
 import ButtonRelated from "../src/components/button-related";
+import ButtonCheck from "../src/components/button-check";
 
 const stories = storiesOf("Button", module);
 
@@ -38,6 +39,7 @@ stories.add("basic", () => (
 ));
 
 stories.add("archive", () => <ButtonArchive onClick={action("clicked")} />);
+stories.add("check", () => <ButtonCheck onClick={action("clicked")} />);
 stories.add("capture", () => <ButtonCapture onClick={action("clicked")} />);
 stories.add("clear", () => <ButtonExit onClick={action("clicked")} />);
 stories.add("comment", () => <ButtonComment onClick={action("clicked")} />);

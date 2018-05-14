@@ -5,6 +5,7 @@ import * as React from "react";
 import ListHeader from "./list-header";
 import ListCapture from "./list-capture";
 import InputCapture from "./input-capture";
+import ListSessionHeader from "./list-session-header";
 
 // Utils
 
@@ -18,7 +19,12 @@ interface Props {
   listData: Array<ListFieldsFragment>;
   // Session
   sessionId?: string;
-
+  sessionTitle?: string;
+  sesssionTags?: string;
+  sessionHandleTitleEdit?: () => void;
+  sessionHandleTagsEdit?: () => void;
+  sessionIsEditingTitle?: boolean;
+  sessionIsEditingTags?: boolean;
   // Header
   handleHeaderCaptureTextChange: (text: string) => void;
   handleHeaderCapture: () => void;
@@ -105,7 +111,10 @@ class List extends React.Component<Props, State> {
     return (
       <div className={`relative w-100 vh-100`}>
         {/* This is the list header that is actually seen when the list is not hidden */}
-        {this.props.sessionId ? null : (
+        {this.props.sessionId ? (
+          null
+          // <ListSessionHeader title={this.props.sessionTitle} tags={this.props.sesssionTags} handleEditTitle={this.props.sessionHandleTitleEdit} handleEditTags={this.props.sessionHandleTagsEdit} isEditingTitle={} />
+        ) : (
           <div
             className={`z-max absolute top-0 left-0 pa4 w-100 bg-light-gray`}
           >

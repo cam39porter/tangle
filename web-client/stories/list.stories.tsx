@@ -103,6 +103,12 @@ stories.add("list", () => (
     listData={listData}
     // Session
     sessionId={undefined}
+    sessionTitle={"This is an example title"}
+    sessionTags={["tag1", "tag2", "tag3"]}
+    sessionIsEditingTags={boolean("sessionIsEditingTags", true)}
+    sessionIsEditingTitle={boolean("sessionIsEditingTitle", false)}
+    sessionHandleEditTags={action("sessionHandleEditTags")}
+    sessionHandleEditTitle={action("sessionHandleEditTitle")}
     // Header
     handleHeaderCaptureTextChange={action("handleCaptureTextChange")}
     handleHeaderCapture={action("handleCapture")}
@@ -138,6 +144,12 @@ stories.add("session", () => (
     listData={listData}
     // Session
     sessionId={"sessionId"}
+    sessionTitle={"This is an example title"}
+    sessionTags={["tag1", "tag2", "tag3"]}
+    sessionIsEditingTags={boolean("sessionIsEditingTags", true)}
+    sessionIsEditingTitle={boolean("sessionIsEditingTitle", false)}
+    sessionHandleEditTags={action("sessionHandleEditTags")}
+    sessionHandleEditTitle={action("sessionHandleEditTitle")}
     // Header
     handleHeaderCaptureTextChange={action("handleCaptureTextChange")}
     handleHeaderCapture={action("handleCapture")}

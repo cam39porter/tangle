@@ -20,11 +20,11 @@ interface Props {
   // Session
   sessionId?: string;
   sessionTitle?: string;
-  sesssionTags?: string;
-  sessionHandleTitleEdit?: () => void;
-  sessionHandleTagsEdit?: () => void;
-  sessionIsEditingTitle?: boolean;
-  sessionIsEditingTags?: boolean;
+  sessionTags?: Array<string>;
+  sessionHandleEditTitle: () => void;
+  sessionHandleEditTags: () => void;
+  sessionIsEditingTitle: boolean;
+  sessionIsEditingTags: boolean;
   // Header
   handleHeaderCaptureTextChange: (text: string) => void;
   handleHeaderCapture: () => void;
@@ -58,7 +58,16 @@ class List extends React.Component<Props, State> {
 
   renderHeaderPadding = () => (
     <div>
-      {this.props.sessionId ? null : (
+      {this.props.sessionId ? (
+        <ListSessionHeader
+          title={this.props.sessionTitle}
+          tags={this.props.sessionTags}
+          isEditingTags={this.props.sessionIsEditingTags}
+          isEditingTitle={this.props.sessionIsEditingTitle}
+          handleEditTags={this.props.sessionHandleEditTags}
+          handleEditTitle={this.props.sessionHandleEditTitle}
+        />
+      ) : (
         <div className={`pa4`}>
           <ListHeader
             handleCaptureTextChange={this.props.handleHeaderCaptureTextChange}
@@ -112,8 +121,16 @@ class List extends React.Component<Props, State> {
       <div className={`relative w-100 vh-100`}>
         {/* This is the list header that is actually seen when the list is not hidden */}
         {this.props.sessionId ? (
-          null
-          // <ListSessionHeader title={this.props.sessionTitle} tags={this.props.sesssionTags} handleEditTitle={this.props.sessionHandleTitleEdit} handleEditTags={this.props.sessionHandleTagsEdit} isEditingTitle={} />
+          <div className={`z-max absolute top-0 left-0 w-100 bg-white`}>
+            <ListSessionHeader
+              title={this.props.sessionTitle}
+              tags={this.props.sessionTags}
+              isEditingTags={this.props.sessionIsEditingTags}
+              isEditingTitle={this.props.sessionIsEditingTitle}
+              handleEditTags={this.props.sessionHandleEditTags}
+              handleEditTitle={this.props.sessionHandleEditTitle}
+            />
+          </div>
         ) : (
           <div
             className={`z-max absolute top-0 left-0 pa4 w-100 bg-light-gray`}

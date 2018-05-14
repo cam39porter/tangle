@@ -76,6 +76,19 @@ const listFragment = gql`
   ${reasonFragment}
 `;
 
+const searchResultsFragment = gql`
+  fragment SearchResultsFields on SearchResults {
+    list {
+      ...ListFields
+    }
+    graph {
+      ...GraphFields
+    }
+  }
+  ${listFragment}
+  ${graphFragment}
+`;
+
 // Create a capture
 export const CreateCapture = gql`
   mutation CreateCapture($body: String!) {
@@ -111,32 +124,50 @@ export const Search = gql`
   ) {
     search(rawQuery: $query, start: $start, count: $count)
       @skip(if: $isDetail) {
-      graph {
-        ...GraphFields
-      }
-      list {
-        ...ListFields
-      }
+      ...SearchResultsFields
     }
     get(id: $detailId) @include(if: $isDetail) {
       ...GraphFields
     }
   }
+  ${searchResultsFragment}
   ${graphFragment}
-  ${listFragment}
 `;
 
 export const DailyCaptures = gql`
   query DailyCaptures($timezoneOffset: Int!) {
     getAll(useCase: "CAPTURED_TODAY", timezoneOffset: $timezoneOffset) {
-      graph {
-        ...GraphFields
-      }
-      list {
-        ...ListFields
-      }
+      ...SearchResultsFields
     }
   }
-  ${graphFragment}
-  ${listFragment}
+  ${searchResultsFragment}
+`;
+
+// v2
+
+export const capturedToday = gql`
+  query capturedToday($timezoneOffset: Int!) {
+    getAll(useCase: "CAPTURED_TODAY", timezoneOffset: $timezoneOffset) {
+      ...SearchResultsFields
+    }
+  }
+  ${searchResultsFragment}
+`;
+
+export const getDetailed = gql`
+  query getDetailed($id: String!) {
+    getDetailed(id: $id) {
+      ...SearchResultsFields
+    }
+  }
+  ${searchResultsFragment}
+`;
+
+export const search = gql`
+  query search($rawQuery: String!) {
+    search(rawQuery: $rawQuery) {
+      ...SearchResultsFields
+    }
+  }
+  ${searchResultsFragment}
 `;

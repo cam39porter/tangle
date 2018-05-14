@@ -11,11 +11,12 @@ import { RouteProps } from "react-router";
 import { Route, Switch } from "react-router-dom";
 
 // Components
-import NavigationBar from "./components/navigation-bar";
 import Login from "./views/login";
 import Tangle from "./views/tangle";
 import Capture from "./views/capture";
 import Surface from "./views/surface";
+
+import Main from "./views/main";
 
 // Config / Utils
 import { firebaseAuth } from "./utils";
@@ -68,15 +69,6 @@ class App extends React.Component<Props, State> {
   render() {
     return (
       <div className={`vh-100 w-100 avenir`}>
-        {this.state.isAuthenticated ? (
-          <div
-            className={`z-1 w-100 h2 measure-narrow-l fixed bottom-1 top-2-l right-2-l`}
-          >
-            <NavigationBar />
-          </div>
-        ) : null}
-
-        {/* Navigation */}
         {this.state.isAuthenticated === null ? null : (
           <div>
             {this.state.isAuthenticated ? (
@@ -84,7 +76,7 @@ class App extends React.Component<Props, State> {
                 <Route path="/capture" component={Capture} />
                 <Route path="/surface" component={Surface} />
                 <Route path="/tangle" component={Tangle} />
-                <Route path="/" component={Capture} />
+                <Route path="/" component={Main} />
               </Switch>
             ) : (
               <Switch>

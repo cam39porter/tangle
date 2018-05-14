@@ -17,3 +17,8 @@ export function getGradient(
 firebase.initializeApp(config.firebase);
 
 export const firebaseAuth = firebase.auth;
+
+// Window
+export const getIsLargeWindow = (widthPixels: number) => {
+  return widthPixels >= 1024;
+};

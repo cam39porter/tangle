@@ -46,11 +46,9 @@ interface Props {
   isMore: (id: string) => boolean;
   handleComment: (id: string) => (() => void);
   handleFocus: (id: string) => (() => void);
-  handleEdit: (id: string) => (() => void);
+  handleEdit: (id: string) => ((text: string) => void);
   isEditing: (id: string) => boolean;
   handleArchive: (id: string) => (() => void);
-  handleTextChange: (id: string) => ((text: string) => void);
-  handleCapture: (id: string) => (() => void);
 }
 
 interface State {}
@@ -127,7 +125,7 @@ class List extends React.Component<Props, State> {
     return (
       <div className={`relative w-100 vh-100`}>
         {/* This is the list header that is actually seen when the list is not hidden */}
-        {/* {this.props.sessionId ? (
+        {this.props.sessionId ? (
           <div className={`z-max absolute top-0 left-0 w-100 bg-white`}>
             <ListSessionHeader
               title={this.props.sessionTitle}
@@ -154,7 +152,7 @@ class List extends React.Component<Props, State> {
               handleClear={this.props.handleSurfaceClear}
             />
           </div>
-        )} */}
+        )}
 
         <div
           className={`flex flex-column overflow-auto w-100 vh-100 bg-light-gray`}
@@ -174,8 +172,6 @@ class List extends React.Component<Props, State> {
                 handleEdit={this.props.handleEdit(listItem.id)}
                 isEditing={this.props.isEditing(listItem.id)}
                 handleArchive={this.props.handleArchive(listItem.id)}
-                handleTextChange={this.props.handleTextChange(listItem.id)}
-                handleCapture={this.props.handleCapture(listItem.id)}
                 handleIsShowingRelated={
                   listItem.relatedItems && listItem.relatedItems.length > 0
                     ? this.props.handleIsShowingRelated(listItem.id)
@@ -210,12 +206,6 @@ class List extends React.Component<Props, State> {
                           handleEdit={this.props.handleEdit(relatedItem.id)}
                           isEditing={this.props.isEditing(relatedItem.id)}
                           handleArchive={this.props.handleArchive(
-                            relatedItem.id
-                          )}
-                          handleTextChange={this.props.handleTextChange(
-                            relatedItem.id
-                          )}
-                          handleCapture={this.props.handleCapture(
                             relatedItem.id
                           )}
                           annotations={relatedItem.text.annotations}

@@ -37,7 +37,7 @@ import GraphVisualization from "../components/graph-visualization";
 
 // Utils
 import { getIsLargeWindow, getCurrentLocation, getQuery } from "../utils";
-import { noop, trim } from "lodash";
+import { noop, trim, assign } from "lodash";
 import windowSize from "react-window-size";
 
 // Types
@@ -65,11 +65,19 @@ interface Props extends RouteProps {
   windowHeight: number;
 }
 
+interface CaptureState {
+  isMore: boolean;
+  isEditing: boolean;
+  isShowingRelated: boolean;
+}
+
 interface State {
   // Header
   isCapturing: boolean;
   captureText: string;
   surfaceText: string;
+  // Captures
+  captures: Map<string, CaptureState>;
 }
 
 // Class
@@ -82,7 +90,8 @@ class Main extends React.Component<Props, State> {
         getCurrentLocation(nextProps.location.search) ===
         Location.CapturedToday,
       captureText: "",
-      surfaceText: getQuery(nextProps.location.search)
+      surfaceText: getQuery(nextProps.location.search),
+      captures: new Map<string, CaptureState>()
     };
   }
 
@@ -94,6 +103,17 @@ class Main extends React.Component<Props, State> {
       surfaceText: getQuery(nextProps.location.search)
     });
   }
+
+  createCaptureState = (id: string): CaptureState => {
+    let captureState = {
+      isMore: false,
+      isEditing: false,
+      isShowingRelated: false,
+      text: ""
+    };
+
+    return captureState;
+  };
 
   render() {
     let isLoading;
@@ -173,11 +193,9 @@ class Main extends React.Component<Props, State> {
             }}
             handleSurface={() => {
               let query = trim(this.state.surfaceText);
-
               if (!query) {
                 return;
               }
-
               this.props.history.push(`?query=${encodeURIComponent(query)}`);
             }}
             handleSurfaceClear={() => {
@@ -194,15 +212,75 @@ class Main extends React.Component<Props, State> {
             handleExpand={(id: string) => noop}
             handleIsShowingRelated={(id: string) => noop}
             isShowingRelated={(id: string) => false}
-            handleMore={(id: string) => noop}
-            isMore={(id: string) => false}
+            handleMore={(id: string) => () => {
+              let captureState = this.state.captures.get(id);
+              if (!captureState) {
+                captureState = this.createCaptureState(id);
+              }
+              let nextCaptureState = assign(captureState, {
+                isMore: !captureState.isMore
+              });
+              let nextCaptures = this.state.captures.set(id, nextCaptureState);
+              this.setState({
+                captures: nextCaptures
+              });
+            }}
+            isMore={(id: string) => {
+              let captureState = this.state.captures.get(id);
+              if (!captureState) {
+                captureState = this.createCaptureState(id);
+              }
+              return captureState.isMore;
+            }}
             handleComment={(id: string) => noop}
             handleFocus={(id: string) => noop}
-            handleEdit={(id: string) => noop}
-            isEditing={(id: string) => false}
-            handleArchive={(id: string) => noop}
-            handleTextChange={(id: string) => noop}
-            handleCapture={(id: string) => noop}
+            handleEdit={(id: string) => text => {
+              let captureState = this.state.captures.get(id);
+              if (!captureState) {
+                captureState = this.createCaptureState(id);
+              }
+              let nextCaptureState = assign(captureState, {
+                isEditing: !captureState.isEditing
+              });
+              let nextCaptures = this.state.captures.set(id, nextCaptureState);
+
+              if (!captureState.isEditing) {
+                this.props
+                  .editCapture({
+                    variables: { id, body: text }
+                  })
+                  .then(() => {
+                    refetch();
+                  })
+                  .then(() => {
+                    this.setState({
+                      captures: nextCaptures
+                    });
+                  })
+                  .catch(err => console.error(err));
+              } else {
+                this.setState({
+                  captures: nextCaptures
+                });
+              }
+            }}
+            isEditing={(id: string) => {
+              let captureState = this.state.captures.get(id);
+              if (!captureState) {
+                captureState = this.createCaptureState(id);
+              }
+              return captureState.isEditing;
+            }}
+            handleArchive={(id: string) => () => {
+              this.props
+                .archiveCapture({
+                  variables: { id }
+                })
+                .then(() => {
+                  refetch();
+                })
+                .catch(err => console.error(err));
+            }}
           />
         </div>
 

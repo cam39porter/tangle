@@ -90,8 +90,6 @@ stories.add("capture", () => (
     handleEdit={action("handleEdit")}
     isEditing={boolean("isEditing", false)}
     handleArchive={action("handleArchive")}
-    handleCapture={action("handleArchive")}
-    handleTextChange={action("handleTextChange")}
   />
 ));
 
@@ -134,8 +132,6 @@ stories.add("list", () => (
     handleEdit={(id: string) => action(`handleEdit ${id}`)}
     isEditing={(id: string) => boolean(`isEditing ${id}`, false)}
     handleArchive={(id: string) => action(`handleArchive ${id}`)}
-    handleTextChange={(id: string) => action("handleTextChange")}
-    handleCapture={(id: string) => action(`handleCapture ${id}`)}
   />
 ));
 
@@ -178,7 +174,5 @@ stories.add("session", () => (
     handleEdit={(id: string) => action(`handleEdit ${id}`)}
     isEditing={(id: string) => boolean(`isEditing ${id}`, false)}
     handleArchive={(id: string) => action(`handleArchive ${id}`)}
-    handleTextChange={(id: string) => action("handleTextChange")}
-    handleCapture={(id: string) => action(`handleCapture ${id}`)}
   />
 ));

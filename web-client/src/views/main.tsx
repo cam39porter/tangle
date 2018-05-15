@@ -210,8 +210,26 @@ class Main extends React.Component<Props, State> {
             footerPaddingText={""}
             // Captures
             handleExpand={(id: string) => noop}
-            handleIsShowingRelated={(id: string) => noop}
-            isShowingRelated={(id: string) => false}
+            handleIsShowingRelated={(id: string) => () => {
+              let captureState = this.state.captures.get(id);
+              if (!captureState) {
+                captureState = this.createCaptureState(id);
+              }
+              let nextCaptureState = assign(captureState, {
+                isShowingRelated: !captureState.isShowingRelated
+              });
+              let nextCaptures = this.state.captures.set(id, nextCaptureState);
+              this.setState({
+                captures: nextCaptures
+              });
+            }}
+            isShowingRelated={(id: string) => {
+              let captureState = this.state.captures.get(id);
+              if (!captureState) {
+                captureState = this.createCaptureState(id);
+              }
+              return captureState.isShowingRelated;
+            }}
             handleMore={(id: string) => () => {
               let captureState = this.state.captures.get(id);
               if (!captureState) {

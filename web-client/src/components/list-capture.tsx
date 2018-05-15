@@ -31,6 +31,7 @@ interface Props {
   handleIsShowingRelated?: () => void;
   isShowingRelated?: boolean;
   annotations?: Array<AnnotationFieldsFragment>;
+  clearOnEnter?: boolean;
 }
 
 function annotate(
@@ -70,7 +71,7 @@ const ListCapture = (props: Props) => {
               handleTextChange={props.handleTextChange}
               handleCapture={props.handleCapture}
               startingText={props.text}
-              clearOnEnter={false}
+              clearOnEnter={props.clearOnEnter ? true : false}
             />
           ) : (
             <div

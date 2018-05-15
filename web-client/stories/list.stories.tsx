@@ -119,6 +119,8 @@ stories.add("list", () => (
     handleSurfaceTextChange={action("handleSurfaceTextChange")}
     handleSurface={action("handleSurface")}
     handleSurfaceClear={action("handleClear")}
+    headerPaddingText={""}
+    footerPaddingText={""}
     // Captures
     handleExpand={(id: string) => action(`handleExpand ${id}`)}
     handleIsShowingRelated={(id: string) =>
@@ -161,6 +163,8 @@ stories.add("session", () => (
     handleSurfaceTextChange={action("handleSurfaceTextChange")}
     handleSurface={action("handleSurface")}
     handleSurfaceClear={action("handleClear")}
+    headerPaddingText={""}
+    footerPaddingText={""}
     // Captures
     handleExpand={(id: string) => action(`handleExpand ${id}`)}
     handleIsShowingRelated={(id: string) =>

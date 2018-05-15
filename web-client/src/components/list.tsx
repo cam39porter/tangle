@@ -36,6 +36,8 @@ interface Props {
   handleSurface: () => void;
   handleSurfaceClear: () => void;
   surfaceStartingText?: string;
+  headerPaddingText: string;
+  footerPaddingText: string;
   // Captures
   handleExpand: (id: string) => (() => void);
   handleIsShowingRelated: (id: string) => (() => void) | undefined;
@@ -81,8 +83,8 @@ class List extends React.Component<Props, State> {
             handleSurfaceTextChange={this.props.handleSurfaceTextChange}
             handleSurface={this.props.handleSurface}
             handleClear={this.props.handleSurfaceClear}
+            surfaceStartingText={this.props.headerPaddingText}
           />
-          }
         </div>
       )}
     </div>
@@ -125,7 +127,7 @@ class List extends React.Component<Props, State> {
     return (
       <div className={`relative w-100 vh-100`}>
         {/* This is the list header that is actually seen when the list is not hidden */}
-        {this.props.sessionId ? (
+        {/* {this.props.sessionId ? (
           <div className={`z-max absolute top-0 left-0 w-100 bg-white`}>
             <ListSessionHeader
               title={this.props.sessionTitle}
@@ -152,7 +154,7 @@ class List extends React.Component<Props, State> {
               handleClear={this.props.handleSurfaceClear}
             />
           </div>
-        )}
+        )} */}
 
         <div
           className={`flex flex-column overflow-auto w-100 vh-100 bg-light-gray`}

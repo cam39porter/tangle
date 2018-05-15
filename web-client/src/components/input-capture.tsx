@@ -29,6 +29,7 @@ const InputCapture = (props: Props) => {
           allowToolbar={props.allowToolbar ? true : false}
           handleChange={props.handleTextChange}
           startingText={props.startingText}
+          clearOnEnter={props.clearOnEnter}
         />
       </div>
       <div className={`pa1`} data-tip={"enter a brainstorm"}>

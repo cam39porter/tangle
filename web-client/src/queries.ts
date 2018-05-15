@@ -145,6 +145,7 @@ export const DailyCaptures = gql`
 
 // v2
 
+// Queries
 export const capturedToday = gql`
   query capturedToday($timezoneOffset: Int!) {
     getAll(useCase: "CAPTURED_TODAY", timezoneOffset: $timezoneOffset) {
@@ -170,4 +171,26 @@ export const search = gql`
     }
   }
   ${searchResultsFragment}
+`;
+
+// Mutations
+export const createCapture = gql`
+  mutation createCapture($body: String!) {
+    createCapture(body: $body) {
+      ...GraphFields
+    }
+  }
+  ${graphFragment}
+`;
+
+export const editCapture = gql`
+  mutation editCapture($id: String!, $body: String!) {
+    editCapture(id: $id, body: $body)
+  }
+`;
+
+export const archiveCapture = gql`
+  mutation archiveCapture($id: String!) {
+    archiveCapture(id: $id)
+  }
 `;

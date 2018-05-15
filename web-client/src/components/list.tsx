@@ -6,6 +6,7 @@ import ListHeader from "./list-header";
 import ListCapture from "./list-capture";
 import InputCapture from "./input-capture";
 import ListSessionHeader from "./list-session-header";
+import ScrollContainer from "./scroll-container";
 
 // Utils
 
@@ -17,6 +18,7 @@ interface Props {
   isHidden: boolean;
   handleIsHidden: () => void;
   listData: Array<ListFieldsFragment>;
+  scrollToId?: string;
   // Session
   sessionId?: string;
   sessionTitle?: string;
@@ -54,9 +56,23 @@ interface Props {
 interface State {}
 
 class List extends React.Component<Props, State> {
+  _scrollContainer: ScrollContainer | null = null;
+
   constructor(props: Props) {
     super(props);
   }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.scrollToId) {
+      this.scrollTo(nextProps.scrollToId);
+    }
+  }
+
+  scrollTo = (id: string) => {
+    if (this._scrollContainer) {
+      this._scrollContainer.scrollTo(id);
+    }
+  };
 
   renderHeaderPadding = () => (
     <div>
@@ -154,71 +170,77 @@ class List extends React.Component<Props, State> {
           </div>
         )}
 
-        <div
-          className={`flex flex-column overflow-auto w-100 vh-100 bg-light-gray`}
+        <ScrollContainer
+          ref={scrollContainer => (this._scrollContainer = scrollContainer)}
         >
-          {/* This is a hack to make scrolling with fixed header work. This serves as padding. The padding needs to be the same height as the fixed bar or else it will  */}
-          {this.renderHeaderPadding()}
+          <div
+            className={`flex flex-column overflow-auto w-100 vh-100 bg-light-gray`}
+          >
+            {/* This is a hack to make scrolling with fixed header work. This serves as padding. The padding needs to be the same height as the fixed bar or else it will  */}
+            {this.renderHeaderPadding()}
 
-          {this.props.listData.map(listItem => (
-            <div key={listItem.id}>
-              <ListCapture
-                text={listItem.text.text}
-                handleExpand={this.props.handleExpand(listItem.id)}
-                handleMore={this.props.handleMore(listItem.id)}
-                isMore={this.props.isMore(listItem.id)}
-                handleComment={this.props.handleComment(listItem.id)}
-                handleFocus={this.props.handleFocus(listItem.id)}
-                handleEdit={this.props.handleEdit(listItem.id)}
-                isEditing={this.props.isEditing(listItem.id)}
-                handleArchive={this.props.handleArchive(listItem.id)}
-                handleIsShowingRelated={
-                  listItem.relatedItems && listItem.relatedItems.length > 0
-                    ? this.props.handleIsShowingRelated(listItem.id)
-                    : undefined
-                }
-                isShowingRelated={
-                  listItem.relatedItems && listItem.relatedItems.length > 0
-                    ? this.props.isShowingRelated(listItem.id)
-                    : undefined
-                }
-                annotations={listItem.text.annotations}
-              />
-              {this.props.isShowingRelated(listItem.id) &&
-                listItem.relatedItems &&
-                listItem.relatedItems.length > 0 && (
-                  <div className={`pl4 pb4`}>
-                    {listItem.relatedItems.map(relatedItem => {
-                      if (!relatedItem) {
-                        return null;
-                      }
-                      return (
-                        <ListCapture
-                          key={relatedItem.id}
-                          text={relatedItem.text.text}
-                          handleExpand={this.props.handleHeaderExpand}
-                          handleMore={this.props.handleMore(relatedItem.id)}
-                          isMore={this.props.isMore(relatedItem.id)}
-                          handleComment={this.props.handleComment(
-                            relatedItem.id
-                          )}
-                          handleFocus={this.props.handleFocus(relatedItem.id)}
-                          handleEdit={this.props.handleEdit(relatedItem.id)}
-                          isEditing={this.props.isEditing(relatedItem.id)}
-                          handleArchive={this.props.handleArchive(
-                            relatedItem.id
-                          )}
-                          annotations={relatedItem.text.annotations}
-                        />
-                      );
-                    })}
-                  </div>
-                )}
-            </div>
-          ))}
-          {/* This is a hack to make scrolling with fixed footer work. This serves as padding. The padding needs to be the same height as the fixed bar or else it will  */}
-          {this.renderFooterPadding()}
-        </div>
+            {this.props.listData.map(listItem => (
+              <div key={listItem.id}>
+                <ListCapture
+                  text={listItem.text.text}
+                  handleExpand={this.props.handleExpand(listItem.id)}
+                  handleMore={this.props.handleMore(listItem.id)}
+                  isMore={this.props.isMore(listItem.id)}
+                  handleComment={this.props.handleComment(listItem.id)}
+                  handleFocus={this.props.handleFocus(listItem.id)}
+                  handleEdit={this.props.handleEdit(listItem.id)}
+                  isEditing={this.props.isEditing(listItem.id)}
+                  handleArchive={this.props.handleArchive(listItem.id)}
+                  handleIsShowingRelated={
+                    listItem.relatedItems && listItem.relatedItems.length > 0
+                      ? this.props.handleIsShowingRelated(listItem.id)
+                      : undefined
+                  }
+                  isShowingRelated={
+                    listItem.relatedItems && listItem.relatedItems.length > 0
+                      ? this.props.isShowingRelated(listItem.id)
+                      : undefined
+                  }
+                  annotations={listItem.text.annotations}
+                />
+                {this.props.isShowingRelated(listItem.id) &&
+                  listItem.relatedItems &&
+                  listItem.relatedItems.length > 0 && (
+                    <div className={`pl4 pb4`}>
+                      {listItem.relatedItems.map(relatedItem => {
+                        if (!relatedItem) {
+                          return null;
+                        }
+                        return (
+                          <ListCapture
+                            key={relatedItem.id}
+                            text={relatedItem.text.text}
+                            handleExpand={this.props.handleHeaderExpand}
+                            handleMore={this.props.handleMore(relatedItem.id)}
+                            isMore={this.props.isMore(relatedItem.id)}
+                            handleComment={this.props.handleComment(
+                              relatedItem.id
+                            )}
+                            handleFocus={this.props.handleFocus(relatedItem.id)}
+                            handleEdit={this.props.handleEdit(relatedItem.id)}
+                            isEditing={this.props.isEditing(relatedItem.id)}
+                            handleArchive={this.props.handleArchive(
+                              relatedItem.id
+                            )}
+                            annotations={relatedItem.text.annotations}
+                          />
+                        );
+                      })}
+                    </div>
+                  )}
+              </div>
+            ))}
+
+            {/* This is a hack to make scrolling with fixed footer work. This serves as padding. The padding needs to be the same height as the fixed bar or else it will  */}
+            {this.renderFooterPadding()}
+          </div>
+        </ScrollContainer>
+
         {this.props.sessionId ? (
           <div
             className={`z-max absolute bottom-0 left-0 pv4 w-100 bt b--light-gray bg-white`}

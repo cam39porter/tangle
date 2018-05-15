@@ -163,6 +163,7 @@ class ListCapture extends React.Component<Props, State> {
                   <ButtonArchive onClick={this.props.handleArchive} />
                 </div>
               </div>
+              <ReactTooltip />
             </div>
           )}
           {this.props.handleIsShowingRelated ? (

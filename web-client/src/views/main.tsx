@@ -9,6 +9,9 @@ import {
   // Search
   searchQuery as searchResponse,
   searchQueryVariables,
+  // Detailed
+  getDetailedQuery as getDetailedResponse,
+  getDetailedQueryVariables,
   // Create Capture
   createCaptureMutation as createCaptureResponse,
   createCaptureMutationVariables,
@@ -22,6 +25,7 @@ import {
 import {
   capturedToday,
   search,
+  getDetailed,
   createCapture,
   archiveCapture,
   editCapture
@@ -36,7 +40,12 @@ import List from "../components/list";
 import GraphVisualization from "../components/graph-visualization";
 
 // Utils
-import { getIsLargeWindow, getCurrentLocation, getQuery } from "../utils";
+import {
+  getIsLargeWindow,
+  getCurrentLocation,
+  getQuery,
+  getId
+} from "../utils";
 import { noop, trim, assign } from "lodash";
 import windowSize from "react-window-size";
 
@@ -50,6 +59,8 @@ interface Props extends RouteProps {
   capturedToday?: QueryProps<capturedTodayQueryVariables> &
     Partial<capturedTodayResponse>;
   search?: QueryProps<searchQueryVariables> & Partial<searchResponse>;
+  getDetailed?: QueryProps<getDetailedQueryVariables> &
+    Partial<getDetailedResponse>;
   // Mutations
   createCapture: MutationFunc<
     createCaptureResponse,
@@ -130,6 +141,12 @@ class Main extends React.Component<Props, State> {
       isLoading = this.props.search.loading;
       data = this.props.search.search;
       refetch = this.props.search.refetch;
+    }
+
+    if (this.props.getDetailed) {
+      isLoading = this.props.getDetailed.loading;
+      data = this.props.getDetailed.getDetailed;
+      refetch = this.props.getDetailed.refetch;
     }
 
     let isLargeWindow = getIsLargeWindow(this.props.windowWidth);
@@ -251,7 +268,9 @@ class Main extends React.Component<Props, State> {
               return captureState.isMore;
             }}
             handleComment={(id: string) => noop}
-            handleFocus={(id: string) => noop}
+            handleFocus={(id: string) => () => {
+              this.props.history.push(`?id=${encodeURIComponent(id)}`);
+            }}
             handleEdit={(id: string) => text => {
               let captureState = this.state.captures.get(id);
               if (!captureState) {
@@ -309,7 +328,9 @@ class Main extends React.Component<Props, State> {
               refEChart={noop}
               nodes={isLoading ? [] : data.graph.nodes}
               edges={isLoading ? [] : data.graph.edges}
-              onClick={noop}
+              onClick={e => {
+                this.props.history.push(`?id=${encodeURIComponent(e.data.id)}`);
+              }}
               onMouseOver={noop}
               onMouseOut={noop}
               showTooltip={false}
@@ -346,6 +367,18 @@ const withSearch = graphql<searchResponse, Props>(search, {
   })
 });
 
+const withGetDetailed = graphql<getDetailedResponse, Props>(getDetailed, {
+  name: "getDetailed",
+  alias: "withGetDetailed",
+  skip: (props: Props) =>
+    getCurrentLocation(props.location.search) !== Location.Detail,
+  options: (props: Props) => ({
+    variables: {
+      id: getId(props.location.search)
+    }
+  })
+});
+
 const withCreateCapture = graphql<createCaptureResponse, Props>(createCapture, {
   name: "createCapture",
   alias: "withCreateCapture"
@@ -367,6 +400,7 @@ const withEditCapture = graphql<editCaptureResponse, Props>(editCapture, {
 const MainWithData = compose(
   withCapturedToday,
   withSearch,
+  withGetDetailed,
   withCreateCapture,
   withEditCapture,
   withArchiveCapture

@@ -4,6 +4,8 @@ import * as firebase from "firebase";
 
 import qs from "query-string";
 
+import { QueryProps } from "react-apollo";
+
 import config from "../cfg";
 
 import { Location } from "../types";
@@ -25,6 +27,11 @@ export const firebaseAuth = firebase.auth;
 // Window
 export const getIsLargeWindow = (widthPixels: number) => {
   return widthPixels >= 1024;
+};
+
+// GraphQL
+export const getIsLoadingOrError = (query: QueryProps): boolean => {
+  return query.loading || query.error ? true : false;
 };
 
 // URLs

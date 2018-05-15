@@ -35,6 +35,7 @@ interface Props {
   handleSurfaceTextChange: (text: string) => void;
   handleSurface: () => void;
   handleSurfaceClear: () => void;
+  surfaceStartingText?: string;
   // Captures
   handleExpand: (id: string) => (() => void);
   handleIsShowingRelated: (id: string) => (() => void) | undefined;
@@ -115,6 +116,7 @@ class List extends React.Component<Props, State> {
             handleSurfaceTextChange={this.props.handleSurfaceTextChange}
             handleSurface={this.props.handleSurface}
             handleClear={this.props.handleSurfaceClear}
+            surfaceStartingText={this.props.surfaceStartingText}
           />
         </div>
       );
@@ -159,9 +161,8 @@ class List extends React.Component<Props, State> {
           {this.renderHeaderPadding()}
 
           {this.props.listData.map(listItem => (
-            <div>
+            <div key={listItem.id}>
               <ListCapture
-                key={listItem.id}
                 text={listItem.text.text}
                 handleExpand={this.props.handleExpand(listItem.id)}
                 handleMore={this.props.handleMore(listItem.id)}

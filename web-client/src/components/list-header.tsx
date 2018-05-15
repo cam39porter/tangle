@@ -15,6 +15,7 @@ interface Props {
   handleIsCapturing: () => void;
   handleSurfaceTextChange: (text: string) => void;
   handleSurface: () => void;
+  surfaceStartingText?: string;
   handleClear: () => void;
 }
 
@@ -38,6 +39,7 @@ const ListHeader = (props: Props) => {
             handleTextChange={props.handleSurfaceTextChange}
             handleSurface={props.handleSurface}
             handleClear={props.handleClear}
+            startingText={props.surfaceStartingText}
           />
         )}
       </div>

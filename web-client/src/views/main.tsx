@@ -89,6 +89,7 @@ interface State {
   surfaceText: string;
   // Captures
   captures: Map<string, CaptureState>;
+  scrollToId?: string;
 }
 
 // Class
@@ -166,6 +167,7 @@ class Main extends React.Component<Props, State> {
             isHidden={false}
             handleIsHidden={noop}
             listData={isLoading ? [] : data.list}
+            scrollToId={this.state.scrollToId}
             // Session
             sessionId={undefined}
             sessionTitle={undefined}
@@ -331,7 +333,11 @@ class Main extends React.Component<Props, State> {
               onClick={e => {
                 this.props.history.push(`?id=${encodeURIComponent(e.data.id)}`);
               }}
-              onMouseOver={noop}
+              onMouseOver={e => {
+                this.setState({
+                  scrollToId: e.data.id
+                });
+              }}
               onMouseOut={noop}
               showTooltip={false}
             />

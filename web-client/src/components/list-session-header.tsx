@@ -23,7 +23,7 @@ interface Props {
 
 const ListSessionHeader = (props: Props) => {
   return (
-    <div className={`flex pa2 w-100 bb b--light-gray`}>
+    <div className={`flex pa2 pv3 w-100 bb b--light-gray bg-white`}>
       <div className={`ma2 pv1 w2`}>
         {props.isEditingTags || props.isEditingTitle ? (
           <div data-tip={`save your changes`}>

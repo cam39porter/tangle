@@ -107,6 +107,7 @@ stories.add("list", () => (
     sessionIsEditingTitle={boolean("sessionIsEditingTitle", false)}
     sessionHandleEditTags={action("sessionHandleEditTags")}
     sessionHandleEditTitle={action("sessionHandleEditTitle")}
+    sessionHandleCapture={action("sessionHandleCapture")}
     sessionHandleClose={action("sessionHandleClose")}
     // Header
     handleHeaderCaptureTextChange={action("handleCaptureTextChange")}
@@ -149,6 +150,7 @@ stories.add("session", () => (
     sessionIsEditingTitle={boolean("sessionIsEditingTitle", false)}
     sessionHandleEditTags={action("sessionHandleEditTags")}
     sessionHandleEditTitle={action("sessionHandleEditTitle")}
+    sessionHandleCapture={action("sessionHandleCapture")}
     sessionHandleClose={action("sessionHandleClose")}
     // Header
     handleHeaderCaptureTextChange={action("handleCaptureTextChange")}

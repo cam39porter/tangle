@@ -35,7 +35,7 @@ export const getIsLoadingOrError = (query: QueryProps): boolean => {
 };
 
 // URLs
-export const getQuery = (queryString: string) => {
+export const getQuery = (queryString: string): string => {
   return (
     qs.parse(queryString, {
       ignoreQueryPrefix: true
@@ -43,7 +43,7 @@ export const getQuery = (queryString: string) => {
   );
 };
 
-export const getId = (queryString: string) => {
+export const getId = (queryString: string): string => {
   return (
     qs.parse(queryString, {
       ignoreQueryPrefix: true
@@ -61,4 +61,9 @@ export const getCurrentLocation = (queryString: string): Location => {
   }
 
   return Location.CapturedToday;
+};
+
+export const getIsSessionId = (queryString: string): string | undefined => {
+  let id = getId(queryString);
+  return id.indexOf("session") >= 0 ? id : undefined;
 };

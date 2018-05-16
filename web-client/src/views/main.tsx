@@ -12,6 +12,11 @@ import {
   // Detailed
   getDetailedQuery as getDetailedResponse,
   getDetailedQueryVariables,
+  // Create Session
+  createSessionMutation as createSessionResponse,
+  // Create Session Capture
+  createSessionCaptureMutation as createSessionCaptureResponse,
+  createSessionCaptureMutationVariables,
   // Create Capture
   createCaptureMutation as createCaptureResponse,
   createCaptureMutationVariables,
@@ -20,12 +25,16 @@ import {
   archiveCaptureMutationVariables,
   // Edit Capture
   editCaptureMutation as editCaptureResponse,
-  editCaptureMutationVariables
+  editCaptureMutationVariables,
+  // Extra
+  ListFieldsFragment
 } from "../__generated__/types";
 import {
   capturedToday,
   search,
   getDetailed,
+  createSession,
+  createSessionCapture,
   createCapture,
   archiveCapture,
   editCapture
@@ -44,7 +53,8 @@ import {
   getIsLargeWindow,
   getCurrentLocation,
   getQuery,
-  getId
+  getId,
+  getIsSessionId
 } from "../utils";
 import { noop, trim, assign } from "lodash";
 import windowSize from "react-window-size";
@@ -62,6 +72,11 @@ interface Props extends RouteProps {
   getDetailed?: QueryProps<getDetailedQueryVariables> &
     Partial<getDetailedResponse>;
   // Mutations
+  createSession: MutationFunc<createSessionResponse, {}>;
+  createSessionCapture: MutationFunc<
+    createSessionCaptureResponse,
+    createSessionCaptureMutationVariables
+  >;
   createCapture: MutationFunc<
     createCaptureResponse,
     createCaptureMutationVariables
@@ -90,6 +105,8 @@ interface State {
   // Captures
   captures: Map<string, CaptureState>;
   scrollToId?: string;
+  // Session
+  sessionId?: string;
 }
 
 // Class
@@ -103,7 +120,8 @@ class Main extends React.Component<Props, State> {
         Location.CapturedToday,
       captureText: "",
       surfaceText: getQuery(nextProps.location.search),
-      captures: new Map<string, CaptureState>()
+      captures: new Map<string, CaptureState>(),
+      sessionId: getIsSessionId(nextProps.location.search)
     };
   }
 
@@ -112,7 +130,8 @@ class Main extends React.Component<Props, State> {
       isCapturing:
         getCurrentLocation(nextProps.location.search) ===
         Location.CapturedToday,
-      surfaceText: getQuery(nextProps.location.search)
+      surfaceText: getQuery(nextProps.location.search),
+      sessionId: getIsSessionId(nextProps.location.search)
     });
   }
 
@@ -120,7 +139,7 @@ class Main extends React.Component<Props, State> {
     let captureState = {
       isMore: false,
       isEditing: false,
-      isShowingRelated: false,
+      isShowingRelated: true,
       text: ""
     };
 
@@ -169,16 +188,53 @@ class Main extends React.Component<Props, State> {
             listData={isLoading ? [] : data.list}
             scrollToId={this.state.scrollToId}
             // Session
-            sessionId={undefined}
+            sessionId={this.state.sessionId}
             sessionTitle={undefined}
             sessionTags={undefined}
             sessionIsEditingTags={false}
             sessionIsEditingTitle={false}
             sessionHandleEditTags={noop}
             sessionHandleEditTitle={noop}
-            sessionHandleClose={noop}
+            sessionHandleCapture={() => {
+              if (!this.state.captureText || !this.state.sessionId) {
+                return;
+              }
+
+              let previousCaptureId;
+
+              if (
+                this.props.getDetailed &&
+                this.props.getDetailed.getDetailed
+              ) {
+                let list = this.props.getDetailed.getDetailed.list;
+
+                if (list.length > 0) {
+                  let previousCapture = list[length - 1] as ListFieldsFragment;
+                  previousCaptureId = previousCapture.id;
+                }
+              }
+
+              this.props
+                .createSessionCapture({
+                  variables: {
+                    body: this.state.captureText,
+                    sessionId: this.state.sessionId,
+                    previousCaptureId: previousCaptureId
+                      ? previousCaptureId
+                      : this.state.sessionId
+                  }
+                })
+                .then(() => {
+                  refetch();
+                })
+                .catch(err => console.error(err));
+            }}
+            sessionHandleClose={() => {
+              this.props.history.goBack();
+            }}
             // Header
             handleHeaderCaptureTextChange={nextCaptureText => {
+              // this handles the session capture bar as well
               this.setState({
                 captureText: nextCaptureText
               });
@@ -198,7 +254,16 @@ class Main extends React.Component<Props, State> {
                 })
                 .catch(err => console.error(err));
             }}
-            handleHeaderExpand={noop}
+            handleHeaderExpand={() => {
+              this.props
+                .createSession({})
+                .then(({ data: res }) => {
+                  this.props.history.push(
+                    `?id=${encodeURIComponent(res.createSession.id)}`
+                  );
+                })
+                .catch(err => console.error(err));
+            }}
             isHeaderCapturing={this.state.isCapturing}
             handleHeaderIsCapturing={() => {
               this.setState({
@@ -338,7 +403,11 @@ class Main extends React.Component<Props, State> {
                   scrollToId: e.data.id
                 });
               }}
-              onMouseOut={noop}
+              onMouseOut={e => {
+                this.setState({
+                  scrollToId: undefined
+                });
+              }}
               showTooltip={false}
             />
           </div>
@@ -357,7 +426,8 @@ const withCapturedToday = graphql<capturedTodayResponse, Props>(capturedToday, {
   options: {
     variables: {
       timezoneOffset: new Date().getTimezoneOffset() / 60 * -1
-    }
+    },
+    fetchPolicy: "network-only"
   }
 });
 
@@ -369,7 +439,8 @@ const withSearch = graphql<searchResponse, Props>(search, {
   options: (props: Props) => ({
     variables: {
       rawQuery: getQuery(props.location.search)
-    }
+    },
+    fetchPolicy: "network-only"
   })
 });
 
@@ -381,9 +452,23 @@ const withGetDetailed = graphql<getDetailedResponse, Props>(getDetailed, {
   options: (props: Props) => ({
     variables: {
       id: getId(props.location.search)
-    }
+    },
+    fetchPolicy: "network-only"
   })
 });
+
+const withCreateSession = graphql<createSessionResponse, Props>(createSession, {
+  name: "createSession",
+  alias: "withCreateSession"
+});
+
+const withCreateSessionCapture = graphql<createSessionCaptureResponse, Props>(
+  createSessionCapture,
+  {
+    name: "createSessionCapture",
+    alias: "withCreateSessionCapture"
+  }
+);
 
 const withCreateCapture = graphql<createCaptureResponse, Props>(createCapture, {
   name: "createCapture",
@@ -407,6 +492,8 @@ const MainWithData = compose(
   withCapturedToday,
   withSearch,
   withGetDetailed,
+  withCreateSession,
+  withCreateSessionCapture,
   withCreateCapture,
   withEditCapture,
   withArchiveCapture

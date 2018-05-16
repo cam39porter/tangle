@@ -29,6 +29,7 @@ interface Props {
   sessionIsEditingTitle: boolean;
   sessionIsEditingTags: boolean;
   sessionHandleClose: () => void;
+  sessionHandleCapture: () => void;
   // Header
   handleHeaderCaptureTextChange: (text: string) => void;
   handleHeaderCapture: () => void;
@@ -98,27 +99,24 @@ class List extends React.Component<Props, State> {
             handleSurfaceTextChange={this.props.handleSurfaceTextChange}
             handleSurface={this.props.handleSurface}
             handleClear={this.props.handleSurfaceClear}
-            surfaceStartingText={this.props.headerPaddingText}
+            surfaceStartingText={this.props.surfaceStartingText}
           />
         </div>
       )}
     </div>
   );
 
-  renderFooterPadding = () => (
-    <div>
-      {this.props.sessionId ? (
-        <div className={`pv4`}>
-          <InputCapture
-            handleCapture={this.props.handleHeaderCapture}
-            handleTextChange={this.props.handleHeaderCaptureTextChange}
-            clearOnEnter={true}
-            allowToolbar={false}
-          />
-        </div>
-      ) : null}
-    </div>
-  );
+  renderFooterPadding = () =>
+    this.props.sessionId ? (
+      <div className={`flex-grow pv4 bg-white`}>
+        <InputCapture
+          handleCapture={this.props.sessionHandleCapture}
+          handleTextChange={this.props.handleHeaderCaptureTextChange}
+          clearOnEnter={true}
+          allowToolbar={false}
+        />
+      </div>
+    ) : null;
 
   render() {
     if (this.props.isHidden) {
@@ -142,7 +140,7 @@ class List extends React.Component<Props, State> {
     return (
       <div className={`relative w-100 vh-100`}>
         {/* This is the list header that is actually seen when the list is not hidden */}
-        {this.props.sessionId ? (
+        {/* {this.props.sessionId ? (
           <div className={`z-max absolute top-0 left-0 w-100 bg-white`}>
             <ListSessionHeader
               title={this.props.sessionTitle}
@@ -169,8 +167,7 @@ class List extends React.Component<Props, State> {
               handleClear={this.props.handleSurfaceClear}
             />
           </div>
-        )}
-
+        )} */}
         <ScrollContainer
           ref={scrollContainer => (this._scrollContainer = scrollContainer)}
         >
@@ -181,31 +178,38 @@ class List extends React.Component<Props, State> {
             {this.renderHeaderPadding()}
 
             {this.props.listData.map(listItem => (
-              <div key={listItem.id}>
-                <ScrollContainerElement key={listItem.id} name={listItem.id}>
-                  <ListCapture
-                    text={listItem.text.text}
-                    handleExpand={this.props.handleExpand(listItem.id)}
-                    handleMore={this.props.handleMore(listItem.id)}
-                    isMore={this.props.isMore(listItem.id)}
-                    handleComment={this.props.handleComment(listItem.id)}
-                    handleFocus={this.props.handleFocus(listItem.id)}
-                    handleEdit={this.props.handleEdit(listItem.id)}
-                    isEditing={this.props.isEditing(listItem.id)}
-                    handleArchive={this.props.handleArchive(listItem.id)}
-                    handleIsShowingRelated={
-                      listItem.relatedItems && listItem.relatedItems.length > 0
-                        ? this.props.handleIsShowingRelated(listItem.id)
-                        : undefined
-                    }
-                    isShowingRelated={
-                      listItem.relatedItems && listItem.relatedItems.length > 0
-                        ? this.props.isShowingRelated(listItem.id)
-                        : undefined
-                    }
-                    annotations={listItem.text.annotations}
-                  />
-                </ScrollContainerElement>
+              <div className={``} key={listItem.id}>
+                <div
+                  className={`${this.props.scrollToId === listItem.id &&
+                    "ba br4 b--accent"}`}
+                >
+                  <ScrollContainerElement name={listItem.id}>
+                    <ListCapture
+                      text={listItem.text.text}
+                      handleExpand={this.props.handleExpand(listItem.id)}
+                      handleMore={this.props.handleMore(listItem.id)}
+                      isMore={this.props.isMore(listItem.id)}
+                      handleComment={this.props.handleComment(listItem.id)}
+                      handleFocus={this.props.handleFocus(listItem.id)}
+                      handleEdit={this.props.handleEdit(listItem.id)}
+                      isEditing={this.props.isEditing(listItem.id)}
+                      handleArchive={this.props.handleArchive(listItem.id)}
+                      handleIsShowingRelated={
+                        listItem.relatedItems &&
+                        listItem.relatedItems.length > 0
+                          ? this.props.handleIsShowingRelated(listItem.id)
+                          : undefined
+                      }
+                      isShowingRelated={
+                        listItem.relatedItems &&
+                        listItem.relatedItems.length > 0
+                          ? this.props.isShowingRelated(listItem.id)
+                          : undefined
+                      }
+                      annotations={listItem.text.annotations}
+                    />
+                  </ScrollContainerElement>
+                </div>
                 {this.props.isShowingRelated(listItem.id) &&
                   listItem.relatedItems &&
                   listItem.relatedItems.length > 0 && (
@@ -215,29 +219,36 @@ class List extends React.Component<Props, State> {
                           return null;
                         }
                         return (
-                          <ScrollContainerElement
+                          <div
                             key={relatedItem.id}
-                            name={relatedItem.id}
+                            className={`${this.props.scrollToId ===
+                              relatedItem.id && "ba br4 b--accent"}`}
                           >
-                            <ListCapture
-                              text={relatedItem.text.text}
-                              handleExpand={this.props.handleHeaderExpand}
-                              handleMore={this.props.handleMore(relatedItem.id)}
-                              isMore={this.props.isMore(relatedItem.id)}
-                              handleComment={this.props.handleComment(
-                                relatedItem.id
-                              )}
-                              handleFocus={this.props.handleFocus(
-                                relatedItem.id
-                              )}
-                              handleEdit={this.props.handleEdit(relatedItem.id)}
-                              isEditing={this.props.isEditing(relatedItem.id)}
-                              handleArchive={this.props.handleArchive(
-                                relatedItem.id
-                              )}
-                              annotations={relatedItem.text.annotations}
-                            />
-                          </ScrollContainerElement>
+                            <ScrollContainerElement name={relatedItem.id}>
+                              <ListCapture
+                                text={relatedItem.text.text}
+                                handleExpand={this.props.handleHeaderExpand}
+                                handleMore={this.props.handleMore(
+                                  relatedItem.id
+                                )}
+                                isMore={this.props.isMore(relatedItem.id)}
+                                handleComment={this.props.handleComment(
+                                  relatedItem.id
+                                )}
+                                handleFocus={this.props.handleFocus(
+                                  relatedItem.id
+                                )}
+                                handleEdit={this.props.handleEdit(
+                                  relatedItem.id
+                                )}
+                                isEditing={this.props.isEditing(relatedItem.id)}
+                                handleArchive={this.props.handleArchive(
+                                  relatedItem.id
+                                )}
+                                annotations={relatedItem.text.annotations}
+                              />
+                            </ScrollContainerElement>
+                          </div>
                         );
                       })}
                     </div>
@@ -250,18 +261,18 @@ class List extends React.Component<Props, State> {
           </div>
         </ScrollContainer>
 
-        {this.props.sessionId ? (
+        {/* {this.props.sessionId ? (
           <div
             className={`z-max absolute bottom-0 left-0 pv4 w-100 bt b--light-gray bg-white`}
           >
             <InputCapture
-              handleCapture={this.props.handleHeaderCapture}
+              handleCapture={this.props.sessionHandleCapture}
               handleTextChange={this.props.handleHeaderCaptureTextChange}
               clearOnEnter={true}
               allowToolbar={false}
             />
           </div>
-        ) : null}
+        ) : null} */}
       </div>
     );
   }

@@ -19,6 +19,7 @@ import {
 const NOT_FOCUS_COLOR = "#CCCCCC";
 const TAG_COLOR = "#333333";
 const ENTITY_COLOR = "#777777";
+const SESSION_COLOR = "#111C77";
 const OTHER_COLOR = "#FFFFFF";
 
 const TEXT_COLOR = "#777777";
@@ -99,6 +100,21 @@ class Graph extends React.Component<Props, State> {
             }
           };
 
+        // Sessions
+        case NodeType.Session:
+          return {
+            id: node.id,
+            name: `${node.text}`,
+            category: node.type,
+            symbolSize: 24,
+            label: {
+              show: false,
+              emphasis: {
+                show: false
+              }
+            }
+          };
+
         // Captures
         default:
           return {
@@ -173,6 +189,14 @@ class Graph extends React.Component<Props, State> {
             color: OTHER_COLOR
           }
         }
+      },
+      {
+        name: NodeType.Session,
+        itemStyle: {
+          normal: {
+            color: SESSION_COLOR
+          }
+        }
       }
     ];
   }
@@ -202,43 +226,43 @@ class Graph extends React.Component<Props, State> {
         showContent: true,
         confine: true,
         position: "top",
-        formatter: (params: {
-          dataType: string;
-          name: string;
-          data: { category: string };
-        }) => {
-          switch (params.dataType) {
-            case "node":
-              if (
-                params.data.category === "entity" ||
-                params.data.category === "tag" ||
-                params.data.category === "link"
-              ) {
-                return "";
-              }
+        // formatter: (params: {
+        //   dataType: string;
+        //   name: string;
+        //   data: { category: string };
+        // }) => {
+        //   switch (params.dataType) {
+        //     case "node":
+        //       if (
+        //         params.data.category === "entity" ||
+        //         params.data.category === "tag" ||
+        //         params.data.category === "link"
+        //       ) {
+        //         return "";
+        //       }
 
-              let lines = params.name.match(/.{1,40}/g);
+        //       let lines = params.name.match(/.{1,40}/g);
 
-              if (!lines) {
-                lines = [params.name];
-              }
+        //       if (!lines) {
+        //         lines = [params.name];
+        //       }
 
-              let label = lines.reduce((currentLabel, line) => {
-                return `
-                  ${currentLabel}
-                  <div class="f6 avenir br1 measure" id="node-label">
-                    ${line}
-                  </div>`;
-              }, "");
+        //       let label = lines.reduce((currentLabel, line) => {
+        //         return `
+        //           ${currentLabel}
+        //           <div class="f6 avenir br1 measure" id="node-label">
+        //             ${line}
+        //           </div>`;
+        //       }, "");
 
-              return `
-              <div class="pa2 shadow-1 br1">
-                ${label}
-              </div>`;
-            default:
-              return "";
-          }
-        },
+        //       return `
+        //       <div class="pa2 shadow-1 br1">
+        //         ${label}
+        //       </div>`;
+        //     default:
+        //       return "";
+        //   }
+        // },
         backgroundColor: OTHER_COLOR,
         textStyle: {
           color: TEXT_COLOR

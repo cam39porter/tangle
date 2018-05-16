@@ -194,3 +194,41 @@ export const archiveCapture = gql`
     archiveCapture(id: $id)
   }
 `;
+
+export const createSession = gql`
+  mutation createSession {
+    createSession {
+      ...NodeFields
+    }
+  }
+  ${nodeFragment}
+`;
+
+export const editSession = gql`
+  mutation editSession($sessionId: String!, $title: String!) {
+    editSession(id: $sessionId, title: $title) {
+      ...NodeFields
+    }
+  }
+  ${nodeFragment}
+`;
+
+export const createSessionCapture = gql`
+  mutation createSessionCapture(
+    $body: String!
+    $sessionId: String!
+    $previousCaptureId: String
+  ) {
+    createCapture(
+      body: $body
+      sessionId: $sessionId
+      captureRelation: {
+        captureId: $previousCaptureId
+        relationshipType: PREVIOUS
+      }
+    ) {
+      ...GraphFields
+    }
+  }
+  ${graphFragment}
+`;

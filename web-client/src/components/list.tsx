@@ -24,8 +24,8 @@ interface Props {
   sessionId?: string;
   sessionTitle?: string;
   sessionTags?: Array<string>;
-  sessionHandleEditTitle: () => void;
-  sessionHandleEditTags: () => void;
+  sessionHandleEditTitle: (title: string) => void;
+  sessionHandleEditTags: (tags: string) => void;
   sessionIsEditingTitle: boolean;
   sessionIsEditingTags: boolean;
   sessionHandleClose: () => void;

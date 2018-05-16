@@ -11,64 +11,82 @@ import ReactTooltip from "react-tooltip";
 
 // Utils
 
+// Types
 interface Props {
   title?: string;
-  handleEditTitle: () => void;
+  handleEditTitle: (title: string) => void;
   isEditingTitle: boolean;
   tags?: Array<string>;
-  handleEditTags: () => void;
+  handleEditTags: (tags: string) => void;
   isEditingTags: boolean;
   handleClose: () => void;
 }
 
-const ListSessionHeader = (props: Props) => {
-  return (
-    <div className={`flex pa2 pv3 w-100 bb b--light-gray bg-white`}>
-      <div className={`ma2 pv1 w2`}>
-        {props.isEditingTags || props.isEditingTitle ? (
-          <div data-tip={`save your changes`}>
-            <ButtonCheck
-              onClick={() => {
-                props.handleEditTags();
-                props.handleEditTitle();
+interface State {}
+
+class ListSessionHeader extends React.Component<Props, State> {
+  title = "";
+  tags = "";
+
+  render() {
+    return (
+      <div className={`flex pa2 pv3 w-100 bb b--light-gray bg-white`}>
+        <div className={`ma2 pv1 w2`}>
+          {this.props.isEditingTags || this.props.isEditingTitle ? (
+            <div data-tip={`save your changes`}>
+              <ButtonCheck
+                onClick={() => {
+                  this.props.handleEditTags(this.tags);
+                  this.props.handleEditTitle(this.title);
+                }}
+              />
+            </div>
+          ) : (
+            <div data-tip={`edit the brainstorm title or tags`}>
+              <ButtonEdit
+                onClick={() => {
+                  this.props.handleEditTags(this.tags);
+                  this.props.handleEditTitle(this.title);
+                }}
+              />
+            </div>
+          )}
+        </div>
+        <div className={`flex-grow pa2`}>
+          <div className={`pv2`}>
+            <ListSessionTitle
+              title={this.props.title}
+              handleEdit={() => {
+                this.props.handleEditTitle(this.title);
+              }}
+              isEditing={this.props.isEditingTitle}
+              handleChange={title => {
+                this.title = title;
               }}
             />
           </div>
-        ) : (
-          <div data-tip={`edit the brainstorm title or tags`}>
-            <ButtonEdit
-              onClick={() => {
-                props.handleEditTags();
-                props.handleEditTitle();
+          <div className={`pv2`}>
+            <ListSessionTags
+              tags={this.props.tags}
+              handleEdit={() => {
+                this.props.handleEditTags(this.tags);
+              }}
+              isEditing={this.props.isEditingTags}
+              handleChange={tags => {
+                this.tags = tags;
               }}
             />
           </div>
-        )}
-      </div>
-      <div className={`flex-grow pa2`}>
-        <div className={`pv2`}>
-          <ListSessionTitle
-            title={props.title}
-            handleEdit={props.handleEditTitle}
-            isEditing={props.isEditingTitle}
-          />
         </div>
-        <div className={`pv2`}>
-          <ListSessionTags
-            tags={props.tags}
-            handleEdit={props.handleEditTags}
-            isEditing={props.isEditingTags}
-          />
+        <div className={`ma2 pv1 w2`}>
+          <div data-tip={`exit the brainstorm`}>
+            <ButtonContract onClick={this.props.handleClose} />
+          </div>
         </div>
+        <ReactTooltip />
       </div>
-      <div className={`ma2 pv1 w2`}>
-        <div data-tip={`exit the brainstorm`}>
-          <ButtonContract onClick={props.handleClose} />
-        </div>
-      </div>
-      <ReactTooltip />
-    </div>
-  );
-};
+    );
+  }
+}
 
 export default ListSessionHeader;

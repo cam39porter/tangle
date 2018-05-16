@@ -8,6 +8,7 @@ interface Props {
   isEditing: boolean;
   handleEdit: () => void;
   tags?: Array<string>;
+  handleChange: (tags: string) => void;
 }
 
 const ListSessionTags = (props: Props) => {
@@ -28,6 +29,7 @@ const ListSessionTags = (props: Props) => {
           startingText={startingText}
           clearOnEnter={false}
           allowToolbar={false}
+          handleChange={props.handleChange}
         />
       ) : (
         <div className={`f5`} onDoubleClick={props.handleEdit}>

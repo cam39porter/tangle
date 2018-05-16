@@ -106,8 +106,8 @@ class ListCapture extends React.Component<Props, State> {
           </div>
           <div className={`flex flex-column pa2`}>
             <div className={`flex-grow w-100 `}>
-              <div data-tip={`enter a brainstorm`}>
-                <ButtonExpand onClick={this.props.handleExpand} />
+              <div data-tip={`focus on this capture`}>
+                <ButtonFocus onClick={this.props.handleFocus} />
               </div>
             </div>
             <div className={`flex-grow w-100`}>
@@ -134,9 +134,9 @@ class ListCapture extends React.Component<Props, State> {
                   <ButtonComment onClick={this.props.handleComment} />
                 </div>
               </div>
-              <div className={`flex-grow`} data-tip={`focus on this capture`}>
-                <div data-tip={`focus on this capture`}>
-                  <ButtonFocus onClick={this.props.handleFocus} />
+              <div className={`flex-grow`}>
+                <div data-tip={`enter a brainstorm`}>
+                  <ButtonExpand onClick={this.props.handleExpand} />
                 </div>
               </div>
               <div className={`flex-grow`}>

@@ -8,6 +8,7 @@ interface Props {
   isEditing: boolean;
   handleEdit: () => void;
   title?: string;
+  handleChange: (title: string) => void;
 }
 
 const ListSessionTitle = (props: Props) => {
@@ -21,6 +22,7 @@ const ListSessionTitle = (props: Props) => {
           startingText={props.title}
           clearOnEnter={false}
           allowToolbar={false}
+          handleChange={props.handleChange}
         />
       ) : (
         <div className={`f4`} onDoubleClick={props.handleEdit}>

@@ -34,10 +34,12 @@ stories.add("session title", () => (
     <ListSessionTitle
       handleEdit={action("handleEdit")}
       isEditing={boolean("isEditing", false)}
+      handleChange={action("handleChange")}
     />
     <ListSessionTitle
       handleEdit={action("handleEdit")}
       isEditing={boolean("isEditing", false)}
+      handleChange={action("handleChange")}
       title={`This is an example title`}
     />
   </div>
@@ -48,11 +50,13 @@ stories.add("session tags", () => (
     <ListSessionTags
       handleEdit={action("handleEdit")}
       isEditing={boolean("isEditing", false)}
+      handleChange={action("handleChange")}
     />
     <ListSessionTags
       handleEdit={action("handleEdit")}
       isEditing={boolean("isEditing", false)}
       tags={["tag1", "tag2", "tag3"]}
+      handleChange={action("handleChange")}
     />
   </div>
 ));

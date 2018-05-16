@@ -17,6 +17,9 @@ import {
   // Create Session Capture
   createSessionCaptureMutation as createSessionCaptureResponse,
   createSessionCaptureMutationVariables,
+  // Edit Session
+  editSessionMutation as editSessionResponse,
+  editSessionMutationVariables,
   // Create Capture
   createCaptureMutation as createCaptureResponse,
   createCaptureMutationVariables,
@@ -35,6 +38,7 @@ import {
   getDetailed,
   createSession,
   createSessionCapture,
+  editSession,
   createCapture,
   archiveCapture,
   editCapture
@@ -73,6 +77,7 @@ interface Props extends RouteProps {
     Partial<getDetailedResponse>;
   // Mutations
   createSession: MutationFunc<createSessionResponse, {}>;
+  editSession: MutationFunc<editSessionResponse, editSessionMutationVariables>;
   createSessionCapture: MutationFunc<
     createSessionCaptureResponse,
     createSessionCaptureMutationVariables
@@ -107,6 +112,9 @@ interface State {
   scrollToId?: string;
   // Session
   sessionId?: string;
+  sessionTitle?: string;
+  sessionIsEditingTitle?: boolean;
+  sessionIsEditingTags?: boolean;
 }
 
 // Class
@@ -192,9 +200,39 @@ class Main extends React.Component<Props, State> {
             sessionTitle={undefined}
             sessionTags={undefined}
             sessionIsEditingTags={false}
-            sessionIsEditingTitle={false}
+            sessionIsEditingTitle={
+              this.state.sessionIsEditingTitle ? true : false
+            }
             sessionHandleEditTags={noop}
-            sessionHandleEditTitle={noop}
+            sessionHandleEditTitle={title => {
+              if (!this.state.sessionId) {
+                return;
+              }
+
+              if (this.state.sessionIsEditingTitle) {
+                this.props
+                  .editSession({
+                    variables: {
+                      sessionId: this.state.sessionId,
+                      title
+                    }
+                  })
+                  .then(({ data: res }) => {
+                    this.setState({
+                      sessionTitle: res.editSession.text,
+                      sessionIsEditingTitle: !this.state.sessionIsEditingTitle
+                    });
+                  })
+                  .then(() => {
+                    refetch();
+                  })
+                  .catch(err => console.error(err));
+              } else {
+                this.setState({
+                  sessionIsEditingTitle: !this.state.sessionIsEditingTitle
+                });
+              }
+            }}
             sessionHandleCapture={() => {
               if (!this.state.captureText || !this.state.sessionId) {
                 return;
@@ -230,6 +268,10 @@ class Main extends React.Component<Props, State> {
                 .catch(err => console.error(err));
             }}
             sessionHandleClose={() => {
+              this.setState({
+                sessionIsEditingTags: false,
+                sessionIsEditingTitle: false
+              });
               this.props.history.goBack();
             }}
             // Header
@@ -462,6 +504,11 @@ const withCreateSession = graphql<createSessionResponse, Props>(createSession, {
   alias: "withCreateSession"
 });
 
+const withEditSession = graphql<editSessionResponse, Props>(editSession, {
+  name: "editSession",
+  alias: "withEditSession"
+});
+
 const withCreateSessionCapture = graphql<createSessionCaptureResponse, Props>(
   createSessionCapture,
   {
@@ -493,6 +540,7 @@ const MainWithData = compose(
   withSearch,
   withGetDetailed,
   withCreateSession,
+  withEditSession,
   withCreateSessionCapture,
   withCreateCapture,
   withEditCapture,

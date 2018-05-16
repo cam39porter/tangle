@@ -197,7 +197,7 @@ class Main extends React.Component<Props, State> {
             scrollToId={this.state.scrollToId}
             // Session
             sessionId={this.state.sessionId}
-            sessionTitle={undefined}
+            sessionTitle={this.state.sessionTitle}
             sessionTags={undefined}
             sessionIsEditingTags={false}
             sessionIsEditingTitle={
@@ -205,16 +205,17 @@ class Main extends React.Component<Props, State> {
             }
             sessionHandleEditTags={noop}
             sessionHandleEditTitle={title => {
+              let nextTitle = trim(title);
               if (!this.state.sessionId) {
                 return;
               }
 
-              if (this.state.sessionIsEditingTitle) {
+              if (this.state.sessionIsEditingTitle && nextTitle) {
                 this.props
                   .editSession({
                     variables: {
                       sessionId: this.state.sessionId,
-                      title
+                      title: nextTitle
                     }
                   })
                   .then(({ data: res }) => {
@@ -335,7 +336,21 @@ class Main extends React.Component<Props, State> {
             }
             footerPaddingText={""}
             // Captures
-            handleExpand={(id: string) => noop}
+            handleExpand={(id: string) => () => {
+              // this.props
+              //   .createSession({})
+              //   .then(({ data: res }) => {
+              //     let id = res.createSession.id;
+              //     // Add capture to beginning of session
+              //     return id;
+              //   })
+              //   .then(id => {
+              //     this.props.history.push(`?id=${encodeURIComponent(id)}`);
+              //   })
+              //   .catch(err => console.error(err));
+
+              return noop;
+            }}
             handleIsShowingRelated={(id: string) => () => {
               let captureState = this.state.captures.get(id);
               if (!captureState) {

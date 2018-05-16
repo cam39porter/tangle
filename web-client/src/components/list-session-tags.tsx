@@ -30,6 +30,7 @@ const ListSessionTags = (props: Props) => {
           clearOnEnter={false}
           allowToolbar={false}
           handleChange={props.handleChange}
+          handleEnterKey={props.handleEdit}
         />
       ) : (
         <div className={`f5`} onDoubleClick={props.handleEdit}>

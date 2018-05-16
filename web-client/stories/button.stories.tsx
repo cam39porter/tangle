@@ -18,6 +18,8 @@ import ButtonFocus from "../src/components/button-focus";
 import ButtonRelated from "../src/components/button-related";
 import ButtonCheck from "../src/components/button-check";
 import ButtonContract from "../src/components/button-contract";
+import ButtonSettings from "../src/components/button-settings";
+import ButtonImport from "../src/components/button-import";
 
 const stories = storiesOf("Button", module);
 
@@ -48,12 +50,14 @@ stories.add("contract", () => <ButtonContract onClick={action("clicked")} />);
 stories.add("edit", () => <ButtonEdit onClick={action("clicked")} />);
 stories.add("expand", () => <ButtonExpand onClick={action("clicked")} />);
 stories.add("focus", () => <ButtonFocus onClick={action("clicked")} />);
+stories.add("import", () => <ButtonImport onClick={action("clicked")} />);
 stories.add("more", () => (
   <ButtonMore onClick={action("clicked")} isMore={boolean("isMore", false)} />
 ));
 stories.add("related", () => (
   <ButtonRelated onClick={action("clicked")} isUp={boolean("isUp", false)} />
 ));
+stories.add("settings", () => <ButtonSettings onClick={action("clicked")} />);
 stories.add("surface", () => <ButtonSurface onClick={action("clicked")} />);
 stories.add("toggle", () => (
   <ButtonToggle

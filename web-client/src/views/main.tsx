@@ -49,7 +49,7 @@ import { graphql, compose, QueryProps, MutationFunc } from "react-apollo";
 import { RouteComponentProps } from "react-router";
 
 // Components
-import List from "../components/list";
+import List, { SESSION_CAPTURE_INPUT_ID } from "../components/list";
 import GraphVisualization from "../components/graph-visualization";
 
 // Utils
@@ -248,7 +248,9 @@ class Main extends React.Component<Props, State> {
                 let list = this.props.getDetailed.getDetailed.list;
 
                 if (list.length > 0) {
-                  let previousCapture = list[length - 1] as ListFieldsFragment;
+                  let previousCapture = list[
+                    list.length - 1
+                  ] as ListFieldsFragment;
                   previousCaptureId = previousCapture.id;
                 }
               }
@@ -265,11 +267,15 @@ class Main extends React.Component<Props, State> {
                 })
                 .then(() => {
                   refetch();
+                  this.setState({
+                    scrollToId: SESSION_CAPTURE_INPUT_ID
+                  });
                 })
                 .catch(err => console.error(err));
             }}
             sessionHandleClose={() => {
               this.setState({
+                sessionTitle: "",
                 sessionIsEditingTags: false,
                 sessionIsEditingTitle: false
               });

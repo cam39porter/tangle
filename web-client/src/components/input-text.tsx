@@ -111,7 +111,6 @@ class InputText extends React.Component<Props, State> {
         if (!this.state.shiftIsPressed) {
           this.props.handleEnterKey();
           if (this.reactQuillRef && this.props.clearOnEnter) {
-            console.log("here");
             this.reactQuillRef.getEditor().setText("");
           }
         }

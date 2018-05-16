@@ -10,6 +10,7 @@ import ScrollContainer from "./scroll-container";
 import ScrollContainerElement from "./scroll-container-element";
 
 // Utils
+export const SESSION_CAPTURE_INPUT_ID = "session-capture-input";
 
 // Types
 import { ListFieldsFragment } from "../__generated__/types";
@@ -108,14 +109,16 @@ class List extends React.Component<Props, State> {
 
   renderFooterPadding = () =>
     this.props.sessionId ? (
-      <div className={`flex-grow pv4 bg-white`}>
-        <InputCapture
-          handleCapture={this.props.sessionHandleCapture}
-          handleTextChange={this.props.handleHeaderCaptureTextChange}
-          clearOnEnter={true}
-          allowToolbar={false}
-        />
-      </div>
+      <ScrollContainerElement name={SESSION_CAPTURE_INPUT_ID}>
+        <div className={`flex-grow pv4 bg-white`}>
+          <InputCapture
+            handleCapture={this.props.sessionHandleCapture}
+            handleTextChange={this.props.handleHeaderCaptureTextChange}
+            clearOnEnter={true}
+            allowToolbar={false}
+          />
+        </div>
+      </ScrollContainerElement>
     ) : null;
 
   render() {

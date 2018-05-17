@@ -12,10 +12,6 @@ import { Route, Switch } from "react-router-dom";
 
 // Components
 import Login from "./views/login";
-import Tangle from "./views/tangle";
-import Capture from "./views/capture";
-import Surface from "./views/surface";
-
 import Main from "./views/main";
 
 // Config / Utils
@@ -73,9 +69,6 @@ class App extends React.Component<Props, State> {
           <div>
             {this.state.isAuthenticated ? (
               <Switch>
-                <Route path="/capture" component={Capture} />
-                <Route path="/surface" component={Surface} />
-                <Route path="/tangle" component={Tangle} />
                 <Route path="/" component={Main} />
               </Switch>
             ) : (

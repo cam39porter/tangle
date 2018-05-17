@@ -232,3 +232,18 @@ export const createSessionCapture = gql`
   }
   ${graphFragment}
 `;
+
+export const createCommentCapture = gql`
+  mutation createCommentCapture($body: String!, $commentedOnCaptureId: String) {
+    createCapture(
+      body: $body
+      captureRelation: {
+        captureId: $commentedOnCaptureId
+        relationshipType: COMMENTED_ON
+      }
+    ) {
+      ...GraphFields
+    }
+  }
+  ${graphFragment}
+`;

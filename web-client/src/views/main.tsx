@@ -29,6 +29,9 @@ import {
   // Edit Capture
   editCaptureMutation as editCaptureResponse,
   editCaptureMutationVariables,
+  // Comment on Capture
+  createCommentCaptureMutation as createCommentCaptureResponse,
+  createCommentCaptureMutationVariables,
   // Extra
   ListFieldsFragment
 } from "../__generated__/types";
@@ -41,7 +44,8 @@ import {
   editSession,
   createCapture,
   archiveCapture,
-  editCapture
+  editCapture,
+  createCommentCapture
 } from "../queries";
 import { graphql, compose, QueryProps, MutationFunc } from "react-apollo";
 
@@ -92,6 +96,10 @@ interface Props extends RouteProps {
     archiveCaptureMutationVariables
   >;
   editCapture: MutationFunc<editCaptureResponse, editCaptureMutationVariables>;
+  createCommentCapture: MutationFunc<
+    createCommentCaptureResponse,
+    createCommentCaptureMutationVariables
+  >;
   // Window Size
   windowWidth: number;
   windowHeight: number;
@@ -184,7 +192,7 @@ class Main extends React.Component<Props, State> {
       <div className={`flex w-100 vh-100`}>
         {/* Menu Bar */}
         {isLargeWindow && (
-          <div className={`fixed top-2 right-2 z-max`}>
+          <div className={`fixed top-0 right-0 ma4 z-max`}>
             <MenuBar />
           </div>
         )}
@@ -405,7 +413,19 @@ class Main extends React.Component<Props, State> {
               }
               return captureState.isMore;
             }}
-            handleComment={(id: string) => noop}
+            handleComment={(id: string) => (text: string) => {
+              this.props
+                .createCommentCapture({
+                  variables: {
+                    commentedOnCaptureId: id,
+                    body: text
+                  }
+                })
+                .then(() => {
+                  refetch();
+                })
+                .catch(err => console.error(err));
+            }}
             handleFocus={(id: string) => () => {
               this.props.history.push(`?id=${encodeURIComponent(id)}`);
             }}
@@ -564,6 +584,14 @@ const withEditCapture = graphql<editCaptureResponse, Props>(editCapture, {
   alias: "withEditCapture"
 });
 
+const withCreateCommentCapture = graphql<createCommentCaptureResponse, Props>(
+  createCommentCapture,
+  {
+    name: "createCommentCapture",
+    alias: "withCreateCommentCapture"
+  }
+);
+
 const MainWithData = compose(
   withCapturedToday,
   withSearch,
@@ -573,7 +601,8 @@ const MainWithData = compose(
   withCreateSessionCapture,
   withCreateCapture,
   withEditCapture,
-  withArchiveCapture
+  withArchiveCapture,
+  withCreateCommentCapture
 )(Main);
 
 //  Window

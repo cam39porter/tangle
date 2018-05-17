@@ -49,7 +49,8 @@ interface Props {
   isShowingRelated: (id: string) => boolean | undefined;
   handleMore: (id: string) => (() => void);
   isMore: (id: string) => boolean;
-  handleComment: (id: string) => (() => void);
+  handleComment: (id: string) => ((text: string) => void);
+  comments?: Array<ListFieldsFragment>;
   handleFocus: (id: string) => (() => void);
   handleEdit: (id: string) => ((text: string) => void);
   isEditing: (id: string) => boolean;

@@ -8,20 +8,24 @@ import ButtonFocus from "./button-focus";
 import ButtonArchive from "./button-archive";
 import ButtonEdit from "./button-edit";
 import ButtonCheck from "./button-check";
-import ButtonComment from "./button-comment";
 import ButtonRelated from "./button-related";
 import InputCapture from "./input-capture";
+import ListComment from "./list-comment";
 import ReactTooltip from "react-tooltip";
 
 // Types
-import { AnnotationFieldsFragment } from "../__generated__/types";
+import {
+  AnnotationFieldsFragment,
+  ListFieldsFragment
+} from "../__generated__/types";
 
 interface Props {
   text: string;
   handleExpand: () => void;
   handleMore: () => void;
   isMore: boolean;
-  handleComment: () => void;
+  handleComment: (text: string) => void;
+  comments?: Array<ListFieldsFragment>;
   handleFocus: () => void;
   handleEdit: (text: string) => void;
   isEditing: boolean;
@@ -116,7 +120,7 @@ class ListCapture extends React.Component<Props, State> {
                   <div
                     data-tip={`${
                       this.props.isMore ? "hide" : "show"
-                    } all actions`}
+                    } all actions and comments`}
                   >
                     <ButtonMore
                       isMore={!this.props.isMore}
@@ -128,42 +132,47 @@ class ListCapture extends React.Component<Props, State> {
             </div>
           </div>
           {this.props.isMore && (
-            <div className={`flex pa2 w-100`}>
-              <div className={`flex-grow`}>
-                <div data-tip={`comment on this capture`}>
-                  <ButtonComment onClick={this.props.handleComment} />
+            <div className={`w-100`}>
+              {/* Action Buttons */}
+              <div className={`flex pa2 w-100`}>
+                <div className={`flex-grow`}>
+                  {this.props.isEditing ? (
+                    <div data-tip={`save your changes`}>
+                      <ButtonCheck
+                        onClick={() => {
+                          this.props.handleEdit(this.text);
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div data-tip={`edit this capture`}>
+                      <ButtonEdit
+                        onClick={() => {
+                          this.props.handleEdit(this.text);
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
-              </div>
-              <div className={`flex-grow`}>
-                <div data-tip={`enter a brainstorm`}>
-                  <ButtonExpand onClick={this.props.handleExpand} />
-                </div>
-              </div>
-              <div className={`flex-grow`}>
-                {this.props.isEditing ? (
-                  <div data-tip={`save your changes`}>
-                    <ButtonCheck
-                      onClick={() => {
-                        this.props.handleEdit(this.text);
-                      }}
-                    />
+                <div className={`flex-grow`}>
+                  <div data-tip={`delete this capture`}>
+                    <ButtonArchive onClick={this.props.handleArchive} />
                   </div>
-                ) : (
-                  <div data-tip={`edit this capture`}>
-                    <ButtonEdit
-                      onClick={() => {
-                        this.props.handleEdit(this.text);
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-              <div className={`flex-grow`}>
-                <div data-tip={`delete this capture`}>
-                  <ButtonArchive onClick={this.props.handleArchive} />
                 </div>
+                <div className={`flex-grow`}>
+                  <div
+                    data-tip={`enter a brainstorm starting with this capture`}
+                  >
+                    <ButtonExpand onClick={this.props.handleExpand} />
+                  </div>
+                </div>
+                <ReactTooltip />
               </div>
-              <ReactTooltip />
+              {/* Comments */}
+              <ListComment
+                handleComment={this.props.handleComment}
+                comments={this.props.comments}
+              />
             </div>
           )}
           {this.props.handleIsShowingRelated ? (

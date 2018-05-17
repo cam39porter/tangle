@@ -10,6 +10,7 @@ import ListSessionTitle from "../src/components/list-session-title";
 import ListSessionTags from "../src/components/list-session-tags";
 import ListSessionHeader from "../src/components/list-session-header";
 import ListCapture from "../src/components/list-capture";
+import ListComment from "../src/components/list-comment";
 import List from "../src/components/list";
 
 const stories = storiesOf("List", module);
@@ -73,6 +74,10 @@ stories.add("session header", () => (
       handleClose={action("handleClose")}
     />
   </div>
+));
+
+stories.add("comment", () => (
+  <ListComment handleComment={action("handleComment")} />
 ));
 
 stories.add("capture", () => (

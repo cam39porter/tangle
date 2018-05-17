@@ -7,6 +7,7 @@ import { withKnobs, boolean } from "@storybook/addon-knobs/react";
 import InputText from "../src/components/input-text";
 import InputCapture from "../src/components/input-capture";
 import InputSurface from "../src/components/input-surface";
+import InputComment from "../src/components/input-comment";
 
 const stories = storiesOf("Input", module);
 
@@ -20,6 +21,13 @@ stories.add("capture", () => (
     handleExpand={action("expanded")}
     handleTextChange={action("text changed")}
     clearOnEnter={boolean("clearOnEnter", true)}
+  />
+));
+
+stories.add("comment", () => (
+  <InputComment
+    handleComment={action("surfaced")}
+    handleTextChange={action("text changed")}
   />
 ));
 

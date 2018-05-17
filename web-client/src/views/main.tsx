@@ -484,12 +484,17 @@ class Main extends React.Component<Props, State> {
               return captureState.isEditing;
             }}
             handleArchive={(id: string) => () => {
+              let shouldRedirect = getId(this.props.location.search) === id;
               this.props
                 .archiveCapture({
                   variables: { id }
                 })
                 .then(() => {
-                  refetch();
+                  if (shouldRedirect) {
+                    this.props.history.goBack();
+                  } else {
+                    refetch();
+                  }
                 })
                 .catch(err => console.error(err));
             }}

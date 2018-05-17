@@ -167,23 +167,27 @@ class Main extends React.Component<Props, State> {
     let isLoading;
     let data;
     let refetch;
+    let header;
 
     if (this.props.capturedToday) {
       isLoading = this.props.capturedToday.loading;
       data = this.props.capturedToday.getAll;
       refetch = this.props.capturedToday.refetch;
+      header = "Captured Today";
     }
 
     if (this.props.search) {
       isLoading = this.props.search.loading;
       data = this.props.search.search;
       refetch = this.props.search.refetch;
+      header = `Results for "${getQuery(this.props.location.search)}"`;
     }
 
     if (this.props.getDetailed) {
       isLoading = this.props.getDetailed.loading;
       data = this.props.getDetailed.getDetailed;
       refetch = this.props.getDetailed.refetch;
+      header = `Focus results`;
     }
 
     let isLargeWindow = getIsLargeWindow(this.props.windowWidth);
@@ -211,6 +215,7 @@ class Main extends React.Component<Props, State> {
             handleIsHidden={noop}
             listData={isLoading ? [] : data.list}
             scrollToId={this.state.scrollToId}
+            header={header}
             // Session
             sessionId={this.state.sessionId}
             sessionTitle={this.state.sessionTitle}

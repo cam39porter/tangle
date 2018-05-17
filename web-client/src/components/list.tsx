@@ -21,6 +21,7 @@ interface Props {
   handleIsHidden: () => void;
   listData: Array<ListFieldsFragment>;
   scrollToId?: string;
+  header?: string;
   // Session
   sessionId?: string;
   sessionTitle?: string;
@@ -180,6 +181,10 @@ class List extends React.Component<Props, State> {
           >
             {/* This is a hack to make scrolling with fixed header work. This serves as padding. The padding needs to be the same height as the fixed bar or else it will  */}
             {this.renderHeaderPadding()}
+
+            {this.props.header && (
+              <div className={`pa3 gray`}>{this.props.header}</div>
+            )}
 
             {this.props.listData.map(listItem => (
               <div className={``} key={listItem.id}>

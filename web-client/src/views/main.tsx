@@ -180,14 +180,21 @@ class Main extends React.Component<Props, State> {
       isLoading = this.props.search.loading;
       data = this.props.search.search;
       refetch = this.props.search.refetch;
-      header = `Results for "${getQuery(this.props.location.search)}"`;
+      header = `Search results for "${getQuery(this.props.location.search)}"`;
     }
 
     if (this.props.getDetailed) {
       isLoading = this.props.getDetailed.loading;
       data = this.props.getDetailed.getDetailed;
       refetch = this.props.getDetailed.refetch;
-      header = `Focus results`;
+      // TODO: remove this hack
+      let focusId = getId(this.props.location.search);
+      let splitId = focusId.split(";");
+      if (splitId.length > 2) {
+        header = `Focusing on "${splitId[1]}"`;
+      } else {
+        header = `Focusing on the below capture`;
+      }
     }
 
     let isLargeWindow = getIsLargeWindow(this.props.windowWidth);

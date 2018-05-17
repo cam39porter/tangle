@@ -51,6 +51,7 @@ import { RouteComponentProps } from "react-router";
 // Components
 import List, { SESSION_CAPTURE_INPUT_ID } from "../components/list";
 import GraphVisualization from "../components/graph-visualization";
+import MenuBar from "../components/menu-bar";
 
 // Utils
 import {
@@ -181,6 +182,13 @@ class Main extends React.Component<Props, State> {
 
     return (
       <div className={`flex w-100 vh-100`}>
+        {/* Menu Bar */}
+        {isLargeWindow && (
+          <div className={`fixed top-2 right-2 z-max`}>
+            <MenuBar />
+          </div>
+        )}
+
         {/* List */}
         <div
           className={`shadow-1`}

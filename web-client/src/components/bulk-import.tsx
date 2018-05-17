@@ -15,11 +15,7 @@ class BulkImport extends React.Component<object, object> {
   }
 
   render() {
-    return (
-      <div>
-        <input type="file" onChange={this.handleUpload} />
-      </div>
-    );
+    return <input className={``} type="file" onChange={this.handleUpload} />;
   }
 }
 

@@ -191,7 +191,12 @@ class Main extends React.Component<Props, State> {
       let focusId = getId(this.props.location.search);
       let splitId = focusId.split(";");
       if (splitId.length >= 2) {
-        header = `Focusing on "${splitId[1]}"`;
+        let focus = splitId[1];
+        focus =
+          focus.charAt(focus.length - 1) === ")"
+            ? focus.slice(0, focus.length - 1)
+            : focus;
+        header = `Focusing on "${focus}"`;
       } else {
         header = `Focusing on the below capture`;
       }

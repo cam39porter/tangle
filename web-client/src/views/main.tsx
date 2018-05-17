@@ -190,7 +190,7 @@ class Main extends React.Component<Props, State> {
       // TODO: remove this hack
       let focusId = getId(this.props.location.search);
       let splitId = focusId.split(";");
-      if (splitId.length > 2) {
+      if (splitId.length >= 2) {
         header = `Focusing on "${splitId[1]}"`;
       } else {
         header = `Focusing on the below capture`;

@@ -12,7 +12,7 @@ import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import { onError } from "apollo-link-error";
 import { RetryLink } from "apollo-link-retry";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { InMemoryCache, defaultDataIdFromObject } from "apollo-cache-inmemory";
 import { ApolloProvider } from "react-apollo";
 
 // Router
@@ -70,7 +70,14 @@ const retryLink = new RetryLink({
 });
 
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    dataIdFromObject: (object: { __typename: string }) => {
+      switch (object.__typename) {
+        default:
+          return defaultDataIdFromObject(object);
+      }
+    }
+  }),
   link: retryLink.concat(logoutLink.concat(authLink.concat(httpLink)))
 });
 

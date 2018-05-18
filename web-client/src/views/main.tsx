@@ -36,9 +36,11 @@ import {
   ListFieldsFragment
 } from "../__generated__/types";
 import {
+  // Queries
   capturedToday,
   search,
   getDetailed,
+  // Mutations
   createSession,
   createSessionCapture,
   editSession,
@@ -46,6 +48,7 @@ import {
   archiveCapture,
   editCapture,
   createCommentCapture
+  // Fragments
 } from "../queries";
 import { graphql, compose, QueryProps, MutationFunc } from "react-apollo";
 

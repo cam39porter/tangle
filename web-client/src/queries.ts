@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 // Fragments
-const annotationFragment = gql`
+export const annotationFragment = gql`
   fragment AnnotationFields on Annotation {
     start
     end
@@ -9,14 +9,14 @@ const annotationFragment = gql`
   }
 `;
 
-const reasonFragment = gql`
+export const reasonFragment = gql`
   fragment ReasonFields on RecommendationReason {
     pivot
     reasonType
   }
 `;
 
-const nodeFragment = gql`
+export const nodeFragment = gql`
   fragment NodeFields on Node {
     id
     type
@@ -25,7 +25,7 @@ const nodeFragment = gql`
   }
 `;
 
-const edgeFragment = gql`
+export const edgeFragment = gql`
   fragment EdgeFields on Edge {
     source
     destination
@@ -34,7 +34,7 @@ const edgeFragment = gql`
   }
 `;
 
-const graphFragment = gql`
+export const graphFragment = gql`
   fragment GraphFields on Graph {
     nodes {
       ...NodeFields
@@ -47,7 +47,7 @@ const graphFragment = gql`
   ${edgeFragment}
 `;
 
-const listFragment = gql`
+export const listFragment = gql`
   fragment ListFields on ListItem {
     id
     text {
@@ -76,7 +76,7 @@ const listFragment = gql`
   ${reasonFragment}
 `;
 
-const searchResultsFragment = gql`
+export const searchResultsFragment = gql`
   fragment SearchResultsFields on SearchResults {
     list {
       ...ListFields

@@ -215,10 +215,10 @@ class Main extends React.Component<Props, State> {
 
         {/* List */}
         <div
-          className={`shadow-1`}
+          className={`shadow-1 z-max`}
           style={{
-            minWidth: isLargeWindow ? "35em" : "100%",
-            maxWidth: isLargeWindow ? "35em" : "100%"
+            minWidth: isLargeWindow ? "32.5em" : "100%",
+            maxWidth: isLargeWindow ? "32.5em" : "100%"
           }}
         >
           <List

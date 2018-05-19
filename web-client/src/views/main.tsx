@@ -33,7 +33,11 @@ import {
   createCommentCaptureMutation as createCommentCaptureResponse,
   createCommentCaptureMutationVariables,
   // Extra
-  ListFieldsFragment
+  SearchResultsFieldsFragment,
+  ListFieldsFragment,
+  NodeType,
+  GraphFieldsFragment,
+  NodeFieldsFragment
 } from "../__generated__/types";
 import {
   // Queries
@@ -47,8 +51,9 @@ import {
   createCapture,
   archiveCapture,
   editCapture,
-  createCommentCapture
+  createCommentCapture,
   // Fragments
+  searchResultsFragment
 } from "../queries";
 import { graphql, compose, QueryProps, MutationFunc } from "react-apollo";
 
@@ -66,9 +71,10 @@ import {
   getCurrentLocation,
   getQuery,
   getId,
-  getIsSessionId
+  getIsSessionId,
+  getRandomId
 } from "../utils";
-import { noop, trim, assign } from "lodash";
+import { noop, trim, assign, reverse } from "lodash";
 import windowSize from "react-window-size";
 
 // Types
@@ -332,6 +338,66 @@ class Main extends React.Component<Props, State> {
                 .createCapture({
                   variables: {
                     body: this.state.captureText
+                  },
+                  optimisticResponse: {
+                    createCapture: {
+                      __typename: "Graph",
+                      nodes: [
+                        {
+                          __typename: "Node",
+                          id: getRandomId(),
+                          type: NodeType.Capture,
+                          text: this.state.captureText,
+                          level: 0
+                        }
+                      ],
+                      edges: []
+                    } as GraphFieldsFragment
+                  },
+                  update: (
+                    dataProxy,
+                    resultData: { data: { createCapture: GraphFieldsFragment } }
+                  ) => {
+                    const optimisticResponse = resultData.data.createCapture;
+                    const cacheData: SearchResultsFieldsFragment | null = dataProxy.readFragment(
+                      {
+                        id: "SearchResults",
+                        fragment: searchResultsFragment,
+                        fragmentName: "SearchResultsFields"
+                      }
+                    );
+
+                    if (!(cacheData && cacheData.list && cacheData.graph)) {
+                      return;
+                    }
+
+                    let tempListItem: ListFieldsFragment = {
+                      __typename: "ListItem",
+                      id: optimisticResponse.nodes[0].id,
+                      text: {
+                        __typename: "AnnotatedText",
+                        text: optimisticResponse.nodes[0].text,
+                        annotations: []
+                      },
+                      reasons: [],
+                      relatedItems: []
+                    };
+
+                    let tempList = reverse(cacheData.list);
+                    tempList.push(tempListItem);
+
+                    let tempNode: NodeFieldsFragment =
+                      optimisticResponse.nodes[0];
+
+                    cacheData.list = reverse(tempList);
+                    cacheData.graph.nodes.push(tempNode);
+
+                    dataProxy.writeFragment({
+                      id: "SearchResults",
+                      fragment: searchResultsFragment,
+                      fragmentName: "SearchResultsFields",
+                      data: cacheData
+                    });
                   }
                 })
                 .then(() => {
@@ -542,8 +608,8 @@ const withCapturedToday = graphql<capturedTodayResponse, Props>(capturedToday, {
   options: {
     variables: {
       timezoneOffset: new Date().getTimezoneOffset() / 60 * -1
-    },
-    fetchPolicy: "network-only"
+    }
+    // fetchPolicy: "network-only"
   }
 });
 
@@ -555,8 +621,8 @@ const withSearch = graphql<searchResponse, Props>(search, {
   options: (props: Props) => ({
     variables: {
       rawQuery: getQuery(props.location.search)
-    },
-    fetchPolicy: "network-only"
+    }
+    // fetchPolicy: "network-only"
   })
 });
 
@@ -568,8 +634,8 @@ const withGetDetailed = graphql<getDetailedResponse, Props>(getDetailed, {
   options: (props: Props) => ({
     variables: {
       id: getId(props.location.search)
-    },
-    fetchPolicy: "network-only"
+    }
+    // fetchPolicy: "network-only"
   })
 });
 

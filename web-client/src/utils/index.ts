@@ -67,3 +67,8 @@ export const getIsSessionId = (queryString: string): string | undefined => {
   let id = getId(queryString);
   return id.indexOf("session") >= 0 ? id : undefined;
 };
+
+export const getRandomId = (): string => {
+  let id = Math.floor(Math.random() * Math.floor(1000000000)).toString();
+  return id;
+};

@@ -19,7 +19,7 @@ import { ApolloProvider } from "react-apollo";
 import { BrowserRouter as Router } from "react-router-dom";
 
 // Config / Utils
-import { firebaseAuth } from "./utils";
+import { FirebaseUtils } from "./utils";
 import config from "./cfg/env";
 
 const httpLink = createHttpLink({
@@ -39,20 +39,20 @@ const authLink = setContext((_, { headers }) => {
 const logoutLink = onError(({ networkError, graphQLErrors }) => {
   if (networkError) {
     if (networkError["statusCode"] === 401) {
-      const user = firebaseAuth().currentUser;
+      const user = FirebaseUtils.firebaseAuth().currentUser;
       if (user !== null) {
         user.getIdToken(true).then(idToken => {
           localStorage.setItem("idToken", idToken);
         });
       } else {
         localStorage.removeItem("idToken");
-        firebaseAuth().signOut();
+        FirebaseUtils.firebaseAuth().signOut();
       }
     }
   } else if (graphQLErrors) {
     console.error(graphQLErrors[0].message);
     alert(
-      "Sorry, you seemed to have found a dark corner of our application. Please email cole@hex.ventures and tell us about your problem so that we can fix it!"
+      "Sorry, you seemed to have found a dark corner of our application. Please email cole@usetangle.com and tell us about your problem so that we can fix it!"
     );
   }
 });

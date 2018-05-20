@@ -6,6 +6,7 @@
   "description": "A web client for empowering people to capture and connect thoughts to create big ideas",
   "private": true,
   "dependencies": {
+    "@google-cloud/error-reporting": "0.4.0",
     "apollo-cache-inmemory": "1.1.9",
     "apollo-client": "2.2.5",
     "apollo-link-context": "1.0.7",
@@ -32,10 +33,7 @@
     "react-tooltip": "3.5.1",
     "react-window-size": "1.0.1",
     "scroll-into-view": "1.9.3",
-    "tachyons": "^4.9.1",
-    "tinycolor": "^0.0.1",
-    "tinycolor2": "^1.4.1",
-    "tinygradient": "^0.3.1"
+    "tachyons": "^4.9.1"
   },
   "homepage": "./",
   "main": "server.js",

@@ -66,14 +66,7 @@ import GraphVisualization from "../components/graph-visualization";
 import MenuBar from "../components/menu-bar";
 
 // Utils
-import {
-  getIsLargeWindow,
-  getCurrentLocation,
-  getQuery,
-  getId,
-  getIsSessionId,
-  getRandomId
-} from "../utils";
+import { WindowUtils, NetworkUtils } from "../utils";
 import { noop, trim, assign, reverse } from "lodash";
 import windowSize from "react-window-size";
 
@@ -142,22 +135,22 @@ class Main extends React.Component<Props, State> {
 
     this.state = {
       isCapturing:
-        getCurrentLocation(nextProps.location.search) ===
+        NetworkUtils.getCurrentLocation(nextProps.location.search) ===
         Location.CapturedToday,
       captureText: "",
-      surfaceText: getQuery(nextProps.location.search),
+      surfaceText: NetworkUtils.getQuery(nextProps.location.search),
       captures: new Map<string, CaptureState>(),
-      sessionId: getIsSessionId(nextProps.location.search)
+      sessionId: NetworkUtils.getIsSessionId(nextProps.location.search)
     };
   }
 
   componentWillReceiveProps(nextProps: Props) {
     this.setState({
       isCapturing:
-        getCurrentLocation(nextProps.location.search) ===
+        NetworkUtils.getCurrentLocation(nextProps.location.search) ===
         Location.CapturedToday,
-      surfaceText: getQuery(nextProps.location.search),
-      sessionId: getIsSessionId(nextProps.location.search)
+      surfaceText: NetworkUtils.getQuery(nextProps.location.search),
+      sessionId: NetworkUtils.getIsSessionId(nextProps.location.search)
     });
   }
 
@@ -189,7 +182,9 @@ class Main extends React.Component<Props, State> {
       isLoading = this.props.search.loading;
       data = this.props.search.search;
       refetch = this.props.search.refetch;
-      header = `Search results for "${getQuery(this.props.location.search)}"`;
+      header = `Search results for "${NetworkUtils.getQuery(
+        this.props.location.search
+      )}"`;
     }
 
     if (this.props.getDetailed) {
@@ -197,7 +192,7 @@ class Main extends React.Component<Props, State> {
       data = this.props.getDetailed.getDetailed;
       refetch = this.props.getDetailed.refetch;
       // TODO: remove this hack
-      let focusId = getId(this.props.location.search);
+      let focusId = NetworkUtils.getId(this.props.location.search);
       let splitId = focusId.split(";");
       if (splitId.length >= 2) {
         let focus = splitId[1];
@@ -211,7 +206,7 @@ class Main extends React.Component<Props, State> {
       }
     }
 
-    let isLargeWindow = getIsLargeWindow(this.props.windowWidth);
+    let isLargeWindow = WindowUtils.getIsLargeWindow(this.props.windowWidth);
 
     return (
       <div className={`flex w-100 vh-100`}>
@@ -345,7 +340,7 @@ class Main extends React.Component<Props, State> {
                       nodes: [
                         {
                           __typename: "Node",
-                          id: getRandomId(),
+                          id: NetworkUtils.getRandomId(),
                           type: NodeType.Capture,
                           text: this.state.captureText,
                           level: 0
@@ -436,7 +431,9 @@ class Main extends React.Component<Props, State> {
             handleSurfaceClear={() => {
               this.props.history.push(`/`);
             }}
-            surfaceStartingText={getQuery(this.props.location.search)}
+            surfaceStartingText={NetworkUtils.getQuery(
+              this.props.location.search
+            )}
             headerPaddingText={
               this.state.isCapturing
                 ? this.state.captureText
@@ -553,7 +550,8 @@ class Main extends React.Component<Props, State> {
               return captureState.isEditing;
             }}
             handleArchive={(id: string) => () => {
-              let shouldRedirect = getId(this.props.location.search) === id;
+              let shouldRedirect =
+                NetworkUtils.getId(this.props.location.search) === id;
               this.props
                 .archiveCapture({
                   variables: { id }
@@ -604,12 +602,13 @@ const withCapturedToday = graphql<capturedTodayResponse, Props>(capturedToday, {
   name: "capturedToday",
   alias: "withCapturedToday",
   skip: (props: Props) =>
-    getCurrentLocation(props.location.search) !== Location.CapturedToday,
+    NetworkUtils.getCurrentLocation(props.location.search) !==
+    Location.CapturedToday,
   options: {
     variables: {
       timezoneOffset: new Date().getTimezoneOffset() / 60 * -1
-    }
-    // fetchPolicy: "network-only"
+    },
+    fetchPolicy: "network-only"
   }
 });
 
@@ -617,12 +616,12 @@ const withSearch = graphql<searchResponse, Props>(search, {
   name: "search",
   alias: "withSearch",
   skip: (props: Props) =>
-    getCurrentLocation(props.location.search) !== Location.Search,
+    NetworkUtils.getCurrentLocation(props.location.search) !== Location.Search,
   options: (props: Props) => ({
     variables: {
-      rawQuery: getQuery(props.location.search)
-    }
-    // fetchPolicy: "network-only"
+      rawQuery: NetworkUtils.getQuery(props.location.search)
+    },
+    fetchPolicy: "network-only"
   })
 });
 
@@ -630,12 +629,12 @@ const withGetDetailed = graphql<getDetailedResponse, Props>(getDetailed, {
   name: "getDetailed",
   alias: "withGetDetailed",
   skip: (props: Props) =>
-    getCurrentLocation(props.location.search) !== Location.Detail,
+    NetworkUtils.getCurrentLocation(props.location.search) !== Location.Detail,
   options: (props: Props) => ({
     variables: {
-      id: getId(props.location.search)
-    }
-    // fetchPolicy: "network-only"
+      id: NetworkUtils.getId(props.location.search)
+    },
+    fetchPolicy: "network-only"
   })
 });
 

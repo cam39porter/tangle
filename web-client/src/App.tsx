@@ -15,7 +15,7 @@ import Login from "./views/login";
 import Main from "./views/main";
 
 // Config / Utils
-import { firebaseAuth } from "./utils";
+import { FirebaseUtils } from "./utils";
 
 interface Props extends RouteProps {}
 
@@ -35,24 +35,26 @@ class App extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    firebaseAuth()
-      .setPersistence(firebaseAuth.Auth.Persistence.LOCAL)
+    FirebaseUtils.firebaseAuth()
+      .setPersistence(FirebaseUtils.firebaseAuth.Auth.Persistence.LOCAL)
       .then(() => {
-        this.removeFirebaseListener = firebaseAuth().onIdTokenChanged(user => {
-          if (user) {
-            user.getIdToken(true).then(idToken => {
-              localStorage.setItem("idToken", idToken);
-            });
+        this.removeFirebaseListener = FirebaseUtils.firebaseAuth().onIdTokenChanged(
+          user => {
+            if (user) {
+              user.getIdToken(true).then(idToken => {
+                localStorage.setItem("idToken", idToken);
+              });
 
-            this.setState({
-              isAuthenticated: true
-            });
-          } else {
-            this.setState({
-              isAuthenticated: false
-            });
+              this.setState({
+                isAuthenticated: true
+              });
+            } else {
+              this.setState({
+                isAuthenticated: false
+              });
+            }
           }
-        });
+        );
       })
       .catch(err => {
         alert(err);

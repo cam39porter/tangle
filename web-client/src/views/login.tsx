@@ -8,7 +8,9 @@ import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { RouteComponentProps } from "react-router";
 
 // Config / Utils
-import { firebaseAuth } from "../utils";
+import { FirebaseUtils } from "../utils";
+
+const firebaseAuth = FirebaseUtils.firebaseAuth;
 
 interface Props extends RouteComponentProps<{}> {}
 

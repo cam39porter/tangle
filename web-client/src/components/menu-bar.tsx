@@ -8,10 +8,9 @@ import BulkImport from "./bulk-import";
 import ReactTooltip from "react-tooltip";
 
 // Utils
-import { firebaseAuth } from "../utils";
+import { FirebaseUtils } from "../utils";
 
 // Types
-
 interface Props {}
 
 interface State {
@@ -81,7 +80,7 @@ class MenuBar extends React.Component<Props, State> {
                     className={`dtc pa2 br4 gray f5 pointer`}
                     onClick={() => {
                       localStorage.removeItem("idToken");
-                      firebaseAuth().signOut();
+                      FirebaseUtils.firebaseAuth().signOut();
                     }}
                   >
                     Sign out

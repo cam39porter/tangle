@@ -61,13 +61,19 @@ interface Props {
   handleDismissCaptureRelation: (fromId: string, toId: string) => void;
 }
 
-interface State {}
+interface State {
+  isShowingDismissRelationMap: Map<string, boolean>;
+}
 
 class List extends React.Component<Props, State> {
   _scrollContainer: ScrollContainer | null = null;
 
   constructor(props: Props) {
     super(props);
+
+    this.state = {
+      isShowingDismissRelationMap: new Map<string, boolean>()
+    };
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -232,22 +238,55 @@ class List extends React.Component<Props, State> {
                           return null;
                         }
                         return (
-                          <div className={`flex`} key={relatedItem.id}>
+                          <div
+                            className={`flex`}
+                            key={relatedItem.id}
+                            onMouseEnter={() => {
+                              let nextIsShowingDismissRelationMap = this.state
+                                .isShowingDismissRelationMap;
+                              nextIsShowingDismissRelationMap.set(
+                                relatedItem.id,
+                                true
+                              );
+                              this.setState({
+                                isShowingDismissRelationMap: nextIsShowingDismissRelationMap
+                              });
+                            }}
+                            onMouseLeave={() => {
+                              let nextIsShowingDismissRelationMap = this.state
+                                .isShowingDismissRelationMap;
+                              nextIsShowingDismissRelationMap.set(
+                                relatedItem.id,
+                                false
+                              );
+                              this.setState({
+                                isShowingDismissRelationMap: nextIsShowingDismissRelationMap
+                              });
+                            }}
+                          >
                             <div className={`flex-column w2`}>
                               <div className={`dt w-100 h-100`}>
-                                <div
-                                  className={`dtc v-mid`}
-                                  data-tip={"mark this capture as unrelated"}
-                                >
-                                  <ButtonExit
-                                    onClick={() => {
-                                      this.props.handleDismissCaptureRelation(
-                                        listItem.id,
-                                        relatedItem.id
-                                      );
-                                    }}
-                                  />
-                                </div>
+                                {this.state.isShowingDismissRelationMap.get(
+                                  relatedItem.id
+                                ) && (
+                                  <div className={`dtc v-mid`}>
+                                    <div
+                                      data-tip={
+                                        "mark this capture as unrelated"
+                                      }
+                                    >
+                                      <ButtonExit
+                                        onClick={() => {
+                                          this.props.handleDismissCaptureRelation(
+                                            listItem.id,
+                                            relatedItem.id
+                                          );
+                                        }}
+                                      />
+                                    </div>
+                                    <ReactTooltip />
+                                  </div>
+                                )}
                               </div>
                             </div>
                             <div
@@ -306,7 +345,6 @@ class List extends React.Component<Props, State> {
             />
           </div>
         ) : null} */}
-        <ReactTooltip />
       </div>
     );
   }

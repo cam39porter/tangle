@@ -36,7 +36,9 @@ interface Props {
   clearOnEnter?: boolean;
 }
 
-interface State {}
+interface State {
+  isShowingButtons: boolean;
+}
 
 function annotate(
   text: string,
@@ -70,6 +72,10 @@ class ListCapture extends React.Component<Props, State> {
     super(nextProps);
 
     this.text = nextProps.text;
+
+    this.state = {
+      isShowingButtons: false
+    };
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -78,7 +84,18 @@ class ListCapture extends React.Component<Props, State> {
 
   render() {
     return (
-      <div>
+      <div
+        onMouseEnter={() => {
+          this.setState({
+            isShowingButtons: true
+          });
+        }}
+        onMouseLeave={() => {
+          this.setState({
+            isShowingButtons: false
+          });
+        }}
+      >
         <div
           className={`flex flex-wrap pa3 pb0 w-100 br4 ba b--light-gray bg-white`}
         >
@@ -108,28 +125,33 @@ class ListCapture extends React.Component<Props, State> {
               />
             )}
           </div>
-          <div className={`flex flex-column pa2`}>
-            <div className={`flex-grow w-100 `}>
-              <div data-tip={`focus on this capture`}>
-                <ButtonFocus onClick={this.props.handleFocus} />
-              </div>
-            </div>
-            <div className={`flex-grow w-100`}>
-              <div className={`dt w-100 h-100`}>
-                <div className={`dtc v-btm`}>
-                  <div
-                    data-tip={`${
-                      this.props.isMore ? "hide" : "show"
-                    } all actions and comments`}
-                  >
-                    <ButtonMore
-                      isMore={!this.props.isMore}
-                      onClick={this.props.handleMore}
-                    />
+          <div className={`w2`}>
+            {this.state.isShowingButtons && (
+              <div className={`flex-column`}>
+                <div className={`flex-grow w-100`}>
+                  <div data-tip={`focus on this capture`}>
+                    <ButtonFocus onClick={this.props.handleFocus} />
                   </div>
                 </div>
+                <div className={`flex-grow w-100`}>
+                  <div className={`dt w-100 h-100`}>
+                    <div className={`dtc v-btm`}>
+                      <div
+                        data-tip={`${
+                          this.props.isMore ? "hide" : "show"
+                        } all actions and comments`}
+                      >
+                        <ButtonMore
+                          isMore={!this.props.isMore}
+                          onClick={this.props.handleMore}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <ReactTooltip />
               </div>
-            </div>
+            )}
           </div>
           {this.props.isMore && (
             <div className={`w-100`}>

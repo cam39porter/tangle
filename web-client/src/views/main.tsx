@@ -32,6 +32,9 @@ import {
   // Comment on Capture
   createCommentCaptureMutation as createCommentCaptureResponse,
   createCommentCaptureMutationVariables,
+  // Dismiss Capture Relation
+  dismissCaptureRelationMutation as dismissCaptureRelationResponse,
+  dismissCaptureRelationMutationVariables,
   // Extra
   SearchResultsFieldsFragment,
   ListFieldsFragment,
@@ -52,6 +55,7 @@ import {
   archiveCapture,
   editCapture,
   createCommentCapture,
+  dismissCaptureRelation,
   // Fragments
   searchResultsFragment
 } from "../queries";
@@ -101,6 +105,10 @@ interface Props extends RouteProps {
   createCommentCapture: MutationFunc<
     createCommentCaptureResponse,
     createCommentCaptureMutationVariables
+  >;
+  dismissCaptureRelation: MutationFunc<
+    dismissCaptureRelationResponse,
+    dismissCaptureRelationMutationVariables
   >;
   // Window Size
   windowWidth: number;
@@ -565,6 +573,19 @@ class Main extends React.Component<Props, State> {
                 })
                 .catch(err => console.error(err));
             }}
+            handleDismissCaptureRelation={(fromId, toId) => {
+              this.props
+                .dismissCaptureRelation({
+                  variables: {
+                    fromId,
+                    toId
+                  }
+                })
+                .then(() => {
+                  refetch();
+                })
+                .catch(err => console.error(err));
+            }}
           />
         </div>
 
@@ -682,6 +703,14 @@ const withCreateCommentCapture = graphql<createCommentCaptureResponse, Props>(
   }
 );
 
+const withDismissCaptureRelation = graphql<
+  dismissCaptureRelationResponse,
+  Props
+>(dismissCaptureRelation, {
+  name: "dismissCaptureRelation",
+  alias: "withDismissCaptureRelation"
+});
+
 const MainWithData = compose(
   withCapturedToday,
   withSearch,
@@ -692,7 +721,8 @@ const MainWithData = compose(
   withCreateCapture,
   withEditCapture,
   withArchiveCapture,
-  withCreateCommentCapture
+  withCreateCommentCapture,
+  withDismissCaptureRelation
 )(Main);
 
 //  Window

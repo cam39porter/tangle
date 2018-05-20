@@ -142,6 +142,9 @@ stories.add("list", () => (
     handleEdit={(id: string) => action(`handleEdit ${id}`)}
     isEditing={(id: string) => boolean(`isEditing ${id}`, false)}
     handleArchive={(id: string) => action(`handleArchive ${id}`)}
+    handleDismissCaptureRelation={(fromId, toId) =>
+      action(`handleDismissCaptureRelation`)
+    }
   />
 ));
 
@@ -185,5 +188,8 @@ stories.add("session", () => (
     handleEdit={(id: string) => action(`handleEdit ${id}`)}
     isEditing={(id: string) => boolean(`isEditing ${id}`, false)}
     handleArchive={(id: string) => action(`handleArchive ${id}`)}
+    handleDismissCaptureRelation={(fromId, toId) =>
+      action(`handleDismissCaptureRelation`)
+    }
   />
 ));

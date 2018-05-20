@@ -247,3 +247,9 @@ export const createCommentCapture = gql`
   }
   ${graphFragment}
 `;
+
+export const dismissCaptureRelation = gql`
+  mutation dismissCaptureRelation($fromId: String!, $toId: String!) {
+    dismissCaptureRelation(fromId: $fromId, toId: $toId)
+  }
+`;

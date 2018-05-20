@@ -8,6 +8,8 @@ import InputCapture from "./input-capture";
 import ListSessionHeader from "./list-session-header";
 import ScrollContainer from "./scroll-container";
 import ScrollContainerElement from "./scroll-container-element";
+import ButtonExit from "./button-exit";
+import ReactTooltip from "react-tooltip";
 
 // Utils
 export const SESSION_CAPTURE_INPUT_ID = "session-capture-input";
@@ -56,6 +58,7 @@ interface Props {
   handleEdit: (id: string) => ((text: string) => void);
   isEditing: (id: string) => boolean;
   handleArchive: (id: string) => (() => void);
+  handleDismissCaptureRelation: (fromId: string, toId: string) => void;
 }
 
 interface State {}
@@ -223,41 +226,61 @@ class List extends React.Component<Props, State> {
                 {this.props.isShowingRelated(listItem.id) &&
                   listItem.relatedItems &&
                   listItem.relatedItems.length > 0 && (
-                    <div className={`pl4 pb4`}>
+                    <div className={`pb4`}>
                       {listItem.relatedItems.map(relatedItem => {
                         if (!relatedItem) {
                           return null;
                         }
                         return (
-                          <div
-                            key={relatedItem.id}
-                            className={`${this.props.scrollToId ===
-                              relatedItem.id && "ba br4 b--accent"}`}
-                          >
-                            <ScrollContainerElement name={relatedItem.id}>
-                              <ListCapture
-                                text={relatedItem.text.text}
-                                handleExpand={this.props.handleHeaderExpand}
-                                handleMore={this.props.handleMore(
-                                  relatedItem.id
-                                )}
-                                isMore={this.props.isMore(relatedItem.id)}
-                                handleComment={this.props.handleComment(
-                                  relatedItem.id
-                                )}
-                                handleFocus={this.props.handleFocus(
-                                  relatedItem.id
-                                )}
-                                handleEdit={this.props.handleEdit(
-                                  relatedItem.id
-                                )}
-                                isEditing={this.props.isEditing(relatedItem.id)}
-                                handleArchive={this.props.handleArchive(
-                                  relatedItem.id
-                                )}
-                                annotations={relatedItem.text.annotations}
-                              />
-                            </ScrollContainerElement>
+                          <div className={`flex`} key={relatedItem.id}>
+                            <div className={`flex-column w2`}>
+                              <div className={`dt w-100 h-100`}>
+                                <div
+                                  className={`dtc v-mid`}
+                                  data-tip={"mark this capture as unrelated"}
+                                >
+                                  <ButtonExit
+                                    onClick={() => {
+                                      this.props.handleDismissCaptureRelation(
+                                        listItem.id,
+                                        relatedItem.id
+                                      );
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className={`flex-grow ${this.props.scrollToId ===
+                                relatedItem.id && "ba br4 b--accent"}`}
+                            >
+                              <ScrollContainerElement name={relatedItem.id}>
+                                <ListCapture
+                                  text={relatedItem.text.text}
+                                  handleExpand={this.props.handleHeaderExpand}
+                                  handleMore={this.props.handleMore(
+                                    relatedItem.id
+                                  )}
+                                  isMore={this.props.isMore(relatedItem.id)}
+                                  handleComment={this.props.handleComment(
+                                    relatedItem.id
+                                  )}
+                                  handleFocus={this.props.handleFocus(
+                                    relatedItem.id
+                                  )}
+                                  handleEdit={this.props.handleEdit(
+                                    relatedItem.id
+                                  )}
+                                  isEditing={this.props.isEditing(
+                                    relatedItem.id
+                                  )}
+                                  handleArchive={this.props.handleArchive(
+                                    relatedItem.id
+                                  )}
+                                  annotations={relatedItem.text.annotations}
+                                />
+                              </ScrollContainerElement>
+                            </div>
                           </div>
                         );
                       })}
@@ -283,6 +306,7 @@ class List extends React.Component<Props, State> {
             />
           </div>
         ) : null} */}
+        <ReactTooltip />
       </div>
     );
   }

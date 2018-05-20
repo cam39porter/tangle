@@ -6,7 +6,6 @@
   "description": "A web client for empowering people to capture and connect thoughts to create big ideas",
   "private": true,
   "dependencies": {
-    "@google-cloud/error-reporting": "0.4.0",
     "apollo-cache-inmemory": "1.1.9",
     "apollo-client": "2.2.5",
     "apollo-link-context": "1.0.7",

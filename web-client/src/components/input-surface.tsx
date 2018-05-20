@@ -30,10 +30,16 @@ const InputSurface = (props: Props) => {
           clearOnEnter={false}
         />
       </div>
-      <div className={`pa1`} data-tip={"exit your search"}>
-        {props.handleClear && <ButtonExit onClick={props.handleClear} />}
+      <div className={`pa1`}>
+        {props.handleClear && (
+          <div>
+            <div data-tip={"exit your search"}>
+              <ButtonExit onClick={props.handleClear} />
+            </div>
+            <ReactTooltip />
+          </div>
+        )}
       </div>
-      <ReactTooltip />
     </div>
   );
 };

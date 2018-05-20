@@ -17,6 +17,7 @@ interface Props {
   startingText?: string;
   placeholder?: string;
   allowToolbar?: boolean;
+  onBlur?: () => void;
 }
 
 interface State {
@@ -138,6 +139,7 @@ class InputText extends React.Component<Props, State> {
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}
         onChange={this.handleChange}
+        onBlur={this.props.onBlur}
       />
     );
   }

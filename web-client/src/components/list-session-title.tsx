@@ -24,6 +24,7 @@ const ListSessionTitle = (props: Props) => {
           allowToolbar={false}
           handleChange={props.handleChange}
           handleEnterKey={props.handleEdit}
+          onBlur={props.handleEdit}
         />
       ) : (
         <div className={`f4`} onDoubleClick={props.handleEdit}>

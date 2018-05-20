@@ -34,6 +34,7 @@ interface Props {
   isShowingRelated?: boolean;
   annotations?: Array<AnnotationFieldsFragment>;
   clearOnEnter?: boolean;
+  isGraphFocus: boolean;
 }
 
 interface State {
@@ -97,7 +98,9 @@ class ListCapture extends React.Component<Props, State> {
         }}
       >
         <div
-          className={`flex flex-wrap pa3 pb0 w-100 br4 ba b--light-gray bg-white`}
+          className={`flex flex-wrap pa3 pb0 w-100 br4 ba ${
+            this.props.isGraphFocus ? "b--accent" : "b--light-gray"
+          } bg-white`}
         >
           <div className={`flex-grow pa2`}>
             {this.props.isEditing ? (

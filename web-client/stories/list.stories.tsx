@@ -99,6 +99,7 @@ stories.add("capture", () => (
     handleEdit={action("handleEdit")}
     isEditing={boolean("isEditing", false)}
     handleArchive={action("handleArchive")}
+    isGraphFocus={boolean("isGraphFocus", false)}
   />
 ));
 

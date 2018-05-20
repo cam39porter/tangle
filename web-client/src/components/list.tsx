@@ -62,7 +62,7 @@ interface Props {
 }
 
 interface State {
-  isShowingDismissRelationMap: Map<string, boolean>;
+  isHoveringOverMap: Map<string, boolean>;
 }
 
 class List extends React.Component<Props, State> {
@@ -72,7 +72,7 @@ class List extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      isShowingDismissRelationMap: new Map<string, boolean>()
+      isHoveringOverMap: new Map<string, boolean>()
     };
   }
 
@@ -198,37 +198,31 @@ class List extends React.Component<Props, State> {
 
             {this.props.listData.map(listItem => (
               <div className={``} key={listItem.id}>
-                <div
-                  className={`${this.props.scrollToId === listItem.id &&
-                    "ba br4 b--accent"}`}
-                >
-                  <ScrollContainerElement name={listItem.id}>
-                    <ListCapture
-                      text={listItem.text.text}
-                      handleExpand={this.props.handleExpand(listItem.id)}
-                      handleMore={this.props.handleMore(listItem.id)}
-                      isMore={this.props.isMore(listItem.id)}
-                      handleComment={this.props.handleComment(listItem.id)}
-                      handleFocus={this.props.handleFocus(listItem.id)}
-                      handleEdit={this.props.handleEdit(listItem.id)}
-                      isEditing={this.props.isEditing(listItem.id)}
-                      handleArchive={this.props.handleArchive(listItem.id)}
-                      handleIsShowingRelated={
-                        listItem.relatedItems &&
-                        listItem.relatedItems.length > 0
-                          ? this.props.handleIsShowingRelated(listItem.id)
-                          : undefined
-                      }
-                      isShowingRelated={
-                        listItem.relatedItems &&
-                        listItem.relatedItems.length > 0
-                          ? this.props.isShowingRelated(listItem.id)
-                          : undefined
-                      }
-                      annotations={listItem.text.annotations}
-                    />
-                  </ScrollContainerElement>
-                </div>
+                <ScrollContainerElement name={listItem.id}>
+                  <ListCapture
+                    text={listItem.text.text}
+                    handleExpand={this.props.handleExpand(listItem.id)}
+                    handleMore={this.props.handleMore(listItem.id)}
+                    isMore={this.props.isMore(listItem.id)}
+                    handleComment={this.props.handleComment(listItem.id)}
+                    handleFocus={this.props.handleFocus(listItem.id)}
+                    handleEdit={this.props.handleEdit(listItem.id)}
+                    isEditing={this.props.isEditing(listItem.id)}
+                    handleArchive={this.props.handleArchive(listItem.id)}
+                    handleIsShowingRelated={
+                      listItem.relatedItems && listItem.relatedItems.length > 0
+                        ? this.props.handleIsShowingRelated(listItem.id)
+                        : undefined
+                    }
+                    isShowingRelated={
+                      listItem.relatedItems && listItem.relatedItems.length > 0
+                        ? this.props.isShowingRelated(listItem.id)
+                        : undefined
+                    }
+                    annotations={listItem.text.annotations}
+                    isGraphFocus={this.props.scrollToId === listItem.id}
+                  />
+                </ScrollContainerElement>
                 {this.props.isShowingRelated(listItem.id) &&
                   listItem.relatedItems &&
                   listItem.relatedItems.length > 0 && (
@@ -242,31 +236,28 @@ class List extends React.Component<Props, State> {
                             className={`flex`}
                             key={relatedItem.id}
                             onMouseEnter={() => {
-                              let nextIsShowingDismissRelationMap = this.state
-                                .isShowingDismissRelationMap;
-                              nextIsShowingDismissRelationMap.set(
-                                relatedItem.id,
-                                true
-                              );
+                              let nextIsHoverOverMap = this.state
+                                .isHoveringOverMap;
+                              nextIsHoverOverMap.set(relatedItem.id, true);
                               this.setState({
-                                isShowingDismissRelationMap: nextIsShowingDismissRelationMap
+                                isHoveringOverMap: nextIsHoverOverMap
                               });
                             }}
                             onMouseLeave={() => {
                               let nextIsShowingDismissRelationMap = this.state
-                                .isShowingDismissRelationMap;
+                                .isHoveringOverMap;
                               nextIsShowingDismissRelationMap.set(
                                 relatedItem.id,
                                 false
                               );
                               this.setState({
-                                isShowingDismissRelationMap: nextIsShowingDismissRelationMap
+                                isHoveringOverMap: nextIsShowingDismissRelationMap
                               });
                             }}
                           >
                             <div className={`flex-column w2`}>
                               <div className={`dt w-100 h-100`}>
-                                {this.state.isShowingDismissRelationMap.get(
+                                {this.state.isHoveringOverMap.get(
                                   relatedItem.id
                                 ) && (
                                   <div className={`dtc v-mid`}>
@@ -289,10 +280,7 @@ class List extends React.Component<Props, State> {
                                 )}
                               </div>
                             </div>
-                            <div
-                              className={`flex-grow ${this.props.scrollToId ===
-                                relatedItem.id && "ba br4 b--accent"}`}
-                            >
+                            <div className={`flex-grow`}>
                               <ScrollContainerElement name={relatedItem.id}>
                                 <ListCapture
                                   text={relatedItem.text.text}
@@ -317,6 +305,9 @@ class List extends React.Component<Props, State> {
                                     relatedItem.id
                                   )}
                                   annotations={relatedItem.text.annotations}
+                                  isGraphFocus={
+                                    this.props.scrollToId === relatedItem.id
+                                  }
                                 />
                               </ScrollContainerElement>
                             </div>

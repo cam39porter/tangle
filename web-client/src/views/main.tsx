@@ -312,9 +312,16 @@ class Main extends React.Component<Props, State> {
                 })
                 .then(() => {
                   refetch();
-                  this.setState({
-                    scrollToId: SESSION_CAPTURE_INPUT_ID
-                  });
+                  this.setState(
+                    {
+                      scrollToId: SESSION_CAPTURE_INPUT_ID
+                    },
+                    () => {
+                      this.setState({
+                        scrollToId: undefined
+                      });
+                    }
+                  );
                 })
                 .catch(err => console.error(err));
             }}

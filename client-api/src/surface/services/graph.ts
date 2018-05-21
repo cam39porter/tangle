@@ -10,6 +10,7 @@ import { getUrnType } from "../../db/helpers/urn-helpers";
 import { NotImplementedError } from "../../util/exceptions/not-implemented-error";
 import { SearchResults } from "../models/search-results";
 import { expandCaptures } from "./expand";
+import { SortListBy } from "../../types";
 
 export function getNode(urn: string): Promise<SearchResults> {
   if (getUrnType(urn) === "capture") {
@@ -39,7 +40,7 @@ function getAllMostRecent(): Promise<SearchResults> {
   const userId = getAuthenticatedUser().id;
   return getMostRecent(userId, LIMIT).then(captures => {
     const captureIds = captures.map(c => c.id);
-    return expandCaptures(userId, captureIds);
+    return expandCaptures(userId, captureIds, null, SortListBy.DESC);
   });
 }
 
@@ -48,7 +49,7 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
   const since = getCreatedSince(timezoneOffset);
   return getAllSince(userId, since).then(captures => {
     const captureIds = captures.map(c => c.id);
-    return expandCaptures(userId, captureIds);
+    return expandCaptures(userId, captureIds, null, SortListBy.DESC);
   });
 }
 

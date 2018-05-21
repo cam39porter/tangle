@@ -5,24 +5,31 @@ import { AnnotatedText } from "../models/annotated-text";
 import { RecommendationReason } from "../models/recommendation-reason";
 import { Annotation } from "../models/annotation";
 import { Entity } from "../../db/models/entity";
+import { SortListBy } from "../../types";
 
 export function buildList(
-  paths: Array<[Capture, Relationship, Node, Relationship, Capture]>
+  paths: Array<[Capture, Relationship, Node, Relationship, Capture]>,
+  sortBy: SortListBy = SortListBy.NONE
 ): ListItem[] {
   const relatedCaptureMap = new Map();
   const rootCaptureMap = new Map();
-  paths
-    .sort((path1, path2) => path2[0].created - path1[0].created)
-    .forEach(path => {
-      rootCaptureMap.set(path[0].id, path[0]);
-      if (path[2] && path[2].labels[0] === "Capture") {
-        const capture = path[2].properties as Capture;
-        relatedCaptureMap.set(capture.id, capture);
-      }
-      if (path[4]) {
-        relatedCaptureMap.set(path[4].id, path[4]);
-      }
+  if (sortBy !== SortListBy.NONE) {
+    paths = paths.sort((p1, p2) => {
+      let a = sortBy === SortListBy.DESC ? p1 : p2;
+      let b = sortBy === SortListBy.DESC ? p2 : p1;
+      return (a[0].created = b[0].created);
     });
+  }
+  paths.forEach(path => {
+    rootCaptureMap.set(path[0].id, path[0]);
+    if (path[2] && path[2].labels[0] === "Capture") {
+      const capture = path[2].properties as Capture;
+      relatedCaptureMap.set(capture.id, capture);
+    }
+    if (path[4]) {
+      relatedCaptureMap.set(path[4].id, path[4]);
+    }
+  });
   const tree = buildTree(paths);
   const listItems = [];
   tree.forEach((value, key) => {

@@ -7,15 +7,17 @@ import { ListItem } from "../models/list-item";
 import { buildList } from "../formatters/list";
 import { SearchResults } from "../models/search-results";
 import { PageInfo } from "../models/page-info";
+import { SortListBy } from "../../types";
 
 export function expandCaptures(
   userUrn: string,
   captureIds: string[],
-  startUrn = null
+  startUrn = null,
+  sortBy: SortListBy = SortListBy.NONE
 ): Promise<SearchResults> {
   const expansionPromises = Promise.all([
     expandGraph(userUrn, captureIds, startUrn),
-    expandList(userUrn, captureIds)
+    expandList(userUrn, captureIds, sortBy)
   ]);
   return expansionPromises.then(expansions => {
     const graph = expansions[0];
@@ -65,7 +67,8 @@ function expandGraph(
 
 function expandList(
   userUrn: string,
-  captureIds: string[]
+  captureIds: string[],
+  sortBy: SortListBy = SortListBy.NONE
 ): Promise<ListItem[]> {
   const params = { userUrn, captureIds };
   const query = `
@@ -103,7 +106,7 @@ function expandList(
       ];
       return ret;
     });
-    return buildList(paths);
+    return buildList(paths, sortBy);
   });
 }
 

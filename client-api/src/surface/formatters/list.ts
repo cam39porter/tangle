@@ -24,7 +24,7 @@ export function buildList(
     }
   });
   const tree = buildTree(paths);
-  let listItems: Array<ListItem> = [];
+  let listItems: ListItem[] = [];
   tree.forEach((value, key) => {
     const relatedCaptures = formatRelatedListItems(
       value,
@@ -42,10 +42,10 @@ export function buildList(
   });
   if (sortBy !== SortListBy.NONE) {
     listItems = listItems.sort((l1, l2) => {
-      let node1 = rootCaptureMap.get(l1.id);
-      let node2 = rootCaptureMap.get(l2.id);
-      let a = sortBy === SortListBy.DESC ? node1 : node2;
-      let b = sortBy === SortListBy.DESC ? node2 : node1;
+      const node1 = rootCaptureMap.get(l1.id);
+      const node2 = rootCaptureMap.get(l2.id);
+      const a = sortBy === SortListBy.DESC ? node1 : node2;
+      const b = sortBy === SortListBy.DESC ? node2 : node1;
       return b.created - a.created;
     });
   }

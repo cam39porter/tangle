@@ -55,8 +55,7 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
 
 function getOthers(urn: string): Promise<SearchResults> {
   const userUrn = getAuthenticatedUser().id;
-  let urnType = getUrnType(urn);
-  switch (urnType) {
+  switch (getUrnType(urn)) {
     case "session":
       return getCapturesByRelatedNode(userUrn, urn).then(captures =>
         expandCaptures(userUrn, captures.map(c => c.id), null, SortListBy.ASC)

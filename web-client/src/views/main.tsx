@@ -679,6 +679,46 @@ class Main extends React.Component<Props, State> {
                   variables: {
                     fromId,
                     toId
+                  },
+                  optimisticResponse: {
+                    dismissCaptureRelation: true
+                  },
+                  update: dataProxy => {
+                    const cacheData: SearchResultsFieldsFragment | null = dataProxy.readFragment(
+                      {
+                        id: "SearchResults",
+                        fragment: searchResultsFragment,
+                        fragmentName: "SearchResultsFields"
+                      }
+                    );
+                    if (!(cacheData && cacheData.list && cacheData.graph)) {
+                      return;
+                    }
+
+                    cacheData.list.forEach((listItem, index) => {
+                      if (listItem && listItem.id === fromId) {
+                        if (listItem.relatedItems) {
+                          remove(listItem.relatedItems, relatedItem => {
+                            if (relatedItem) {
+                              return relatedItem.id === toId;
+                            }
+                            return false;
+                          });
+                        }
+                      }
+                    });
+
+                    remove(cacheData.graph.nodes, node => node.id === toId);
+                    remove(
+                      cacheData.graph.edges,
+                      edge => edge.source === toId || edge.destination === toId
+                    );
+                    dataProxy.writeFragment({
+                      id: "SearchResults",
+                      fragment: searchResultsFragment,
+                      fragmentName: "SearchResultsFields",
+                      data: cacheData
+                    });
                   }
                 })
                 .then(() => {

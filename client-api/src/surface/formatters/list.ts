@@ -11,16 +11,18 @@ export function buildList(
 ): ListItem[] {
   const relatedCaptureMap = new Map();
   const rootCaptureMap = new Map();
-  paths.forEach(path => {
-    rootCaptureMap.set(path[0].id, path[0]);
-    if (path[2] && path[2].labels[0] === "Capture") {
-      const capture = path[2].properties as Capture;
-      relatedCaptureMap.set(capture.id, capture);
-    }
-    if (path[4]) {
-      relatedCaptureMap.set(path[4].id, path[4]);
-    }
-  });
+  paths
+    .sort((path1, path2) => path2[0].created - path1[0].created)
+    .forEach(path => {
+      rootCaptureMap.set(path[0].id, path[0]);
+      if (path[2] && path[2].labels[0] === "Capture") {
+        const capture = path[2].properties as Capture;
+        relatedCaptureMap.set(capture.id, capture);
+      }
+      if (path[4]) {
+        relatedCaptureMap.set(path[4].id, path[4]);
+      }
+    });
   const tree = buildTree(paths);
   const listItems = [];
   tree.forEach((value, key) => {

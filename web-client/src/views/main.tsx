@@ -173,6 +173,51 @@ class Main extends React.Component<Props, State> {
     return captureState;
   };
 
+  optimisticUpdateOnCapture = (
+    dataProxy,
+    resultData: { data: { createCapture: GraphFieldsFragment } }
+  ) => {
+    const optimisticResponse = resultData.data.createCapture;
+
+    // only update for optimistic response
+    if (optimisticResponse.nodes[0].id.split(":")[0] !== "optimistic") {
+      return;
+    }
+
+    const cacheData: SearchResultsFieldsFragment | null = dataProxy.readFragment(
+      {
+        id: "SearchResults",
+        fragment: searchResultsFragment,
+        fragmentName: "SearchResultsFields"
+      }
+    );
+    if (!(cacheData && cacheData.list && cacheData.graph)) {
+      return;
+    }
+    let tempListItem: ListFieldsFragment = {
+      __typename: "ListItem",
+      id: optimisticResponse.nodes[0].id,
+      text: {
+        __typename: "AnnotatedText",
+        text: optimisticResponse.nodes[0].text,
+        annotations: []
+      },
+      reasons: [],
+      relatedItems: []
+    };
+    let tempList = reverse(cacheData.list);
+    tempList.push(tempListItem);
+    let tempNode: NodeFieldsFragment = optimisticResponse.nodes[0];
+    cacheData.list = reverse(tempList);
+    cacheData.graph.nodes.push(tempNode);
+    dataProxy.writeFragment({
+      id: "SearchResults",
+      fragment: searchResultsFragment,
+      fragmentName: "SearchResultsFields",
+      data: cacheData
+    });
+  };
+
   render() {
     let isLoading;
     let data;
@@ -308,7 +353,23 @@ class Main extends React.Component<Props, State> {
                     previousCaptureId: previousCaptureId
                       ? previousCaptureId
                       : this.state.sessionId
-                  }
+                  },
+                  optimisticResponse: {
+                    createCapture: {
+                      __typename: "Graph",
+                      nodes: [
+                        {
+                          __typename: "Node",
+                          id: `optimistic:${NetworkUtils.getRandomId()}`,
+                          type: NodeType.Capture,
+                          text: this.state.captureText,
+                          level: 0
+                        }
+                      ],
+                      edges: []
+                    } as GraphFieldsFragment
+                  },
+                  update: this.optimisticUpdateOnCapture
                 })
                 .then(() => {
                   refetch();
@@ -364,54 +425,7 @@ class Main extends React.Component<Props, State> {
                       edges: []
                     } as GraphFieldsFragment
                   },
-                  update: (
-                    dataProxy,
-                    resultData: { data: { createCapture: GraphFieldsFragment } }
-                  ) => {
-                    const optimisticResponse = resultData.data.createCapture;
-
-                    // only update for optimistic response
-                    if (
-                      optimisticResponse.nodes[0].id.split(":")[0] !==
-                      "optimistic"
-                    ) {
-                      return;
-                    }
-
-                    const cacheData: SearchResultsFieldsFragment | null = dataProxy.readFragment(
-                      {
-                        id: "SearchResults",
-                        fragment: searchResultsFragment,
-                        fragmentName: "SearchResultsFields"
-                      }
-                    );
-                    if (!(cacheData && cacheData.list && cacheData.graph)) {
-                      return;
-                    }
-                    let tempListItem: ListFieldsFragment = {
-                      __typename: "ListItem",
-                      id: optimisticResponse.nodes[0].id,
-                      text: {
-                        __typename: "AnnotatedText",
-                        text: optimisticResponse.nodes[0].text,
-                        annotations: []
-                      },
-                      reasons: [],
-                      relatedItems: []
-                    };
-                    let tempList = reverse(cacheData.list);
-                    tempList.push(tempListItem);
-                    let tempNode: NodeFieldsFragment =
-                      optimisticResponse.nodes[0];
-                    cacheData.list = reverse(tempList);
-                    cacheData.graph.nodes.push(tempNode);
-                    dataProxy.writeFragment({
-                      id: "SearchResults",
-                      fragment: searchResultsFragment,
-                      fragmentName: "SearchResultsFields",
-                      data: cacheData
-                    });
-                  }
+                  update: this.optimisticUpdateOnCapture
                 })
                 .then(() => {
                   refetch();
@@ -543,7 +557,51 @@ class Main extends React.Component<Props, State> {
               if (!captureState.isEditing) {
                 this.props
                   .editCapture({
-                    variables: { id, body: text }
+                    variables: { id, body: text },
+                    optimisticResponse: {
+                      editCapture: true
+                    },
+                    update: dataProxy => {
+                      const cacheData: SearchResultsFieldsFragment | null = dataProxy.readFragment(
+                        {
+                          id: "SearchResults",
+                          fragment: searchResultsFragment,
+                          fragmentName: "SearchResultsFields"
+                        }
+                      );
+
+                      if (!(cacheData && cacheData.list && cacheData.graph)) {
+                        return;
+                      }
+
+                      const listItemIndex = cacheData.list.findIndex(
+                        listItem => {
+                          if (listItem) {
+                            return listItem.id === id;
+                          }
+                          return false;
+                        }
+                      );
+
+                      if (listItemIndex >= 0) {
+                        let listItem = cacheData.list[listItemIndex];
+                        let nextListItem = assign(listItem, {
+                          text: {
+                            __typename: "AnnotatedText",
+                            text,
+                            annotations: []
+                          }
+                        });
+                        cacheData.list[listItemIndex] = nextListItem;
+                      }
+
+                      dataProxy.writeFragment({
+                        id: "SearchResults",
+                        fragment: searchResultsFragment,
+                        fragmentName: "SearchResultsFields",
+                        data: cacheData
+                      });
+                    }
                   })
                   .then(() => {
                     refetch();

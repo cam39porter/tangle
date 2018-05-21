@@ -71,7 +71,7 @@ import MenuBar from "../components/menu-bar";
 
 // Utils
 import { WindowUtils, NetworkUtils } from "../utils";
-import { noop, trim, assign, reverse } from "lodash";
+import { noop, trim, assign, reverse, remove } from "lodash";
 import windowSize from "react-window-size";
 
 // Types
@@ -355,7 +355,7 @@ class Main extends React.Component<Props, State> {
                       nodes: [
                         {
                           __typename: "Node",
-                          id: NetworkUtils.getRandomId(),
+                          id: `optimistic:${NetworkUtils.getRandomId()}`,
                           type: NodeType.Capture,
                           text: this.state.captureText,
                           level: 0
@@ -369,6 +369,15 @@ class Main extends React.Component<Props, State> {
                     resultData: { data: { createCapture: GraphFieldsFragment } }
                   ) => {
                     const optimisticResponse = resultData.data.createCapture;
+
+                    // only update for optimistic response
+                    if (
+                      optimisticResponse.nodes[0].id.split(":")[0] !==
+                      "optimistic"
+                    ) {
+                      return;
+                    }
+
                     const cacheData: SearchResultsFieldsFragment | null = dataProxy.readFragment(
                       {
                         id: "SearchResults",
@@ -376,11 +385,9 @@ class Main extends React.Component<Props, State> {
                         fragmentName: "SearchResultsFields"
                       }
                     );
-
                     if (!(cacheData && cacheData.list && cacheData.graph)) {
                       return;
                     }
-
                     let tempListItem: ListFieldsFragment = {
                       __typename: "ListItem",
                       id: optimisticResponse.nodes[0].id,
@@ -392,16 +399,12 @@ class Main extends React.Component<Props, State> {
                       reasons: [],
                       relatedItems: []
                     };
-
                     let tempList = reverse(cacheData.list);
                     tempList.push(tempListItem);
-
                     let tempNode: NodeFieldsFragment =
                       optimisticResponse.nodes[0];
-
                     cacheData.list = reverse(tempList);
                     cacheData.graph.nodes.push(tempNode);
-
                     dataProxy.writeFragment({
                       id: "SearchResults",
                       fragment: searchResultsFragment,
@@ -569,7 +572,39 @@ class Main extends React.Component<Props, State> {
                 NetworkUtils.getId(this.props.location.search) === id;
               this.props
                 .archiveCapture({
-                  variables: { id }
+                  variables: { id },
+                  optimisticResponse: {
+                    archiveCapture: true
+                  },
+                  update: (dataProxy, _) => {
+                    const cacheData: SearchResultsFieldsFragment | null = dataProxy.readFragment(
+                      {
+                        id: "SearchResults",
+                        fragment: searchResultsFragment,
+                        fragmentName: "SearchResultsFields"
+                      }
+                    );
+                    if (!(cacheData && cacheData.list && cacheData.graph)) {
+                      return;
+                    }
+                    remove(cacheData.list, listItem => {
+                      if (listItem) {
+                        return listItem.id === id;
+                      }
+                      return false;
+                    });
+                    remove(cacheData.graph.nodes, node => node.id === id);
+                    remove(
+                      cacheData.graph.edges,
+                      edge => edge.source === id || edge.destination === id
+                    );
+                    dataProxy.writeFragment({
+                      id: "SearchResults",
+                      fragment: searchResultsFragment,
+                      fragmentName: "SearchResultsFields",
+                      data: cacheData
+                    });
+                  }
                 })
                 .then(() => {
                   if (shouldRedirect) {

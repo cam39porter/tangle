@@ -5,6 +5,19 @@ import { executeQuery } from "../db";
 import { getLabel, toCaptureUrn } from "../helpers/urn-helpers";
 import { Capture } from "../models/capture";
 
+export function getMostRecent(
+  userId: string,
+  limit: number
+): Promise<Capture[]> {
+  const params = { userId, limit };
+  const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
+  WHERE NOT EXISTS (capture.archived)
+  RETURN capture
+  ORDER BY capture.created DESC
+  LIMIT {limit}`;
+  return executeQuery(query, params).then(formatCaptureArray);
+}
+
 export function getAllSince(userId: string, since: number): Promise<Capture[]> {
   const params = { userId, since };
   const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})

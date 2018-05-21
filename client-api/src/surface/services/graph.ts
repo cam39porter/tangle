@@ -2,7 +2,8 @@ import * as moment from "moment";
 import {
   getAllSince,
   getCapture as getCaptureClient,
-  getCapturesByRelatedNode
+  getCapturesByRelatedNode,
+  getMostRecent
 } from "../../db/services/capture";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { getUrnType } from "../../db/helpers/urn-helpers";
@@ -24,11 +25,22 @@ export function getAllByUseCase(
 ): Promise<SearchResults> {
   if (useCase === "CAPTURED_TODAY") {
     return getAllCapturedToday(timezoneOffset);
+  } else if (useCase === "MOST_RECENT") {
+    return getAllMostRecent();
   } else {
     throw new NotImplementedError(
-      "Get all currently only supports useCase CAPTURED_TODAY"
+      "Get all currently only supports useCase CAPTURED_TODAY and MOST_RECENT"
     );
   }
+}
+
+function getAllMostRecent(): Promise<SearchResults> {
+  const LIMIT = 10;
+  const userId = getAuthenticatedUser().id;
+  return getMostRecent(userId, LIMIT).then(captures => {
+    const captureIds = captures.map(c => c.id);
+    return expandCaptures(userId, captureIds);
+  });
 }
 
 function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {

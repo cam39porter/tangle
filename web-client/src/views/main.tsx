@@ -491,7 +491,10 @@ class Main extends React.Component<Props, State> {
 
               return noop;
             }}
-            handleIsShowingRelated={(id: string) => () => {
+            handleIsShowingRelated={(
+              id: string,
+              callback?: () => void
+            ) => () => {
               let captureState = this.state.captures.get(id);
               if (!captureState) {
                 captureState = this.createCaptureState(id);
@@ -500,9 +503,12 @@ class Main extends React.Component<Props, State> {
                 isShowingRelated: !captureState.isShowingRelated
               });
               let nextCaptures = this.state.captures.set(id, nextCaptureState);
-              this.setState({
-                captures: nextCaptures
-              });
+              this.setState(
+                {
+                  captures: nextCaptures
+                },
+                callback
+              );
             }}
             isShowingRelated={(id: string) => {
               let captureState = this.state.captures.get(id);

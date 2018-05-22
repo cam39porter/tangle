@@ -48,7 +48,10 @@ interface Props {
   footerPaddingText: string;
   // Captures
   handleExpand: (id: string) => (() => void);
-  handleIsShowingRelated: (id: string) => (() => void) | undefined;
+  handleIsShowingRelated: (
+    id: string,
+    callback?: () => void
+  ) => (() => void) | undefined;
   isShowingRelated: (id: string) => boolean | undefined;
   handleMore: (id: string) => (() => void);
   isMore: (id: string) => boolean;
@@ -83,9 +86,42 @@ class List extends React.Component<Props, State> {
   }
 
   scrollTo = (id: string) => {
-    if (this._scrollContainer) {
-      this._scrollContainer.scrollTo(id);
+    // check if this is a root capture and if so scroll
+    let rootIndex = this.props.listData.findIndex(
+      listItem => listItem.id === id
+    );
+    if (rootIndex >= 0) {
+      this._scrollContainer && this._scrollContainer.scrollTo(id);
+      return;
     }
+
+    // not a rootCapture so showRelated for rootCapture and then scroll
+    this.props.listData.forEach(rootListItem => {
+      let childListItemIndex =
+        rootListItem.relatedItems &&
+        rootListItem.relatedItems.findIndex(childItem => {
+          if (childItem) {
+            return childItem.id === id;
+          }
+          return false;
+        });
+      if (childListItemIndex !== null && childListItemIndex >= 0) {
+        let parentIsShowingRelated = this.props.isShowingRelated(
+          rootListItem.id
+        );
+        if (!parentIsShowingRelated) {
+          let handleParentIsShowingRelated = this.props.handleIsShowingRelated(
+            rootListItem.id,
+            () => {
+              this._scrollContainer && this._scrollContainer.scrollTo(id);
+            }
+          );
+          handleParentIsShowingRelated && handleParentIsShowingRelated();
+        } else {
+          this._scrollContainer && this._scrollContainer.scrollTo(id);
+        }
+      }
+    });
   };
 
   renderHeaderPadding = () => (

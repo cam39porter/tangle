@@ -208,7 +208,10 @@ class Main extends React.Component<Props, State> {
     let tempList = reverse(cacheData.list);
     tempList.push(tempListItem);
     let tempNode: NodeFieldsFragment = optimisticResponse.nodes[0];
-    cacheData.list = reverse(tempList);
+    // insert at the top of list of this is not a session
+    if (!this.state.sessionId) {
+      cacheData.list = reverse(tempList);
+    }
     cacheData.graph.nodes.push(tempNode);
     dataProxy.writeFragment({
       id: "SearchResults",

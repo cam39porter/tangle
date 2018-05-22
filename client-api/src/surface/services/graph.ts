@@ -3,7 +3,8 @@ import {
   getAllSince,
   getCapture as getCaptureClient,
   getCapturesByRelatedNode,
-  getMostRecent
+  getMostRecent,
+  getRandomCapture
 } from "../../db/services/capture";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { getUrnType } from "../../db/helpers/urn-helpers";
@@ -28,11 +29,20 @@ export function getAllByUseCase(
     return getAllCapturedToday(timezoneOffset);
   } else if (useCase === "MOST_RECENT") {
     return getAllMostRecent();
+  } else if (useCase === "RANDOM") {
+    return getAllRandom();
   } else {
     throw new NotImplementedError(
-      "Get all currently only supports useCase CAPTURED_TODAY and MOST_RECENT"
+      "Get all currently only supports use cases; CAPTURED_TODAY, MOST_RECENT, and RANDOM"
     );
   }
+}
+
+function getAllRandom(): Promise<SearchResults> {
+  const userId = getAuthenticatedUser().id;
+  return getRandomCapture(userId).then(capture => {
+    return expandCaptures(userId, [capture.id], null, SortListBy.DESC);
+  });
 }
 
 function getAllMostRecent(): Promise<SearchResults> {

@@ -99,6 +99,7 @@ type Query {
 enum GetAllUseCase {
   CAPTURED_TODAY
   MOST_RECENT
+  RANDOM
 }
 
 enum CaptureRelationType {

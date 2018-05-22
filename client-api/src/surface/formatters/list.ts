@@ -5,6 +5,7 @@ import { AnnotatedText } from "../models/annotated-text";
 import { RecommendationReason } from "../models/recommendation-reason";
 import { Annotation } from "../models/annotation";
 import { Entity } from "../../db/models/entity";
+import { Tag } from "../../db/models/Tag";
 import { SortListBy } from "../../types";
 
 export function buildList(
@@ -85,6 +86,10 @@ function formatRelatedListItems(
         annotations.push(new Annotation("HIGHLIGHT", start, end));
         return new RecommendationReason("SHARES_ENTITY", entity.name);
       } else if (node.labels[0] === "Tag") {
+        const tag = node.properties as Tag;
+        const start = capture.body.indexOf(tag.name);
+        const end = start + tag.name.length;
+        annotations.push(new Annotation("HIGHLIGHT", start, end));
         return new RecommendationReason("SHARES_TAG", node.properties["name"]);
       } else {
         return new RecommendationReason("DEFAULT", null);

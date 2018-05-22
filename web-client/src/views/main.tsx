@@ -746,6 +746,10 @@ class Main extends React.Component<Props, State> {
               nodes={isLoading ? [] : data.graph.nodes}
               edges={isLoading ? [] : data.graph.edges}
               onClick={e => {
+                // to prevent selecting and edge for now
+                if (!e.data.id) {
+                  return;
+                }
                 this.props.history.push(`?id=${encodeURIComponent(e.data.id)}`);
               }}
               onMouseOver={e => {

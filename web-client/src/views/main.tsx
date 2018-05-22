@@ -166,7 +166,7 @@ class Main extends React.Component<Props, State> {
     let captureState = {
       isMore: false,
       isEditing: false,
-      isShowingRelated: true,
+      isShowingRelated: false,
       text: ""
     };
 

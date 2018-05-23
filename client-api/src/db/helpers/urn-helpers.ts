@@ -60,7 +60,8 @@ function getEntityOrTagName(urn: string): string | null {
     case "entity":
       return getName(urn);
     case "tag":
-      return getName(urn);
+      let name = getName(urn);
+      return `#${name.slice(0, name.length - 1)}`;
     default:
       return null;
   }

@@ -54,7 +54,7 @@ function getLabel(urn: string): string {
 
 function getEntityOrTagName(urn: string): string | null {
   const type = getUrnType(urn);
-  const getName = (urn: string) => urn.split(";")[1];
+  const getName = (u: string) => u.split(";")[1];
 
   switch (type) {
     case "Entity":

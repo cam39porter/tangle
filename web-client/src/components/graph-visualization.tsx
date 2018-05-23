@@ -280,7 +280,7 @@ class Graph extends React.Component<Props, State> {
           polarIndex: 0,
           geoIndex: 0,
           calendarIndex: 0,
-          hoverAnimation: false,
+          hoverAnimation: true,
           layout: "force",
           circular: {
             rotateLabel: false
@@ -291,7 +291,7 @@ class Graph extends React.Component<Props, State> {
             gravity: 0.2,
             layoutAnimation: true
           },
-          roam: true,
+          roam: "move",
           nodeScaleRation: 0.5,
           draggable: false,
           focusNodeAdjacency: true,

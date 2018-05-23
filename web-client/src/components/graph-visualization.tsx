@@ -292,7 +292,6 @@ class Graph extends React.Component<Props, State> {
             layoutAnimation: true
           },
           roam: "move",
-          nodeScaleRation: 0.5,
           draggable: false,
           focusNodeAdjacency: true,
           cursor: "pointer",

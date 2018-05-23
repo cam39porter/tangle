@@ -10,8 +10,11 @@ interface Props {
 }
 
 const NavigationSurprise = (props: Props) => (
-  <div className={`pa2 br4 shadow-1 bg-white`}>
-    <div data-tip={`Surprise me with a random capture`}>
+  <div className={`flex pa2 br4 shadow-1 bg-white`}>
+    <div
+      className={`flex-grow ma2`}
+      data-tip={`Surprise me with a random capture`}
+    >
       <ButtonSurprise onClick={props.handleSurprise} />
     </div>
     <ReactToolTip />

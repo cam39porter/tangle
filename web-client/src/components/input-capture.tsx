@@ -19,7 +19,7 @@ interface Props {
 const InputCapture = (props: Props) => {
   return (
     <div className={`flex w-100`}>
-      <div className={`pa1`} data-tip={"add to your tangle"}>
+      <div className={`pa1`} data-tip={"Add to your tangle"}>
         <ButtonCapture onClick={props.handleCapture} />
       </div>
       <div className={`flex-grow`}>
@@ -32,7 +32,7 @@ const InputCapture = (props: Props) => {
           clearOnEnter={props.clearOnEnter}
         />
       </div>
-      <div className={`pa1`} data-tip={"enter a brainstorm"}>
+      <div className={`pa1`} data-tip={"Enter a brainstorm"}>
         {props.handleExpand && <ButtonExpand onClick={props.handleExpand} />}
       </div>
       <ReactTooltip />

@@ -21,6 +21,7 @@ import ButtonContract from "../src/components/button-contract";
 import ButtonSettings from "../src/components/button-settings";
 import ButtonImport from "../src/components/button-import";
 import ButtonSurprise from "../src/components/button-surprise";
+import ButtonFavorite from "../src/components/button-favorite";
 
 const stories = storiesOf("Button", module);
 
@@ -50,6 +51,7 @@ stories.add("comment", () => <ButtonComment onClick={action("clicked")} />);
 stories.add("contract", () => <ButtonContract onClick={action("clicked")} />);
 stories.add("edit", () => <ButtonEdit onClick={action("clicked")} />);
 stories.add("expand", () => <ButtonExpand onClick={action("clicked")} />);
+stories.add("favorite", () => <ButtonFavorite onClick={action("clicked")} />);
 stories.add("focus", () => <ButtonFocus onClick={action("clicked")} />);
 stories.add("import", () => <ButtonImport onClick={action("clicked")} />);
 stories.add("more", () => (

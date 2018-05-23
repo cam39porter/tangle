@@ -9,6 +9,7 @@ import ButtonArchive from "./button-archive";
 import ButtonEdit from "./button-edit";
 import ButtonCheck from "./button-check";
 import ButtonRelated from "./button-related";
+import ButtonFavorite from "./button-favorite";
 import InputCapture from "./input-capture";
 import ListComment from "./list-comment";
 import ReactTooltip from "react-tooltip";
@@ -102,6 +103,22 @@ class ListCapture extends React.Component<Props, State> {
             this.props.isGraphFocus ? "b--accent" : "b--light-gray"
           } bg-white`}
         >
+          <div className={`w2`}>
+            {this.state.isShowingButtons && (
+              <div className={`flex-column`}>
+                <div className={`flex-grow w-100`}>
+                  <div data-tip={`Favorite this capture`}>
+                    <ButtonFavorite
+                      onClick={() => {
+                        // TODO: add favoriting captures
+                      }}
+                    />
+                  </div>
+                </div>
+                <ReactTooltip />
+              </div>
+            )}
+          </div>
           <div className={`flex-grow pa2`}>
             {this.props.isEditing ? (
               <InputCapture
@@ -119,7 +136,7 @@ class ListCapture extends React.Component<Props, State> {
                 onDoubleClick={() => {
                   this.props.handleEdit(this.text);
                 }}
-                className={`lh-copy`}
+                className={`lh-copy f6`}
                 dangerouslySetInnerHTML={{
                   __html: this.props.annotations
                     ? annotate(this.props.text, this.props.annotations)
@@ -132,7 +149,7 @@ class ListCapture extends React.Component<Props, State> {
             {this.state.isShowingButtons && (
               <div className={`flex-column`}>
                 <div className={`flex-grow w-100`}>
-                  <div data-tip={`focus on this capture`}>
+                  <div data-tip={`Focus on this capture`}>
                     <ButtonFocus onClick={this.props.handleFocus} />
                   </div>
                 </div>
@@ -141,7 +158,7 @@ class ListCapture extends React.Component<Props, State> {
                     <div className={`dtc v-btm`}>
                       <div
                         data-tip={`${
-                          this.props.isMore ? "hide" : "show"
+                          this.props.isMore ? "Hide" : "Show"
                         } all actions and comments`}
                       >
                         <ButtonMore
@@ -162,7 +179,7 @@ class ListCapture extends React.Component<Props, State> {
               <div className={`flex pa2 w-100`}>
                 <div className={`flex-grow`}>
                   {this.props.isEditing ? (
-                    <div data-tip={`save your changes`}>
+                    <div data-tip={`Save your changes`}>
                       <ButtonCheck
                         onClick={() => {
                           this.props.handleEdit(this.text);
@@ -170,7 +187,7 @@ class ListCapture extends React.Component<Props, State> {
                       />
                     </div>
                   ) : (
-                    <div data-tip={`edit this capture`}>
+                    <div data-tip={`Edit this capture`}>
                       <ButtonEdit
                         onClick={() => {
                           this.props.handleEdit(this.text);
@@ -180,13 +197,13 @@ class ListCapture extends React.Component<Props, State> {
                   )}
                 </div>
                 <div className={`flex-grow`}>
-                  <div data-tip={`delete this capture`}>
+                  <div data-tip={`Delete this capture`}>
                     <ButtonArchive onClick={this.props.handleArchive} />
                   </div>
                 </div>
                 <div className={`flex-grow`}>
                   <div
-                    data-tip={`enter a brainstorm starting with this capture`}
+                    data-tip={`Enter a brainstorm starting with this capture`}
                   >
                     <ButtonExpand onClick={this.props.handleExpand} />
                   </div>
@@ -205,7 +222,7 @@ class ListCapture extends React.Component<Props, State> {
               <div
                 className={`center pa2 w2`}
                 data-tip={`${
-                  this.props.isShowingRelated ? "hide" : "show"
+                  this.props.isShowingRelated ? "Hide" : "Show"
                 } related captures`}
               >
                 <ButtonRelated

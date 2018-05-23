@@ -45,7 +45,7 @@ const ListHeader = (props: Props) => {
       </div>
       <div
         className={`pa1`}
-        data-tip={`toggle to ${props.isCapturing ? "search" : "capture"}`}
+        data-tip={`Toggle to ${props.isCapturing ? "search" : "capture"}`}
       >
         <ButtonToggle
           isRight={props.isCapturing}

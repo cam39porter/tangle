@@ -33,7 +33,7 @@ const InputSurface = (props: Props) => {
       <div className={`pa1`}>
         {props.handleClear && (
           <div>
-            <div data-tip={"exit your search"}>
+            <div data-tip={"Exit your search"}>
               <ButtonExit onClick={props.handleClear} />
             </div>
             <ReactTooltip />

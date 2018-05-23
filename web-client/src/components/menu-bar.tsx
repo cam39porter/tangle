@@ -36,7 +36,7 @@ class MenuBar extends React.Component<Props, State> {
             <div
               className={`dtc pa2 center br4 ${this.state.isShowingImport &&
                 "bg-light-gray"}`}
-              data-tip={`import your data`}
+              data-tip={`Import your data`}
             >
               <ButtonImport
                 onClick={() => {
@@ -50,7 +50,7 @@ class MenuBar extends React.Component<Props, State> {
             <div
               className={`dtc pa2 center br4 ${this.state.isShowingSettings &&
                 "bg-light-gray"}`}
-              data-tip={`manage your settings`}
+              data-tip={`Manage your settings`}
             >
               <ButtonSettings
                 onClick={() => {

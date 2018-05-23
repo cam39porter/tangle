@@ -52,6 +52,20 @@ function getLabel(urn: string): string {
   return label;
 }
 
+function getEntityOrTagName(urn: string): string | null {
+  const type = getUrnType(urn);
+  const getName = (urn: string) => urn.split(";")[1];
+
+  switch (type) {
+    case "Entity":
+      return getName(urn);
+    case "Tag":
+      return getName(urn);
+    default:
+      return null;
+  }
+}
+
 const urnTypeToLabel = {
   capture: "Capture",
   link: "Link",
@@ -71,5 +85,6 @@ export {
   toLinkUrn,
   toEvernoteNoteUrn,
   getUrnType,
-  getLabel
+  getLabel,
+  getEntityOrTagName
 };

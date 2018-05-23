@@ -7,7 +7,7 @@ import {
   getRandomCapture
 } from "../../db/services/capture";
 import { getAuthenticatedUser } from "../../filters/request-context";
-import { getUrnType } from "../../db/helpers/urn-helpers";
+import { getUrnType, getEntityOrTagName } from "../../db/helpers/urn-helpers";
 import { NotImplementedError } from "../../util/exceptions/not-implemented-error";
 import { SearchResults } from "../models/search-results";
 import { expandCaptures } from "./expand";
@@ -41,7 +41,13 @@ export function getAllByUseCase(
 function getAllRandom(): Promise<SearchResults> {
   const userId = getAuthenticatedUser().id;
   return getRandomCapture(userId).then(capture => {
-    return expandCaptures(userId, [capture.id], null, SortListBy.DESC);
+    return expandCaptures(
+      userId,
+      [capture.id],
+      null,
+      SortListBy.DESC,
+      `Focusing on the random capture below`
+    );
   });
 }
 
@@ -50,7 +56,13 @@ function getAllMostRecent(): Promise<SearchResults> {
   const userId = getAuthenticatedUser().id;
   return getMostRecent(userId, LIMIT).then(captures => {
     const captureIds = captures.map(c => c.id);
-    return expandCaptures(userId, captureIds, null, SortListBy.DESC);
+    return expandCaptures(
+      userId,
+      captureIds,
+      null,
+      SortListBy.DESC,
+      `Most recent captures`
+    );
   });
 }
 
@@ -59,7 +71,13 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
   const since = getCreatedSince(timezoneOffset);
   return getAllSince(userId, since).then(captures => {
     const captureIds = captures.map(c => c.id);
-    return expandCaptures(userId, captureIds, null, SortListBy.DESC);
+    return expandCaptures(
+      userId,
+      captureIds,
+      null,
+      SortListBy.DESC,
+      `Captured today`
+    );
   });
 }
 
@@ -71,16 +89,29 @@ function getOthers(urn: string): Promise<SearchResults> {
         expandCaptures(userUrn, captures.map(c => c.id), null, SortListBy.ASC)
       );
     default:
-      return getCapturesByRelatedNode(userUrn, urn).then(captures =>
-        expandCaptures(userUrn, captures.map(c => c.id))
-      );
+      return getCapturesByRelatedNode(userUrn, urn).then(captures => {
+        const name = getEntityOrTagName(urn);
+        return expandCaptures(
+          userUrn,
+          captures.map(c => c.id),
+          null,
+          SortListBy.NONE,
+          name ? `Focusing on '${name}'` : null
+        );
+      });
   }
 }
 
 function getCapture(urn: string): Promise<SearchResults> {
   const userUrn = getAuthenticatedUser().id;
   return getCaptureClient(userUrn, urn).then(capture =>
-    expandCaptures(userUrn, [capture.id])
+    expandCaptures(
+      userUrn,
+      [capture.id],
+      null,
+      SortListBy.NONE,
+      `Focusing on the below capture`
+    )
   );
 }
 

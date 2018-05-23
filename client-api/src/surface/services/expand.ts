@@ -13,7 +13,8 @@ export function expandCaptures(
   userUrn: string,
   captureIds: string[],
   startUrn = null,
-  sortBy: SortListBy = SortListBy.NONE
+  sortBy: SortListBy = SortListBy.NONE,
+  header: string | null = null
 ): Promise<SearchResults> {
   const expansionPromises = Promise.all([
     expandGraph(userUrn, captureIds, startUrn),
@@ -23,6 +24,7 @@ export function expandCaptures(
     const graph = expansions[0];
     const list = expansions[1];
     return new SearchResults(
+      header,
       graph,
       list,
       new PageInfo(0, graph.nodes.length, graph.nodes.length)

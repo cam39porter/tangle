@@ -1,4 +1,5 @@
 type SearchResults {
+  header: String # what the search results correspond to
   graph: Graph! # for generating the graph visualization,
   list: [ListItem]! # for generating list results
   pageInfo: PageInfo!

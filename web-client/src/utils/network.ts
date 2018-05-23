@@ -24,6 +24,14 @@ const getId = (queryString: string): string => {
   );
 };
 
+const getRandom = (queryString: string): string => {
+  return (
+    qs.parse(queryString, {
+      ignoreQueryPrefix: true
+    }).random || ""
+  );
+};
+
 const getCurrentLocation = (queryString: string): Location => {
   if (getQuery(queryString)) {
     return Location.Search;
@@ -31,6 +39,10 @@ const getCurrentLocation = (queryString: string): Location => {
 
   if (getId(queryString)) {
     return Location.Detail;
+  }
+
+  if (getRandom(queryString)) {
+    return Location.Random;
   }
 
   return Location.CapturedToday;

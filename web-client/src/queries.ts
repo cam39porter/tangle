@@ -155,6 +155,15 @@ export const capturedToday = gql`
   ${searchResultsFragment}
 `;
 
+export const randomCapture = gql`
+  query randomCapture {
+    getAll(useCase: "RANDOM") {
+      ...SearchResultsFields
+    }
+  }
+  ${searchResultsFragment}
+`;
+
 export const getDetailed = gql`
   query getDetailed($id: String!) {
     getDetailed(id: $id) {

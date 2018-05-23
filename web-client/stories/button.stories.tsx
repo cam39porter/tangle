@@ -20,6 +20,7 @@ import ButtonCheck from "../src/components/button-check";
 import ButtonContract from "../src/components/button-contract";
 import ButtonSettings from "../src/components/button-settings";
 import ButtonImport from "../src/components/button-import";
+import ButtonSurprise from "../src/components/button-surprise";
 
 const stories = storiesOf("Button", module);
 
@@ -59,6 +60,7 @@ stories.add("related", () => (
 ));
 stories.add("settings", () => <ButtonSettings onClick={action("clicked")} />);
 stories.add("surface", () => <ButtonSurface onClick={action("clicked")} />);
+stories.add("surprise", () => <ButtonSurprise onClick={action("clicked")} />);
 stories.add("toggle", () => (
   <ButtonToggle
     onClick={action("clicked")}

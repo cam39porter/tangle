@@ -2077,6 +2077,18 @@
               "description": "",
               "isDeprecated": false,
               "deprecationReason": null
+            },
+            {
+              "name": "MOST_RECENT",
+              "description": "",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "RANDOM",
+              "description": "",
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "possibleTypes": null

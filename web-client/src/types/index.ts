@@ -22,5 +22,6 @@ export interface GraphEvent {
 export enum Location {
   CapturedToday,
   Search,
-  Detail
+  Detail,
+  Random
 }

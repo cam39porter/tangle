@@ -6,6 +6,8 @@ import {
   // Captured Today
   capturedTodayQuery as capturedTodayResponse,
   capturedTodayQueryVariables,
+  // Random
+  randomCaptureQuery as randomCaptureResponse,
   // Search
   searchQuery as searchResponse,
   searchQueryVariables,
@@ -45,6 +47,7 @@ import {
 import {
   // Queries
   capturedToday,
+  randomCapture,
   search,
   getDetailed,
   // Mutations
@@ -68,6 +71,7 @@ import { RouteComponentProps } from "react-router";
 import List, { SESSION_CAPTURE_INPUT_ID } from "../components/list";
 import GraphVisualization from "../components/graph-visualization";
 import MenuBar from "../components/menu-bar";
+import Navigation from "../components/navigation";
 
 // Utils
 import { WindowUtils, NetworkUtils } from "../utils";
@@ -83,6 +87,7 @@ interface Props extends RouteProps {
   // Queries
   capturedToday?: QueryProps<capturedTodayQueryVariables> &
     Partial<capturedTodayResponse>;
+  randomCapture?: QueryProps<{}> & Partial<randomCaptureResponse>;
   search?: QueryProps<searchQueryVariables> & Partial<searchResponse>;
   getDetailed?: QueryProps<getDetailedQueryVariables> &
     Partial<getDetailedResponse>;
@@ -234,6 +239,13 @@ class Main extends React.Component<Props, State> {
       header = "Captured Today";
     }
 
+    if (this.props.randomCapture) {
+      isLoading = this.props.randomCapture.loading;
+      data = this.props.randomCapture.getAll;
+      refetch = this.props.randomCapture.refetch;
+      header = "Focusing on random capture below";
+    }
+
     if (this.props.search) {
       isLoading = this.props.search.loading;
       data = this.props.search.search;
@@ -266,13 +278,6 @@ class Main extends React.Component<Props, State> {
 
     return (
       <div className={`flex w-100 vh-100`}>
-        {/* Menu Bar */}
-        {isLargeWindow && (
-          <div className={`fixed top-0 right-0 ma4 z-max`}>
-            <MenuBar />
-          </div>
-        )}
-
         {/* List */}
         <div
           className={`shadow-1 z-max`}
@@ -740,7 +745,24 @@ class Main extends React.Component<Props, State> {
 
         {/* Graph */}
         {isLargeWindow ? (
-          <div className={`flex-grow`}>
+          <div className={`relative flex-grow`}>
+            <div className={`absolute top-0 right-0 ma4 z-max`}>
+              <MenuBar />
+            </div>
+            <div className={`absolute top-0 left-0 ma4 z-max`}>
+              <Navigation
+                handleSurprise={() => {
+                  this.props.history.push("?random=true");
+                  if (
+                    NetworkUtils.getCurrentLocation(
+                      this.props.location.search
+                    ) === Location.Random
+                  ) {
+                    refetch();
+                  }
+                }}
+              />
+            </div>
             <GraphVisualization
               refEChart={noop}
               nodes={isLoading ? [] : data.graph.nodes}
@@ -782,6 +804,16 @@ const withCapturedToday = graphql<capturedTodayResponse, Props>(capturedToday, {
     variables: {
       timezoneOffset: new Date().getTimezoneOffset() / 60 * -1
     },
+    fetchPolicy: "network-only"
+  }
+});
+
+const withRandomCapture = graphql<randomCaptureResponse, Props>(randomCapture, {
+  name: "randomCapture",
+  alias: "withRandomCapture",
+  skip: (props: Props) =>
+    NetworkUtils.getCurrentLocation(props.location.search) !== Location.Random,
+  options: {
     fetchPolicy: "network-only"
   }
 });
@@ -866,6 +898,7 @@ const withDismissCaptureRelation = graphql<
 
 const MainWithData = compose(
   withCapturedToday,
+  withRandomCapture,
   withSearch,
   withGetDetailed,
   withCreateSession,

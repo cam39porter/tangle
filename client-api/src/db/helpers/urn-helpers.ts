@@ -57,9 +57,9 @@ function getEntityOrTagName(urn: string): string | null {
   const getName = (u: string) => u.split(";")[1];
 
   switch (type) {
-    case "Entity":
+    case "entity":
       return getName(urn);
-    case "Tag":
+    case "tag":
       return getName(urn);
     default:
       return null;

@@ -78,6 +78,7 @@ export const listFragment = gql`
 
 export const searchResultsFragment = gql`
   fragment SearchResultsFields on SearchResults {
+    header
     list {
       ...ListFields
     }

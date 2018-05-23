@@ -236,42 +236,34 @@ class Main extends React.Component<Props, State> {
       isLoading = this.props.capturedToday.loading;
       data = this.props.capturedToday.getAll;
       refetch = this.props.capturedToday.refetch;
-      header = "Captured Today";
+      header =
+        this.props.capturedToday.getAll &&
+        this.props.capturedToday.getAll.header;
     }
 
     if (this.props.randomCapture) {
       isLoading = this.props.randomCapture.loading;
       data = this.props.randomCapture.getAll;
       refetch = this.props.randomCapture.refetch;
-      header = "Focusing on random capture below";
+      header =
+        this.props.randomCapture.getAll &&
+        this.props.randomCapture.getAll.header;
     }
 
     if (this.props.search) {
       isLoading = this.props.search.loading;
       data = this.props.search.search;
       refetch = this.props.search.refetch;
-      header = `Search results for "${NetworkUtils.getQuery(
-        this.props.location.search
-      )}"`;
+      header = this.props.search.search && this.props.search.search.header;
     }
 
     if (this.props.getDetailed) {
       isLoading = this.props.getDetailed.loading;
       data = this.props.getDetailed.getDetailed;
       refetch = this.props.getDetailed.refetch;
-      // TODO: remove this hack
-      let focusId = NetworkUtils.getId(this.props.location.search);
-      let splitId = focusId.split(";");
-      if (splitId.length >= 2) {
-        let focus = splitId[1];
-        focus =
-          focus.charAt(focus.length - 1) === ")"
-            ? focus.slice(0, focus.length - 1)
-            : focus;
-        header = `Focusing on "${focus}"`;
-      } else {
-        header = `Focusing on the below capture`;
-      }
+      header =
+        this.props.getDetailed.getDetailed &&
+        this.props.getDetailed.getDetailed.header;
     }
 
     let isLargeWindow = WindowUtils.getIsLargeWindow(this.props.windowWidth);

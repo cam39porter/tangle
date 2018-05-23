@@ -299,7 +299,7 @@ class List extends React.Component<Props, State> {
                                   <div className={`dtc v-mid`}>
                                     <div
                                       data-tip={
-                                        "mark this capture as unrelated"
+                                        "Mark this capture as unrelated"
                                       }
                                     >
                                       <ButtonExit

@@ -83,13 +83,13 @@ function formatRelatedListItems(
         const entity = node.properties as Entity;
         const start = capture.body.indexOf(entity.name);
         const end = start + entity.name.length;
-        annotations.push(new Annotation("HIGHLIGHT", start, end));
+        annotations.push(new Annotation("HIGHLIGHT", start, end, entity.id));
         return new RecommendationReason("SHARES_ENTITY", entity.name);
       } else if (node.labels[0] === "Tag") {
         const tag = node.properties as Tag;
         const start = capture.body.indexOf(tag.name);
         const end = start + tag.name.length;
-        annotations.push(new Annotation("HIGHLIGHT", start, end));
+        annotations.push(new Annotation("HIGHLIGHT", start - 1, end, tag.id));
         return new RecommendationReason("SHARES_TAG", node.properties["name"]);
       } else {
         return new RecommendationReason("DEFAULT", null);

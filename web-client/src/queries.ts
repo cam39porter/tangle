@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 // Fragments
 export const annotationFragment = gql`
   fragment AnnotationFields on Annotation {
+    linkToId
     start
     end
     type

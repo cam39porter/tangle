@@ -1,6 +1,8 @@
 // React
 import * as React from "react";
 
+// Router
+
 // Components
 import ButtonExpand from "./button-expand";
 import ButtonMore from "./button-more";
@@ -13,6 +15,8 @@ import ButtonFavorite from "./button-favorite";
 import InputCapture from "./input-capture";
 import ListComment from "./list-comment";
 import ReactTooltip from "react-tooltip";
+
+// Utils
 
 // Types
 import {
@@ -28,6 +32,7 @@ interface Props {
   handleComment: (text: string) => void;
   comments?: Array<ListFieldsFragment>;
   handleFocus: () => void;
+  handleFocusWithId?: (id: string) => () => void;
   handleEdit: (text: string) => void;
   isEditing: boolean;
   handleArchive: () => void;
@@ -55,10 +60,14 @@ function annotate(
     let nextAnnotations = "";
 
     ends.forEach(a => {
-      nextAnnotations = nextAnnotations + `</span>`;
+      nextAnnotations = nextAnnotations + "</span>";
     });
     starts.forEach(a => {
-      nextAnnotations = nextAnnotations + `<span class="accent">`;
+      nextAnnotations =
+        nextAnnotations +
+        `<span class="${a.linkToId ? "pointer accent" : "accent"}" ${
+          a.linkToId ? `id="${a.linkToId}"` : ""
+        }>`;
     });
 
     annotatedText = annotatedText + nextAnnotations + nextCharacter;
@@ -82,6 +91,23 @@ class ListCapture extends React.Component<Props, State> {
 
   componentWillReceiveProps(nextProps: Props) {
     this.text = nextProps.text;
+  }
+
+  componentDidMount() {
+    // add links to annotations
+    this.props.annotations &&
+      this.props.annotations.forEach(a => {
+        if (a.linkToId === null) {
+          return;
+        }
+        let annotationNode = document.getElementById(a.linkToId);
+        annotationNode &&
+          annotationNode.addEventListener("click", () => {
+            this.props.handleFocusWithId &&
+              a.linkToId &&
+              this.props.handleFocusWithId(a.linkToId)();
+          });
+      });
   }
 
   render() {

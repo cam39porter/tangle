@@ -331,6 +331,7 @@ class List extends React.Component<Props, State> {
                                   handleFocus={this.props.handleFocus(
                                     relatedItem.id
                                   )}
+                                  handleFocusWithId={this.props.handleFocus}
                                   handleEdit={this.props.handleEdit(
                                     relatedItem.id
                                   )}

@@ -66,7 +66,7 @@ function annotate(
       nextAnnotations =
         nextAnnotations +
         `<span class="${a.linkToId ? "pointer accent" : "accent"}" ${
-          a.linkToId ? `id="${a.linkToId}"` : ""
+          a.linkToId ? `id="${a.linkToId}:${a.start}:${a.end}"` : ""
         }>`;
     });
 
@@ -100,7 +100,9 @@ class ListCapture extends React.Component<Props, State> {
         if (a.linkToId === null) {
           return;
         }
-        let annotationNode = document.getElementById(a.linkToId);
+        let annotationNode = document.getElementById(
+          `${a.linkToId}:${a.start}:${a.end}`
+        );
         annotationNode &&
           annotationNode.addEventListener("click", () => {
             this.props.handleFocusWithId &&

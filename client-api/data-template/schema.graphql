@@ -34,7 +34,7 @@ type AnnotatedText {
 }
 
 type Annotation {
-  id: String # can be used for getting detail view of relationship
+  linkToId: String # can be used for getting detail view of relationship (naming id prevnets right number of results returning)
   type: AnnotationType!
   start: Int!
   end: Int!

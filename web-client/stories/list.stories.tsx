@@ -82,6 +82,7 @@ stories.add("comment", () => (
 
 stories.add("capture", () => (
   <ListCapture
+    captureId={"id"}
     handleExpand={action("handleExpand")}
     text={select(
       "text",

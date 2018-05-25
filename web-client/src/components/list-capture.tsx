@@ -25,6 +25,7 @@ import {
 } from "../__generated__/types";
 
 interface Props {
+  captureId: string;
   text: string;
   handleExpand: () => void;
   handleMore: () => void;
@@ -48,6 +49,7 @@ interface State {
 }
 
 function annotate(
+  captureId: string,
   text: string,
   annotations: Array<AnnotationFieldsFragment>
 ): string {
@@ -66,7 +68,9 @@ function annotate(
       nextAnnotations =
         nextAnnotations +
         `<span class="${a.linkToId ? "pointer accent" : "accent"}" ${
-          a.linkToId ? `id="${a.linkToId}:${a.start}:${a.end}"` : ""
+          a.linkToId
+            ? `id="${captureId}:${a.linkToId}:${a.start}:${a.end}"`
+            : ""
         }>`;
     });
 
@@ -101,7 +105,7 @@ class ListCapture extends React.Component<Props, State> {
           return;
         }
         let annotationNode = document.getElementById(
-          `${a.linkToId}:${a.start}:${a.end}`
+          `${this.props.captureId}:${a.linkToId}:${a.start}:${a.end}`
         );
         annotationNode &&
           annotationNode.addEventListener("click", () => {
@@ -167,7 +171,11 @@ class ListCapture extends React.Component<Props, State> {
                 className={`lh-copy f6`}
                 dangerouslySetInnerHTML={{
                   __html: this.props.annotations
-                    ? annotate(this.props.text, this.props.annotations)
+                    ? annotate(
+                        this.props.captureId,
+                        this.props.text,
+                        this.props.annotations
+                      )
                     : this.props.text
                 }}
               />

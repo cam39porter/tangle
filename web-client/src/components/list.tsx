@@ -236,6 +236,7 @@ class List extends React.Component<Props, State> {
               <div className={``} key={listItem.id}>
                 <ScrollContainerElement name={listItem.id}>
                   <ListCapture
+                    captureId={listItem.id}
                     text={listItem.text.text}
                     handleExpand={this.props.handleExpand(listItem.id)}
                     handleMore={this.props.handleMore(listItem.id)}
@@ -319,6 +320,7 @@ class List extends React.Component<Props, State> {
                             <div className={`flex-grow`}>
                               <ScrollContainerElement name={relatedItem.id}>
                                 <ListCapture
+                                  captureId={relatedItem.id}
                                   text={relatedItem.text.text}
                                   handleExpand={this.props.handleHeaderExpand}
                                   handleMore={this.props.handleMore(

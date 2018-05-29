@@ -207,8 +207,8 @@ export const archiveCapture = gql`
 `;
 
 export const createSession = gql`
-  mutation createSession {
-    createSession {
+  mutation createSession($title: String, $firstCaptureId: String) {
+    createSession(title: $title, firstCaptureId: $firstCaptureId) {
       ...NodeFields
     }
   }

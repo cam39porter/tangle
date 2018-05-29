@@ -437,7 +437,12 @@ class Main extends React.Component<Props, State> {
             }}
             handleHeaderExpand={() => {
               this.props
-                .createSession({})
+                .createSession({
+                  variables: {
+                    firstCaptureId: null,
+                    title: null
+                  }
+                })
                 .then(({ data: res }) => {
                   this.props.history.push(
                     `?id=${encodeURIComponent(res.createSession.id)}`
@@ -477,19 +482,23 @@ class Main extends React.Component<Props, State> {
             footerPaddingText={""}
             // Captures
             handleExpand={(id: string) => () => {
-              // this.props
-              //   .createSession({})
-              //   .then(({ data: res }) => {
-              //     let id = res.createSession.id;
-              //     // Add capture to beginning of session
-              //     return id;
-              //   })
-              //   .then(id => {
-              //     this.props.history.push(`?id=${encodeURIComponent(id)}`);
-              //   })
-              //   .catch(err => console.error(err));
-
-              return noop;
+              this.props
+                .createSession({
+                  variables: {
+                    firstCaptureId: id,
+                    title: null
+                  }
+                })
+                .then(({ data: res }) => {
+                  const sessionId = res.createSession.id;
+                  return sessionId;
+                })
+                .then(sessionId => {
+                  this.props.history.push(
+                    `?id=${encodeURIComponent(sessionId)}`
+                  );
+                })
+                .catch(err => console.error(err));
             }}
             handleIsShowingRelated={(
               id: string,

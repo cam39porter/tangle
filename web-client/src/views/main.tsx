@@ -300,7 +300,7 @@ class Main extends React.Component<Props, State> {
                 return;
               }
 
-              if (this.state.sessionIsEditingTitle && nextTitle) {
+              if (this.state.sessionIsEditingTitle) {
                 this.props
                   .editSession({
                     variables: {
@@ -310,7 +310,10 @@ class Main extends React.Component<Props, State> {
                   })
                   .then(({ data: res }) => {
                     this.setState({
-                      sessionTitle: res.editSession.text,
+                      sessionTitle:
+                        res.editSession.text === "Untitled brainstorm"
+                          ? undefined
+                          : res.editSession.text,
                       sessionIsEditingTitle: !this.state.sessionIsEditingTitle
                     });
                   })

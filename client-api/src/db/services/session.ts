@@ -30,7 +30,8 @@ export function create(userId: string, title: string): Promise<Session> {
     MATCH (u:User {id:{userId}})
     CREATE (session:Session {id:{sessionUrn},
       ${title ? "title:{title}," : ""}
-      created:TIMESTAMP()})
+      created:TIMESTAMP(),
+      owner:{userId}})
     CREATE (session)<-[:CREATED]-(u)
     RETURN session`;
   const params = { userId, sessionUrn, title };

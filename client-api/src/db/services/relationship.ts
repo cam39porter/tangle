@@ -20,5 +20,7 @@ export function create(
     SET r.created = TIMESTAMP()
     RETURN r`;
 
-  return executeQuery(query, params).then(() => null);
+  return executeQuery(query, params).then(() => {
+    return null;
+  });
 }

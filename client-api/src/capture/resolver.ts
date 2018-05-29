@@ -13,6 +13,7 @@ import {
   editCapture,
   dismissCaptureRelation
 } from "./services/capture";
+import { create as createRelationship } from "../db/services/relationship";
 
 export default {
   Mutation: {
@@ -41,11 +42,34 @@ export default {
           getAllByUseCase("CAPTURED_TODAY", null).then(results => results.graph)
       );
     },
-    // @ts-ignore
-    createSession(parent, { title }, context, info): Promise<GraphNode> {
+    createSession(
+      // @ts-ignore
+      parent,
+      // @ts-ignore
+      { title, firstCaptureId },
+      // @ts-ignore
+      context,
+      // @ts-ignore
+      info
+    ): Promise<GraphNode> {
       const userId = getAuthenticatedUser().id;
       return createSession(userId, title).then((session: Session) => {
-        return new GraphNode(session.id, "Session", session.title, null);
+        let relationshipPromise;
+        if (firstCaptureId) {
+          relationshipPromise = createRelationship(
+            userId,
+            session.id,
+            "Session",
+            firstCaptureId,
+            "Capture",
+            "INCLUDES"
+          );
+        } else {
+          relationshipPromise = Promise.resolve(null);
+        }
+        return relationshipPromise.then(() => {
+          return new GraphNode(session.id, "Session", session.title, null);
+        });
       });
     },
     // @ts-ignore

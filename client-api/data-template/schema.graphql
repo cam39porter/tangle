@@ -120,7 +120,7 @@ type Mutation {
     sessionId: String
     captureRelation: CaptureRelation
   ): Graph!
-  createSession(title: String): Node!
+  createSession(title: String, firstCaptureId: String): Node!
   editSession(id: String!, title: String): Node!
   archiveCapture(id: String!): Boolean
   editCapture(id: String!, body: String!): Boolean

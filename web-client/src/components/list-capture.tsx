@@ -4,7 +4,7 @@ import * as React from "react";
 // Router
 
 // Components
-import ButtonExpand from "./button-expand";
+import ButtonZap from "./button-zap";
 import ButtonMore from "./button-more";
 import ButtonFocus from "./button-focus";
 import ButtonArchive from "./button-archive";
@@ -151,7 +151,12 @@ class ListCapture extends React.Component<Props, State> {
               </div>
             )}
           </div>
-          <div className={`flex-grow pa2`}>
+          <div
+            className={`flex-grow pa2`}
+            style={{
+              minHeight: "5em"
+            }}
+          >
             {this.props.isEditing ? (
               <InputCapture
                 handleTextChange={text => {
@@ -212,8 +217,8 @@ class ListCapture extends React.Component<Props, State> {
           {this.props.isMore && (
             <div className={`w-100`}>
               {/* Action Buttons */}
-              <div className={`flex pa2 w-100`}>
-                <div className={`flex-grow`}>
+              <div className={`flex justify-around pa2 w-100`}>
+                <div className={``}>
                   {this.props.isEditing ? (
                     <div data-tip={`Save your changes`}>
                       <ButtonCheck
@@ -232,16 +237,16 @@ class ListCapture extends React.Component<Props, State> {
                     </div>
                   )}
                 </div>
-                <div className={`flex-grow`}>
+                <div className={``}>
                   <div data-tip={`Delete this capture`}>
                     <ButtonArchive onClick={this.props.handleArchive} />
                   </div>
                 </div>
-                <div className={`flex-grow`}>
+                <div className={``}>
                   <div
                     data-tip={`Enter a brainstorm starting with this capture`}
                   >
-                    <ButtonExpand onClick={this.props.handleExpand} />
+                    <ButtonZap onClick={this.props.handleExpand} />
                   </div>
                 </div>
                 <ReactTooltip />

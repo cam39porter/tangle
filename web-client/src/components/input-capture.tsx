@@ -3,7 +3,7 @@ import * as React from "react";
 
 // Components
 import InputText from "./input-text";
-import ButtonExpand from "./button-expand";
+import ButtonZap from "./button-zap";
 import ButtonCapture from "./button-capture";
 import ReactTooltip from "react-tooltip";
 
@@ -33,7 +33,7 @@ const InputCapture = (props: Props) => {
         />
       </div>
       <div className={`pa1`} data-tip={"Enter a brainstorm"}>
-        {props.handleExpand && <ButtonExpand onClick={props.handleExpand} />}
+        {props.handleExpand && <ButtonZap onClick={props.handleExpand} />}
       </div>
       <ReactTooltip />
     </div>

@@ -137,7 +137,11 @@ class List extends React.Component<Props, State> {
           handleClose={this.props.sessionHandleClose}
         />
       ) : (
-        <div className={`pa4`}>
+        <div
+          className={`pa4 ${
+            this.props.isHeaderCapturing ? "bg-accent" : "bg-base"
+          }`}
+        >
           <ListHeader
             handleCaptureTextChange={this.props.handleHeaderCaptureTextChange}
             handleCapture={this.props.handleHeaderCapture}
@@ -229,7 +233,7 @@ class List extends React.Component<Props, State> {
 
             {this.props.header &&
               !this.props.sessionId && (
-                <div className={`pa3 gray`}>{this.props.header}</div>
+                <div className={`pv4 ph3 gray`}>{this.props.header}</div>
               )}
 
             {this.props.listData.map(listItem => (

@@ -4,6 +4,7 @@ import { escape } from "../../helpers/capture-parser";
 import { executeQuery } from "../db";
 import { getLabel, toCaptureUrn } from "../helpers/urn-helpers";
 import { Capture } from "../models/capture";
+import { NotFoundError } from "../../util/exceptions/not-found-error";
 
 export function getMostRecent(
   userId: string,
@@ -35,6 +36,7 @@ export function getCapture(
   const params = { userId, captureId };
   const query = `
     MATCH (capture:Capture {id:{captureId}})<-[created:CREATED]-(user:User {id:{userId}})
+    WHERE NOT EXISTS(capture.archived) OR capture.archived = false
     RETURN capture
   `;
   return executeQuery(query, params).then(formatCaptureResult);
@@ -124,5 +126,8 @@ function formatCaptureResult(result: StatementResult): Capture {
 }
 
 function formatCaptureRecord(record: any): Capture {
+  if (!record) {
+    throw new NotFoundError("Could not find record");
+  }
   return record.get("capture").properties as Capture;
 }

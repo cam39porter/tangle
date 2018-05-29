@@ -45,7 +45,7 @@ function expandGraph(
   OPTIONAL MATCH (roots)-[r1:TAGGED_WITH|INCLUDES|REFERENCES|LINKS_TO|PREVIOUS|COMMENTED_ON]-(firstDegree)
     WHERE (firstDegree:Tag OR firstDegree:Entity OR firstDegree:Session OR firstDegree:Link OR firstDegree:Capture)
     AND (NOT EXISTS(firstDegree.archived) or firstDegree.archived = false)
-  OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|INCLUDES|REFERENCES|LINKS_TO]
+  OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]
     -(secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
     WHERE NOT EXISTS(secondDegree.archived) or secondDegree.archived = false
   WITH collect(roots) as roots, collect(roots)+collect(firstDegree)+collect(secondDegree) AS nodes,
@@ -82,7 +82,7 @@ function expandList(
     (firstDegree)
   WHERE (firstDegree:Tag OR firstDegree:Entity OR firstDegree:Session OR firstDegree:Link OR firstDegree:Capture)
   AND (NOT EXISTS(firstDegree.archived) or firstDegree.archived = false)
-  OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|INCLUDES|REFERENCES|LINKS_TO]-
+  OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]-
     (secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
     WHERE (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)
   RETURN roots, r1, firstDegree, r2, secondDegree

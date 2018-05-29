@@ -131,7 +131,7 @@ class ListCapture extends React.Component<Props, State> {
         }}
       >
         <div
-          className={`flex flex-wrap pa3 pb0 w-100 br4 ba ${
+          className={`flex flex-wrap pa3 w-100 br4 ba ${
             this.props.isGraphFocus ? "b--accent" : "b--light-gray"
           } bg-white`}
         >
@@ -147,44 +147,60 @@ class ListCapture extends React.Component<Props, State> {
                     />
                   </div>
                 </div>
+                <div className={`flex-grow w-100`}>
+                  {this.props.handleIsShowingRelated && (
+                    <div
+                      data-tip={`${
+                        this.props.isShowingRelated ? "Hide" : "Show"
+                      } related captures`}
+                    >
+                      <ButtonRelated
+                        isUp={!!this.props.isShowingRelated}
+                        onClick={this.props.handleIsShowingRelated}
+                      />
+                    </div>
+                  )}
+                </div>
                 <ReactTooltip />
               </div>
             )}
           </div>
           <div
-            className={`flex-grow pa2`}
+            className={`flex-grow dt ph2`}
             style={{
               minHeight: "5em"
             }}
           >
-            {this.props.isEditing ? (
-              <InputCapture
-                handleTextChange={text => {
-                  this.text = text;
-                }}
-                handleCapture={() => {
-                  this.props.handleEdit(this.text);
-                }}
-                startingText={this.props.text}
-                clearOnEnter={this.props.clearOnEnter ? true : false}
-              />
-            ) : (
-              <div
-                onDoubleClick={() => {
-                  this.props.handleEdit(this.text);
-                }}
-                className={`lh-copy f6`}
-                dangerouslySetInnerHTML={{
-                  __html: this.props.annotations
-                    ? annotate(
-                        this.props.captureId,
-                        this.props.text,
-                        this.props.annotations
-                      )
-                    : this.props.text
-                }}
-              />
-            )}
+            <div className={`dtc v-mid`}>
+              {this.props.isEditing ? (
+                <InputCapture
+                  handleTextChange={text => {
+                    this.text = text;
+                  }}
+                  handleCapture={() => {
+                    this.props.handleEdit(this.text);
+                  }}
+                  startingText={this.props.text}
+                  clearOnEnter={this.props.clearOnEnter ? true : false}
+                />
+              ) : (
+                <div
+                  onDoubleClick={() => {
+                    this.props.handleEdit(this.text);
+                  }}
+                  className={`lh-copy f6`}
+                  dangerouslySetInnerHTML={{
+                    __html: this.props.annotations
+                      ? annotate(
+                          this.props.captureId,
+                          this.props.text,
+                          this.props.annotations
+                        )
+                      : this.props.text
+                  }}
+                />
+              )}
+            </div>
           </div>
           <div className={`w2`}>
             {this.state.isShowingButtons && (
@@ -257,24 +273,6 @@ class ListCapture extends React.Component<Props, State> {
                 comments={this.props.comments}
               />
             </div>
-          )}
-          {this.props.handleIsShowingRelated ? (
-            <div className={`w-100`}>
-              <div
-                className={`center pa2 w2`}
-                data-tip={`${
-                  this.props.isShowingRelated ? "Hide" : "Show"
-                } related captures`}
-              >
-                <ButtonRelated
-                  isUp={!!this.props.isShowingRelated}
-                  onClick={this.props.handleIsShowingRelated}
-                />
-              </div>
-            </div>
-          ) : (
-            // this adds padding to the bottom of the card when the show related button is not rendered
-            <div className={`w-100 pb3`} />
           )}
         </div>
         <ReactTooltip />

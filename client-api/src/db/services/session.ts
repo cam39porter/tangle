@@ -11,11 +11,14 @@ export function edit(
 ): Promise<Session> {
   const query = `
     MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
-    SET session.title = {title}
+    ${title ? "SET session.title = {title}" : "REMOVE session.title"}
     RETURN session`;
   const params = { userId, sessionId, title };
   return executeQuery(query, params).then((result: StatementResult) => {
     const session = result.records[0].get("session").properties as Session;
+    if (!session.title) {
+      session.title = getDefaultTitle();
+    }
     return session;
   });
 }
@@ -34,8 +37,12 @@ export function create(userId: string, title: string): Promise<Session> {
   return executeQuery(query, params).then((result: StatementResult) => {
     const session = result.records[0].get("session").properties as Session;
     if (!session.title) {
-      session.title = "Untitled brainstorm";
+      session.title = getDefaultTitle();
     }
     return session;
   });
+}
+
+function getDefaultTitle(): string {
+  return "Untitled brainstorm";
 }

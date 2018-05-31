@@ -15,6 +15,11 @@ import { upsertEntity } from "../../db/services/entity";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { parseLinks, parseTags, stripTags } from "../../helpers/capture-parser";
 import { CaptureRelation } from "../models/capture-relation";
+import { CAPTURE_LABEL } from "../../db/helpers/labels";
+import {
+  DISMISSED_RELATION_RELATIONSHIP,
+  PREVIOUS_RELATIONSHIP
+} from "../../db/helpers/relationships";
 
 export function dismissCaptureRelation(
   fromId: string,
@@ -23,10 +28,10 @@ export function dismissCaptureRelation(
   return createRelationship(
     getAuthenticatedUser().id,
     fromId,
-    "Capture",
+    CAPTURE_LABEL,
     toId,
-    "Capture",
-    "DISMISSED_RELATION"
+    CAPTURE_LABEL,
+    DISMISSED_RELATION_RELATIONSHIP
   ).then(() => true);
 }
 
@@ -46,7 +51,7 @@ export function createCapture(
   const user: User = getAuthenticatedUser();
   if (
     captureRelation &&
-    captureRelation.relationshipType === "PREVIOUS" &&
+    captureRelation.relationshipType.name === PREVIOUS_RELATIONSHIP.name &&
     !parentId
   ) {
     throw new GraphQLError(
@@ -59,9 +64,9 @@ export function createCapture(
         return createRelationship(
           user.id,
           capture.id,
-          "Capture",
+          CAPTURE_LABEL,
           captureRelation.captureId,
-          "Capture",
+          CAPTURE_LABEL,
           captureRelation.relationshipType
         ).then(() => capture);
       } else {

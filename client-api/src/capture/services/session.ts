@@ -10,7 +10,15 @@ import {
   deleteRelationship
 } from "../../db/services/relationship";
 import { upsert as upsertTag, getTags } from "../../db/services/tag";
-
+import {
+  CAPTURE_LABEL,
+  SESSION_LABEL,
+  TAG_LABEL
+} from "../../db/helpers/labels";
+import {
+  INCLUDES_RELATIONSHIP,
+  TAGGED_WITH_RELATIONSHIP
+} from "../../db/helpers/relationships";
 export function create(
   title: string,
   firstCaptureId: string,
@@ -23,10 +31,10 @@ export function create(
       relationshipPromise = createRelationship(
         userId,
         session.id,
-        "Session",
+        SESSION_LABEL,
         firstCaptureId,
-        "Capture",
-        "INCLUDES"
+        CAPTURE_LABEL,
+        INCLUDES_RELATIONSHIP
       );
     } else {
       relationshipPromise = Promise.resolve(null);
@@ -61,10 +69,10 @@ function deleteTags(userId: string, sessionId: string): Promise<void> {
           deleteRelationship(
             userId,
             sessionId,
-            "Session",
+            SESSION_LABEL,
             tag.id,
-            "Tag",
-            "TAGGED_WITH"
+            TAG_LABEL,
+            TAGGED_WITH_RELATIONSHIP
           )
         )
       );

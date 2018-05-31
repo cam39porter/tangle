@@ -1,9 +1,9 @@
 import { Session } from "../db/models/session";
 import { archiveCaptureNode } from "../db/services/capture";
 import {
-  edit as editSession,
-  create as createSession
-} from "../db/services/session";
+  create as createSession,
+  edit as editSession
+} from "./services/session";
 import { getAuthenticatedUser } from "../filters/request-context";
 import { Graph } from "../surface/models/graph";
 import { GraphNode } from "../surface/models/graph-node";
@@ -13,7 +13,6 @@ import {
   editCapture,
   dismissCaptureRelation
 } from "./services/capture";
-import { create as createRelationship } from "../db/services/relationship";
 
 export default {
   Mutation: {
@@ -46,38 +45,25 @@ export default {
       // @ts-ignore
       parent,
       // @ts-ignore
-      { title, firstCaptureId },
+      { title, firstCaptureId, tags },
       // @ts-ignore
       context,
       // @ts-ignore
       info
     ): Promise<GraphNode> {
-      const userId = getAuthenticatedUser().id;
-      return createSession(userId, title).then((session: Session) => {
-        let relationshipPromise;
-        if (firstCaptureId) {
-          relationshipPromise = createRelationship(
-            userId,
-            session.id,
-            "Session",
-            firstCaptureId,
-            "Capture",
-            "INCLUDES"
-          );
-        } else {
-          relationshipPromise = Promise.resolve(null);
-        }
-        return relationshipPromise.then(() => {
-          return new GraphNode(session.id, "Session", session.title, null);
-        });
-      });
+      return createSession(title, firstCaptureId, tags);
     },
-    // @ts-ignore
-    editSession(parent, { id, title }, context, info): Promise<GraphNode> {
-      const userId = getAuthenticatedUser().id;
-      return editSession(userId, id, title).then((session: Session) => {
-        return new GraphNode(session.id, "Session", session.title, null);
-      });
+    editSession(
+      // @ts-ignore
+      parent,
+      // @ts-ignore
+      { id, title, tags },
+      // @ts-ignore
+      context,
+      // @ts-ignore
+      info
+    ): Promise<GraphNode> {
+      return editSession(id, title, tags);
     },
     // @ts-ignore
     dismissCaptureRelation(

@@ -1,6 +1,6 @@
 import { User } from "../../db/models/user";
 import { upsert as upsertLink } from "../../db/services/link";
-import { create as createRelationship } from "../../db/services/relationship";
+import { createRelationship } from "../../db/services/relationship";
 import { upsert as upsertTag } from "../../db/services/tag";
 
 import {
@@ -92,7 +92,7 @@ function createRelations(
 function createTags(captureId: string, body: string): Promise<boolean> {
   const user: User = getAuthenticatedUser();
   return Promise.all(
-    parseTags(body).map(tag => upsertTag(user.id, tag, captureId))
+    parseTags(body).map(tag => upsertTag(user.id, tag, captureId, "Capture"))
   ).then(() => true);
 }
 

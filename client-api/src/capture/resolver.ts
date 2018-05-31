@@ -1,4 +1,3 @@
-import { Session } from "../db/models/session";
 import { archiveCaptureNode } from "../db/services/capture";
 import {
   create as createSession,

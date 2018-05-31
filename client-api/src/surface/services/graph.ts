@@ -86,7 +86,7 @@ function getOthers(urn: string): Promise<SearchResults> {
   switch (getUrnType(urn)) {
     case "session":
       return getCapturesByRelatedNode(userUrn, urn).then(captures =>
-        expandCaptures(userUrn, captures.map(c => c.id), null, SortListBy.ASC)
+        expandCaptures(userUrn, captures.map(c => c.id), urn, SortListBy.ASC)
       );
     default:
       return getCapturesByRelatedNode(userUrn, urn).then(captures => {
@@ -94,7 +94,7 @@ function getOthers(urn: string): Promise<SearchResults> {
         return expandCaptures(
           userUrn,
           captures.map(c => c.id),
-          null,
+          urn,
           SortListBy.NONE,
           name ? `Focusing on '${name}'` : null
         );

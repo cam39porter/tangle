@@ -12,7 +12,7 @@ import { SortListBy } from "../../types";
 export function expandCaptures(
   userUrn: string,
   captureIds: string[],
-  startUrn = null,
+  startUrn: string = null,
   sortBy: SortListBy = SortListBy.NONE,
   header: string | null = null
 ): Promise<SearchResults> {
@@ -35,9 +35,9 @@ export function expandCaptures(
 function expandGraph(
   userUrn: string,
   captureIds: string[],
-  startUrn = null
+  startUrn: string = null
 ): Promise<Graph> {
-  const params = { userUrn, captureIds };
+  const params = { userUrn, captureIds, startUrn };
   const query = `
   MATCH (roots:Capture)
     WHERE roots.id IN {captureIds}
@@ -45,6 +45,7 @@ function expandGraph(
   OPTIONAL MATCH (roots)-[r1:TAGGED_WITH|INCLUDES|REFERENCES|LINKS_TO|PREVIOUS|COMMENTED_ON]-(firstDegree)
     WHERE (firstDegree:Tag OR firstDegree:Entity OR firstDegree:Session OR firstDegree:Link OR firstDegree:Capture)
     AND (NOT EXISTS(firstDegree.archived) or firstDegree.archived = false)
+    ${startUrn ? "AND (firstDegree.id <> {startUrn})" : ""}
   OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]
     -(secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
     WHERE NOT EXISTS(secondDegree.archived) or secondDegree.archived = false
@@ -71,9 +72,10 @@ function expandGraph(
 function expandList(
   userUrn: string,
   captureIds: string[],
-  sortBy: SortListBy = SortListBy.NONE
+  sortBy: SortListBy = SortListBy.NONE,
+  startUrn: string = null
 ): Promise<ListItem[]> {
-  const params = { userUrn, captureIds };
+  const params = { userUrn, captureIds, startUrn };
   const query = `
   MATCH (roots:Capture)
     WHERE roots.id IN {captureIds}
@@ -82,6 +84,7 @@ function expandList(
     (firstDegree)
   WHERE (firstDegree:Tag OR firstDegree:Entity OR firstDegree:Session OR firstDegree:Link OR firstDegree:Capture)
   AND (NOT EXISTS(firstDegree.archived) or firstDegree.archived = false)
+  ${startUrn ? "AND (firstDegree.id <> {startUrn})" : ""}
   OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]-
     (secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
     WHERE (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)

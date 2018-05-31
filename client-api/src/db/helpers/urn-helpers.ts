@@ -52,6 +52,7 @@ function getLabel(urn: string): string {
   return label;
 }
 
+// TODO cole remove this and use data fetched from db
 function getEntityOrTagName(urn: string): string | null {
   const type = getUrnType(urn);
   const getName = (u: string) => u.split(";")[1];

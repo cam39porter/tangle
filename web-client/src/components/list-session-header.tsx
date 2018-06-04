@@ -6,7 +6,7 @@ import ListSessionTitle from "./list-session-title";
 import ListSessionTags from "./list-session-tags";
 import ButtonEdit from "./button-edit";
 import ButtonCheck from "./button-check";
-import ButtonZapOff from "./button-zap-off";
+import ButtonExit from "./button-exit";
 import ReactTooltip from "react-tooltip";
 
 // Utils
@@ -80,7 +80,7 @@ class ListSessionHeader extends React.Component<Props, State> {
         </div>
         <div className={`ma2 pv1 w2`}>
           <div data-tip={`exit the brainstorm`}>
-            <ButtonZapOff onClick={this.props.handleClose} />
+            <ButtonExit onClick={this.props.handleClose} />
           </div>
         </div>
         <ReactTooltip />

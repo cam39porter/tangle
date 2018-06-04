@@ -297,7 +297,7 @@ class Graph extends React.Component<Props, State> {
           cursor: "pointer",
           lineStyle: {
             curveness: 0.3,
-            opacity: 0.2,
+            opacity: 0.3,
             type: "solid"
           },
           categories: this.getCategories(),

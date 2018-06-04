@@ -39,16 +39,7 @@ function expandGraph(
 ): Promise<Graph> {
   const params = { userUrn, captureIds, startUrn };
   const query = `
-  MATCH (roots:Capture)
-    WHERE roots.id IN {captureIds}
-  WITH roots
-  OPTIONAL MATCH (roots)-[r1:TAGGED_WITH|INCLUDES|REFERENCES|LINKS_TO|PREVIOUS|COMMENTED_ON]-(firstDegree)
-    WHERE (firstDegree:Tag OR firstDegree:Entity OR firstDegree:Session OR firstDegree:Link OR firstDegree:Capture)
-    AND (NOT EXISTS(firstDegree.archived) or firstDegree.archived = false)
-    ${startUrn ? "AND (firstDegree.id <> {startUrn})" : ""}
-  OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]
-    -(secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
-    WHERE NOT EXISTS(secondDegree.archived) or secondDegree.archived = false
+  ${baseExpansion(startUrn)}
   WITH collect(roots) as roots, collect(roots)+collect(firstDegree)+collect(secondDegree) AS nodes,
     collect(distinct r1)+collect(distinct r2) AS relationships
   UNWIND nodes as node
@@ -77,17 +68,7 @@ function expandList(
 ): Promise<ListItem[]> {
   const params = { userUrn, captureIds, startUrn };
   const query = `
-  MATCH (roots:Capture)
-    WHERE roots.id IN {captureIds}
-  WITH roots
-  OPTIONAL MATCH (roots)-[r1:TAGGED_WITH|INCLUDES|REFERENCES|LINKS_TO|PREVIOUS|COMMENTED_ON|DISMISSED_RELATION]-
-    (firstDegree)
-  WHERE (firstDegree:Tag OR firstDegree:Entity OR firstDegree:Session OR firstDegree:Link OR firstDegree:Capture)
-  AND (NOT EXISTS(firstDegree.archived) or firstDegree.archived = false)
-  ${startUrn ? "AND (firstDegree.id <> {startUrn})" : ""}
-  OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]-
-    (secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
-    WHERE (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)
+  ${baseExpansion(startUrn)}
   RETURN roots, r1, firstDegree, r2, secondDegree
   `;
   return executeQuery(query, params).then((result: StatementResult) => {
@@ -118,4 +99,24 @@ function expandList(
 
 function formatCaptures(nodes: Node[]): Capture[] {
   return nodes.map(node => node.properties as Capture);
+}
+
+function baseExpansion(startUrn: string): string {
+  return `
+  MATCH (roots:Capture)
+  WHERE roots.id IN {captureIds}
+  WITH roots
+  OPTIONAL MATCH (roots)-[r1:TAGGED_WITH|INCLUDES|REFERENCES|LINKS_TO|PREVIOUS|COMMENTED_ON|DISMISSED_RELATION]-
+  (firstDegree)
+  WHERE (firstDegree:Tag
+    OR firstDegree:Entity
+    OR firstDegree:Session OR firstDegree:Link OR firstDegree:Capture)
+  AND (NOT EXISTS(firstDegree.archived) or firstDegree.archived = false)
+  ${startUrn ? "AND (firstDegree.id <> {startUrn})" : ""}
+  WITH roots, r1, firstDegree
+  ORDER BY r1.salience DESC LIMIT 5
+  OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]-
+  (secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
+  WHERE (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)
+  `;
 }

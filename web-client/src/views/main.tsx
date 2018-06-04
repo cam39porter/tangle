@@ -395,7 +395,11 @@ class Main extends React.Component<Props, State> {
                 sessionIsEditingTags: false,
                 sessionIsEditingTitle: false
               });
-              this.props.history.goBack();
+              if (this.props.history.length > 2) {
+                this.props.history.goBack();
+              } else {
+                this.props.history.push("/");
+              }
             }}
             // Header
             handleHeaderCaptureTextChange={nextCaptureText => {

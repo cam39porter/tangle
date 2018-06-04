@@ -1,55 +1,56 @@
-import * as _ from "lodash";
 import { Edge } from "../models/edge";
 import { Graph } from "../models/graph";
 import { GraphNode } from "../models/graph-node";
 import { Capture } from "../../db/models/capture";
 import { Node, Relationship } from "neo4j-driver/types/v1";
+import { CAPTURE_LABEL } from "../../db/helpers/labels";
 
 export function buildGraph(
-  neoNodes: Node[],
-  neoRelationships: Relationship[],
-  startUrn: string,
-  neoRoots: Capture[]
+  paths: Array<[Capture, Relationship, Node, Relationship, Capture]>
 ): Graph {
-  const neoIdToNodeId = _.mapValues(
-    _.keyBy(neoNodes, "identity"),
-    "properties.id"
-  );
-
-  const captureRoots = neoRoots.map(capture => capture.id);
-  if (startUrn) {
-    captureRoots.push(startUrn);
-  }
-
-  const nodes: GraphNode[] = neoNodes.map(
-    node =>
-      new GraphNode(
-        node.properties["id"],
-        node.labels[0],
-        node.properties["body"] ||
-          node.properties["name"] ||
-          node.properties["title"] ||
-          node.properties["url"] ||
-          "Untitled",
-        getLevel(captureRoots, node.properties["id"])
-      )
-  );
-  const edges: Edge[] = neoRelationships.map(
-    edge =>
-      new Edge({
-        source: neoIdToNodeId[edge.start],
-        destination: neoIdToNodeId[edge.end],
-        type: edge.type,
-        salience: edge.properties["salience"]
-      })
-  );
-  return new Graph(nodes, edges);
+  const nodes = new Map<string, GraphNode>();
+  const edges = [];
+  paths.forEach(path => {
+    nodes.set(path[0].id, formatCapture(path[0], true));
+    if (path[2]) {
+      nodes.set(path[2].properties["id"], formatNode(path[2]));
+      edges.push(formatEdge(path[1], path[0].id, path[2].properties["id"]));
+    }
+    if (path[4]) {
+      nodes.set(path[4].id, formatCapture(path[4], false));
+      edges.push(formatEdge(path[3], path[2].properties["id"], path[4].id));
+    }
+  });
+  return new Graph(Array.from(nodes, ([, value]) => value), edges);
 }
 
-function getLevel(rootIds, id): number {
-  if (rootIds.includes(id)) {
-    return 0;
-  } else {
-    return 1;
-  }
+function formatNode(node: Node): GraphNode {
+  return new GraphNode(
+    node.properties["id"],
+    node.labels[0],
+    node.properties["body"] ||
+      node.properties["name"] ||
+      node.properties["title"] ||
+      node.properties["url"] ||
+      "Untitled",
+    1
+  );
+}
+
+function formatCapture(capture: Capture, isRoot: boolean): GraphNode {
+  return new GraphNode(
+    capture.id,
+    CAPTURE_LABEL.name,
+    capture.body,
+    isRoot ? 0 : 1
+  );
+}
+
+function formatEdge(rel: Relationship, start: string, end: string): Edge {
+  return new Edge({
+    source: start,
+    destination: end,
+    type: rel.type,
+    salience: rel.properties["salience"]
+  });
 }

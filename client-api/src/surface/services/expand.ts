@@ -38,25 +38,9 @@ function expandGraph(
   startUrn: string = null
 ): Promise<Graph> {
   const params = { userUrn, captureIds, startUrn };
-  const query = `
-  ${baseExpansion(startUrn)}
-  WITH collect(roots) as roots, collect(roots)+collect(firstDegree)+collect(secondDegree) AS nodes,
-    collect(distinct r1)+collect(distinct r2) AS relationships
-  UNWIND nodes as node
-  UNWIND relationships as relationship
-  RETURN roots, collect(distinct node) as nodes, collect(distinct relationship) as relationships
-  `;
+  const query = getExpansionQuery(startUrn, false);
   return executeQuery(query, params).then((result: StatementResult) => {
-    if (result.records.length === 0) {
-      return new Graph([], []);
-    } else {
-      return buildGraph(
-        result.records[0].get("nodes"),
-        result.records[0].get("relationships"),
-        startUrn,
-        formatCaptures(result.records[0].get("roots"))
-      );
-    }
+    return buildGraph(formatDbResponse(result));
   });
 }
 
@@ -67,46 +51,46 @@ function expandList(
   startUrn: string = null
 ): Promise<ListItem[]> {
   const params = { userUrn, captureIds, startUrn };
-  const query = `
-  ${baseExpansion(startUrn)}
-  RETURN roots, r1, firstDegree, r2, secondDegree
-  `;
+  const query = getExpansionQuery(startUrn, true);
   return executeQuery(query, params).then((result: StatementResult) => {
-    const paths: Array<
-      [Capture, Relationship, Node, Relationship, Capture]
-    > = result.records.map(record => {
-      const root: Capture = record.get("roots")
-        ? (record.get("roots").properties as Capture)
-        : (null as Capture);
-      const r1: Relationship = record.get("r1") as Relationship;
-      const intermediate: Node = record.get("firstDegree") as Node;
-      const r2: Relationship = record.get("r2") as Relationship;
-      const end: Capture = record.get("secondDegree")
-        ? (record.get("secondDegree").properties as Capture)
-        : (null as Capture);
-      const ret: [Capture, Relationship, Node, Relationship, Capture] = [
-        root,
-        r1,
-        intermediate,
-        r2,
-        end
-      ];
-      return ret;
-    });
-    return buildList(paths, sortBy);
+    return buildList(formatDbResponse(result), sortBy);
   });
 }
 
-function formatCaptures(nodes: Node[]): Capture[] {
-  return nodes.map(node => node.properties as Capture);
+function formatDbResponse(
+  result: StatementResult
+): Array<[Capture, Relationship, Node, Relationship, Capture]> {
+  const paths: Array<
+    [Capture, Relationship, Node, Relationship, Capture]
+  > = result.records.map(record => {
+    const root: Capture = record.get("roots")
+      ? (record.get("roots").properties as Capture)
+      : (null as Capture);
+    const r1: Relationship = record.get("r1") as Relationship;
+    const intermediate: Node = record.get("firstDegree") as Node;
+    const r2: Relationship = record.get("r2") as Relationship;
+    const end: Capture = record.get("secondDegree")
+      ? (record.get("secondDegree").properties as Capture)
+      : (null as Capture);
+    const ret: [Capture, Relationship, Node, Relationship, Capture] = [
+      root,
+      r1,
+      intermediate,
+      r2,
+      end
+    ];
+    return ret;
+  });
+  return paths;
 }
 
-function baseExpansion(startUrn: string): string {
+function getExpansionQuery(startUrn: string, listMode: boolean): string {
   return `
   MATCH (roots:Capture)
   WHERE roots.id IN {captureIds}
   WITH roots
-  OPTIONAL MATCH (roots)-[r1:TAGGED_WITH|INCLUDES|REFERENCES|LINKS_TO|PREVIOUS|COMMENTED_ON|DISMISSED_RELATION]-
+  OPTIONAL MATCH (roots)-[r1:TAGGED_WITH|INCLUDES|REFERENCES|LINKS_TO|PREVIOUS|COMMENTED_ON
+    ${listMode ? "|DISMISSED_RELATION" : ""}]-
   (firstDegree)
   WHERE (firstDegree:Tag
     OR firstDegree:Entity
@@ -118,5 +102,6 @@ function baseExpansion(startUrn: string): string {
   OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]-
   (secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
   WHERE (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)
+  RETURN roots, r1, firstDegree, r2, secondDegree
   `;
 }

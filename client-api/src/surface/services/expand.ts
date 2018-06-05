@@ -89,6 +89,8 @@ function getExpansionQuery(startUrn: string, listMode: boolean): string {
   MATCH (roots:Capture)
   WHERE roots.id IN {captureIds}
   WITH roots
+
+  CALL apoc.cypher.run('
   OPTIONAL MATCH (roots)-[r1:TAGGED_WITH|INCLUDES|REFERENCES|LINKS_TO|PREVIOUS|COMMENTED_ON
     ${listMode ? "|DISMISSED_RELATION" : ""}]-
   (firstDegree)
@@ -97,8 +99,10 @@ function getExpansionQuery(startUrn: string, listMode: boolean): string {
     OR firstDegree:Session OR firstDegree:Link OR firstDegree:Capture)
   AND (NOT EXISTS(firstDegree.archived) or firstDegree.archived = false)
   ${startUrn ? "AND (firstDegree.id <> {startUrn})" : ""}
-  WITH roots, r1, firstDegree
-  ORDER BY r1.salience DESC LIMIT 5
+  RETURN r1, firstDegree
+  ORDER BY r1.salience DESC LIMIT 5', {roots:roots}) YIELD value
+  WITH roots, value.r1 as r1, value.firstDegree as firstDegree
+
   OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]-
   (secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
   WHERE (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)

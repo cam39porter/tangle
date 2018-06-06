@@ -104,7 +104,7 @@ function getExpansionQuery(startUrn: string, listMode: boolean): string {
   {roots:roots, startUrn:{startUrn}}) YIELD value
   WITH roots, value.r1 as r1, value.firstDegree as firstDegree
 
-  OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]-
+  MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]-
   (secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
   WHERE (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)
   RETURN roots, r1, firstDegree, r2, secondDegree

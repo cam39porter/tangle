@@ -98,9 +98,10 @@ function getExpansionQuery(startUrn: string, listMode: boolean): string {
     OR firstDegree:Entity
     OR firstDegree:Session OR firstDegree:Link OR firstDegree:Capture)
   AND (NOT EXISTS(firstDegree.archived) or firstDegree.archived = false)
-  ${startUrn ? "AND (firstDegree.id <> {startUrn})" : ""}
+  ${startUrn ? "AND (firstDegree.id <> startUrn)" : ""}
   RETURN r1, firstDegree
-  ORDER BY r1.salience DESC LIMIT 5', {roots:roots}) YIELD value
+  ORDER BY r1.salience DESC LIMIT 5',
+  {roots:roots, startUrn:{startUrn}}) YIELD value
   WITH roots, value.r1 as r1, value.firstDegree as firstDegree
 
   OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]-

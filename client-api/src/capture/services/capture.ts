@@ -38,7 +38,7 @@ export function dismissCaptureRelation(
 export function editCapture(id: string, body: string): Promise<boolean> {
   const userId = getAuthenticatedUser().id;
   return editCaptureNodeAndDeleteRelationships(userId, id, body).then(() =>
-    createRelations(id, body, "PLAIN_TEXT")
+    createRelations(id, body, "HTML")
   );
 }
 

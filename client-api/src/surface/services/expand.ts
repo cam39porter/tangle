@@ -102,9 +102,9 @@ function getExpansionQuery(startUrn: string, listMode: boolean): string {
   RETURN r1, firstDegree
   ORDER BY r1.salience DESC LIMIT 5',
   {roots:roots, startUrn:{startUrn}}) YIELD value
-  WITH roots, value.r1 as r1, value.firstDegree as firstDegree
+  WITH roots, value.r1 as r1, value.firstDegree as firstDegree, collect(roots) as allRoots
 
-  MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]-
+  OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]-
   (secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
   WHERE (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)
   RETURN roots, r1, firstDegree, r2, secondDegree

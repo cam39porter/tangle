@@ -1,8 +1,8 @@
 function parseTags(str: string): string[] {
-  const regex = /(?:^|\s)(?:#)([a-zA-Z\d]+)/gm;
+  const regexp = new RegExp("#([^\\s]*)", "g");
   const ret = [];
   let match;
-  while ((match = regex.exec(str))) {
+  while ((match = regexp.exec(str))) {
     ret.push(match[1]);
   }
   return ret;

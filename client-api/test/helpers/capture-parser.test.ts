@@ -23,8 +23,8 @@ describe("test parseTags", () => {
     expect(parseTags("#one tag #two tag")).toEqual(["one", "two"]);
   });
 
-  test("parseTags ending tag", () => {
-    expect(parseTags("one #")).toEqual([]);
+  test("parseTags html", () => {
+    expect(parseTags("<p>#one")).toEqual(["one"]);
   });
 });
 
@@ -45,8 +45,8 @@ describe("test stripTags", () => {
     expect(stripTags("#one tag #two tag")).toEqual("tag  tag");
   });
 
-  test("stripTags ending tag", () => {
-    expect(stripTags("one #")).toEqual("one");
+  test("stripTags html", () => {
+    expect(stripTags("<p>#one</p>")).toEqual("<p></p>");
   });
 });
 

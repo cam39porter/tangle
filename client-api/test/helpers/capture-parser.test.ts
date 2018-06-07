@@ -46,7 +46,7 @@ describe("test stripTags", () => {
   });
 
   test("stripTags html", () => {
-    expect(stripTags("<p>#one</p>")).toEqual("<p></p>");
+    expect(stripTags("<p>#one</p>")).toEqual("<p>");
   });
 });
 

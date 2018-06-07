@@ -87,21 +87,21 @@ class ListCapture extends React.Component<Props, State> {
 
   componentDidMount() {
     // add links to annotations
-    this.props.annotations &&
-      this.props.annotations.forEach(a => {
-        if (a.linkToId === null) {
-          return;
-        }
-        let annotationNode = document.getElementById(
-          `${this.props.captureId}:${a.linkToId}:${a.start}:${a.end}`
-        );
-        annotationNode &&
-          annotationNode.addEventListener("click", () => {
-            this.props.handleFocusWithId &&
-              a.linkToId &&
-              this.props.handleFocusWithId(a.linkToId)();
-          });
-      });
+    // this.props.annotations &&
+    //   this.props.annotations.forEach(a => {
+    //     if (a.linkToId === null) {
+    //       return;
+    //     }
+    //     let annotationNode = document.getElementById(
+    //       `${this.props.captureId}:${a.linkToId}:${a.start}:${a.end}`
+    //     );
+    //     annotationNode &&
+    //       annotationNode.addEventListener("click", () => {
+    //         this.props.handleFocusWithId &&
+    //           a.linkToId &&
+    //           this.props.handleFocusWithId(a.linkToId)();
+    //       });
+    //   });
   }
 
   render() {

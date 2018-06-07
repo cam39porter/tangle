@@ -8,7 +8,7 @@ import ReactTooltip from "react-tooltip";
 import * as Draft from "draft-js";
 
 // Utils
-import { stateToHTML } from "draft-js-export-html";
+import { convertToHTML, convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 
 const TIME_TO_AUTO_CAPTURE_EDIT = 500; // ms till change is automatically captured
@@ -34,12 +34,9 @@ class InputCapture extends React.Component<Props, State> {
     let editorState = Draft.EditorState.createEmpty();
 
     if (this.props.startingHTML) {
-      const blocksFromHTML = Draft.convertFromHTML(this.props.startingHTML);
-      const state = Draft.ContentState.createFromBlockArray(
-        blocksFromHTML.contentBlocks,
-        blocksFromHTML.entityMap
+      editorState = Draft.EditorState.createWithContent(
+        convertFromHTML(this.props.startingHTML)
       );
-      editorState = Draft.EditorState.createWithContent(state);
     }
 
     this.state = {
@@ -57,7 +54,7 @@ class InputCapture extends React.Component<Props, State> {
 
   handleOnChange = (editorState: Draft.EditorState) => {
     // inform parent components of state
-    this.props.handleOnChange(stateToHTML(editorState.getCurrentContent()));
+    this.props.handleOnChange(convertToHTML(editorState.getCurrentContent()));
 
     // set timeout to capture after a given amount of time of no changes
     this.captureTimer && clearTimeout(this.captureTimer);
@@ -76,7 +73,16 @@ class InputCapture extends React.Component<Props, State> {
       <div className={`flex w-100`}>
         {this.props.handleCapture && (
           <div className={`pa1`} data-tip={"Add to your tangle"}>
-            <ButtonCapture onClick={this.props.handleCapture} />
+            <ButtonCapture
+              onClick={() => {
+                if (this.props.handleCapture) {
+                  this.props.handleCapture();
+                  this.setState({
+                    editorState: Draft.EditorState.createEmpty()
+                  });
+                }
+              }}
+            />
           </div>
         )}
         <div className={`flex-grow`}>

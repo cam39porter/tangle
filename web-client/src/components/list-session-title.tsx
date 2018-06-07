@@ -5,7 +5,7 @@ import * as React from "react";
 import * as Draft from "draft-js";
 
 // Utils
-import { stateToHTML } from "draft-js-export-html";
+import { convertToHTML, convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 
 interface Props {
@@ -25,12 +25,9 @@ class ListSessionTitle extends React.Component<Props, State> {
     let editorState = Draft.EditorState.createEmpty();
 
     if (this.props.title) {
-      const blocksFromHTML = Draft.convertFromHTML(this.props.title);
-      const state = Draft.ContentState.createFromBlockArray(
-        blocksFromHTML.contentBlocks,
-        blocksFromHTML.entityMap
+      editorState = Draft.EditorState.createWithContent(
+        convertFromHTML(this.props.title)
       );
-      editorState = Draft.EditorState.createWithContent(state);
     }
 
     this.state = {
@@ -40,7 +37,7 @@ class ListSessionTitle extends React.Component<Props, State> {
 
   handleOnChange = (editorState: Draft.EditorState) => {
     // inform parent components of state
-    this.props.handleOnChange(stateToHTML(editorState.getCurrentContent()));
+    this.props.handleOnChange(convertToHTML(editorState.getCurrentContent()));
 
     this.setState({
       editorState

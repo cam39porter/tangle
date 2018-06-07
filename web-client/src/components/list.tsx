@@ -53,10 +53,6 @@ interface Props {
     callback?: () => void
   ) => (() => void) | undefined;
   isShowingRelated: (id: string) => boolean | undefined;
-  handleMore: (id: string) => (() => void);
-  isMore: (id: string) => boolean;
-  handleComment: (id: string) => ((text: string) => void);
-  comments?: Array<ListFieldsFragment>;
   handleFocus: (id: string) => (() => void);
   handleEdit: (id: string) => ((text: string) => void);
   isEditing: (id: string) => boolean;
@@ -124,14 +120,12 @@ class List extends React.Component<Props, State> {
     });
   };
 
-  renderHeaderPadding = () => (
+  renderHeader = () => (
     <div>
       {this.props.sessionId ? (
         <ListSessionHeader
           title={this.props.sessionTitle}
           tags={this.props.sessionTags}
-          isEditingTags={this.props.sessionIsEditingTags}
-          isEditingTitle={this.props.sessionIsEditingTitle}
           handleEditTags={this.props.sessionHandleEditTags}
           handleEditTitle={this.props.sessionHandleEditTitle}
           handleClose={this.props.sessionHandleClose}
@@ -158,15 +152,13 @@ class List extends React.Component<Props, State> {
     </div>
   );
 
-  renderFooterPadding = () =>
+  renderFooter = () =>
     this.props.sessionId ? (
       <ScrollContainerElement name={SESSION_CAPTURE_INPUT_ID}>
         <div className={`flex-grow pv4 bg-white`}>
           <InputCapture
             handleCapture={this.props.sessionHandleCapture}
-            handleTextChange={this.props.handleHeaderCaptureTextChange}
-            clearOnEnter={true}
-            allowToolbar={false}
+            handleOnChange={this.props.handleHeaderCaptureTextChange}
           />
         </div>
       </ScrollContainerElement>
@@ -193,43 +185,13 @@ class List extends React.Component<Props, State> {
 
     return (
       <div className={`relative w-100 vh-100`}>
-        {/* This is the list header that is actually seen when the list is not hidden */}
-        {/* {this.props.sessionId ? (
-          <div className={`z-max absolute top-0 left-0 w-100 bg-white`}>
-            <ListSessionHeader
-              title={this.props.sessionTitle}
-              tags={this.props.sessionTags}
-              isEditingTags={this.props.sessionIsEditingTags}
-              isEditingTitle={this.props.sessionIsEditingTitle}
-              handleEditTags={this.props.sessionHandleEditTags}
-              handleEditTitle={this.props.sessionHandleEditTitle}
-              handleClose={this.props.sessionHandleClose}
-            />
-          </div>
-        ) : (
-          <div
-            className={`z-max absolute top-0 left-0 pa4 w-100 bg-light-gray`}
-          >
-            <ListHeader
-              handleCaptureTextChange={this.props.handleHeaderCaptureTextChange}
-              handleCapture={this.props.handleHeaderCapture}
-              handleExpand={this.props.handleHeaderExpand}
-              isCapturing={this.props.isHeaderCapturing}
-              handleIsCapturing={this.props.handleHeaderIsCapturing}
-              handleSurfaceTextChange={this.props.handleSurfaceTextChange}
-              handleSurface={this.props.handleSurface}
-              handleClear={this.props.handleSurfaceClear}
-            />
-          </div>
-        )} */}
         <ScrollContainer
           ref={scrollContainer => (this._scrollContainer = scrollContainer)}
         >
           <div
             className={`flex flex-column overflow-auto w-100 vh-100 bg-light-gray`}
           >
-            {/* This is a hack to make scrolling with fixed header work. This serves as padding. The padding needs to be the same height as the fixed bar or else it will  */}
-            {this.renderHeaderPadding()}
+            {this.renderHeader()}
 
             {this.props.header &&
               !this.props.sessionId && (
@@ -243,9 +205,6 @@ class List extends React.Component<Props, State> {
                     captureId={listItem.id}
                     text={listItem.text.text}
                     handleExpand={this.props.handleExpand(listItem.id)}
-                    handleMore={this.props.handleMore(listItem.id)}
-                    isMore={this.props.isMore(listItem.id)}
-                    handleComment={this.props.handleComment(listItem.id)}
                     handleFocus={this.props.handleFocus(listItem.id)}
                     handleEdit={this.props.handleEdit(listItem.id)}
                     isEditing={this.props.isEditing(listItem.id)}
@@ -327,13 +286,6 @@ class List extends React.Component<Props, State> {
                                   captureId={relatedItem.id}
                                   text={relatedItem.text.text}
                                   handleExpand={this.props.handleHeaderExpand}
-                                  handleMore={this.props.handleMore(
-                                    relatedItem.id
-                                  )}
-                                  isMore={this.props.isMore(relatedItem.id)}
-                                  handleComment={this.props.handleComment(
-                                    relatedItem.id
-                                  )}
                                   handleFocus={this.props.handleFocus(
                                     relatedItem.id
                                   )}
@@ -361,24 +313,9 @@ class List extends React.Component<Props, State> {
                   )}
               </div>
             ))}
-
-            {/* This is a hack to make scrolling with fixed footer work. This serves as padding. The padding needs to be the same height as the fixed bar or else it will  */}
-            {this.renderFooterPadding()}
+            {this.renderFooter()}
           </div>
         </ScrollContainer>
-
-        {/* {this.props.sessionId ? (
-          <div
-            className={`z-max absolute bottom-0 left-0 pv4 w-100 bt b--light-gray bg-white`}
-          >
-            <InputCapture
-              handleCapture={this.props.sessionHandleCapture}
-              handleTextChange={this.props.handleHeaderCaptureTextChange}
-              clearOnEnter={true}
-              allowToolbar={false}
-            />
-          </div>
-        ) : null} */}
       </div>
     );
   }

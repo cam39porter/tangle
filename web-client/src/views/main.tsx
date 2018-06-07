@@ -31,9 +31,6 @@ import {
   // Edit Capture
   editCaptureMutation as editCaptureResponse,
   editCaptureMutationVariables,
-  // Comment on Capture
-  createCommentCaptureMutation as createCommentCaptureResponse,
-  createCommentCaptureMutationVariables,
   // Dismiss Capture Relation
   dismissCaptureRelationMutation as dismissCaptureRelationResponse,
   dismissCaptureRelationMutationVariables,
@@ -57,7 +54,6 @@ import {
   createCapture,
   archiveCapture,
   editCapture,
-  createCommentCapture,
   dismissCaptureRelation,
   // Fragments
   searchResultsFragment
@@ -107,10 +103,6 @@ interface Props extends RouteProps {
     archiveCaptureMutationVariables
   >;
   editCapture: MutationFunc<editCaptureResponse, editCaptureMutationVariables>;
-  createCommentCapture: MutationFunc<
-    createCommentCaptureResponse,
-    createCommentCaptureMutationVariables
-  >;
   dismissCaptureRelation: MutationFunc<
     dismissCaptureRelationResponse,
     dismissCaptureRelationMutationVariables
@@ -121,7 +113,6 @@ interface Props extends RouteProps {
 }
 
 interface CaptureState {
-  isMore: boolean;
   isEditing: boolean;
   isShowingRelated: boolean;
 }
@@ -530,39 +521,6 @@ class Main extends React.Component<Props, State> {
               }
               return captureState.isShowingRelated;
             }}
-            handleMore={(id: string) => () => {
-              let captureState = this.state.captures.get(id);
-              if (!captureState) {
-                captureState = this.createCaptureState(id);
-              }
-              let nextCaptureState = assign(captureState, {
-                isMore: !captureState.isMore
-              });
-              let nextCaptures = this.state.captures.set(id, nextCaptureState);
-              this.setState({
-                captures: nextCaptures
-              });
-            }}
-            isMore={(id: string) => {
-              let captureState = this.state.captures.get(id);
-              if (!captureState) {
-                captureState = this.createCaptureState(id);
-              }
-              return captureState.isMore;
-            }}
-            handleComment={(id: string) => (text: string) => {
-              this.props
-                .createCommentCapture({
-                  variables: {
-                    commentedOnCaptureId: id,
-                    body: text
-                  }
-                })
-                .then(() => {
-                  refetch();
-                })
-                .catch(err => console.error(err));
-            }}
             handleFocus={(id: string) => () => {
               this.props.history.push(`?id=${encodeURIComponent(id)}`);
             }}
@@ -576,69 +534,61 @@ class Main extends React.Component<Props, State> {
               });
               let nextCaptures = this.state.captures.set(id, nextCaptureState);
 
-              if (!captureState.isEditing) {
-                this.props
-                  .editCapture({
-                    variables: { id, body: text },
-                    optimisticResponse: {
-                      editCapture: true
-                    },
-                    update: dataProxy => {
-                      const cacheData: SearchResultsFieldsFragment | null = dataProxy.readFragment(
-                        {
-                          id: "SearchResults",
-                          fragment: searchResultsFragment,
-                          fragmentName: "SearchResultsFields"
-                        }
-                      );
-
-                      if (!(cacheData && cacheData.list && cacheData.graph)) {
-                        return;
-                      }
-
-                      const listItemIndex = cacheData.list.findIndex(
-                        listItem => {
-                          if (listItem) {
-                            return listItem.id === id;
-                          }
-                          return false;
-                        }
-                      );
-
-                      if (listItemIndex >= 0) {
-                        let listItem = cacheData.list[listItemIndex];
-                        let nextListItem = assign(listItem, {
-                          text: {
-                            __typename: "AnnotatedText",
-                            text,
-                            annotations: []
-                          }
-                        });
-                        cacheData.list[listItemIndex] = nextListItem;
-                      }
-
-                      dataProxy.writeFragment({
+              this.props
+                .editCapture({
+                  variables: { id, body: text },
+                  optimisticResponse: {
+                    editCapture: true
+                  },
+                  update: dataProxy => {
+                    const cacheData: SearchResultsFieldsFragment | null = dataProxy.readFragment(
+                      {
                         id: "SearchResults",
                         fragment: searchResultsFragment,
-                        fragmentName: "SearchResultsFields",
-                        data: cacheData
-                      });
+                        fragmentName: "SearchResultsFields"
+                      }
+                    );
+
+                    if (!(cacheData && cacheData.list && cacheData.graph)) {
+                      return;
                     }
-                  })
-                  .then(() => {
-                    refetch();
-                  })
-                  .then(() => {
-                    this.setState({
-                      captures: nextCaptures
+
+                    const listItemIndex = cacheData.list.findIndex(listItem => {
+                      if (listItem) {
+                        return listItem.id === id;
+                      }
+                      return false;
                     });
-                  })
-                  .catch(err => console.error(err));
-              } else {
-                this.setState({
-                  captures: nextCaptures
-                });
-              }
+
+                    if (listItemIndex >= 0) {
+                      let listItem = cacheData.list[listItemIndex];
+                      let nextListItem = assign(listItem, {
+                        text: {
+                          __typename: "AnnotatedText",
+                          text,
+                          annotations: []
+                        }
+                      });
+                      cacheData.list[listItemIndex] = nextListItem;
+                    }
+
+                    dataProxy.writeFragment({
+                      id: "SearchResults",
+                      fragment: searchResultsFragment,
+                      fragmentName: "SearchResultsFields",
+                      data: cacheData
+                    });
+                  }
+                })
+                .then(() => {
+                  refetch();
+                })
+                .then(() => {
+                  this.setState({
+                    captures: nextCaptures
+                  });
+                })
+                .catch(err => console.error(err));
             }}
             isEditing={(id: string) => {
               let captureState = this.state.captures.get(id);
@@ -810,7 +760,7 @@ const withCapturedToday = graphql<capturedTodayResponse, Props>(capturedToday, {
     Location.CapturedToday,
   options: {
     variables: {
-      timezoneOffset: new Date().getTimezoneOffset() / 60 * -1
+      timezoneOffset: (new Date().getTimezoneOffset() / 60) * -1
     },
     fetchPolicy: "network-only"
   }
@@ -888,14 +838,6 @@ const withEditCapture = graphql<editCaptureResponse, Props>(editCapture, {
   alias: "withEditCapture"
 });
 
-const withCreateCommentCapture = graphql<createCommentCaptureResponse, Props>(
-  createCommentCapture,
-  {
-    name: "createCommentCapture",
-    alias: "withCreateCommentCapture"
-  }
-);
-
 const withDismissCaptureRelation = graphql<
   dismissCaptureRelationResponse,
   Props
@@ -915,7 +857,6 @@ const MainWithData = compose(
   withCreateCapture,
   withEditCapture,
   withArchiveCapture,
-  withCreateCommentCapture,
   withDismissCaptureRelation
 )(Main);
 

@@ -2,41 +2,68 @@
 import * as React from "react";
 
 // Components
-import InputText from "./input-text";
+import * as Draft from "draft-js";
+
+// Utils
+import { stateToHTML } from "draft-js-export-html";
+import "draft-js/dist/Draft.css";
 
 interface Props {
-  isEditing: boolean;
   handleEdit: () => void;
   title?: string;
-  handleChange: (title: string) => void;
+  handleOnChange: (title: string) => void;
 }
 
-const ListSessionTitle = (props: Props) => {
-  const placeholder = "Enter a title";
+interface State {
+  editorState: Draft.EditorState;
+}
 
-  return (
-    <div>
-      {props.isEditing ? (
-        <InputText
-          placeholder={placeholder}
-          startingText={props.title}
-          clearOnEnter={false}
-          allowToolbar={false}
-          handleChange={props.handleChange}
-          handleEnterKey={props.handleEdit}
-          onBlur={props.handleEdit}
+class ListSessionTitle extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    let editorState = Draft.EditorState.createEmpty();
+
+    if (this.props.title) {
+      const blocksFromHTML = Draft.convertFromHTML(this.props.title);
+      const state = Draft.ContentState.createFromBlockArray(
+        blocksFromHTML.contentBlocks,
+        blocksFromHTML.entityMap
+      );
+      editorState = Draft.EditorState.createWithContent(state);
+    }
+
+    this.state = {
+      editorState
+    };
+  }
+
+  handleOnChange = (editorState: Draft.EditorState) => {
+    // inform parent components of state
+    this.props.handleOnChange(stateToHTML(editorState.getCurrentContent()));
+
+    this.setState({
+      editorState
+    });
+  };
+
+  render() {
+    return (
+      <div className={`f3`}>
+        <Draft.Editor
+          editorState={this.state.editorState}
+          onChange={this.handleOnChange}
+          placeholder={`Enter a title for the session`}
+          handleReturn={(e, editorState) => {
+            this.props.handleEdit();
+            return "handled";
+          }}
+          onFocus={this.props.handleEdit}
+          onBlur={this.props.handleEdit}
         />
-      ) : (
-        <div className={`f4`} onDoubleClick={props.handleEdit}>
-          {props.title ? (
-            <div className={`fw8 dark-gray`}>{props.title}</div>
-          ) : (
-            <div className={`fw2 i gray`}>{placeholder}</div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-};
+      </div>
+    );
+  }
+}
 
 export default ListSessionTitle;

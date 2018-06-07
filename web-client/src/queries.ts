@@ -244,21 +244,6 @@ export const createSessionCapture = gql`
   ${graphFragment}
 `;
 
-export const createCommentCapture = gql`
-  mutation createCommentCapture($body: String!, $commentedOnCaptureId: String) {
-    createCapture(
-      body: $body
-      captureRelation: {
-        captureId: $commentedOnCaptureId
-        relationshipType: COMMENTED_ON
-      }
-    ) {
-      ...GraphFields
-    }
-  }
-  ${graphFragment}
-`;
-
 export const dismissCaptureRelation = gql`
   mutation dismissCaptureRelation($fromId: String!, $toId: String!) {
     dismissCaptureRelation(fromId: $fromId, toId: $toId)

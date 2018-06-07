@@ -29,17 +29,16 @@ const ListHeader = (props: Props) => {
       <div className={`flex-grow`}>
         {props.isCapturing ? (
           <InputCapture
-            handleTextChange={props.handleCaptureTextChange}
+            handleOnChange={props.handleCaptureTextChange}
             handleCapture={props.handleCapture}
             handleExpand={props.handleExpand}
-            clearOnEnter={true}
           />
         ) : (
           <InputSurface
-            handleTextChange={props.handleSurfaceTextChange}
+            handleOnChange={props.handleSurfaceTextChange}
             handleSurface={props.handleSurface}
             handleClear={props.handleClear}
-            startingText={props.surfaceStartingText}
+            startingHTML={props.surfaceStartingText}
           />
         )}
       </div>

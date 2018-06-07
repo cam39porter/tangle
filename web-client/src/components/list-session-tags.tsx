@@ -2,48 +2,74 @@
 import * as React from "react";
 
 // Components
-import InputText from "./input-text";
+import * as Draft from "draft-js";
+
+// Utils
+import { stateToHTML } from "draft-js-export-html";
+import "draft-js/dist/Draft.css";
 
 interface Props {
-  isEditing: boolean;
   handleEdit: () => void;
   tags?: Array<string>;
-  handleChange: (tags: string) => void;
+  handleOnChange: (tags: string) => void;
 }
 
-const ListSessionTags = (props: Props) => {
-  const placeholder = "Enter some tags like #todo #idea";
+interface State {
+  editorState: Draft.EditorState;
+}
 
-  let startingText: string | undefined;
+class ListSessionTags extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
 
-  props.tags &&
-    props.tags.forEach(tag => {
-      startingText = startingText ? startingText + `#${tag} ` : `#${tag} `;
+    let editorState = Draft.EditorState.createEmpty();
+
+    let startingText: string | undefined;
+    if (this.props.tags) {
+      this.props.tags.forEach(tag => {
+        startingText = startingText ? startingText + `#${tag} ` : `#${tag} `;
+      });
+    }
+    if (startingText) {
+      const blocksFromHTML = Draft.convertFromHTML(startingText);
+      const state = Draft.ContentState.createFromBlockArray(
+        blocksFromHTML.contentBlocks,
+        blocksFromHTML.entityMap
+      );
+      editorState = Draft.EditorState.createWithContent(state);
+    }
+
+    this.state = {
+      editorState
+    };
+  }
+
+  handleOnChange = (editorState: Draft.EditorState) => {
+    // inform parent components of state
+    this.props.handleOnChange(stateToHTML(editorState.getCurrentContent()));
+
+    this.setState({
+      editorState
     });
+  };
 
-  return (
-    <div>
-      {props.isEditing ? (
-        <InputText
-          placeholder={placeholder}
-          startingText={startingText}
-          clearOnEnter={false}
-          allowToolbar={false}
-          handleChange={props.handleChange}
-          handleEnterKey={props.handleEdit}
-          onBlur={props.handleEdit}
+  render() {
+    return (
+      <div className={`f5`}>
+        <Draft.Editor
+          editorState={this.state.editorState}
+          onChange={this.handleOnChange}
+          placeholder={`Enter some tags like #todo #ideas`}
+          handleReturn={(e, editorState) => {
+            this.props.handleEdit();
+            return "handled";
+          }}
+          onFocus={this.props.handleEdit}
+          onBlur={this.props.handleEdit}
         />
-      ) : (
-        <div className={`f5`} onDoubleClick={props.handleEdit}>
-          {props.tags ? (
-            <div className={`fw6 dark-gray`}>{startingText}</div>
-          ) : (
-            <div className={`fw2 i gray`}>{placeholder}</div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-};
+      </div>
+    );
+  }
+}
 
 export default ListSessionTags;

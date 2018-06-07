@@ -10,7 +10,6 @@ import ListSessionTitle from "../src/components/list-session-title";
 import ListSessionTags from "../src/components/list-session-tags";
 import ListSessionHeader from "../src/components/list-session-header";
 import ListCapture from "../src/components/list-capture";
-import ListComment from "../src/components/list-comment";
 import List from "../src/components/list";
 
 const stories = storiesOf("List", module);
@@ -34,13 +33,11 @@ stories.add("session title", () => (
   <div>
     <ListSessionTitle
       handleEdit={action("handleEdit")}
-      isEditing={boolean("isEditing", false)}
-      handleChange={action("handleChange")}
+      handleOnChange={action("handleChange")}
     />
     <ListSessionTitle
       handleEdit={action("handleEdit")}
-      isEditing={boolean("isEditing", false)}
-      handleChange={action("handleChange")}
+      handleOnChange={action("handleChange")}
       title={`This is an example title`}
     />
   </div>
@@ -50,14 +47,12 @@ stories.add("session tags", () => (
   <div>
     <ListSessionTags
       handleEdit={action("handleEdit")}
-      isEditing={boolean("isEditing", false)}
-      handleChange={action("handleChange")}
+      handleOnChange={action("handleChange")}
     />
     <ListSessionTags
       handleEdit={action("handleEdit")}
-      isEditing={boolean("isEditing", false)}
       tags={["tag1", "tag2", "tag3"]}
-      handleChange={action("handleChange")}
+      handleOnChange={action("handleChange")}
     />
   </div>
 ));
@@ -67,17 +62,11 @@ stories.add("session header", () => (
     <ListSessionHeader
       title={"This is a title"}
       handleEditTitle={action("handleEditTitle")}
-      isEditingTitle={boolean("isEditingTitle", false)}
       handleEditTags={action("handleEditTags")}
-      isEditingTags={boolean("isEditingTags", false)}
       tags={["tag1", "tag2", "tag3"]}
       handleClose={action("handleClose")}
     />
   </div>
-));
-
-stories.add("comment", () => (
-  <ListComment handleComment={action("handleComment")} />
 ));
 
 stories.add("capture", () => (
@@ -93,9 +82,6 @@ stories.add("capture", () => (
       },
       "This is a basic capture"
     )}
-    handleMore={action("handleMore")}
-    isMore={boolean("isMore", true)}
-    handleComment={action("handleComment")}
     handleFocus={action("handleFocus")}
     handleEdit={action("handleEdit")}
     isEditing={boolean("isEditing", false)}
@@ -137,9 +123,6 @@ stories.add("list", () => (
       action(`handleIsShowingRelated ${id}`)
     }
     isShowingRelated={(id: string) => boolean(`isShowingRelated ${id}`, false)}
-    handleMore={(id: string) => action(`handleMore ${id}`)}
-    isMore={(id: string) => boolean(`isMore ${id}`, false)}
-    handleComment={(id: string) => action(`handleComment ${id}`)}
     handleFocus={(id: string) => action(`handleFocus ${id}`)}
     handleEdit={(id: string) => action(`handleEdit ${id}`)}
     isEditing={(id: string) => boolean(`isEditing ${id}`, false)}
@@ -183,9 +166,6 @@ stories.add("session", () => (
       action(`handleIsShowingRelated ${id}`)
     }
     isShowingRelated={(id: string) => boolean(`isShowingRelated ${id}`, false)}
-    handleMore={(id: string) => action(`handleMore ${id}`)}
-    isMore={(id: string) => boolean(`isMore ${id}`, false)}
-    handleComment={(id: string) => action(`handleComment ${id}`)}
     handleFocus={(id: string) => action(`handleFocus ${id}`)}
     handleEdit={(id: string) => action(`handleEdit ${id}`)}
     isEditing={(id: string) => boolean(`isEditing ${id}`, false)}

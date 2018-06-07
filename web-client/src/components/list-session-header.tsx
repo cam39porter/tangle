@@ -4,8 +4,6 @@ import * as React from "react";
 // Components
 import ListSessionTitle from "./list-session-title";
 import ListSessionTags from "./list-session-tags";
-import ButtonEdit from "./button-edit";
-import ButtonCheck from "./button-check";
 import ButtonExit from "./button-exit";
 import ReactTooltip from "react-tooltip";
 
@@ -15,10 +13,8 @@ import ReactTooltip from "react-tooltip";
 interface Props {
   title?: string;
   handleEditTitle: (title: string) => void;
-  isEditingTitle: boolean;
   tags?: Array<string>;
   handleEditTags: (tags: string) => void;
-  isEditingTags: boolean;
   handleClose: () => void;
 }
 
@@ -31,27 +27,6 @@ class ListSessionHeader extends React.Component<Props, State> {
   render() {
     return (
       <div className={`flex pa2 pv3 w-100 bb b--light-gray bg-white`}>
-        <div className={`ma2 pv1 w2`}>
-          {this.props.isEditingTags || this.props.isEditingTitle ? (
-            <div data-tip={`save your changes`}>
-              <ButtonCheck
-                onClick={() => {
-                  this.props.handleEditTags(this.tags);
-                  this.props.handleEditTitle(this.title);
-                }}
-              />
-            </div>
-          ) : (
-            <div data-tip={`edit the brainstorm title or tags`}>
-              <ButtonEdit
-                onClick={() => {
-                  this.props.handleEditTags(this.tags);
-                  this.props.handleEditTitle(this.title);
-                }}
-              />
-            </div>
-          )}
-        </div>
         <div className={`flex-grow pa2`}>
           <div className={`pv2`}>
             <ListSessionTitle
@@ -59,8 +34,7 @@ class ListSessionHeader extends React.Component<Props, State> {
               handleEdit={() => {
                 this.props.handleEditTitle(this.title);
               }}
-              isEditing={this.props.isEditingTitle}
-              handleChange={title => {
+              handleOnChange={title => {
                 this.title = title;
               }}
             />
@@ -71,8 +45,7 @@ class ListSessionHeader extends React.Component<Props, State> {
               handleEdit={() => {
                 this.props.handleEditTags(this.tags);
               }}
-              isEditing={this.props.isEditingTags}
-              handleChange={tags => {
+              handleOnChange={tags => {
                 this.tags = tags;
               }}
             />

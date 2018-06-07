@@ -5,33 +5,21 @@ import * as React from "react";
 
 // Components
 import ButtonZap from "./button-zap";
-import ButtonMore from "./button-more";
-import ButtonFocus from "./button-focus";
 import ButtonArchive from "./button-archive";
-import ButtonEdit from "./button-edit";
-import ButtonCheck from "./button-check";
 import ButtonRelated from "./button-related";
 import ButtonFavorite from "./button-favorite";
 import InputCapture from "./input-capture";
-import ListComment from "./list-comment";
 import ReactTooltip from "react-tooltip";
 
 // Utils
 
 // Types
-import {
-  AnnotationFieldsFragment,
-  ListFieldsFragment
-} from "../__generated__/types";
+import { AnnotationFieldsFragment } from "../__generated__/types";
 
 interface Props {
   captureId: string;
   text: string;
   handleExpand: () => void;
-  handleMore: () => void;
-  isMore: boolean;
-  handleComment: (text: string) => void;
-  comments?: Array<ListFieldsFragment>;
   handleFocus: () => void;
   handleFocusWithId?: (id: string) => () => void;
   handleEdit: (text: string) => void;
@@ -48,37 +36,37 @@ interface State {
   isShowingButtons: boolean;
 }
 
-function annotate(
-  captureId: string,
-  text: string,
-  annotations: Array<AnnotationFieldsFragment>
-): string {
-  let annotatedText = "";
+// function annotate(
+//   captureId: string,
+//   text: string,
+//   annotations: Array<AnnotationFieldsFragment>
+// ): string {
+//   let annotatedText = "";
 
-  for (let i = 0; i < text.length; i++) {
-    let starts = annotations.filter(a => a.start === i);
-    let ends = annotations.filter(a => a.end === i);
-    let nextCharacter = text.charAt(i);
-    let nextAnnotations = "";
+//   for (let i = 0; i < text.length; i++) {
+//     let starts = annotations.filter(a => a.start === i);
+//     let ends = annotations.filter(a => a.end === i);
+//     let nextCharacter = text.charAt(i);
+//     let nextAnnotations = "";
 
-    ends.forEach(a => {
-      nextAnnotations = nextAnnotations + "</span>";
-    });
-    starts.forEach(a => {
-      nextAnnotations =
-        nextAnnotations +
-        `<span class="${a.linkToId ? "pointer accent" : "accent"}" ${
-          a.linkToId
-            ? `id="${captureId}:${a.linkToId}:${a.start}:${a.end}"`
-            : ""
-        }>`;
-    });
+//     ends.forEach(a => {
+//       nextAnnotations = nextAnnotations + "</span>";
+//     });
+//     starts.forEach(a => {
+//       nextAnnotations =
+//         nextAnnotations +
+//         `<span class="${a.linkToId ? "pointer accent" : "accent"}" ${
+//           a.linkToId
+//             ? `id="${captureId}:${a.linkToId}:${a.start}:${a.end}"`
+//             : ""
+//         }>`;
+//     });
 
-    annotatedText = annotatedText + nextAnnotations + nextCharacter;
-  }
+//     annotatedText = annotatedText + nextAnnotations + nextCharacter;
+//   }
 
-  return annotatedText;
-}
+//   return annotatedText;
+// }
 
 class ListCapture extends React.Component<Props, State> {
   text: string = "";
@@ -142,7 +130,7 @@ class ListCapture extends React.Component<Props, State> {
                   <div data-tip={`Favorite this capture`}>
                     <ButtonFavorite
                       onClick={() => {
-                        // TODO: add favoriting captures
+                        // TODO: add favorite captures
                       }}
                     />
                   </div>
@@ -172,56 +160,32 @@ class ListCapture extends React.Component<Props, State> {
             }}
           >
             <div className={`dtc v-mid`}>
-              {this.props.isEditing ? (
-                <InputCapture
-                  handleTextChange={text => {
-                    this.text = text;
-                  }}
-                  handleCapture={() => {
-                    this.props.handleEdit(this.text);
-                  }}
-                  startingText={this.props.text}
-                  clearOnEnter={this.props.clearOnEnter ? true : false}
-                />
-              ) : (
-                <div
-                  onDoubleClick={() => {
-                    this.props.handleEdit(this.text);
-                  }}
-                  className={`lh-copy f6`}
-                  dangerouslySetInnerHTML={{
-                    __html: this.props.annotations
-                      ? annotate(
-                          this.props.captureId,
-                          this.props.text,
-                          this.props.annotations
-                        )
-                      : this.props.text
-                  }}
-                />
-              )}
+              <InputCapture
+                handleOnChange={text => {
+                  this.text = text;
+                }}
+                handleEdit={() => {
+                  this.props.handleEdit(this.text);
+                }}
+                startingHTML={this.props.text}
+              />
             </div>
           </div>
           <div className={`w2`}>
             {this.state.isShowingButtons && (
               <div className={`flex-column`}>
                 <div className={`flex-grow w-100`}>
-                  <div data-tip={`Focus on this capture`}>
-                    <ButtonFocus onClick={this.props.handleFocus} />
+                  <div
+                    data-tip={`Enter a brainstorm starting with this capture`}
+                  >
+                    <ButtonZap onClick={this.props.handleExpand} />
                   </div>
                 </div>
                 <div className={`flex-grow w-100`}>
                   <div className={`dt w-100 h-100`}>
                     <div className={`dtc v-btm`}>
-                      <div
-                        data-tip={`${
-                          this.props.isMore ? "Hide" : "Show"
-                        } all actions and comments`}
-                      >
-                        <ButtonMore
-                          isMore={!this.props.isMore}
-                          onClick={this.props.handleMore}
-                        />
+                      <div data-tip={`Delete this capture`}>
+                        <ButtonArchive onClick={this.props.handleArchive} />
                       </div>
                     </div>
                   </div>
@@ -230,50 +194,6 @@ class ListCapture extends React.Component<Props, State> {
               </div>
             )}
           </div>
-          {this.props.isMore && (
-            <div className={`w-100`}>
-              {/* Action Buttons */}
-              <div className={`flex justify-around pa2 w-100`}>
-                <div className={``}>
-                  {this.props.isEditing ? (
-                    <div data-tip={`Save your changes`}>
-                      <ButtonCheck
-                        onClick={() => {
-                          this.props.handleEdit(this.text);
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div data-tip={`Edit this capture`}>
-                      <ButtonEdit
-                        onClick={() => {
-                          this.props.handleEdit(this.text);
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-                <div className={``}>
-                  <div data-tip={`Delete this capture`}>
-                    <ButtonArchive onClick={this.props.handleArchive} />
-                  </div>
-                </div>
-                <div className={``}>
-                  <div
-                    data-tip={`Enter a brainstorm starting with this capture`}
-                  >
-                    <ButtonZap onClick={this.props.handleExpand} />
-                  </div>
-                </div>
-                <ReactTooltip />
-              </div>
-              {/* Comments */}
-              <ListComment
-                handleComment={this.props.handleComment}
-                comments={this.props.comments}
-              />
-            </div>
-          )}
         </div>
         <ReactTooltip />
       </div>

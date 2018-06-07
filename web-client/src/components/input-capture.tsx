@@ -2,42 +2,129 @@
 import * as React from "react";
 
 // Components
-import InputText from "./input-text";
 import ButtonZap from "./button-zap";
 import ButtonCapture from "./button-capture";
 import ReactTooltip from "react-tooltip";
+import * as Draft from "draft-js";
+
+// Utils
+import { stateToHTML } from "draft-js-export-html";
+import "draft-js/dist/Draft.css";
+
+const TIME_TO_AUTO_CAPTURE_EDIT = 500; // ms till change is automatically captured
 
 interface Props {
-  handleTextChange: (text: string) => void;
-  handleCapture: () => void;
+  handleOnChange: (text: string) => void;
+  handleCapture?: () => void;
+  handleEdit?: () => void;
   handleExpand?: () => void;
-  startingText?: string;
-  clearOnEnter: boolean;
-  allowToolbar?: boolean;
+  startingHTML?: string;
 }
 
-const InputCapture = (props: Props) => {
-  return (
-    <div className={`flex w-100`}>
-      <div className={`pa1`} data-tip={"Add to your tangle"}>
-        <ButtonCapture onClick={props.handleCapture} />
+interface State {
+  editorState: Draft.EditorState;
+}
+
+class InputCapture extends React.Component<Props, State> {
+  captureTimer;
+
+  constructor(props: Props) {
+    super(props);
+
+    let editorState = Draft.EditorState.createEmpty();
+
+    if (this.props.startingHTML) {
+      const blocksFromHTML = Draft.convertFromHTML(this.props.startingHTML);
+      const state = Draft.ContentState.createFromBlockArray(
+        blocksFromHTML.contentBlocks,
+        blocksFromHTML.entityMap
+      );
+      editorState = Draft.EditorState.createWithContent(state);
+    }
+
+    this.state = {
+      editorState
+    };
+  }
+
+  handleKeyBindings = (e: React.KeyboardEvent<{}>) => {
+    if (e.key === "Enter" && Draft.KeyBindingUtil.hasCommandModifier(e)) {
+      return "command-return";
+    }
+
+    return Draft.getDefaultKeyBinding(e);
+  };
+
+  handleOnChange = (editorState: Draft.EditorState) => {
+    console.log("handle on change");
+    // inform parent components of state
+    this.props.handleOnChange(stateToHTML(editorState.getCurrentContent()));
+
+    // set timeout to capture after a given amount of time of no changes
+    this.captureTimer && clearTimeout(this.captureTimer);
+    this.captureTimer = setTimeout(
+      this.props.handleEdit,
+      TIME_TO_AUTO_CAPTURE_EDIT
+    );
+
+    this.setState({
+      editorState
+    });
+  };
+
+  render() {
+    return (
+      <div className={`flex w-100`}>
+        {this.props.handleCapture && (
+          <div className={`pa1`} data-tip={"Add to your tangle"}>
+            <ButtonCapture onClick={this.props.handleCapture} />
+          </div>
+        )}
+        <div className={`flex-grow`}>
+          <div className={`pv3 f6`}>
+            <Draft.Editor
+              editorState={this.state.editorState}
+              onChange={this.handleOnChange}
+              handleKeyCommand={(
+                command: Draft.DraftEditorCommand | "command-return",
+                editorState: Draft.EditorState
+              ) => {
+                if (command === "command-return") {
+                  if (this.props.handleCapture) {
+                    this.props.handleCapture();
+                    this.setState({
+                      editorState: Draft.EditorState.createEmpty()
+                    });
+                    return "handled";
+                  }
+                }
+
+                const newState = Draft.RichUtils.handleKeyCommand(
+                  editorState,
+                  command
+                );
+
+                if (newState) {
+                  this.handleOnChange(newState);
+                  return "handled";
+                }
+                return "not-handled";
+              }}
+              keyBindingFn={this.handleKeyBindings}
+              placeholder={`Capture a thought...`}
+              spellCheck={true}
+            />
+          </div>
+        </div>
+        <div className={`pa1`} data-tip={"Enter a brainstorm"}>
+          {this.props.handleExpand && (
+            <ButtonZap onClick={this.props.handleExpand} />
+          )}
+        </div>
+        <ReactTooltip />
       </div>
-      <div className={`flex-grow`}>
-        <InputText
-          placeholder={`Capture a thought...`}
-          handleEnterKey={props.handleCapture}
-          allowToolbar={props.allowToolbar ? true : false}
-          handleChange={props.handleTextChange}
-          startingText={props.startingText}
-          clearOnEnter={props.clearOnEnter}
-        />
-      </div>
-      <div className={`pa1`} data-tip={"Enter a brainstorm"}>
-        {props.handleExpand && <ButtonZap onClick={props.handleExpand} />}
-      </div>
-      <ReactTooltip />
-    </div>
-  );
-};
+    );
+  }
+}
 
 export default InputCapture;

@@ -55,11 +55,11 @@ class ListSessionTags extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className={`f5`}>
+      <div className={`ph4 f5`}>
         <Draft.Editor
           editorState={this.state.editorState}
           onChange={this.handleOnChange}
-          placeholder={`Enter some tags like #todo #ideas`}
+          placeholder={`Tags like #todo #ideas`}
           handleReturn={(e, editorState) => {
             this.props.handleEdit();
             return "handled";

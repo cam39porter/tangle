@@ -49,11 +49,11 @@ class ListSessionTitle extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className={`f3`}>
+      <div className={`ph4 f3`}>
         <Draft.Editor
           editorState={this.state.editorState}
           onChange={this.handleOnChange}
-          placeholder={`Enter a title for the session`}
+          placeholder={`Title`}
           handleReturn={(e, editorState) => {
             this.props.handleEdit();
             return "handled";

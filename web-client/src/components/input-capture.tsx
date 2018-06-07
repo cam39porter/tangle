@@ -56,7 +56,6 @@ class InputCapture extends React.Component<Props, State> {
   };
 
   handleOnChange = (editorState: Draft.EditorState) => {
-    console.log("handle on change");
     // inform parent components of state
     this.props.handleOnChange(stateToHTML(editorState.getCurrentContent()));
 

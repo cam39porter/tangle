@@ -121,7 +121,8 @@ class ListCapture extends React.Component<Props, State> {
         <div
           className={`flex flex-wrap pa3 w-100 br4 ba ${
             this.props.isGraphFocus ? "b--accent" : "b--light-gray"
-          } bg-white`}
+          } bg-white pointer`}
+          onClick={this.props.handleFocus}
         >
           <div className={`w2`}>
             {this.state.isShowingButtons && (
@@ -159,7 +160,12 @@ class ListCapture extends React.Component<Props, State> {
               minHeight: "5em"
             }}
           >
-            <div className={`dtc v-mid`}>
+            <div
+              className={`dtc v-mid`}
+              style={{
+                cursor: "text"
+              }}
+            >
               <InputCapture
                 handleOnChange={text => {
                   this.text = text;

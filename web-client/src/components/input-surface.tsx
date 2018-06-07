@@ -8,7 +8,7 @@ import ButtonExit from "./button-exit";
 import * as Draft from "draft-js";
 
 // Utils
-import { convertToHTML, convertFromHTML } from "draft-convert";
+import { convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 
 interface Props {
@@ -41,7 +41,7 @@ class InputSurface extends React.Component<Props, State> {
 
   handleOnChange = (editorState: Draft.EditorState) => {
     // inform parent components of state
-    this.props.handleOnChange(convertToHTML(editorState.getCurrentContent()));
+    this.props.handleOnChange(editorState.getCurrentContent().getPlainText());
 
     this.setState({
       editorState

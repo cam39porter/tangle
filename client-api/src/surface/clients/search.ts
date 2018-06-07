@@ -7,15 +7,15 @@ export function search(
   count: number
 ): Promise<string[]> {
   const userId = getAuthenticatedUser().id;
-  const rewrittenQuery = `${rawQuery}~`;
-  const params = { rewrittenQuery, userId, start, count };
-  const query = `CALL apoc.index.search("captures", {rewrittenQuery}) YIELD node as c, weight
-    MATCH (c:Capture)<-[created:CREATED]-(u:User {id:{userId}})
-    WHERE NOT EXISTS (c.archived) OR c.archived = false
-    WITH c
-    SKIP {start} LIMIT {count}
-    RETURN c.id as captureId
-  `;
+  const params = { rawQuery, userId, start, count };
+  const query = `CALL ga.es.queryNode('{"query":{"bool":{
+    "must":{"match":{"body":"${rawQuery}"}},
+    "filter":{"match":{"owner":"${userId}"}},
+    "must_not":{"match":{"archived":"true"}}
+
+  }}}')
+   YIELD node RETURN node.id as captureId
+  `.replace(/\r?\n|\r/g, "");
   return executeQuery(query, params).then(res => {
     return res.records.map(record => record.get("captureId"));
   });

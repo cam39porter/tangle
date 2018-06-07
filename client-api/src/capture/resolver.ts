@@ -35,9 +35,8 @@ export default {
       // @ts-ignore
       info
     ): Promise<Graph> {
-      return createCapture(body, sessionId, "PLAIN_TEXT", captureRelation).then(
-        () =>
-          getAllByUseCase("CAPTURED_TODAY", null).then(results => results.graph)
+      return createCapture(body, sessionId, "HTML", captureRelation).then(() =>
+        getAllByUseCase("CAPTURED_TODAY", null).then(results => results.graph)
       );
     },
     createSession(

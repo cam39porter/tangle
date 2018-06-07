@@ -119,10 +119,15 @@ class ListCapture extends React.Component<Props, State> {
         }}
       >
         <div
+          id={`list-capture`}
           className={`flex flex-wrap pa3 w-100 br4 ba ${
             this.props.isGraphFocus ? "b--accent" : "b--light-gray"
           } bg-white pointer`}
-          onClick={this.props.handleFocus}
+          onClick={e => {
+            if (e.target["id"] === `list-capture`) {
+              this.props.handleFocus();
+            }
+          }}
         >
           <div className={`w2`}>
             {this.state.isShowingButtons && (

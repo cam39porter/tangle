@@ -85,7 +85,7 @@ export function editCaptureNodeAndDeleteRelationships(
   const params = { captureId, userId, body: escape(body) };
   const query = `
     MATCH (capture:Capture {id:{captureId}})<-[:CREATED]-(u:User {id:{userId}})
-    MATCH (capture)-[r]-(other)
+    OPTIONAL MATCH (capture)-[r]-(other)
     WHERE type(r)<>"CREATED" AND type(r)<>"INCLUDES"
     DELETE r
     SET capture.body={body}

@@ -7,14 +7,15 @@ import { ListItem } from "../models/list-item";
 import { buildList } from "../formatters/list";
 import { SurfaceResults } from "../models/surface-results";
 import { PageInfo } from "../models/page-info";
+import { GraphNode } from "../models/graph-node";
 
 export function expandCaptures(
   userUrn: string,
   captureIds: string[],
-  startUrn: string = null
+  pivot: GraphNode = null
 ): Promise<SurfaceResults> {
   const expansionPromises = Promise.all([
-    expandGraph(userUrn, captureIds, startUrn),
+    expandGraph(userUrn, captureIds, (pivot && pivot.id) || null),
     expandList(userUrn, captureIds)
   ]);
   return expansionPromises.then(expansions => {
@@ -23,7 +24,8 @@ export function expandCaptures(
     return new SurfaceResults(
       graph,
       list,
-      new PageInfo(0, graph.nodes.length, graph.nodes.length)
+      new PageInfo(0, graph.nodes.length, graph.nodes.length),
+      pivot
     );
   });
 }

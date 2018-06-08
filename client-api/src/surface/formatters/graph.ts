@@ -3,7 +3,7 @@ import { Graph } from "../models/graph";
 import { GraphNode } from "../models/graph-node";
 import { Capture } from "../../db/models/capture";
 import { Node, Relationship } from "neo4j-driver/types/v1";
-import { CAPTURE_LABEL } from "../../db/helpers/labels";
+import { formatNode, formatCapture } from "./graph-node";
 
 export function buildGraph(
   paths: Array<[Capture, Relationship, Node, Relationship, Capture]>
@@ -14,7 +14,7 @@ export function buildGraph(
     nodes.set(path[0].id, formatCapture(path[0], true));
     if (path[2]) {
       if (!nodes.has(path[2].properties["id"])) {
-        nodes.set(path[2].properties["id"], formatNode(path[2]));
+        nodes.set(path[2].properties["id"], formatNode(path[2], false));
       }
       const edge = formatEdge(path[1], path[0].id, path[2].properties["id"]);
       if (!hasEdge(edges, edge)) {
@@ -34,28 +34,6 @@ export function buildGraph(
   return new Graph(
     Array.from(nodes, ([, value]) => value),
     Array.from(edges, ([, value]) => value)
-  );
-}
-
-function formatNode(node: Node): GraphNode {
-  return new GraphNode(
-    node.properties["id"],
-    node.labels[0],
-    node.properties["body"] ||
-      node.properties["name"] ||
-      node.properties["title"] ||
-      node.properties["url"] ||
-      "Untitled",
-    1
-  );
-}
-
-function formatCapture(capture: Capture, isRoot: boolean): GraphNode {
-  return new GraphNode(
-    capture.id,
-    CAPTURE_LABEL.name,
-    capture.body,
-    isRoot ? 0 : 1
   );
 }
 

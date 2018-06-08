@@ -1,4 +1,4 @@
-import { StatementResult } from "neo4j-driver/types/v1";
+import { StatementResult, Node } from "neo4j-driver/types/v1";
 import { v4 as uuidv4 } from "uuid/v4";
 import { escape } from "../../helpers/capture-parser";
 import { executeQuery } from "../db";
@@ -46,14 +46,16 @@ export function getCapture(
 export function getCapturesByRelatedNode(
   userId: string,
   nodeId: string
-): Promise<Capture[]> {
+): Promise<Array<Node | Capture[]>> {
   const label = getLabel(nodeId);
   const params = { userId, nodeId };
   const query = `MATCH (other:${label} {id:{nodeId}})-[r]-(capture:Capture)<-[:CREATED]-(u:User {id:{userId}})
   WHERE NOT EXISTS(capture.archived) OR capture.archived = false
-  RETURN capture
+  RETURN capture, other
   `;
-  return executeQuery(query, params).then(formatCaptureArray);
+  return executeQuery(query, params).then(result => {
+    return [result.records[0].get("other") as Node, formatCaptureArray(result)];
+  });
 }
 
 export function getRandomCapture(userId: string): Promise<Capture> {

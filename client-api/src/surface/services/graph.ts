@@ -11,6 +11,9 @@ import { getUrnType } from "../../db/helpers/urn-helpers";
 import { NotImplementedError } from "../../util/exceptions/not-implemented-error";
 import { SurfaceResults } from "../models/surface-results";
 import { expandCaptures } from "./expand";
+import { formatCapture, formatNode } from "../formatters/graph-node";
+import { Node } from "neo4j-driver/types/v1";
+import { Capture } from "../../db/models/capture";
 
 export function getNode(urn: string): Promise<SurfaceResults> {
   if (getUrnType(urn) === "capture") {
@@ -38,7 +41,7 @@ export function getAllByUseCase(
 function getAllRandom(): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().id;
   return getRandomCapture(userId).then(capture => {
-    return expandCaptures(userId, [capture.id], null);
+    return expandCaptures(userId, [capture.id], formatCapture(capture, true));
   });
 }
 
@@ -64,22 +67,21 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SurfaceResults> {
 
 function getOthers(urn: string): Promise<SurfaceResults> {
   const userUrn = getAuthenticatedUser().id;
-  switch (getUrnType(urn)) {
-    case "session":
-      return getCapturesByRelatedNode(userUrn, urn).then(captures =>
-        expandCaptures(userUrn, captures.map(c => c.id), urn)
-      );
-    default:
-      return getCapturesByRelatedNode(userUrn, urn).then(captures => {
-        return expandCaptures(userUrn, captures.map(c => c.id), urn);
-      });
-  }
+  return getCapturesByRelatedNode(userUrn, urn).then(nodeAndCaptures => {
+    const node = nodeAndCaptures[0] as Node;
+    const captures = nodeAndCaptures[1] as Capture[];
+    return expandCaptures(
+      userUrn,
+      captures.map(c => c.id),
+      formatNode(node, true)
+    );
+  });
 }
 
 function getCapture(urn: string): Promise<SurfaceResults> {
   const userUrn = getAuthenticatedUser().id;
   return getCaptureClient(userUrn, urn).then(capture =>
-    expandCaptures(userUrn, [capture.id], null)
+    expandCaptures(userUrn, [capture.id], formatCapture(capture, true))
   );
 }
 

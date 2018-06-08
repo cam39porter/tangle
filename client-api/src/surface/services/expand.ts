@@ -50,7 +50,7 @@ function expandList(
   const params = { userUrn, captureIds, startUrn };
   const query = getExpansionQuery(startUrn, true);
   return executeQuery(query, params).then((result: StatementResult) => {
-    return buildList(formatDbResponse(result));
+    return buildList(formatDbResponse(result), captureIds);
   });
 }
 

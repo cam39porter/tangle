@@ -8,7 +8,8 @@ import { Entity } from "../../db/models/entity";
 import { Tag } from "../../db/models/Tag";
 
 export function buildList(
-  paths: Array<[Capture, Relationship, Node, Relationship, Capture]>
+  paths: Array<[Capture, Relationship, Node, Relationship, Capture]>,
+  captureOrder: string[]
 ): ListItem[] {
   const relatedCaptureMap = new Map();
   const rootCaptureMap = new Map();
@@ -39,6 +40,9 @@ export function buildList(
       )
     );
   });
+  listItems.sort(
+    (a, b) => captureOrder.indexOf(a.id) - captureOrder.indexOf(b.id)
+  );
   return listItems;
 }
 

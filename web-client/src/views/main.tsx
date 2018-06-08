@@ -184,7 +184,7 @@ class Main extends React.Component<Props, State> {
       {
         id: "SurfaceResults",
         fragment: surfaceResultsFragment,
-        fragmentName: "SurfaceResultsFragment"
+        fragmentName: "SurfaceResultsFields"
       }
     );
     if (!(cacheData && cacheData.list && cacheData.graph)) {
@@ -212,7 +212,7 @@ class Main extends React.Component<Props, State> {
     dataProxy.writeFragment({
       id: "SurfaceResults",
       fragment: surfaceResultsFragment,
-      fragmentName: "SurfaceResultsFragment",
+      fragmentName: "SurfaceResultsFields",
       data: cacheData
     });
   };
@@ -609,9 +609,9 @@ class Main extends React.Component<Props, State> {
                   update: (dataProxy, _) => {
                     const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
                       {
-                        id: "SearchResults",
+                        id: "SurfaceResults",
                         fragment: surfaceResultsFragment,
-                        fragmentName: "SearchResultsFields"
+                        fragmentName: "SurfaceResultsFields"
                       }
                     );
                     if (!(cacheData && cacheData.list && cacheData.graph)) {
@@ -629,9 +629,9 @@ class Main extends React.Component<Props, State> {
                       edge => edge.source === id || edge.destination === id
                     );
                     dataProxy.writeFragment({
-                      id: "SearchResults",
+                      id: "SurfaceResults",
                       fragment: surfaceResultsFragment,
-                      fragmentName: "SearchResultsFields",
+                      fragmentName: "SurfaceResultsFields",
                       data: cacheData
                     });
                   }
@@ -658,9 +658,9 @@ class Main extends React.Component<Props, State> {
                   update: dataProxy => {
                     const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
                       {
-                        id: "SearchResults",
+                        id: "SurfaceResults",
                         fragment: surfaceResultsFragment,
-                        fragmentName: "SearchResultsFields"
+                        fragmentName: "SurfaceResultsFields"
                       }
                     );
                     if (!(cacheData && cacheData.list && cacheData.graph)) {
@@ -686,9 +686,9 @@ class Main extends React.Component<Props, State> {
                       edge => edge.source === toId || edge.destination === toId
                     );
                     dataProxy.writeFragment({
-                      id: "SearchResults",
+                      id: "SurfaceResults",
                       fragment: surfaceResultsFragment,
-                      fragmentName: "SearchResultsFields",
+                      fragmentName: "SurfaceResultsFields",
                       data: cacheData
                     });
                   }

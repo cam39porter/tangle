@@ -77,8 +77,8 @@ export const listFragment = gql`
   ${reasonFragment}
 `;
 
-export const searchResultsFragment = gql`
-  fragment SearchResultsFields on SearchResults {
+export const surfaceResultsFragment = gql`
+  fragment SurfaceResultsFields on SurfaceResults {
     header
     list {
       ...ListFields
@@ -95,37 +95,37 @@ export const searchResultsFragment = gql`
 export const mostRecent = gql`
   query getMostRecent($start: Int!, $count: Int!) {
     getMostRecent(start: $start, count: $count) {
-      ...SearchResultsFields
+      ...SurfaceResultsFields
     }
   }
-  ${searchResultsFragment}
+  ${surfaceResultsFragment}
 `;
 
 export const randomCapture = gql`
   query randomCapture {
     getAll(useCase: "RANDOM") {
-      ...SearchResultsFields
+      ...SurfaceResultsFields
     }
   }
-  ${searchResultsFragment}
+  ${surfaceResultsFragment}
 `;
 
 export const getDetailed = gql`
   query getDetailed($id: String!) {
     getDetailed(id: $id) {
-      ...SearchResultsFields
+      ...SurfaceResultsFields
     }
   }
-  ${searchResultsFragment}
+  ${surfaceResultsFragment}
 `;
 
 export const search = gql`
   query search($rawQuery: String!) {
     search(rawQuery: $rawQuery) {
-      ...SearchResultsFields
+      ...SurfaceResultsFields
     }
   }
-  ${searchResultsFragment}
+  ${surfaceResultsFragment}
 `;
 
 // Mutations

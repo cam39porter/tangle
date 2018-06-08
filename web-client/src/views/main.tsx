@@ -35,7 +35,7 @@ import {
   dismissCaptureRelationMutation as dismissCaptureRelationResponse,
   dismissCaptureRelationMutationVariables,
   // Extra
-  SearchResultsFieldsFragment,
+  SurfaceResultsFieldsFragment,
   ListFieldsFragment,
   NodeType,
   GraphFieldsFragment,
@@ -56,7 +56,7 @@ import {
   editCapture,
   dismissCaptureRelation,
   // Fragments
-  searchResultsFragment
+  surfaceResultsFragment
 } from "../queries";
 import { graphql, compose, QueryProps, MutationFunc } from "react-apollo";
 
@@ -180,10 +180,10 @@ class Main extends React.Component<Props, State> {
       return;
     }
 
-    const cacheData: SearchResultsFieldsFragment | null = dataProxy.readFragment(
+    const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
       {
         id: "SearchResults",
-        fragment: searchResultsFragment,
+        fragment: surfaceResultsFragment,
         fragmentName: "SearchResultsFields"
       }
     );
@@ -211,7 +211,7 @@ class Main extends React.Component<Props, State> {
     cacheData.graph.nodes.push(tempNode);
     dataProxy.writeFragment({
       id: "SearchResults",
-      fragment: searchResultsFragment,
+      fragment: surfaceResultsFragment,
       fragmentName: "SearchResultsFields",
       data: cacheData
     });
@@ -541,10 +541,10 @@ class Main extends React.Component<Props, State> {
                     editCapture: true
                   },
                   update: dataProxy => {
-                    const cacheData: SearchResultsFieldsFragment | null = dataProxy.readFragment(
+                    const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
                       {
                         id: "SearchResults",
-                        fragment: searchResultsFragment,
+                        fragment: surfaceResultsFragment,
                         fragmentName: "SearchResultsFields"
                       }
                     );
@@ -574,7 +574,7 @@ class Main extends React.Component<Props, State> {
 
                     dataProxy.writeFragment({
                       id: "SearchResults",
-                      fragment: searchResultsFragment,
+                      fragment: surfaceResultsFragment,
                       fragmentName: "SearchResultsFields",
                       data: cacheData
                     });
@@ -607,10 +607,10 @@ class Main extends React.Component<Props, State> {
                     archiveCapture: true
                   },
                   update: (dataProxy, _) => {
-                    const cacheData: SearchResultsFieldsFragment | null = dataProxy.readFragment(
+                    const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
                       {
                         id: "SearchResults",
-                        fragment: searchResultsFragment,
+                        fragment: surfaceResultsFragment,
                         fragmentName: "SearchResultsFields"
                       }
                     );
@@ -630,7 +630,7 @@ class Main extends React.Component<Props, State> {
                     );
                     dataProxy.writeFragment({
                       id: "SearchResults",
-                      fragment: searchResultsFragment,
+                      fragment: surfaceResultsFragment,
                       fragmentName: "SearchResultsFields",
                       data: cacheData
                     });
@@ -656,10 +656,10 @@ class Main extends React.Component<Props, State> {
                     dismissCaptureRelation: true
                   },
                   update: dataProxy => {
-                    const cacheData: SearchResultsFieldsFragment | null = dataProxy.readFragment(
+                    const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
                       {
                         id: "SearchResults",
-                        fragment: searchResultsFragment,
+                        fragment: surfaceResultsFragment,
                         fragmentName: "SearchResultsFields"
                       }
                     );
@@ -687,7 +687,7 @@ class Main extends React.Component<Props, State> {
                     );
                     dataProxy.writeFragment({
                       id: "SearchResults",
-                      fragment: searchResultsFragment,
+                      fragment: surfaceResultsFragment,
                       fragmentName: "SearchResultsFields",
                       data: cacheData
                     });

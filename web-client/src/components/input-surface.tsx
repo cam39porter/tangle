@@ -2,9 +2,6 @@
 import * as React from "react";
 
 // Components
-import ReactTooltip from "react-tooltip";
-import ButtonSurface from "./button-surface";
-import ButtonExit from "./button-exit";
 import * as Draft from "draft-js";
 
 // Utils
@@ -14,7 +11,6 @@ import "draft-js/dist/Draft.css";
 interface Props {
   handleOnChange: (text: string) => void;
   handleSurface: () => void;
-  handleClear?: () => void;
   startingHTML?: string;
 }
 
@@ -51,11 +47,8 @@ class InputSurface extends React.Component<Props, State> {
   render() {
     return (
       <div className={`w-100 flex`}>
-        <div className={`pa1`}>
-          <ButtonSurface onClick={this.props.handleSurface} />
-        </div>
         <div className={`flex-grow`}>
-          <div className={`f6`}>
+          <div className={`f6 lh-copy`}>
             <Draft.Editor
               editorState={this.state.editorState}
               onChange={this.handleOnChange}
@@ -67,16 +60,6 @@ class InputSurface extends React.Component<Props, State> {
               spellCheck={true}
             />
           </div>
-        </div>
-        <div className={`pa1`}>
-          {this.props.handleClear && (
-            <div>
-              <div data-tip={"Exit your search"}>
-                <ButtonExit onClick={this.props.handleClear} />
-              </div>
-              <ReactTooltip />
-            </div>
-          )}
         </div>
       </div>
     );

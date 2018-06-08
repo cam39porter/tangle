@@ -155,7 +155,7 @@ class List extends React.Component<Props, State> {
   renderFooter = () =>
     this.props.sessionId ? (
       <ScrollContainerElement name={SESSION_CAPTURE_INPUT_ID}>
-        <div className={`flex-grow pv4 bg-white`}>
+        <div className={`flex-grow pa2 pv4 bg-white`}>
           <InputCapture
             handleCapture={this.props.sessionHandleCapture}
             handleOnChange={this.props.handleHeaderCaptureTextChange}

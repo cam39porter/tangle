@@ -14,7 +14,6 @@ stories.addDecorator(withKnobs);
 stories.add("capture", () => (
   <InputCapture
     handleCapture={action("captured")}
-    handleExpand={action("expanded")}
     handleOnChange={action("text changed")}
   />
 ));
@@ -22,7 +21,6 @@ stories.add("capture", () => (
 stories.add("surface", () => (
   <InputSurface
     handleSurface={action("surfaced")}
-    handleClear={action("clear")}
     handleOnChange={action("text changed")}
   />
 ));

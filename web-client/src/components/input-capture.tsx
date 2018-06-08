@@ -2,8 +2,6 @@
 import * as React from "react";
 
 // Components
-import ButtonZap from "./button-zap";
-import ButtonCapture from "./button-capture";
 import ReactTooltip from "react-tooltip";
 import * as Draft from "draft-js";
 
@@ -17,7 +15,6 @@ interface Props {
   handleOnChange: (text: string) => void;
   handleCapture?: () => void;
   handleEdit?: () => void;
-  handleExpand?: () => void;
   startingHTML?: string;
 }
 
@@ -77,22 +74,8 @@ class InputCapture extends React.Component<Props, State> {
   render() {
     return (
       <div className={`flex w-100`}>
-        {this.props.handleCapture && (
-          <div className={`pa1`} data-tip={"Add to your tangle"}>
-            <ButtonCapture
-              onClick={() => {
-                if (this.props.handleCapture) {
-                  this.props.handleCapture();
-                  this.setState({
-                    editorState: Draft.EditorState.createEmpty()
-                  });
-                }
-              }}
-            />
-          </div>
-        )}
         <div className={`flex-grow`}>
-          <div className={`f6`}>
+          <div className={`f6 lh-copy`}>
             <Draft.Editor
               editorState={this.state.editorState}
               onChange={this.handleOnChange}
@@ -126,11 +109,6 @@ class InputCapture extends React.Component<Props, State> {
               spellCheck={true}
             />
           </div>
-        </div>
-        <div className={`pa1`} data-tip={"Enter a brainstorm"}>
-          {this.props.handleExpand && (
-            <ButtonZap onClick={this.props.handleExpand} />
-          )}
         </div>
         <ReactTooltip />
       </div>

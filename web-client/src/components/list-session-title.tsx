@@ -46,7 +46,7 @@ class ListSessionTitle extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className={`ph4 f3`}>
+      <div className={`f3`}>
         <Draft.Editor
           editorState={this.state.editorState}
           onChange={this.handleOnChange}

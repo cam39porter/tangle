@@ -83,7 +83,7 @@ enum EdgeType {
 type PageInfo {
   start: Int!
   count: Int!
-  total: Int!
+  total: Int
 }
 
 schema {
@@ -93,9 +93,9 @@ schema {
 
 type Query {
   search(rawQuery: String!, start: Int = 0, count: Int = 10): SearchResults!
-  get(id: String!): Graph!
   getDetailed(id: String!): SearchResults!
   getAll(useCase: String!, timezoneOffset: Int): SearchResults!
+  getMostRecent(start: Int = 0, count: Int = 10): SearchResults!
 }
 
 enum GetAllUseCase {

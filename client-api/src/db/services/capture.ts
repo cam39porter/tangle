@@ -8,14 +8,15 @@ import { NotFoundError } from "../../util/exceptions/not-found-error";
 
 export function getMostRecent(
   userId: string,
-  limit: number
+  start: number,
+  count: number
 ): Promise<Capture[]> {
-  const params = { userId, limit };
+  const params = { userId, start, count };
   const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
   WHERE NOT EXISTS (capture.archived)
   RETURN capture
   ORDER BY capture.created DESC
-  LIMIT {limit}`;
+  SKIP {start} LIMIT {count}`;
   return executeQuery(query, params).then(formatCaptureArray);
 }
 

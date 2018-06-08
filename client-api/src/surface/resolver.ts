@@ -1,6 +1,7 @@
 import { SearchResults } from "../surface/models/search-results";
-import { getAllByUseCase, getNode } from "./services/graph";
+import { getAllByUseCase, getNode, getAllMostRecent } from "./services/graph";
 import { search } from "./services/search";
+import { PageInfo } from "./models/page-info";
 
 export default {
   Query: {
@@ -29,6 +30,20 @@ export default {
       info
     ): Promise<SearchResults> {
       return getAllByUseCase(useCase, timezoneOffset);
+    },
+    getMostRecent(
+      // @ts-ignore
+      parent,
+      { start, count },
+      // @ts-ignore
+      context,
+      // @ts-ignore
+      info
+    ): Promise<SearchResults> {
+      return getAllMostRecent(start, count).then(searchResults => {
+        searchResults.pageInfo = new PageInfo(start, count, null);
+        return searchResults;
+      });
     }
   }
 };

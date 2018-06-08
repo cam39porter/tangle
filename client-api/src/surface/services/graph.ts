@@ -27,8 +27,6 @@ export function getAllByUseCase(
 ): Promise<SearchResults> {
   if (useCase === "CAPTURED_TODAY") {
     return getAllCapturedToday(timezoneOffset);
-  } else if (useCase === "MOST_RECENT") {
-    return getAllMostRecent();
   } else if (useCase === "RANDOM") {
     return getAllRandom();
   } else {
@@ -51,10 +49,12 @@ function getAllRandom(): Promise<SearchResults> {
   });
 }
 
-function getAllMostRecent(): Promise<SearchResults> {
-  const LIMIT = 10;
+export function getAllMostRecent(
+  start: number,
+  count: number
+): Promise<SearchResults> {
   const userId = getAuthenticatedUser().id;
-  return getMostRecent(userId, LIMIT).then(captures => {
+  return getMostRecent(userId, start, count).then(captures => {
     const captureIds = captures.map(c => c.id);
     return expandCaptures(
       userId,

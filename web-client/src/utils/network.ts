@@ -45,7 +45,7 @@ const getCurrentLocation = (queryString: string): Location => {
     return Location.Random;
   }
 
-  return Location.CapturedToday;
+  return Location.MostRecent;
 };
 
 const getIsSessionId = (queryString: string): string | undefined => {

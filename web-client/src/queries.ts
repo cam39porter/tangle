@@ -91,66 +91,10 @@ export const searchResultsFragment = gql`
   ${graphFragment}
 `;
 
-// Create a capture
-export const CreateCapture = gql`
-  mutation CreateCapture($body: String!) {
-    createCapture(body: $body) {
-      ...GraphFields
-    }
-  }
-  ${graphFragment}
-`;
-
-// Archive capture
-export const ArchiveCapture = gql`
-  mutation ArchiveCapture($id: String!) {
-    archiveCapture(id: $id)
-  }
-`;
-
-// Edit capture
-export const EditCapture = gql`
-  mutation EditCapture($id: String!, $body: String!) {
-    editCapture(id: $id, body: $body)
-  }
-`;
-
-// Search for captures
-export const Search = gql`
-  query Search(
-    $query: String!
-    $start: Int
-    $count: Int
-    $isDetail: Boolean!
-    $detailId: String!
-  ) {
-    search(rawQuery: $query, start: $start, count: $count)
-      @skip(if: $isDetail) {
-      ...SearchResultsFields
-    }
-    get(id: $detailId) @include(if: $isDetail) {
-      ...GraphFields
-    }
-  }
-  ${searchResultsFragment}
-  ${graphFragment}
-`;
-
-export const DailyCaptures = gql`
-  query DailyCaptures($timezoneOffset: Int!) {
-    getAll(useCase: "CAPTURED_TODAY", timezoneOffset: $timezoneOffset) {
-      ...SearchResultsFields
-    }
-  }
-  ${searchResultsFragment}
-`;
-
-// v2
-
 // Queries
-export const capturedToday = gql`
-  query capturedToday($timezoneOffset: Int!) {
-    getAll(useCase: "CAPTURED_TODAY", timezoneOffset: $timezoneOffset) {
+export const mostRecent = gql`
+  query getMostRecent($start: Int!, $count: Int!) {
+    getMostRecent(start: $start, count: $count) {
       ...SearchResultsFields
     }
   }

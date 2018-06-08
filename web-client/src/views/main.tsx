@@ -3,9 +3,9 @@ import * as React from "react";
 
 // GraphQL
 import {
-  // Captured Today
-  capturedTodayQuery as capturedTodayResponse,
-  capturedTodayQueryVariables,
+  // Most Recent
+  getMostRecentQuery as getMostRecentResponse,
+  getMostRecentQueryVariables,
   // Random
   randomCaptureQuery as randomCaptureResponse,
   // Search
@@ -43,7 +43,7 @@ import {
 } from "../__generated__/types";
 import {
   // Queries
-  capturedToday,
+  mostRecent,
   randomCapture,
   search,
   getDetailed,
@@ -81,8 +81,8 @@ interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
   // Queries
-  capturedToday?: QueryProps<capturedTodayQueryVariables> &
-    Partial<capturedTodayResponse>;
+  mostRecent?: QueryProps<getMostRecentQueryVariables> &
+    Partial<getMostRecentResponse>;
   randomCapture?: QueryProps<{}> & Partial<randomCaptureResponse>;
   search?: QueryProps<searchQueryVariables> & Partial<searchResponse>;
   getDetailed?: QueryProps<getDetailedQueryVariables> &
@@ -140,7 +140,7 @@ class Main extends React.Component<Props, State> {
     this.state = {
       isCapturing:
         NetworkUtils.getCurrentLocation(nextProps.location.search) ===
-        Location.CapturedToday,
+        Location.MostRecent,
       captureText: "",
       surfaceText: NetworkUtils.getQuery(nextProps.location.search),
       captures: new Map<string, CaptureState>(),
@@ -152,7 +152,7 @@ class Main extends React.Component<Props, State> {
     this.setState({
       isCapturing:
         NetworkUtils.getCurrentLocation(nextProps.location.search) ===
-        Location.CapturedToday,
+        Location.MostRecent,
       surfaceText: NetworkUtils.getQuery(nextProps.location.search),
       sessionId: NetworkUtils.getIsSessionId(nextProps.location.search)
     });
@@ -223,13 +223,13 @@ class Main extends React.Component<Props, State> {
     let refetch;
     let header;
 
-    if (this.props.capturedToday) {
-      isLoading = this.props.capturedToday.loading;
-      data = this.props.capturedToday.getAll;
-      refetch = this.props.capturedToday.refetch;
+    if (this.props.mostRecent) {
+      isLoading = this.props.mostRecent.loading;
+      data = this.props.mostRecent.getMostRecent;
+      refetch = this.props.mostRecent.refetch;
       header =
-        this.props.capturedToday.getAll &&
-        this.props.capturedToday.getAll.header;
+        this.props.mostRecent.getMostRecent &&
+        this.props.mostRecent.getMostRecent.header;
     }
 
     if (this.props.randomCapture) {
@@ -752,15 +752,16 @@ class Main extends React.Component<Props, State> {
 }
 
 // GraphQL Queries and Mutations
-const withCapturedToday = graphql<capturedTodayResponse, Props>(capturedToday, {
-  name: "capturedToday",
-  alias: "withCapturedToday",
+const withMostRecent = graphql<getMostRecentResponse, Props>(mostRecent, {
+  name: "mostRecent",
+  alias: "withMostRecent",
   skip: (props: Props) =>
     NetworkUtils.getCurrentLocation(props.location.search) !==
-    Location.CapturedToday,
+    Location.MostRecent,
   options: {
     variables: {
-      timezoneOffset: (new Date().getTimezoneOffset() / 60) * -1
+      start: 0,
+      count: 5
     },
     fetchPolicy: "network-only"
   }
@@ -847,7 +848,7 @@ const withDismissCaptureRelation = graphql<
 });
 
 const MainWithData = compose(
-  withCapturedToday,
+  withMostRecent,
   withRandomCapture,
   withSearch,
   withGetDetailed,

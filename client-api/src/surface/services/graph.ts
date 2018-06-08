@@ -9,11 +9,11 @@ import {
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { getUrnType, getEntityOrTagName } from "../../db/helpers/urn-helpers";
 import { NotImplementedError } from "../../util/exceptions/not-implemented-error";
-import { SearchResults } from "../models/search-results";
+import { SurfaceResults } from "../models/search-results";
 import { expandCaptures } from "./expand";
 import { SortListBy } from "../../types";
 
-export function getNode(urn: string): Promise<SearchResults> {
+export function getNode(urn: string): Promise<SurfaceResults> {
   if (getUrnType(urn) === "capture") {
     return getCapture(urn);
   } else {
@@ -24,19 +24,19 @@ export function getNode(urn: string): Promise<SearchResults> {
 export function getAllByUseCase(
   useCase: string,
   timezoneOffset: number
-): Promise<SearchResults> {
+): Promise<SurfaceResults> {
   if (useCase === "CAPTURED_TODAY") {
     return getAllCapturedToday(timezoneOffset);
   } else if (useCase === "RANDOM") {
     return getAllRandom();
   } else {
     throw new NotImplementedError(
-      "Get all currently only supports use cases; CAPTURED_TODAY, MOST_RECENT, and RANDOM"
+      "Get all currently only supports use cases; CAPTURED_TODAY, and RANDOM"
     );
   }
 }
 
-function getAllRandom(): Promise<SearchResults> {
+function getAllRandom(): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().id;
   return getRandomCapture(userId).then(capture => {
     return expandCaptures(
@@ -52,7 +52,7 @@ function getAllRandom(): Promise<SearchResults> {
 export function getAllMostRecent(
   start: number,
   count: number
-): Promise<SearchResults> {
+): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().id;
   return getMostRecent(userId, start, count).then(captures => {
     const captureIds = captures.map(c => c.id);
@@ -66,7 +66,7 @@ export function getAllMostRecent(
   });
 }
 
-function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
+function getAllCapturedToday(timezoneOffset: number): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().id;
   const since = getCreatedSince(timezoneOffset);
   return getAllSince(userId, since).then(captures => {
@@ -81,7 +81,7 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SearchResults> {
   });
 }
 
-function getOthers(urn: string): Promise<SearchResults> {
+function getOthers(urn: string): Promise<SurfaceResults> {
   const userUrn = getAuthenticatedUser().id;
   switch (getUrnType(urn)) {
     case "session":
@@ -102,7 +102,7 @@ function getOthers(urn: string): Promise<SearchResults> {
   }
 }
 
-function getCapture(urn: string): Promise<SearchResults> {
+function getCapture(urn: string): Promise<SurfaceResults> {
   const userUrn = getAuthenticatedUser().id;
   return getCaptureClient(userUrn, urn).then(capture =>
     expandCaptures(

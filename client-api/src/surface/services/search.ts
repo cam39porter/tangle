@@ -1,7 +1,7 @@
 import { getRandomCapture as getRandomCaptureClient } from "../../db/services/capture";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { search as searchClient } from "../clients/search";
-import { SearchResults } from "../models/search-results";
+import { SurfaceResults } from "../models/search-results";
 import { expandCaptures } from "./expand";
 import { SortListBy } from "../../types";
 
@@ -9,7 +9,7 @@ export function search(
   rawQuery: string,
   start: number,
   count: number
-): Promise<SearchResults> {
+): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().id;
   if (!rawQuery || rawQuery.length === 0) {
     return getRandomCapture();
@@ -26,7 +26,7 @@ export function search(
   }
 }
 
-function getRandomCapture(): Promise<SearchResults> {
+function getRandomCapture(): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().id;
   return getRandomCaptureClient(userId).then(capture =>
     expandCaptures(

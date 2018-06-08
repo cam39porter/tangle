@@ -5,7 +5,7 @@ import { Graph } from "../models/graph";
 import { Capture } from "../../db/models/capture";
 import { ListItem } from "../models/list-item";
 import { buildList } from "../formatters/list";
-import { SearchResults } from "../models/search-results";
+import { SurfaceResults } from "../models/search-results";
 import { PageInfo } from "../models/page-info";
 import { SortListBy } from "../../types";
 
@@ -15,7 +15,7 @@ export function expandCaptures(
   startUrn: string = null,
   sortBy: SortListBy = SortListBy.NONE,
   header: string | null = null
-): Promise<SearchResults> {
+): Promise<SurfaceResults> {
   const expansionPromises = Promise.all([
     expandGraph(userUrn, captureIds, startUrn),
     expandList(userUrn, captureIds, sortBy)
@@ -23,7 +23,7 @@ export function expandCaptures(
   return expansionPromises.then(expansions => {
     const graph = expansions[0];
     const list = expansions[1];
-    return new SearchResults(
+    return new SurfaceResults(
       header,
       graph,
       list,

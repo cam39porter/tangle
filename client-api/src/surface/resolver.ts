@@ -1,4 +1,4 @@
-import { SearchResults } from "../surface/models/search-results";
+import { SurfaceResults } from "../surface/models/search-results";
 import { getAllByUseCase, getNode, getAllMostRecent } from "./services/graph";
 import { search } from "./services/search";
 import { PageInfo } from "./models/page-info";
@@ -13,11 +13,11 @@ export default {
       context,
       // @ts-ignore
       info
-    ): Promise<SearchResults> {
+    ): Promise<SurfaceResults> {
       return search(rawQuery, start, count);
     },
     // @ts-ignore
-    getDetailed(parent, { id }, context, info): Promise<SearchResults> {
+    getDetailed(parent, { id }, context, info): Promise<SurfaceResults> {
       return getNode(id);
     },
     getAll(
@@ -28,7 +28,7 @@ export default {
       context,
       // @ts-ignore
       info
-    ): Promise<SearchResults> {
+    ): Promise<SurfaceResults> {
       return getAllByUseCase(useCase, timezoneOffset);
     },
     getMostRecent(
@@ -39,7 +39,7 @@ export default {
       context,
       // @ts-ignore
       info
-    ): Promise<SearchResults> {
+    ): Promise<SurfaceResults> {
       return getAllMostRecent(start, count).then(searchResults => {
         searchResults.pageInfo = new PageInfo(start, count, null);
         return searchResults;

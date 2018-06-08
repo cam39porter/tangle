@@ -182,9 +182,9 @@ class Main extends React.Component<Props, State> {
 
     const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
       {
-        id: "SearchResults",
+        id: "SurfaceResults",
         fragment: surfaceResultsFragment,
-        fragmentName: "SearchResultsFields"
+        fragmentName: "SurfaceResultsFragment"
       }
     );
     if (!(cacheData && cacheData.list && cacheData.graph)) {
@@ -210,9 +210,9 @@ class Main extends React.Component<Props, State> {
     }
     cacheData.graph.nodes.push(tempNode);
     dataProxy.writeFragment({
-      id: "SearchResults",
+      id: "SurfaceResults",
       fragment: surfaceResultsFragment,
-      fragmentName: "SearchResultsFields",
+      fragmentName: "SurfaceResultsFragment",
       data: cacheData
     });
   };
@@ -543,9 +543,9 @@ class Main extends React.Component<Props, State> {
                   update: dataProxy => {
                     const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
                       {
-                        id: "SearchResults",
+                        id: "SurfaceResults",
                         fragment: surfaceResultsFragment,
-                        fragmentName: "SearchResultsFields"
+                        fragmentName: "SurfaceResultsFragment"
                       }
                     );
 
@@ -573,9 +573,9 @@ class Main extends React.Component<Props, State> {
                     }
 
                     dataProxy.writeFragment({
-                      id: "SearchResults",
+                      id: "SurfaceResults",
                       fragment: surfaceResultsFragment,
-                      fragmentName: "SearchResultsFields",
+                      fragmentName: "SurfaceResultsFragment",
                       data: cacheData
                     });
                   }

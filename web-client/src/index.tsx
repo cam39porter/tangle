@@ -73,8 +73,8 @@ const client = new ApolloClient({
   cache: new InMemoryCache({
     dataIdFromObject: (object: { __typename: string }) => {
       switch (object.__typename) {
-        case "SearchResults":
-          return "SearchResults";
+        case "SurfaceResults":
+          return "SurfaceResults";
         default:
           return defaultDataIdFromObject(object);
       }

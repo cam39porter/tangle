@@ -263,7 +263,7 @@ class Main extends React.Component<Props, State> {
       <div className={`flex w-100 vh-100`}>
         {/* List */}
         <div
-          className={`shadow-1 z-max`}
+          className={`shadow-1 z-5`}
           style={{
             minWidth: isLargeWindow ? "32.5em" : "100%",
             maxWidth: isLargeWindow ? "32.5em" : "100%"

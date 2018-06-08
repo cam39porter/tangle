@@ -21,11 +21,7 @@ interface Props {
 
 const ListHeader = (props: Props) => {
   return (
-    <div
-      className={`flex pa2 w-100 shadow-1 br4 bb b--${
-        props.isCapturing ? "accent" : "base"
-      } bg-white`}
-    >
+    <div className={`flex pa2 w-100 shadow-1 br4 bg-white`}>
       <div className={`flex-grow`}>
         {props.isCapturing ? (
           <InputCapture

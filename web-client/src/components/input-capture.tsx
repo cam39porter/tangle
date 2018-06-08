@@ -92,7 +92,7 @@ class InputCapture extends React.Component<Props, State> {
           </div>
         )}
         <div className={`flex-grow`}>
-          <div className={`pv3 f6`}>
+          <div className={`f6`}>
             <Draft.Editor
               editorState={this.state.editorState}
               onChange={this.handleOnChange}

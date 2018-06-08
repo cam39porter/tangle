@@ -7,7 +7,6 @@ import * as React from "react";
 import ButtonZap from "./button-zap";
 import ButtonArchive from "./button-archive";
 import ButtonRelated from "./button-related";
-import ButtonFavorite from "./button-favorite";
 import InputCapture from "./input-capture";
 import ReactTooltip from "react-tooltip";
 
@@ -120,8 +119,10 @@ class ListCapture extends React.Component<Props, State> {
       >
         <div
           id={`list-capture`}
-          className={`flex flex-wrap pa3 w-100 br4 ba ${
-            this.props.isGraphFocus ? "b--accent" : "b--light-gray"
+          className={`relative flex flex-wrap pa3 w-100 br4 ba ${
+            this.props.isGraphFocus || this.state.isShowingButtons
+              ? "b--accent"
+              : "b--light-gray"
           } bg-white pointer`}
           onClick={e => {
             if (e.target["id"] === `list-capture`) {
@@ -129,42 +130,7 @@ class ListCapture extends React.Component<Props, State> {
             }
           }}
         >
-          <div className={`w2`}>
-            {this.state.isShowingButtons && (
-              <div className={`flex-column`}>
-                <div className={`flex-grow w-100`}>
-                  <div data-tip={`Favorite this capture`}>
-                    <ButtonFavorite
-                      onClick={() => {
-                        // TODO: add favorite captures
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className={`flex-grow w-100`}>
-                  {this.props.handleIsShowingRelated && (
-                    <div
-                      data-tip={`${
-                        this.props.isShowingRelated ? "Hide" : "Show"
-                      } related captures`}
-                    >
-                      <ButtonRelated
-                        isUp={!!this.props.isShowingRelated}
-                        onClick={this.props.handleIsShowingRelated}
-                      />
-                    </div>
-                  )}
-                </div>
-                <ReactTooltip />
-              </div>
-            )}
-          </div>
-          <div
-            className={`flex-grow dt ph2`}
-            style={{
-              minHeight: "5em"
-            }}
-          >
+          <div className={`flex-grow dt`}>
             <div
               className={`dtc v-mid`}
               style={{
@@ -182,29 +148,37 @@ class ListCapture extends React.Component<Props, State> {
               />
             </div>
           </div>
-          <div className={`w2`}>
-            {this.state.isShowingButtons && (
-              <div className={`flex-column`}>
-                <div className={`flex-grow w-100`}>
-                  <div
-                    data-tip={`Enter a brainstorm starting with this capture`}
-                  >
-                    <ButtonZap onClick={this.props.handleExpand} />
-                  </div>
+          {this.state.isShowingButtons && (
+            <div
+              className={`absolute flex top--1 right-0 h2 ph2 br4 shadow-1 z-max bg-white`}
+            >
+              <div className={`w2`}>
+                <div data-tip={`Enter a brainstorm starting with this capture`}>
+                  <ButtonZap onClick={this.props.handleExpand} />
                 </div>
-                <div className={`flex-grow w-100`}>
-                  <div className={`dt w-100 h-100`}>
-                    <div className={`dtc v-btm`}>
-                      <div data-tip={`Delete this capture`}>
-                        <ButtonArchive onClick={this.props.handleArchive} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <ReactTooltip />
               </div>
-            )}
-          </div>
+              <div className={`w2`}>
+                <div data-tip={`Delete this capture`}>
+                  <ButtonArchive onClick={this.props.handleArchive} />
+                </div>
+              </div>
+              {this.props.handleIsShowingRelated && (
+                <div className={`w2`}>
+                  <div
+                    data-tip={`${
+                      this.props.isShowingRelated ? "Hide" : "Show"
+                    } related captures`}
+                  >
+                    <ButtonRelated
+                      isUp={!!this.props.isShowingRelated}
+                      onClick={this.props.handleIsShowingRelated}
+                    />
+                  </div>
+                </div>
+              )}
+              <ReactTooltip />
+            </div>
+          )}
         </div>
         <ReactTooltip />
       </div>

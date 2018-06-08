@@ -24,8 +24,12 @@ describe("test parseTags", () => {
   });
 
   test("parseTags html", () => {
-    expect(parseTags("<p>#one")).toEqual(["one"]);
+    expect(parseTags("<p>#one</p>")).toEqual(["one"]);
   });
+
+  // test("parseTags html", () => {
+  //   expect(parseTags("<p>one#two</p>")).toEqual([]);
+  // });
 });
 
 describe("test stripTags", () => {
@@ -46,8 +50,12 @@ describe("test stripTags", () => {
   });
 
   test("stripTags html", () => {
-    expect(stripTags("<p>#one</p>")).toEqual("<p>");
+    expect(stripTags("<p>#one</p>")).toEqual("<p></p>");
   });
+
+  // test("stripTags html", () => {
+  //   expect(parseTags("<p>one#two</p>")).toEqual("<p>one#two</p>");
+  // });
 });
 
 describe("test parseLinks", () => {

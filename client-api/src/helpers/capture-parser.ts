@@ -1,16 +1,16 @@
+const hashtagRegex = new RegExp("#([^\\s<]*)", "g");
+
 function parseTags(str: string): string[] {
-  const regexp = new RegExp("#([^\\s]*)", "g");
   const ret = [];
   let match;
-  while ((match = regexp.exec(str))) {
+  while ((match = hashtagRegex.exec(str))) {
     ret.push(match[1]);
   }
   return ret;
 }
 
 function stripTags(str: string): string {
-  const regexp = new RegExp("#([^\\s]*)", "g");
-  return str.replace(regexp, "").trim();
+  return str.replace(hashtagRegex, "").trim();
 }
 
 function parseLinks(str: string): string[] {

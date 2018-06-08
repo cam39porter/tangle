@@ -43,18 +43,30 @@ export function getCapture(
   return executeQuery(query, params).then(formatCaptureResult);
 }
 
+export function getUntypedNode(userId: string, nodeId: string): Promise<Node> {
+  const label = getLabel(nodeId);
+  const params = { userId, nodeId };
+  const query = `MATCH (n:${label} {id:{nodeId}, owner:{userId}})
+  WHERE NOT EXISTS(n.archived) OR n.archived = false
+  RETURN n
+  `;
+  return executeQuery(query, params).then(result => {
+    return result.records[0].get("n") as Node;
+  });
+}
+
 export function getCapturesByRelatedNode(
   userId: string,
   nodeId: string
-): Promise<Array<Node | Capture[]>> {
+): Promise<Capture[]> {
   const label = getLabel(nodeId);
   const params = { userId, nodeId };
   const query = `MATCH (other:${label} {id:{nodeId}})-[r]-(capture:Capture)<-[:CREATED]-(u:User {id:{userId}})
   WHERE NOT EXISTS(capture.archived) OR capture.archived = false
-  RETURN capture, other
+  RETURN capture
   `;
   return executeQuery(query, params).then(result => {
-    return [result.records[0].get("other") as Node, formatCaptureArray(result)];
+    return formatCaptureArray(result);
   });
 }
 

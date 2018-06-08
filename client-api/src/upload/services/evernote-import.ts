@@ -11,7 +11,6 @@ import { getAuthenticatedUser } from "../../filters/request-context";
 import { EvernoteUpload } from "../models/evernote-upload";
 import { parseEvernoteHtml } from "./evernote-html-parser";
 import { saveOverwrite, saveSafely } from "./file-db";
-import { Capture } from "../../db/models/capture";
 
 const readFileAsync = promisify(fs.readFile);
 
@@ -45,8 +44,7 @@ export function importEvernoteNoteUpload(file): Promise<void> {
 export function deleteEvernoteNote(evernoteId: string): Promise<void> {
   const userId = getAuthenticatedUser().id;
   const archiveCaptures = getCapturesByRelatedNode(userId, evernoteId).then(
-    nodeAndCaptures => {
-      const captures = nodeAndCaptures[1] as Capture[];
+    captures => {
       return Promise.all(
         captures.map(capture => archiveCaptureNode(userId, capture.id))
       );

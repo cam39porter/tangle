@@ -4,7 +4,6 @@ import { ListItem } from "./list-item";
 import { GraphNode } from "./graph-node";
 
 export class SurfaceResults {
-  public header: string;
   public pivot: GraphNode;
   public graph: Graph;
   public list: ListItem[];
@@ -19,6 +18,5 @@ export class SurfaceResults {
     this.list = list;
     this.pageInfo = pageInfo;
     this.pivot = pivot;
-    this.header = "Header is deprecated. Fix this Cam";
   }
 }

@@ -1,5 +1,4 @@
 type SurfaceResults {
-  header: String # what the search results correspond to
   pivot: Node # for detailed view, the node being asked for
   graph: Graph! # for generating the graph visualization,
   list: [ListItem]! # for generating list results

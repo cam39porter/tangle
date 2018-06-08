@@ -7,24 +7,20 @@ import { ListItem } from "../models/list-item";
 import { buildList } from "../formatters/list";
 import { SurfaceResults } from "../models/surface-results";
 import { PageInfo } from "../models/page-info";
-import { SortListBy } from "../../types";
 
 export function expandCaptures(
   userUrn: string,
   captureIds: string[],
-  startUrn: string = null,
-  sortBy: SortListBy = SortListBy.NONE,
-  header: string | null = null
+  startUrn: string = null
 ): Promise<SurfaceResults> {
   const expansionPromises = Promise.all([
     expandGraph(userUrn, captureIds, startUrn),
-    expandList(userUrn, captureIds, sortBy)
+    expandList(userUrn, captureIds)
   ]);
   return expansionPromises.then(expansions => {
     const graph = expansions[0];
     const list = expansions[1];
     return new SurfaceResults(
-      header,
       graph,
       list,
       new PageInfo(0, graph.nodes.length, graph.nodes.length)
@@ -47,13 +43,12 @@ function expandGraph(
 function expandList(
   userUrn: string,
   captureIds: string[],
-  sortBy: SortListBy = SortListBy.NONE,
   startUrn: string = null
 ): Promise<ListItem[]> {
   const params = { userUrn, captureIds, startUrn };
   const query = getExpansionQuery(startUrn, true);
   return executeQuery(query, params).then((result: StatementResult) => {
-    return buildList(formatDbResponse(result), sortBy);
+    return buildList(formatDbResponse(result));
   });
 }
 

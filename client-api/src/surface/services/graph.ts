@@ -7,11 +7,10 @@ import {
   getRandomCapture
 } from "../../db/services/capture";
 import { getAuthenticatedUser } from "../../filters/request-context";
-import { getUrnType, getEntityOrTagName } from "../../db/helpers/urn-helpers";
+import { getUrnType } from "../../db/helpers/urn-helpers";
 import { NotImplementedError } from "../../util/exceptions/not-implemented-error";
 import { SurfaceResults } from "../models/surface-results";
 import { expandCaptures } from "./expand";
-import { SortListBy } from "../../types";
 
 export function getNode(urn: string): Promise<SurfaceResults> {
   if (getUrnType(urn) === "capture") {
@@ -39,13 +38,7 @@ export function getAllByUseCase(
 function getAllRandom(): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().id;
   return getRandomCapture(userId).then(capture => {
-    return expandCaptures(
-      userId,
-      [capture.id],
-      null,
-      SortListBy.DESC,
-      `Focusing on the random capture below`
-    );
+    return expandCaptures(userId, [capture.id], null);
   });
 }
 
@@ -56,13 +49,7 @@ export function getAllMostRecent(
   const userId = getAuthenticatedUser().id;
   return getMostRecent(userId, start, count).then(captures => {
     const captureIds = captures.map(c => c.id);
-    return expandCaptures(
-      userId,
-      captureIds,
-      null,
-      SortListBy.DESC,
-      `Most recent captures`
-    );
+    return expandCaptures(userId, captureIds, null);
   });
 }
 
@@ -71,13 +58,7 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SurfaceResults> {
   const since = getCreatedSince(timezoneOffset);
   return getAllSince(userId, since).then(captures => {
     const captureIds = captures.map(c => c.id);
-    return expandCaptures(
-      userId,
-      captureIds,
-      null,
-      SortListBy.DESC,
-      `Captured today`
-    );
+    return expandCaptures(userId, captureIds, null);
   });
 }
 
@@ -86,18 +67,11 @@ function getOthers(urn: string): Promise<SurfaceResults> {
   switch (getUrnType(urn)) {
     case "session":
       return getCapturesByRelatedNode(userUrn, urn).then(captures =>
-        expandCaptures(userUrn, captures.map(c => c.id), urn, SortListBy.ASC)
+        expandCaptures(userUrn, captures.map(c => c.id), urn)
       );
     default:
       return getCapturesByRelatedNode(userUrn, urn).then(captures => {
-        const name = getEntityOrTagName(urn);
-        return expandCaptures(
-          userUrn,
-          captures.map(c => c.id),
-          urn,
-          SortListBy.NONE,
-          name ? `Focusing on '${name}'` : null
-        );
+        return expandCaptures(userUrn, captures.map(c => c.id), urn);
       });
   }
 }
@@ -105,13 +79,7 @@ function getOthers(urn: string): Promise<SurfaceResults> {
 function getCapture(urn: string): Promise<SurfaceResults> {
   const userUrn = getAuthenticatedUser().id;
   return getCaptureClient(userUrn, urn).then(capture =>
-    expandCaptures(
-      userUrn,
-      [capture.id],
-      null,
-      SortListBy.NONE,
-      `Focusing on the below capture`
-    )
+    expandCaptures(userUrn, [capture.id], null)
   );
 }
 

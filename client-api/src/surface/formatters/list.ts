@@ -6,11 +6,9 @@ import { RecommendationReason } from "../models/recommendation-reason";
 import { Annotation } from "../models/annotation";
 import { Entity } from "../../db/models/entity";
 import { Tag } from "../../db/models/Tag";
-import { SortListBy } from "../../types";
 
 export function buildList(
-  paths: Array<[Capture, Relationship, Node, Relationship, Capture]>,
-  sortBy: SortListBy = SortListBy.NONE
+  paths: Array<[Capture, Relationship, Node, Relationship, Capture]>
 ): ListItem[] {
   const relatedCaptureMap = new Map();
   const rootCaptureMap = new Map();
@@ -25,7 +23,7 @@ export function buildList(
     }
   });
   const tree = buildTree(paths);
-  let listItems: ListItem[] = [];
+  const listItems: ListItem[] = [];
   tree.forEach((value, key) => {
     const relatedCaptures = formatRelatedListItems(
       value,
@@ -41,15 +39,6 @@ export function buildList(
       )
     );
   });
-  if (sortBy !== SortListBy.NONE) {
-    listItems = listItems.sort((l1, l2) => {
-      const node1 = rootCaptureMap.get(l1.id);
-      const node2 = rootCaptureMap.get(l2.id);
-      const a = sortBy === SortListBy.DESC ? node1 : node2;
-      const b = sortBy === SortListBy.DESC ? node2 : node1;
-      return b.created - a.created;
-    });
-  }
   return listItems;
 }
 

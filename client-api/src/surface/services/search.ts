@@ -3,7 +3,6 @@ import { getAuthenticatedUser } from "../../filters/request-context";
 import { search as searchClient } from "../clients/search";
 import { SurfaceResults } from "../models/surface-results";
 import { expandCaptures } from "./expand";
-import { SortListBy } from "../../types";
 
 export function search(
   rawQuery: string,
@@ -18,9 +17,7 @@ export function search(
       return expandCaptures(
         userId,
         searchResults.results.map(capture => capture.id),
-        null,
-        SortListBy.NONE,
-        `Search results for '${rawQuery}'`
+        null
       ).then(surfaceResults => {
         surfaceResults.pageInfo = searchResults.pageInfo;
         return surfaceResults;
@@ -32,12 +29,6 @@ export function search(
 function getRandomCapture(): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().id;
   return getRandomCaptureClient(userId).then(capture =>
-    expandCaptures(
-      userId,
-      [capture.id],
-      null,
-      SortListBy.NONE,
-      `Focusing on the random capture below`
-    )
+    expandCaptures(userId, [capture.id], null)
   );
 }

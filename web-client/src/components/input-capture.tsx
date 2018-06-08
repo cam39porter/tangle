@@ -53,15 +53,21 @@ class InputCapture extends React.Component<Props, State> {
   };
 
   handleOnChange = (editorState: Draft.EditorState) => {
-    // inform parent components of state
-    this.props.handleOnChange(convertToHTML(editorState.getCurrentContent()));
+    const currentContent = this.state.editorState.getCurrentContent();
+    const newContent = editorState.getCurrentContent();
 
-    // set timeout to capture after a given amount of time of no changes
-    this.captureTimer && clearTimeout(this.captureTimer);
-    this.captureTimer = setTimeout(
-      this.props.handleEdit,
-      TIME_TO_AUTO_CAPTURE_EDIT
-    );
+    // Content has changed
+    if (currentContent !== newContent) {
+      // inform parent components of content change
+      this.props.handleOnChange(convertToHTML(newContent));
+
+      // set timeout to capture after a given amount of time of no changes
+      this.captureTimer && clearTimeout(this.captureTimer);
+      this.captureTimer = setTimeout(
+        this.props.handleEdit,
+        TIME_TO_AUTO_CAPTURE_EDIT
+      );
+    }
 
     this.setState({
       editorState

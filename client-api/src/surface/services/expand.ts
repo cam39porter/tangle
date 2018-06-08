@@ -5,7 +5,7 @@ import { Graph } from "../models/graph";
 import { Capture } from "../../db/models/capture";
 import { ListItem } from "../models/list-item";
 import { buildList } from "../formatters/list";
-import { SurfaceResults } from "../models/search-results";
+import { SurfaceResults } from "../models/surface-results";
 import { PageInfo } from "../models/page-info";
 import { SortListBy } from "../../types";
 

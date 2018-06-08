@@ -1,7 +1,7 @@
 import { getRandomCapture as getRandomCaptureClient } from "../../db/services/capture";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { search as searchClient } from "../clients/search";
-import { SurfaceResults } from "../models/search-results";
+import { SurfaceResults } from "../models/surface-results";
 import { expandCaptures } from "./expand";
 import { SortListBy } from "../../types";
 
@@ -14,14 +14,17 @@ export function search(
   if (!rawQuery || rawQuery.length === 0) {
     return getRandomCapture();
   } else {
-    return searchClient(rawQuery, start, count).then(captureIds => {
+    return searchClient(rawQuery, start, count).then(searchResults => {
       return expandCaptures(
         userId,
-        captureIds,
+        searchResults.results.map(capture => capture.id),
         null,
         SortListBy.NONE,
         `Search results for '${rawQuery}'`
-      );
+      ).then(surfaceResults => {
+        surfaceResults.pageInfo = searchResults.pageInfo;
+        return surfaceResults;
+      });
     });
   }
 }

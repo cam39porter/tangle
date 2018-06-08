@@ -2,6 +2,8 @@ import { getAuthenticatedUser } from "../../filters/request-context";
 import * as elasticsearch from "elasticsearch";
 import { SearchResponse } from "elasticsearch";
 import { Capture } from "../../db/models/capture";
+import { SearchResults } from "../models/search-results";
+import { PageInfo } from "../models/page-info";
 
 const client: elasticsearch.Client = new elasticsearch.Client({
   host:
@@ -12,7 +14,7 @@ export function search(
   rawQuery: string,
   start: number,
   count: number
-): Promise<string[]> {
+): Promise<SearchResults> {
   const userId = getAuthenticatedUser().id;
   const esquery = {
     index: "neo4j-index-node",
@@ -29,8 +31,12 @@ export function search(
     }
   };
   return client.search(esquery).then((resp: SearchResponse<Capture>) => {
-    return resp.hits.hits
-      .map(record => record._source as Capture)
-      .map(capture => capture.id);
+    const results: Capture[] = resp.hits.hits.map(
+      record => record._source as Capture
+    );
+    return new SearchResults(
+      results,
+      new PageInfo(start, count, resp.hits.total)
+    );
   });
 }

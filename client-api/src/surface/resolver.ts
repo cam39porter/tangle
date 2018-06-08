@@ -1,4 +1,4 @@
-import { SurfaceResults } from "../surface/models/search-results";
+import { SurfaceResults } from "./models/surface-results";
 import { getAllByUseCase, getNode, getAllMostRecent } from "./services/graph";
 import { search } from "./services/search";
 import { PageInfo } from "./models/page-info";

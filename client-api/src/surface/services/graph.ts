@@ -9,7 +9,7 @@ import {
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { getUrnType, getEntityOrTagName } from "../../db/helpers/urn-helpers";
 import { NotImplementedError } from "../../util/exceptions/not-implemented-error";
-import { SurfaceResults } from "../models/search-results";
+import { SurfaceResults } from "../models/surface-results";
 import { expandCaptures } from "./expand";
 import { SortListBy } from "../../types";
 

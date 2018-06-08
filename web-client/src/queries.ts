@@ -79,7 +79,9 @@ export const listFragment = gql`
 
 export const surfaceResultsFragment = gql`
   fragment SurfaceResultsFields on SurfaceResults {
-    header
+    pivot {
+      ...NodeFields
+    }
     list {
       ...ListFields
     }
@@ -87,6 +89,7 @@ export const surfaceResultsFragment = gql`
       ...GraphFields
     }
   }
+  ${nodeFragment}
   ${listFragment}
   ${graphFragment}
 `;

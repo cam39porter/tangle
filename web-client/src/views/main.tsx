@@ -227,6 +227,7 @@ class Main extends React.Component<Props, State> {
     let refetch;
     let fetchMore;
     let header;
+    let pivot: NodeFieldsFragment | undefined;
 
     // Most Recent
     if (this.props.mostRecent) {
@@ -234,9 +235,7 @@ class Main extends React.Component<Props, State> {
       data = this.props.mostRecent.getMostRecent;
       refetch = this.props.mostRecent.refetch;
       fetchMore = isLoading ? undefined : this.props.mostRecent.fetchMore;
-      header =
-        this.props.mostRecent.getMostRecent &&
-        this.props.mostRecent.getMostRecent.header;
+      header = "Most recent captures";
     }
 
     // Search
@@ -245,7 +244,9 @@ class Main extends React.Component<Props, State> {
       data = this.props.search.search;
       refetch = this.props.search.refetch;
       fetchMore = isLoading ? undefined : this.props.search.fetchMore;
-      header = this.props.search.search && this.props.search.search.header;
+      header = `Search results for "${NetworkUtils.getQuery(
+        this.props.location.search
+      )}"`;
     }
 
     // Random
@@ -253,9 +254,7 @@ class Main extends React.Component<Props, State> {
       isLoading = this.props.randomCapture.loading;
       data = this.props.randomCapture.getAll;
       refetch = this.props.randomCapture.refetch;
-      header =
-        this.props.randomCapture.getAll &&
-        this.props.randomCapture.getAll.header;
+      header = "Focusing on the random capture below";
     }
 
     // Detailed
@@ -263,9 +262,17 @@ class Main extends React.Component<Props, State> {
       isLoading = this.props.getDetailed.loading;
       data = this.props.getDetailed.getDetailed;
       refetch = this.props.getDetailed.refetch;
-      header =
-        this.props.getDetailed.getDetailed &&
-        this.props.getDetailed.getDetailed.header;
+      pivot =
+        (this.props.getDetailed.getDetailed &&
+          this.props.getDetailed.getDetailed.pivot) ||
+        undefined;
+      header = pivot
+        ? pivot.type === NodeType.Capture
+          ? `Focusing on the capture below`
+          : `Focusing on "${
+              pivot.type === NodeType.Tag ? "#" + pivot.text : pivot.text
+            }"`
+        : undefined;
     }
 
     let isLargeWindow = WindowUtils.getIsLargeWindow(this.props.windowWidth);
@@ -287,6 +294,7 @@ class Main extends React.Component<Props, State> {
             listData={isLoading ? [] : data.list}
             scrollToId={this.state.scrollToId}
             header={header}
+            pivot={pivot}
             // Session
             sessionId={this.state.sessionId}
             sessionTitle={this.state.sessionTitle}

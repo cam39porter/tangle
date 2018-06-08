@@ -15,7 +15,7 @@ import ReactTooltip from "react-tooltip";
 export const SESSION_CAPTURE_INPUT_ID = "session-capture-input";
 
 // Types
-import { ListFieldsFragment } from "../__generated__/types";
+import { ListFieldsFragment, NodeFieldsFragment } from "../__generated__/types";
 
 interface Props {
   // List
@@ -24,6 +24,7 @@ interface Props {
   listData: Array<ListFieldsFragment>;
   scrollToId?: string;
   header?: string;
+  pivot?: NodeFieldsFragment;
   // Session
   sessionId?: string;
   sessionTitle?: string;

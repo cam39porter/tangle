@@ -74,6 +74,8 @@ import { WindowUtils, NetworkUtils } from "../utils";
 import { noop, trim, assign, reverse, remove } from "lodash";
 import windowSize from "react-window-size";
 
+const DEFAULT_LIST_LENGTH = 5;
+
 // Types
 import { Location } from "../types";
 
@@ -134,6 +136,8 @@ interface State {
 
 // Class
 class Main extends React.Component<Props, State> {
+  numberOfCallsToFetchMore = 0; // track the number of times more items are requested
+
   constructor(nextProps: Props) {
     super(nextProps);
 
@@ -221,17 +225,30 @@ class Main extends React.Component<Props, State> {
     let isLoading;
     let data;
     let refetch;
+    let fetchMore;
     let header;
 
+    // Most Recent
     if (this.props.mostRecent) {
       isLoading = this.props.mostRecent.loading;
       data = this.props.mostRecent.getMostRecent;
       refetch = this.props.mostRecent.refetch;
+      fetchMore = isLoading ? undefined : this.props.mostRecent.fetchMore;
       header =
         this.props.mostRecent.getMostRecent &&
         this.props.mostRecent.getMostRecent.header;
     }
 
+    // Search
+    if (this.props.search) {
+      isLoading = this.props.search.loading;
+      data = this.props.search.search;
+      refetch = this.props.search.refetch;
+      fetchMore = isLoading ? undefined : this.props.search.fetchMore;
+      header = this.props.search.search && this.props.search.search.header;
+    }
+
+    // Random
     if (this.props.randomCapture) {
       isLoading = this.props.randomCapture.loading;
       data = this.props.randomCapture.getAll;
@@ -241,13 +258,7 @@ class Main extends React.Component<Props, State> {
         this.props.randomCapture.getAll.header;
     }
 
-    if (this.props.search) {
-      isLoading = this.props.search.loading;
-      data = this.props.search.search;
-      refetch = this.props.search.refetch;
-      header = this.props.search.search && this.props.search.search.header;
-    }
-
+    // Detailed
     if (this.props.getDetailed) {
       isLoading = this.props.getDetailed.loading;
       data = this.props.getDetailed.getDetailed;
@@ -698,6 +709,26 @@ class Main extends React.Component<Props, State> {
                 })
                 .catch(err => console.error(err));
             }}
+            fetchMore={
+              fetchMore
+                ? () => {
+                    this.numberOfCallsToFetchMore =
+                      this.numberOfCallsToFetchMore + 1;
+                    fetchMore({
+                      variables: {
+                        count:
+                          (this.numberOfCallsToFetchMore + 1) *
+                          DEFAULT_LIST_LENGTH
+                      },
+                      updateQuery: (prev, { fetchMoreResult }) => {
+                        // TODO: Only fetch what is needed and append to the list
+                        // TODO: Only fetch when total is not exceeded
+                        return fetchMoreResult;
+                      }
+                    });
+                  }
+                : undefined
+            }
           />
         </div>
 
@@ -761,7 +792,7 @@ const withMostRecent = graphql<getMostRecentResponse, Props>(mostRecent, {
   options: {
     variables: {
       start: 0,
-      count: 5
+      count: DEFAULT_LIST_LENGTH
     },
     fetchPolicy: "network-only"
   }
@@ -784,7 +815,9 @@ const withSearch = graphql<searchResponse, Props>(search, {
     NetworkUtils.getCurrentLocation(props.location.search) !== Location.Search,
   options: (props: Props) => ({
     variables: {
-      rawQuery: NetworkUtils.getQuery(props.location.search)
+      rawQuery: NetworkUtils.getQuery(props.location.search),
+      start: 0,
+      count: DEFAULT_LIST_LENGTH
     },
     fetchPolicy: "network-only"
   })

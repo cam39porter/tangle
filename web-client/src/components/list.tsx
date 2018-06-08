@@ -58,6 +58,8 @@ interface Props {
   isEditing: (id: string) => boolean;
   handleArchive: (id: string) => (() => void);
   handleDismissCaptureRelation: (fromId: string, toId: string) => void;
+  // GraphQL
+  fetchMore?: () => void;
 }
 
 interface State {
@@ -151,18 +153,6 @@ class List extends React.Component<Props, State> {
       )}
     </div>
   );
-
-  renderFooter = () =>
-    this.props.sessionId ? (
-      <ScrollContainerElement name={SESSION_CAPTURE_INPUT_ID}>
-        <div className={`flex-grow pa2 pv4 bg-white`}>
-          <InputCapture
-            handleCapture={this.props.sessionHandleCapture}
-            handleOnChange={this.props.handleHeaderCaptureTextChange}
-          />
-        </div>
-      </ScrollContainerElement>
-    ) : null;
 
   render() {
     if (this.props.isHidden) {
@@ -313,7 +303,26 @@ class List extends React.Component<Props, State> {
                   )}
               </div>
             ))}
-            {this.renderFooter()}
+            {/* Session Capture */}
+            {this.props.sessionId ? (
+              <ScrollContainerElement name={SESSION_CAPTURE_INPUT_ID}>
+                <div className={`flex-grow pa2 pv4 bg-white`}>
+                  <InputCapture
+                    handleCapture={this.props.sessionHandleCapture}
+                    handleOnChange={this.props.handleHeaderCaptureTextChange}
+                  />
+                </div>
+              </ScrollContainerElement>
+            ) : null}
+            {/* Fetch More data in list */}
+            {this.props.fetchMore ? (
+              <div
+                className={`pv4 center f6 ttu gray pointer`}
+                onClick={this.props.fetchMore}
+              >
+                Load more
+              </div>
+            ) : null}
           </div>
         </ScrollContainer>
       </div>

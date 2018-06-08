@@ -120,8 +120,8 @@ export const getDetailed = gql`
 `;
 
 export const search = gql`
-  query search($rawQuery: String!) {
-    search(rawQuery: $rawQuery) {
+  query search($rawQuery: String!, $start: Int!, $count: Int!) {
+    search(rawQuery: $rawQuery, start: $start, count: $count) {
       ...SurfaceResultsFields
     }
   }

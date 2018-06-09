@@ -5,7 +5,8 @@ import { upsert as upsertTag } from "../../db/services/tag";
 
 import {
   createCaptureNode,
-  editCaptureNodeAndDeleteRelationships
+  editCaptureNodeAndDeleteRelationships,
+  archiveCaptureNode
 } from "../../db/services/capture";
 import { getNLPResponse } from "../../nlp/services/nlp";
 
@@ -20,6 +21,8 @@ import {
   DISMISSED_RELATION_RELATIONSHIP,
   PREVIOUS_RELATIONSHIP
 } from "../../db/helpers/relationships";
+import { formatCapture } from "../../surface/formatters/graph-node";
+import { GraphNode } from "../../surface/models/graph-node";
 
 export function dismissCaptureRelation(
   fromId: string,
@@ -35,10 +38,17 @@ export function dismissCaptureRelation(
   ).then(() => true);
 }
 
-export function editCapture(id: string, body: string): Promise<boolean> {
+export function archiveCapture(id: string): Promise<GraphNode> {
   const userId = getAuthenticatedUser().id;
-  return editCaptureNodeAndDeleteRelationships(userId, id, body).then(() =>
-    createRelations(id, body, "HTML")
+  return archiveCaptureNode(userId, id).then(capture =>
+    formatCapture(capture, false)
+  );
+}
+
+export function editCapture(id: string, body: string): Promise<GraphNode> {
+  const userId = getAuthenticatedUser().id;
+  return editCaptureNodeAndDeleteRelationships(userId, id, body).then(capture =>
+    createRelations(id, body, "HTML").then(() => formatCapture(capture, false))
   );
 }
 
@@ -47,7 +57,7 @@ export function createCapture(
   parentId: string,
   contentType: string,
   captureRelation: CaptureRelation
-): Promise<boolean> {
+): Promise<GraphNode> {
   const user: User = getAuthenticatedUser();
   if (
     captureRelation &&
@@ -73,7 +83,11 @@ export function createCapture(
         return Promise.resolve(capture);
       }
     })
-    .then((capture: Capture) => createRelations(capture.id, body, contentType));
+    .then((capture: Capture) => {
+      return createRelations(capture.id, body, contentType).then(() =>
+        formatCapture(capture, false)
+      );
+    });
 }
 
 function createRelations(

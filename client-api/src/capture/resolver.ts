@@ -1,27 +1,24 @@
-import { archiveCaptureNode } from "../db/services/capture";
 import {
   create as createSession,
   edit as editSession
 } from "./services/session";
 import { getAuthenticatedUser } from "../filters/request-context";
-import { Graph } from "../surface/models/graph";
 import { GraphNode } from "../surface/models/graph-node";
-import { getAllByUseCase } from "../surface/services/graph";
 import {
   createCapture,
   editCapture,
-  dismissCaptureRelation
+  dismissCaptureRelation,
+  archiveCapture
 } from "./services/capture";
 
 export default {
   Mutation: {
     // @ts-ignore
-    archiveCapture(parent, { id }, context, info): Promise<boolean> {
-      const userId: string = getAuthenticatedUser().id;
-      return archiveCaptureNode(userId, id).then(() => true);
+    archiveCapture(parent, { id }, context, info): Promise<GraphNode> {
+      return archiveCapture(id);
     },
     // @ts-ignore
-    editCapture(parent, { id, body }, context, info): Promise<boolean> {
+    editCapture(parent, { id, body }, context, info): Promise<GraphNode> {
       return editCapture(id, body);
     },
     // @ts-ignore
@@ -34,10 +31,8 @@ export default {
       context,
       // @ts-ignore
       info
-    ): Promise<Graph> {
-      return createCapture(body, sessionId, "HTML", captureRelation).then(() =>
-        getAllByUseCase("CAPTURED_TODAY", null).then(results => results.graph)
-      );
+    ): Promise<GraphNode> {
+      return createCapture(body, sessionId, "HTML", captureRelation);
     },
     createSession(
       // @ts-ignore

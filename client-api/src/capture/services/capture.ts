@@ -9,6 +9,7 @@ import {
   archiveCaptureNode
 } from "../../db/services/capture";
 import { getNLPResponse } from "../../nlp/services/nlp";
+import * as cheerio from "cheerio";
 
 import { GraphQLError } from "graphql";
 import { Capture } from "../../db/models/capture";
@@ -47,7 +48,13 @@ export function archiveCapture(id: string): Promise<GraphNode> {
 
 export function editCapture(id: string, body: string): Promise<GraphNode> {
   const userId = getAuthenticatedUser().id;
-  return editCaptureNodeAndDeleteRelationships(userId, id, body).then(capture =>
+  const plainText = parseHtml(body);
+  return editCaptureNodeAndDeleteRelationships(
+    userId,
+    id,
+    plainText,
+    body
+  ).then(capture =>
     createRelations(id, body, "HTML").then(() => formatCapture(capture, false))
   );
 }
@@ -68,7 +75,8 @@ export function createCapture(
       "Malformed request. SessionId is required if captureRelation is present and of type PREVIOUS"
     );
   }
-  return createCaptureNode(user.id, body, parentId)
+  const plainText = parseHtml(body);
+  return createCaptureNode(user.id, plainText, body, parentId)
     .then((capture: Capture) => {
       if (captureRelation) {
         return createRelationship(
@@ -88,6 +96,11 @@ export function createCapture(
         formatCapture(capture, false)
       );
     });
+}
+
+function parseHtml(html: string): string {
+  const $ = cheerio.load(html);
+  return $.root().text();
 }
 
 function createRelations(

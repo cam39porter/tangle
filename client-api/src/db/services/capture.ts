@@ -95,22 +95,30 @@ export function archiveCaptureNode(
 export function editCaptureNodeAndDeleteRelationships(
   userId: string,
   captureId: string,
-  body: string
+  plainText: string,
+  html: string
 ): Promise<Capture> {
-  const params = { captureId, userId, body: escape(body) };
+  const params = {
+    captureId,
+    userId,
+    plainText: escape(plainText),
+    html: escape(html)
+  };
   const query = `
     MATCH (capture:Capture {id:{captureId}})<-[:CREATED]-(u:User {id:{userId}})
     OPTIONAL MATCH (capture)-[r]-(other)
     WHERE type(r)<>"CREATED" AND type(r)<>"INCLUDES"
     DELETE r
-    SET capture.body={body}
+    SET capture.plainText={plainText}
+    SET capture.body={html}
     RETURN capture`;
   return executeQuery(query, params).then(formatCaptureResult);
 }
 
 export function createCaptureNode(
   userId: string,
-  body: string,
+  plainText: string,
+  html: string,
   parentId: string
 ): Promise<Capture> {
   const uuid = uuidv4();
@@ -122,13 +130,20 @@ export function createCaptureNode(
     ${parentQuery}
     CREATE (u)-[created:CREATED]->(capture:Capture {
       id:{captureUrn},
-      body:{body},
+      body:{html},
+      plainText:{plainText},
       created:TIMESTAMP(),
       owner:{userId}
     })
     ${parentId ? "CREATE (capture)<-[:INCLUDES]-(parent)" : ""}
     RETURN capture`;
-  const params = { userId, body: escape(body), parentId, captureUrn };
+  const params = {
+    userId,
+    plainText: escape(plainText),
+    html: escape(html),
+    parentId,
+    captureUrn
+  };
   return executeQuery(query, params).then(formatCaptureResult);
 }
 

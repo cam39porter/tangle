@@ -23,7 +23,7 @@ export function search(
       size: count,
       query: {
         bool: {
-          must: { match: { body: rawQuery } },
+          must: { match: { plainText: rawQuery } },
           filter: { match: { owner: userId } },
           must_not: { match: { archived: "true" } }
         }

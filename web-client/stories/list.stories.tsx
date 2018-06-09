@@ -93,31 +93,7 @@ stories.add("capture", () => (
 stories.add("list", () => (
   <List
     // List
-    isHidden={boolean("isHidden", false)}
-    handleIsHidden={action(`handleIsHidden`)}
     listData={listData}
-    // Session
-    sessionId={undefined}
-    sessionTitle={"This is an example title"}
-    sessionTags={["tag1", "tag2", "tag3"]}
-    sessionIsEditingTags={boolean("sessionIsEditingTags", true)}
-    sessionIsEditingTitle={boolean("sessionIsEditingTitle", false)}
-    sessionHandleEditTags={action("sessionHandleEditTags")}
-    sessionHandleEditTitle={action("sessionHandleEditTitle")}
-    sessionHandleCapture={action("sessionHandleCapture")}
-    sessionHandleClose={action("sessionHandleClose")}
-    // Header
-    handleHeaderCaptureTextChange={action("handleCaptureTextChange")}
-    handleHeaderCapture={action("handleCapture")}
-    handleHeaderExpand={action("handleExpand")}
-    isHeaderCapturing={boolean("isCapturing", true)}
-    handleHeaderIsCapturing={action("handleIsCapture")}
-    handleSurfaceTextChange={action("handleSurfaceTextChange")}
-    handleSurface={action("handleSurface")}
-    handleSurfaceClear={action("handleClear")}
-    headerPaddingText={""}
-    footerPaddingText={""}
-    // Captures
     handleExpand={(id: string) => action(`handleExpand ${id}`)}
     handleIsShowingRelated={(id: string) =>
       action(`handleIsShowingRelated ${id}`)
@@ -136,31 +112,7 @@ stories.add("list", () => (
 stories.add("session", () => (
   <List
     // List
-    isHidden={boolean("isHidden", false)}
-    handleIsHidden={action(`handleIsHidden`)}
     listData={listData}
-    // Session
-    sessionId={"sessionId"}
-    sessionTitle={"This is an example title"}
-    sessionTags={["tag1", "tag2", "tag3"]}
-    sessionIsEditingTags={boolean("sessionIsEditingTags", true)}
-    sessionIsEditingTitle={boolean("sessionIsEditingTitle", false)}
-    sessionHandleEditTags={action("sessionHandleEditTags")}
-    sessionHandleEditTitle={action("sessionHandleEditTitle")}
-    sessionHandleCapture={action("sessionHandleCapture")}
-    sessionHandleClose={action("sessionHandleClose")}
-    // Header
-    handleHeaderCaptureTextChange={action("handleCaptureTextChange")}
-    handleHeaderCapture={action("handleCapture")}
-    handleHeaderExpand={action("handleExpand")}
-    isHeaderCapturing={boolean("isCapturing", true)}
-    handleHeaderIsCapturing={action("handleIsCapture")}
-    handleSurfaceTextChange={action("handleSurfaceTextChange")}
-    handleSurface={action("handleSurface")}
-    handleSurfaceClear={action("handleClear")}
-    headerPaddingText={""}
-    footerPaddingText={""}
-    // Captures
     handleExpand={(id: string) => action(`handleExpand ${id}`)}
     handleIsShowingRelated={(id: string) =>
       action(`handleIsShowingRelated ${id}`)

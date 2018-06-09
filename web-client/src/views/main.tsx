@@ -63,16 +63,21 @@ import { graphql, compose, QueryProps, MutationFunc } from "react-apollo";
 import { RouteComponentProps } from "react-router";
 
 // Components
-import List, { SESSION_CAPTURE_INPUT_ID } from "../components/list";
+import List from "../components/list";
 import GraphVisualization from "../components/graph-visualization";
 import MenuBar from "../components/menu-bar";
 import Navigation from "../components/navigation";
+import ListSessionHeader from "../components/list-session-header";
+import ListHeader from "../components/list-header";
+import InputCapture from "../components/input-capture";
+import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 import { WindowUtils, NetworkUtils } from "../utils";
 import { noop, trim, assign, reverse, remove } from "lodash";
 import windowSize from "react-window-size";
 
+// Constants
 const DEFAULT_LIST_LENGTH = 5;
 
 // Types
@@ -119,6 +124,8 @@ interface CaptureState {
 }
 
 interface State {
+  listHeaderHeight: number;
+  listFooterHeight: number;
   // Header
   isCapturing: boolean;
   captureText: string;
@@ -141,6 +148,8 @@ class Main extends React.Component<Props, State> {
     super(nextProps);
 
     this.state = {
+      listHeaderHeight: 0,
+      listFooterHeight: 0,
       isCapturing:
         NetworkUtils.getCurrentLocation(nextProps.location.search) ===
         Location.MostRecent,
@@ -152,12 +161,16 @@ class Main extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
+    const sessionId = NetworkUtils.getIsSessionId(nextProps.location.search);
+
     this.setState({
+      listHeaderHeight: sessionId ? 0 : this.state.listHeaderHeight,
+      listFooterHeight: sessionId ? this.state.listFooterHeight : 0,
       isCapturing:
         NetworkUtils.getCurrentLocation(nextProps.location.search) ===
         Location.MostRecent,
       surfaceText: NetworkUtils.getQuery(nextProps.location.search),
-      sessionId: NetworkUtils.getIsSessionId(nextProps.location.search)
+      sessionId
     });
   }
 
@@ -280,421 +293,472 @@ class Main extends React.Component<Props, State> {
       <div className={`flex w-100 vh-100`}>
         {/* List */}
         <div
-          className={`shadow-1 z-5`}
+          className={`shadow-3 bg-light-gray z-5`}
           style={{
-            minWidth: isLargeWindow ? "32.5em" : "100%",
-            maxWidth: isLargeWindow ? "32.5em" : "100%"
+            width: isLargeWindow ? "32.5em" : "100%"
           }}
         >
-          <List
-            // List
-            isHidden={false}
-            handleIsHidden={noop}
-            listData={isLoading ? [] : data.list}
-            scrollToId={this.state.scrollToId}
-            header={header}
-            pivot={pivot}
-            // Session
-            sessionId={this.state.sessionId}
-            sessionTitle={this.state.sessionTitle}
-            sessionTags={undefined}
-            sessionIsEditingTags={false}
-            sessionIsEditingTitle={
-              this.state.sessionIsEditingTitle ? true : false
-            }
-            sessionHandleEditTags={noop}
-            sessionHandleEditTitle={title => {
-              let nextTitle = trim(title);
-              if (!this.state.sessionId) {
-                return;
-              }
+          {/* Capture Header */}
+          {!this.state.sessionId && (
+            <div
+              className={`pa4 ${
+                this.state.isCapturing ? "bg-accent" : "bg-base"
+              }`}
+            >
+              <ReactResizeDetector
+                handleHeight={true}
+                onResize={(_, height) => {
+                  this.setState({
+                    listHeaderHeight: height + 64
+                  });
+                }}
+              />
+              <ListHeader
+                handleCaptureTextChange={nextCaptureText => {
+                  this.setState({
+                    captureText: nextCaptureText
+                  });
+                }}
+                handleCapture={() => {
+                  if (!this.state.captureText) {
+                    return;
+                  }
+                  this.props
+                    .createCapture({
+                      variables: {
+                        body: this.state.captureText
+                      },
+                      optimisticResponse: {
+                        createCapture: {
+                          __typename: "Node",
+                          id: `optimistic:${NetworkUtils.getRandomId()}`,
+                          type: NodeType.Capture,
+                          text: this.state.captureText,
+                          level: 0
+                        } as NodeFieldsFragment
+                      },
+                      update: this.optimisticUpdateOnCapture
+                    })
+                    .then(() => {
+                      refetch();
+                    })
+                    .catch(err => console.error(err));
+                }}
+                handleExpand={() => {
+                  this.props
+                    .createSession({
+                      variables: {
+                        firstCaptureId: null,
+                        title: null
+                      }
+                    })
+                    .then(({ data: res }) => {
+                      this.props.history.push(
+                        `?id=${encodeURIComponent(res.createSession.id)}`
+                      );
+                    })
+                    .catch(err => console.error(err));
+                }}
+                isCapturing={this.state.isCapturing}
+                handleIsCapturing={() => {
+                  this.setState({
+                    isCapturing: !this.state.isCapturing
+                  });
+                }}
+                handleSurfaceTextChange={nextSurfaceText => {
+                  this.setState({
+                    surfaceText: nextSurfaceText
+                  });
+                }}
+                handleSurface={() => {
+                  let query = trim(this.state.surfaceText);
+                  if (!query) {
+                    return;
+                  }
+                  this.props.history.push(
+                    `?query=${encodeURIComponent(query)}`
+                  );
+                }}
+                handleClear={() => {
+                  this.props.history.push(`/`);
+                }}
+                surfaceStartingText={NetworkUtils.getQuery(
+                  this.props.location.search
+                )}
+              />
+            </div>
+          )}
 
-              if (this.state.sessionIsEditingTitle) {
+          {/* List */}
+          <div
+            className={`flex-column overflow-auto`}
+            style={{
+              height: `${this.props.windowHeight -
+                this.state.listHeaderHeight -
+                this.state.listFooterHeight}px`
+            }}
+          >
+            {/* Session Title / Tags */}
+            {this.state.sessionId && (
+              <div>
+                <ListSessionHeader
+                  title={this.state.sessionTitle}
+                  tags={undefined}
+                  handleEditTags={noop}
+                  handleEditTitle={title => {
+                    let nextTitle = trim(title);
+                    if (!this.state.sessionId) {
+                      return;
+                    }
+
+                    if (this.state.sessionIsEditingTitle) {
+                      this.props
+                        .editSession({
+                          variables: {
+                            sessionId: this.state.sessionId,
+                            title: nextTitle
+                          }
+                        })
+                        .then(({ data: res }) => {
+                          this.setState({
+                            sessionTitle:
+                              res.editSession.text === "Untitled brainstorm"
+                                ? undefined
+                                : res.editSession.text,
+                            sessionIsEditingTitle: !this.state
+                              .sessionIsEditingTitle
+                          });
+                        })
+                        .then(() => {
+                          refetch();
+                        })
+                        .catch(err => console.error(err));
+                    } else {
+                      this.setState({
+                        sessionIsEditingTitle: !this.state.sessionIsEditingTitle
+                      });
+                    }
+                  }}
+                  handleClose={() => {
+                    this.setState({
+                      sessionTitle: "",
+                      sessionIsEditingTags: false,
+                      sessionIsEditingTitle: false
+                    });
+                    if (this.props.history.length > 2) {
+                      this.props.history.goBack();
+                    } else {
+                      this.props.history.push("/");
+                    }
+                  }}
+                />
+              </div>
+            )}
+
+            {header &&
+              !this.state.sessionId && (
+                <div className={`pv4 ph3 gray`}>{header}</div>
+              )}
+
+            <List
+              // List
+              listData={isLoading ? [] : data.list}
+              scrollToId={this.state.scrollToId}
+              // Captures
+              handleExpand={(id: string) => () => {
                 this.props
-                  .editSession({
+                  .createSession({
                     variables: {
-                      sessionId: this.state.sessionId,
-                      title: nextTitle
+                      firstCaptureId: id,
+                      title: null
                     }
                   })
                   .then(({ data: res }) => {
+                    const sessionId = res.createSession.id;
+                    return sessionId;
+                  })
+                  .then(sessionId => {
+                    this.props.history.push(
+                      `?id=${encodeURIComponent(sessionId)}`
+                    );
+                  })
+                  .catch(err => console.error(err));
+              }}
+              handleIsShowingRelated={(
+                id: string,
+                callback?: () => void
+              ) => () => {
+                let captureState = this.state.captures.get(id);
+                if (!captureState) {
+                  captureState = this.createCaptureState(id);
+                }
+                let nextCaptureState = assign(captureState, {
+                  isShowingRelated: !captureState.isShowingRelated
+                });
+                let nextCaptures = this.state.captures.set(
+                  id,
+                  nextCaptureState
+                );
+                this.setState(
+                  {
+                    captures: nextCaptures
+                  },
+                  callback
+                );
+              }}
+              isShowingRelated={(id: string) => {
+                let captureState = this.state.captures.get(id);
+                if (!captureState) {
+                  captureState = this.createCaptureState(id);
+                }
+                return captureState.isShowingRelated;
+              }}
+              handleFocus={(id: string) => () => {
+                this.props.history.push(`?id=${encodeURIComponent(id)}`);
+              }}
+              handleEdit={(id: string) => text => {
+                let captureState = this.state.captures.get(id);
+                if (!captureState) {
+                  captureState = this.createCaptureState(id);
+                }
+                let nextCaptureState = assign(captureState, {
+                  isEditing: !captureState.isEditing
+                });
+                let nextCaptures = this.state.captures.set(
+                  id,
+                  nextCaptureState
+                );
+
+                this.props
+                  .editCapture({
+                    variables: { id, body: text }
+                  })
+                  .then(() => {
+                    refetch();
+                  })
+                  .then(() => {
                     this.setState({
-                      sessionTitle:
-                        res.editSession.text === "Untitled brainstorm"
-                          ? undefined
-                          : res.editSession.text,
-                      sessionIsEditingTitle: !this.state.sessionIsEditingTitle
+                      captures: nextCaptures
                     });
+                  })
+                  .catch(err => console.error(err));
+              }}
+              isEditing={(id: string) => {
+                let captureState = this.state.captures.get(id);
+                if (!captureState) {
+                  captureState = this.createCaptureState(id);
+                }
+                return captureState.isEditing;
+              }}
+              handleArchive={(id: string) => () => {
+                let shouldRedirect =
+                  NetworkUtils.getId(this.props.location.search) === id;
+                this.props
+                  .archiveCapture({
+                    variables: { id },
+                    optimisticResponse: {
+                      archiveCapture: {
+                        __typename: "Node",
+                        id: `optimistic:${NetworkUtils.getRandomId()}`,
+                        type: NodeType.Capture,
+                        text: this.state.captureText,
+                        level: 0
+                      } as NodeFieldsFragment
+                    },
+                    update: (dataProxy, _) => {
+                      const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
+                        {
+                          id: "SurfaceResults",
+                          fragment: surfaceResultsFragment,
+                          fragmentName: "SurfaceResultsFields"
+                        }
+                      );
+                      if (!(cacheData && cacheData.list && cacheData.graph)) {
+                        return;
+                      }
+                      remove(cacheData.list, listItem => {
+                        if (listItem) {
+                          return listItem.id === id;
+                        }
+                        return false;
+                      });
+                      remove(cacheData.graph.nodes, node => node.id === id);
+                      remove(
+                        cacheData.graph.edges,
+                        edge => edge.source === id || edge.destination === id
+                      );
+                      dataProxy.writeFragment({
+                        id: "SurfaceResults",
+                        fragment: surfaceResultsFragment,
+                        fragmentName: "SurfaceResultsFields",
+                        data: cacheData
+                      });
+                    }
+                  })
+                  .then(() => {
+                    if (shouldRedirect) {
+                      this.props.history.goBack();
+                    } else {
+                      refetch();
+                    }
+                  })
+                  .catch(err => console.error(err));
+              }}
+              handleDismissCaptureRelation={(fromId, toId) => {
+                this.props
+                  .dismissCaptureRelation({
+                    variables: {
+                      fromId,
+                      toId
+                    },
+                    optimisticResponse: {
+                      dismissCaptureRelation: {
+                        __typename: "Node",
+                        id: `optimistic:${NetworkUtils.getRandomId()}`,
+                        type: NodeType.Capture,
+                        text: this.state.captureText,
+                        level: 0
+                      } as NodeFieldsFragment
+                    },
+                    update: dataProxy => {
+                      const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
+                        {
+                          id: "SurfaceResults",
+                          fragment: surfaceResultsFragment,
+                          fragmentName: "SurfaceResultsFields"
+                        }
+                      );
+                      if (!(cacheData && cacheData.list && cacheData.graph)) {
+                        return;
+                      }
+
+                      cacheData.list.forEach((listItem, index) => {
+                        if (listItem && listItem.id === fromId) {
+                          if (listItem.relatedItems) {
+                            remove(listItem.relatedItems, relatedItem => {
+                              if (relatedItem) {
+                                return relatedItem.id === toId;
+                              }
+                              return false;
+                            });
+                          }
+                        }
+                      });
+
+                      remove(cacheData.graph.nodes, node => node.id === toId);
+                      remove(
+                        cacheData.graph.edges,
+                        edge =>
+                          edge.source === toId || edge.destination === toId
+                      );
+                      dataProxy.writeFragment({
+                        id: "SurfaceResults",
+                        fragment: surfaceResultsFragment,
+                        fragmentName: "SurfaceResultsFields",
+                        data: cacheData
+                      });
+                    }
                   })
                   .then(() => {
                     refetch();
                   })
                   .catch(err => console.error(err));
-              } else {
-                this.setState({
-                  sessionIsEditingTitle: !this.state.sessionIsEditingTitle
-                });
-              }
-            }}
-            sessionHandleCapture={() => {
-              if (!this.state.captureText || !this.state.sessionId) {
-                return;
-              }
-
-              let previousCaptureId;
-
-              if (
-                this.props.getDetailed &&
-                this.props.getDetailed.getDetailed
-              ) {
-                let list = this.props.getDetailed.getDetailed.list;
-
-                if (list.length > 0) {
-                  let previousCapture = list[
-                    list.length - 1
-                  ] as ListFieldsFragment;
-                  previousCaptureId = previousCapture.id;
-                }
-              }
-
-              this.props
-                .createSessionCapture({
-                  variables: {
-                    body: this.state.captureText,
-                    sessionId: this.state.sessionId,
-                    previousCaptureId: previousCaptureId
-                      ? previousCaptureId
-                      : this.state.sessionId
-                  },
-                  optimisticResponse: {
-                    createCapture: {
-                      __typename: "Node",
-                      id: `optimistic:${NetworkUtils.getRandomId()}`,
-                      type: NodeType.Capture,
-                      text: this.state.captureText,
-                      level: 0
-                    } as NodeFieldsFragment
-                  },
-                  update: this.optimisticUpdateOnCapture
-                })
-                .then(() => {
-                  refetch();
-                  this.setState(
-                    {
-                      scrollToId: SESSION_CAPTURE_INPUT_ID
+              }}
+            />
+            {/* Fetch More data in list */}
+            {fetchMore ? (
+              <div
+                className={`pv4 tc f6 ttu gray pointer`}
+                onClick={() => {
+                  this.numberOfCallsToFetchMore =
+                    this.numberOfCallsToFetchMore + 1;
+                  fetchMore({
+                    variables: {
+                      count:
+                        (this.numberOfCallsToFetchMore + 1) *
+                        DEFAULT_LIST_LENGTH
                     },
-                    () => {
-                      this.setState({
-                        scrollToId: undefined
-                      });
+                    updateQuery: (prev, { fetchMoreResult }) => {
+                      // TODO: Only fetch what is needed and append to the list
+                      // TODO: Only fetch when total is not exceeded
+                      return fetchMoreResult;
                     }
-                  );
-                })
-                .catch(err => console.error(err));
-            }}
-            sessionHandleClose={() => {
-              this.setState({
-                sessionTitle: "",
-                sessionIsEditingTags: false,
-                sessionIsEditingTitle: false
-              });
-              if (this.props.history.length > 2) {
-                this.props.history.goBack();
-              } else {
-                this.props.history.push("/");
-              }
-            }}
-            // Header
-            handleHeaderCaptureTextChange={nextCaptureText => {
-              // this handles the session capture bar as well
-              this.setState({
-                captureText: nextCaptureText
-              });
-            }}
-            handleHeaderCapture={() => {
-              if (!this.state.captureText) {
-                return;
-              }
-              this.props
-                .createCapture({
-                  variables: {
-                    body: this.state.captureText
-                  },
-                  optimisticResponse: {
-                    createCapture: {
-                      __typename: "Node",
-                      id: `optimistic:${NetworkUtils.getRandomId()}`,
-                      type: NodeType.Capture,
-                      text: this.state.captureText,
-                      level: 0
-                    } as NodeFieldsFragment
-                  },
-                  update: this.optimisticUpdateOnCapture
-                })
-                .then(() => {
-                  refetch();
-                })
-                .catch(err => console.error(err));
-            }}
-            handleHeaderExpand={() => {
-              this.props
-                .createSession({
-                  variables: {
-                    firstCaptureId: null,
-                    title: null
-                  }
-                })
-                .then(({ data: res }) => {
-                  this.props.history.push(
-                    `?id=${encodeURIComponent(res.createSession.id)}`
-                  );
-                })
-                .catch(err => console.error(err));
-            }}
-            isHeaderCapturing={this.state.isCapturing}
-            handleHeaderIsCapturing={() => {
-              this.setState({
-                isCapturing: !this.state.isCapturing
-              });
-            }}
-            handleSurfaceTextChange={nextSurfaceText => {
-              this.setState({
-                surfaceText: nextSurfaceText
-              });
-            }}
-            handleSurface={() => {
-              let query = trim(this.state.surfaceText);
-              if (!query) {
-                return;
-              }
-              this.props.history.push(`?query=${encodeURIComponent(query)}`);
-            }}
-            handleSurfaceClear={() => {
-              this.props.history.push(`/`);
-            }}
-            surfaceStartingText={NetworkUtils.getQuery(
-              this.props.location.search
-            )}
-            headerPaddingText={
-              this.state.isCapturing
-                ? this.state.captureText
-                : this.state.surfaceText
-            }
-            footerPaddingText={""}
-            // Captures
-            handleExpand={(id: string) => () => {
-              this.props
-                .createSession({
-                  variables: {
-                    firstCaptureId: id,
-                    title: null
-                  }
-                })
-                .then(({ data: res }) => {
-                  const sessionId = res.createSession.id;
-                  return sessionId;
-                })
-                .then(sessionId => {
-                  this.props.history.push(
-                    `?id=${encodeURIComponent(sessionId)}`
-                  );
-                })
-                .catch(err => console.error(err));
-            }}
-            handleIsShowingRelated={(
-              id: string,
-              callback?: () => void
-            ) => () => {
-              let captureState = this.state.captures.get(id);
-              if (!captureState) {
-                captureState = this.createCaptureState(id);
-              }
-              let nextCaptureState = assign(captureState, {
-                isShowingRelated: !captureState.isShowingRelated
-              });
-              let nextCaptures = this.state.captures.set(id, nextCaptureState);
-              this.setState(
-                {
-                  captures: nextCaptures
-                },
-                callback
-              );
-            }}
-            isShowingRelated={(id: string) => {
-              let captureState = this.state.captures.get(id);
-              if (!captureState) {
-                captureState = this.createCaptureState(id);
-              }
-              return captureState.isShowingRelated;
-            }}
-            handleFocus={(id: string) => () => {
-              this.props.history.push(`?id=${encodeURIComponent(id)}`);
-            }}
-            handleEdit={(id: string) => text => {
-              let captureState = this.state.captures.get(id);
-              if (!captureState) {
-                captureState = this.createCaptureState(id);
-              }
-              let nextCaptureState = assign(captureState, {
-                isEditing: !captureState.isEditing
-              });
-              let nextCaptures = this.state.captures.set(id, nextCaptureState);
-
-              this.props
-                .editCapture({
-                  variables: { id, body: text }
-                })
-                .then(() => {
-                  refetch();
-                })
-                .then(() => {
-                  this.setState({
-                    captures: nextCaptures
                   });
-                })
-                .catch(err => console.error(err));
-            }}
-            isEditing={(id: string) => {
-              let captureState = this.state.captures.get(id);
-              if (!captureState) {
-                captureState = this.createCaptureState(id);
-              }
-              return captureState.isEditing;
-            }}
-            handleArchive={(id: string) => () => {
-              let shouldRedirect =
-                NetworkUtils.getId(this.props.location.search) === id;
-              this.props
-                .archiveCapture({
-                  variables: { id },
-                  optimisticResponse: {
-                    archiveCapture: {
-                      __typename: "Node",
-                      id: `optimistic:${NetworkUtils.getRandomId()}`,
-                      type: NodeType.Capture,
-                      text: this.state.captureText,
-                      level: 0
-                    } as NodeFieldsFragment
-                  },
-                  update: (dataProxy, _) => {
-                    const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
-                      {
-                        id: "SurfaceResults",
-                        fragment: surfaceResultsFragment,
-                        fragmentName: "SurfaceResultsFields"
-                      }
-                    );
-                    if (!(cacheData && cacheData.list && cacheData.graph)) {
-                      return;
-                    }
-                    remove(cacheData.list, listItem => {
-                      if (listItem) {
-                        return listItem.id === id;
-                      }
-                      return false;
-                    });
-                    remove(cacheData.graph.nodes, node => node.id === id);
-                    remove(
-                      cacheData.graph.edges,
-                      edge => edge.source === id || edge.destination === id
-                    );
-                    dataProxy.writeFragment({
-                      id: "SurfaceResults",
-                      fragment: surfaceResultsFragment,
-                      fragmentName: "SurfaceResultsFields",
-                      data: cacheData
-                    });
-                  }
-                })
-                .then(() => {
-                  if (shouldRedirect) {
-                    this.props.history.goBack();
-                  } else {
-                    refetch();
-                  }
-                })
-                .catch(err => console.error(err));
-            }}
-            handleDismissCaptureRelation={(fromId, toId) => {
-              this.props
-                .dismissCaptureRelation({
-                  variables: {
-                    fromId,
-                    toId
-                  },
-                  optimisticResponse: {
-                    dismissCaptureRelation: {
-                      __typename: "Node",
-                      id: `optimistic:${NetworkUtils.getRandomId()}`,
-                      type: NodeType.Capture,
-                      text: this.state.captureText,
-                      level: 0
-                    } as NodeFieldsFragment
-                  },
-                  update: dataProxy => {
-                    const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
-                      {
-                        id: "SurfaceResults",
-                        fragment: surfaceResultsFragment,
-                        fragmentName: "SurfaceResultsFields"
-                      }
-                    );
-                    if (!(cacheData && cacheData.list && cacheData.graph)) {
-                      return;
-                    }
+                }}
+              >
+                Load more
+              </div>
+            ) : (
+              <div className={`pv4`} />
+            )}
+          </div>
 
-                    cacheData.list.forEach((listItem, index) => {
-                      if (listItem && listItem.id === fromId) {
-                        if (listItem.relatedItems) {
-                          remove(listItem.relatedItems, relatedItem => {
-                            if (relatedItem) {
-                              return relatedItem.id === toId;
-                            }
-                            return false;
-                          });
-                        }
-                      }
-                    });
-
-                    remove(cacheData.graph.nodes, node => node.id === toId);
-                    remove(
-                      cacheData.graph.edges,
-                      edge => edge.source === toId || edge.destination === toId
-                    );
-                    dataProxy.writeFragment({
-                      id: "SurfaceResults",
-                      fragment: surfaceResultsFragment,
-                      fragmentName: "SurfaceResultsFields",
-                      data: cacheData
-                    });
+          {/* Session Capture */}
+          {this.state.sessionId && (
+            <div className={`pa2 pv4 bg-white`}>
+              <ReactResizeDetector
+                handleHeight={true}
+                onResize={(_, height) => {
+                  this.setState({
+                    listFooterHeight: height + 64
+                  });
+                }}
+              />
+              <InputCapture
+                handleCapture={() => {
+                  if (!this.state.captureText || !this.state.sessionId) {
+                    return;
                   }
-                })
-                .then(() => {
-                  refetch();
-                })
-                .catch(err => console.error(err));
-            }}
-            fetchMore={
-              fetchMore
-                ? () => {
-                    this.numberOfCallsToFetchMore =
-                      this.numberOfCallsToFetchMore + 1;
-                    fetchMore({
+
+                  let previousCaptureId;
+
+                  if (
+                    this.props.getDetailed &&
+                    this.props.getDetailed.getDetailed
+                  ) {
+                    let list = this.props.getDetailed.getDetailed.list;
+
+                    if (list.length > 0) {
+                      let previousCapture = list[
+                        list.length - 1
+                      ] as ListFieldsFragment;
+                      previousCaptureId = previousCapture.id;
+                    }
+                  }
+
+                  this.props
+                    .createSessionCapture({
                       variables: {
-                        count:
-                          (this.numberOfCallsToFetchMore + 1) *
-                          DEFAULT_LIST_LENGTH
+                        body: this.state.captureText,
+                        sessionId: this.state.sessionId,
+                        previousCaptureId: previousCaptureId
+                          ? previousCaptureId
+                          : this.state.sessionId
                       },
-                      updateQuery: (prev, { fetchMoreResult }) => {
-                        // TODO: Only fetch what is needed and append to the list
-                        // TODO: Only fetch when total is not exceeded
-                        return fetchMoreResult;
-                      }
-                    });
-                  }
-                : undefined
-            }
-          />
+                      optimisticResponse: {
+                        createCapture: {
+                          __typename: "Node",
+                          id: `optimistic:${NetworkUtils.getRandomId()}`,
+                          type: NodeType.Capture,
+                          text: this.state.captureText,
+                          level: 0
+                        } as NodeFieldsFragment
+                      },
+                      update: this.optimisticUpdateOnCapture
+                    })
+                    .then(() => {
+                      refetch();
+                    })
+                    .catch(err => console.error(err));
+                }}
+                handleOnChange={nextCaptureText => {
+                  this.setState({
+                    captureText: nextCaptureText
+                  });
+                }}
+              />
+            </div>
+          )}
         </div>
 
         {/* Graph */}

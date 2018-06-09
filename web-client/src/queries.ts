@@ -135,22 +135,28 @@ export const search = gql`
 export const createCapture = gql`
   mutation createCapture($body: String!) {
     createCapture(body: $body) {
-      ...GraphFields
+      ...NodeFields
     }
   }
-  ${graphFragment}
+  ${nodeFragment}
 `;
 
 export const editCapture = gql`
   mutation editCapture($id: String!, $body: String!) {
-    editCapture(id: $id, body: $body)
+    editCapture(id: $id, body: $body) {
+      ...NodeFields
+    }
   }
+  ${nodeFragment}
 `;
 
 export const archiveCapture = gql`
   mutation archiveCapture($id: String!) {
-    archiveCapture(id: $id)
+    archiveCapture(id: $id) {
+      ...NodeFields
+    }
   }
+  ${nodeFragment}
 `;
 
 export const createSession = gql`
@@ -185,14 +191,17 @@ export const createSessionCapture = gql`
         relationshipType: PREVIOUS
       }
     ) {
-      ...GraphFields
+      ...NodeFields
     }
   }
-  ${graphFragment}
+  ${nodeFragment}
 `;
 
 export const dismissCaptureRelation = gql`
   mutation dismissCaptureRelation($fromId: String!, $toId: String!) {
-    dismissCaptureRelation(fromId: $fromId, toId: $toId)
+    dismissCaptureRelation(fromId: $fromId, toId: $toId) {
+      ...NodeFields
+    }
   }
+  ${nodeFragment}
 `;

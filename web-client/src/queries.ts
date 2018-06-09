@@ -199,9 +199,6 @@ export const createSessionCapture = gql`
 
 export const dismissCaptureRelation = gql`
   mutation dismissCaptureRelation($fromId: String!, $toId: String!) {
-    dismissCaptureRelation(fromId: $fromId, toId: $toId) {
-      ...NodeFields
-    }
+    dismissCaptureRelation(fromId: $fromId, toId: $toId)
   }
-  ${nodeFragment}
 `;

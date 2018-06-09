@@ -38,7 +38,6 @@ import {
   SurfaceResultsFieldsFragment,
   ListFieldsFragment,
   NodeType,
-  GraphFieldsFragment,
   NodeFieldsFragment
 } from "../__generated__/types";
 import {
@@ -175,12 +174,12 @@ class Main extends React.Component<Props, State> {
 
   optimisticUpdateOnCapture = (
     dataProxy,
-    resultData: { data: { createCapture: GraphFieldsFragment } }
+    resultData: { data: { createCapture: NodeFieldsFragment } }
   ) => {
     const optimisticResponse = resultData.data.createCapture;
 
     // only update for optimistic response
-    if (optimisticResponse.nodes[0].id.split(":")[0] !== "optimistic") {
+    if (optimisticResponse.id.split(":")[0] !== "optimistic") {
       return;
     }
 
@@ -196,10 +195,10 @@ class Main extends React.Component<Props, State> {
     }
     let tempListItem: ListFieldsFragment = {
       __typename: "ListItem",
-      id: optimisticResponse.nodes[0].id,
+      id: optimisticResponse.id,
       text: {
         __typename: "AnnotatedText",
-        text: optimisticResponse.nodes[0].text,
+        text: optimisticResponse.text,
         annotations: []
       },
       reasons: [],
@@ -207,7 +206,7 @@ class Main extends React.Component<Props, State> {
     };
     let tempList = reverse(cacheData.list);
     tempList.push(tempListItem);
-    let tempNode: NodeFieldsFragment = optimisticResponse.nodes[0];
+    let tempNode: NodeFieldsFragment = optimisticResponse;
     // insert at the top of list of this is not a session
     if (!this.state.sessionId) {
       cacheData.list = reverse(tempList);
@@ -369,18 +368,12 @@ class Main extends React.Component<Props, State> {
                   },
                   optimisticResponse: {
                     createCapture: {
-                      __typename: "Graph",
-                      nodes: [
-                        {
-                          __typename: "Node",
-                          id: `optimistic:${NetworkUtils.getRandomId()}`,
-                          type: NodeType.Capture,
-                          text: this.state.captureText,
-                          level: 0
-                        }
-                      ],
-                      edges: []
-                    } as GraphFieldsFragment
+                      __typename: "Node",
+                      id: `optimistic:${NetworkUtils.getRandomId()}`,
+                      type: NodeType.Capture,
+                      text: this.state.captureText,
+                      level: 0
+                    } as NodeFieldsFragment
                   },
                   update: this.optimisticUpdateOnCapture
                 })
@@ -429,18 +422,12 @@ class Main extends React.Component<Props, State> {
                   },
                   optimisticResponse: {
                     createCapture: {
-                      __typename: "Graph",
-                      nodes: [
-                        {
-                          __typename: "Node",
-                          id: `optimistic:${NetworkUtils.getRandomId()}`,
-                          type: NodeType.Capture,
-                          text: this.state.captureText,
-                          level: 0
-                        }
-                      ],
-                      edges: []
-                    } as GraphFieldsFragment
+                      __typename: "Node",
+                      id: `optimistic:${NetworkUtils.getRandomId()}`,
+                      type: NodeType.Capture,
+                      text: this.state.captureText,
+                      level: 0
+                    } as NodeFieldsFragment
                   },
                   update: this.optimisticUpdateOnCapture
                 })
@@ -555,49 +542,7 @@ class Main extends React.Component<Props, State> {
 
               this.props
                 .editCapture({
-                  variables: { id, body: text },
-                  optimisticResponse: {
-                    editCapture: true
-                  },
-                  update: dataProxy => {
-                    const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
-                      {
-                        id: "SurfaceResults",
-                        fragment: surfaceResultsFragment,
-                        fragmentName: "SurfaceResultsFragment"
-                      }
-                    );
-
-                    if (!(cacheData && cacheData.list && cacheData.graph)) {
-                      return;
-                    }
-
-                    const listItemIndex = cacheData.list.findIndex(listItem => {
-                      if (listItem) {
-                        return listItem.id === id;
-                      }
-                      return false;
-                    });
-
-                    if (listItemIndex >= 0) {
-                      let listItem = cacheData.list[listItemIndex];
-                      let nextListItem = assign(listItem, {
-                        text: {
-                          __typename: "AnnotatedText",
-                          text,
-                          annotations: []
-                        }
-                      });
-                      cacheData.list[listItemIndex] = nextListItem;
-                    }
-
-                    dataProxy.writeFragment({
-                      id: "SurfaceResults",
-                      fragment: surfaceResultsFragment,
-                      fragmentName: "SurfaceResultsFragment",
-                      data: cacheData
-                    });
-                  }
+                  variables: { id, body: text }
                 })
                 .then(() => {
                   refetch();
@@ -623,7 +568,13 @@ class Main extends React.Component<Props, State> {
                 .archiveCapture({
                   variables: { id },
                   optimisticResponse: {
-                    archiveCapture: true
+                    archiveCapture: {
+                      __typename: "Node",
+                      id: `optimistic:${NetworkUtils.getRandomId()}`,
+                      type: NodeType.Capture,
+                      text: this.state.captureText,
+                      level: 0
+                    } as NodeFieldsFragment
                   },
                   update: (dataProxy, _) => {
                     const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(
@@ -672,7 +623,13 @@ class Main extends React.Component<Props, State> {
                     toId
                   },
                   optimisticResponse: {
-                    dismissCaptureRelation: true
+                    dismissCaptureRelation: {
+                      __typename: "Node",
+                      id: `optimistic:${NetworkUtils.getRandomId()}`,
+                      type: NodeType.Capture,
+                      text: this.state.captureText,
+                      level: 0
+                    } as NodeFieldsFragment
                   },
                   update: dataProxy => {
                     const cacheData: SurfaceResultsFieldsFragment | null = dataProxy.readFragment(

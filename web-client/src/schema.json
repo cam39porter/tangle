@@ -206,18 +206,6 @@
           "description": "",
           "fields": [
             {
-              "name": "header",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "pivot",
               "description": "",
               "args": [],
@@ -1006,7 +994,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Graph",
+                  "name": "Node",
                   "ofType": null
                 }
               },
@@ -1147,9 +1135,13 @@
                 }
               ],
               "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Node",
+                  "ofType": null
+                }
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -1188,9 +1180,13 @@
                 }
               ],
               "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Node",
+                  "ofType": null
+                }
               },
               "isDeprecated": false,
               "deprecationReason": null

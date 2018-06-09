@@ -8,15 +8,16 @@ import { buildList } from "../formatters/list";
 import { SurfaceResults } from "../models/surface-results";
 import { PageInfo } from "../models/page-info";
 import { GraphNode } from "../models/graph-node";
+import { CaptureUrn } from "../../urn/capture-urn";
 
 export function expandCaptures(
   userUrn: string,
-  captureIds: string[],
+  captureUrns: CaptureUrn[],
   pivot: GraphNode = null
 ): Promise<SurfaceResults> {
   const expansionPromises = Promise.all([
-    expandGraph(userUrn, captureIds, (pivot && pivot.id) || null),
-    expandList(userUrn, captureIds)
+    expandGraph(userUrn, captureUrns, (pivot && pivot.id) || null),
+    expandList(userUrn, captureUrns)
   ]);
   return expansionPromises.then(expansions => {
     const graph = expansions[0];
@@ -32,10 +33,14 @@ export function expandCaptures(
 
 function expandGraph(
   userUrn: string,
-  captureIds: string[],
+  captureUrns: CaptureUrn[],
   startUrn: string = null
 ): Promise<Graph> {
-  const params = { userUrn, captureIds, startUrn };
+  const params = {
+    userUrn,
+    captureIds: captureUrns.map(urn => urn.toString()),
+    startUrn
+  };
   const query = getExpansionQuery(startUrn, false);
   return executeQuery(query, params).then((result: StatementResult) => {
     return buildGraph(formatDbResponse(result));
@@ -44,13 +49,17 @@ function expandGraph(
 
 function expandList(
   userUrn: string,
-  captureIds: string[],
+  captureUrns: CaptureUrn[],
   startUrn: string = null
 ): Promise<ListItem[]> {
-  const params = { userUrn, captureIds, startUrn };
+  const params = {
+    userUrn,
+    captureIds: captureUrns.map(urn => urn.toString()),
+    startUrn
+  };
   const query = getExpansionQuery(startUrn, true);
   return executeQuery(query, params).then((result: StatementResult) => {
-    return buildList(formatDbResponse(result), captureIds);
+    return buildList(formatDbResponse(result), captureUrns);
   });
 }
 
@@ -61,13 +70,13 @@ function formatDbResponse(
     [Capture, Relationship, Node, Relationship, Capture]
   > = result.records.map(record => {
     const root: Capture = record.get("roots")
-      ? (record.get("roots").properties as Capture)
+      ? Capture.fromProperties(record.get("roots").properties)
       : (null as Capture);
     const r1: Relationship = record.get("r1") as Relationship;
     const intermediate: Node = record.get("firstDegree") as Node;
     const r2: Relationship = record.get("r2") as Relationship;
     const end: Capture = record.get("secondDegree")
-      ? (record.get("secondDegree").properties as Capture)
+      ? Capture.fromProperties(record.get("secondDegree").properties)
       : (null as Capture);
     const ret: [Capture, Relationship, Node, Relationship, Capture] = [
       root,

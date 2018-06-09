@@ -16,7 +16,7 @@ export function search(
     return searchClient(rawQuery, start, count).then(searchResults => {
       return expandCaptures(
         userId,
-        searchResults.results.map(capture => capture.id),
+        searchResults.results.map(capture => capture.urn),
         null
       ).then(surfaceResults => {
         surfaceResults.pageInfo = searchResults.pageInfo;
@@ -29,6 +29,6 @@ export function search(
 function getRandomCapture(): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().id;
   return getRandomCaptureClient(userId).then(capture =>
-    expandCaptures(userId, [capture.id], null)
+    expandCaptures(userId, [capture.urn], null)
   );
 }

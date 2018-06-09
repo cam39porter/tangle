@@ -9,16 +9,17 @@ import {
   dismissCaptureRelation,
   archiveCapture
 } from "./services/capture";
+import { CaptureUrn } from "../urn/capture-urn";
 
 export default {
   Mutation: {
     // @ts-ignore
     archiveCapture(parent, { id }, context, info): Promise<GraphNode> {
-      return archiveCapture(id);
+      return archiveCapture(CaptureUrn.fromRaw(id));
     },
     // @ts-ignore
     editCapture(parent, { id, body }, context, info): Promise<GraphNode> {
-      return editCapture(id, body);
+      return editCapture(CaptureUrn.fromRaw(id), body);
     },
     // @ts-ignore
     createCapture(
@@ -43,7 +44,7 @@ export default {
       // @ts-ignore
       info
     ): Promise<GraphNode> {
-      return createSession(title, firstCaptureId, tags);
+      return createSession(title, CaptureUrn.fromRaw(firstCaptureId), tags);
     },
     editSession(
       // @ts-ignore

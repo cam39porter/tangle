@@ -31,8 +31,8 @@ export function search(
     }
   };
   return client.search(esquery).then((resp: SearchResponse<Capture>) => {
-    const results: Capture[] = resp.hits.hits.map(
-      record => record._source as Capture
+    const results: Capture[] = resp.hits.hits.map(record =>
+      Capture.fromProperties(record._source)
     );
     return new SearchResults(
       results,

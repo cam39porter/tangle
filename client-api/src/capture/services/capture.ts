@@ -24,6 +24,7 @@ import {
 } from "../../db/helpers/relationships";
 import { formatCapture } from "../../surface/formatters/graph-node";
 import { GraphNode } from "../../surface/models/graph-node";
+import { CaptureUrn } from "../../urn/capture-urn";
 
 export function dismissCaptureRelation(
   fromId: string,
@@ -39,23 +40,23 @@ export function dismissCaptureRelation(
   ).then(() => true);
 }
 
-export function archiveCapture(id: string): Promise<GraphNode> {
+export function archiveCapture(urn: CaptureUrn): Promise<GraphNode> {
   const userId = getAuthenticatedUser().id;
-  return archiveCaptureNode(userId, id).then(capture =>
+  return archiveCaptureNode(userId, urn).then(capture =>
     formatCapture(capture, false)
   );
 }
 
-export function editCapture(id: string, body: string): Promise<GraphNode> {
+export function editCapture(urn: CaptureUrn, body: string): Promise<GraphNode> {
   const userId = getAuthenticatedUser().id;
   const plainText = parseHtml(body);
   return editCaptureNodeAndDeleteRelationships(
     userId,
-    id,
+    urn,
     plainText,
     body
   ).then(capture =>
-    createRelations(id, body, "HTML").then(() => formatCapture(capture, false))
+    createRelations(urn, body, "HTML").then(() => formatCapture(capture, false))
   );
 }
 
@@ -81,7 +82,7 @@ export function createCapture(
       if (captureRelation) {
         return createRelationship(
           user.id,
-          capture.id,
+          capture.urn.toString(),
           CAPTURE_LABEL,
           captureRelation.captureId,
           CAPTURE_LABEL,
@@ -92,7 +93,7 @@ export function createCapture(
       }
     })
     .then((capture: Capture) => {
-      return createRelations(capture.id, body, contentType).then(() =>
+      return createRelations(capture.urn, body, contentType).then(() =>
         formatCapture(capture, false)
       );
     });
@@ -104,14 +105,14 @@ function parseHtml(html: string): string {
 }
 
 function createRelations(
-  captureId: string,
+  captureUrn: CaptureUrn,
   body: string,
   contentType: string
 ): Promise<boolean> {
   const promises = [
-    createTags(captureId, body),
-    createLinks(captureId, body),
-    createEntities(captureId, body, contentType)
+    createTags(captureUrn, body),
+    createLinks(captureUrn, body),
+    createEntities(captureUrn, body, contentType)
   ];
   return Promise.all(promises)
     .then(() => true)
@@ -121,22 +122,24 @@ function createRelations(
     });
 }
 
-function createTags(captureId: string, body: string): Promise<boolean> {
+function createTags(captureUrn: CaptureUrn, body: string): Promise<boolean> {
   const user: User = getAuthenticatedUser();
   return Promise.all(
-    parseTags(body).map(tag => upsertTag(user.id, tag, captureId, "Capture"))
+    parseTags(body).map(tag =>
+      upsertTag(user.id, tag, captureUrn.toString(), "Capture")
+    )
   ).then(() => true);
 }
 
-function createLinks(captureId: string, body: string): Promise<boolean> {
+function createLinks(captureUrn: CaptureUrn, body: string): Promise<boolean> {
   const user: User = getAuthenticatedUser();
   return Promise.all(
-    parseLinks(body).map(link => upsertLink(user.id, link, captureId))
+    parseLinks(body).map(link => upsertLink(user.id, link, captureUrn))
   ).then(() => true);
 }
 
 function createEntities(
-  captureId: string,
+  captureUrn: CaptureUrn,
   body: string,
   contentType: string
 ): Promise<boolean> {
@@ -149,7 +152,7 @@ function createEntities(
           entity.name,
           entity.type,
           entity.salience,
-          captureId
+          captureUrn
         )
       )
     ).then(() => true);

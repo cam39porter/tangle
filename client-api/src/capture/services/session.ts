@@ -19,20 +19,21 @@ import {
   INCLUDES_RELATIONSHIP,
   TAGGED_WITH_RELATIONSHIP
 } from "../../db/helpers/relationships";
+import { CaptureUrn } from "../../urn/capture-urn";
 export function create(
   title: string,
-  firstCaptureId: string,
+  firstCaptureUrn: CaptureUrn,
   tags: string[]
 ): Promise<GraphNode> {
   const userId = getAuthenticatedUser().id;
   return createSession(userId, title).then((session: Session) => {
     let relationshipPromise;
-    if (firstCaptureId) {
+    if (firstCaptureUrn) {
       relationshipPromise = createRelationship(
         userId,
         session.id,
         SESSION_LABEL,
-        firstCaptureId,
+        firstCaptureUrn.toString(),
         CAPTURE_LABEL,
         INCLUDES_RELATIONSHIP
       );

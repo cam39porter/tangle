@@ -13,10 +13,11 @@ import { NotImplementedError } from "../../util/exceptions/not-implemented-error
 import { SurfaceResults } from "../models/surface-results";
 import { expandCaptures } from "./expand";
 import { formatCapture, formatNode } from "../formatters/graph-node";
+import { CaptureUrn } from "../../urn/capture-urn";
 
 export function getNode(urn: string): Promise<SurfaceResults> {
   if (getUrnType(urn) === "capture") {
-    return getCapture(urn);
+    return getCapture(CaptureUrn.fromRaw(urn));
   } else {
     return getOthers(urn);
   }
@@ -40,7 +41,7 @@ export function getAllByUseCase(
 function getAllRandom(): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().id;
   return getRandomCapture(userId).then(capture => {
-    return expandCaptures(userId, [capture.id], formatCapture(capture, true));
+    return expandCaptures(userId, [capture.urn], formatCapture(capture, true));
   });
 }
 
@@ -50,8 +51,8 @@ export function getAllMostRecent(
 ): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().id;
   return getMostRecent(userId, start, count).then(captures => {
-    const captureIds = captures.map(c => c.id);
-    return expandCaptures(userId, captureIds, null);
+    const captureUrns = captures.map(c => c.urn);
+    return expandCaptures(userId, captureUrns, null);
   });
 }
 
@@ -59,8 +60,8 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().id;
   const since = getCreatedSince(timezoneOffset);
   return getAllSince(userId, since).then(captures => {
-    const captureIds = captures.map(c => c.id);
-    return expandCaptures(userId, captureIds, null);
+    const captureUrns = captures.map(c => c.urn);
+    return expandCaptures(userId, captureUrns, null);
   });
 }
 
@@ -70,17 +71,17 @@ function getOthers(urn: string): Promise<SurfaceResults> {
     return getCapturesByRelatedNode(userUrn, urn).then(captures => {
       return expandCaptures(
         userUrn,
-        captures.map(c => c.id),
+        captures.map(c => c.urn),
         formatNode(node, true)
       );
     });
   });
 }
 
-function getCapture(urn: string): Promise<SurfaceResults> {
+function getCapture(urn: CaptureUrn): Promise<SurfaceResults> {
   const userUrn = getAuthenticatedUser().id;
   return getCaptureClient(userUrn, urn).then(capture =>
-    expandCaptures(userUrn, [capture.id], formatCapture(capture, true))
+    expandCaptures(userUrn, [capture.urn], formatCapture(capture, true))
   );
 }
 

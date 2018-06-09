@@ -11,21 +11,29 @@ export function buildGraph(
   const nodes = new Map<string, GraphNode>();
   const edges = new Map<string, Edge>();
   paths.forEach(path => {
-    nodes.set(path[0].id, formatCapture(path[0], true));
+    nodes.set(path[0].urn.getId(), formatCapture(path[0], true));
     if (path[2]) {
       if (!nodes.has(path[2].properties["id"])) {
         nodes.set(path[2].properties["id"], formatNode(path[2], false));
       }
-      const edge = formatEdge(path[1], path[0].id, path[2].properties["id"]);
+      const edge = formatEdge(
+        path[1],
+        path[0].urn.getId(),
+        path[2].properties["id"]
+      );
       if (!hasEdge(edges, edge)) {
         edges.set(formatEdgeId(edge.source, edge.destination), edge);
       }
     }
     if (path[4]) {
-      if (!nodes.has(path[4].id)) {
-        nodes.set(path[4].id, formatCapture(path[4], false));
+      if (!nodes.has(path[4].urn.getId())) {
+        nodes.set(path[4].urn.getId(), formatCapture(path[4], false));
       }
-      const edge = formatEdge(path[3], path[2].properties["id"], path[4].id);
+      const edge = formatEdge(
+        path[3],
+        path[2].properties["id"],
+        path[4].urn.getId()
+      );
       if (!hasEdge(edges, edge)) {
         edges.set(formatEdgeId(edge.source, edge.destination), edge);
       }

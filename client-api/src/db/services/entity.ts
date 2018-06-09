@@ -2,16 +2,25 @@ import { StatementResult } from "neo4j-driver/types/v1";
 import { executeQuery } from "../db";
 import { toEntityUrn } from "../helpers/urn-helpers";
 import { Entity } from "../models/entity";
+import { CaptureUrn } from "../../urn/capture-urn";
 
 export function upsertEntity(
   userId: string,
   name: string,
   type: string,
   salience: number,
-  captureUrn: string
+  captureUrn: CaptureUrn
 ): Promise<Entity> {
   const entityUrn = toEntityUrn(userId, name, type);
-  const params = { userId, entityUrn, name, type, captureUrn, salience };
+  captureUrn.toString();
+  const params = {
+    userId,
+    entityUrn,
+    name,
+    type,
+    captureUrn: captureUrn.toString(),
+    salience
+  };
   const query = `
   MATCH (capture {id: {captureUrn}})
   MERGE (entity:Entity {

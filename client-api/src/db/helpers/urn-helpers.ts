@@ -52,22 +52,6 @@ function getLabel(urn: string): string {
   return label;
 }
 
-// TODO cole remove this and use data fetched from db
-function getEntityOrTagName(urn: string): string | null {
-  const type = getUrnType(urn);
-  const getName = (u: string) => u.split(";")[1];
-
-  switch (type) {
-    case "entity":
-      return getName(urn);
-    case "tag":
-      const name = getName(urn);
-      return `#${name.slice(0, name.length - 1)}`;
-    default:
-      return null;
-  }
-}
-
 const urnTypeToLabel = {
   capture: "Capture",
   link: "Link",
@@ -87,6 +71,5 @@ export {
   toLinkUrn,
   toEvernoteNoteUrn,
   getUrnType,
-  getLabel,
-  getEntityOrTagName
+  getLabel
 };

@@ -46,7 +46,7 @@ export function deleteEvernoteNote(evernoteId: string): Promise<void> {
   const archiveCaptures = getCapturesByRelatedNode(userId, evernoteId).then(
     captures => {
       return Promise.all(
-        captures.map(capture => archiveCaptureNode(userId, capture.id))
+        captures.map(capture => archiveCaptureNode(userId, capture.urn))
       );
     }
   );

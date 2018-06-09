@@ -5,6 +5,7 @@ import { executeQuery } from "../db";
 import { getLabel, toCaptureUrn } from "../helpers/urn-helpers";
 import { Capture } from "../models/capture";
 import { NotFoundError } from "../../util/exceptions/not-found-error";
+import { CaptureUrn } from "../../urn/capture-urn";
 
 export function getMostRecent(
   userId: string,
@@ -32,11 +33,11 @@ export function getAllSince(userId: string, since: number): Promise<Capture[]> {
 
 export function getCapture(
   userId: string,
-  captureId: string
+  captureUrn: CaptureUrn
 ): Promise<Capture> {
-  const params = { userId, captureId };
+  const params = { userId, captureUrn: captureUrn.toString() };
   const query = `
-    MATCH (capture:Capture {id:{captureId}})<-[created:CREATED]-(user:User {id:{userId}})
+    MATCH (capture:Capture {id:{captureUrn}})<-[created:CREATED]-(user:User {id:{userId}})
     WHERE NOT EXISTS(capture.archived) OR capture.archived = false
     RETURN capture
   `;
@@ -82,10 +83,10 @@ export function getRandomCapture(userId: string): Promise<Capture> {
 
 export function archiveCaptureNode(
   userId: string,
-  captureId: string
+  captureUrn: CaptureUrn
 ): Promise<Capture> {
-  const params = { userId, captureId };
-  const query = `MATCH (capture:Capture {id:{captureId}})<-[:CREATED]-(u:User {id:{userId}})
+  const params = { userId, captureUrn: captureUrn.toString() };
+  const query = `MATCH (capture:Capture {id:{captureUrn}})<-[:CREATED]-(u:User {id:{userId}})
   SET capture.archived = true
   RETURN capture
   `;
@@ -94,18 +95,18 @@ export function archiveCaptureNode(
 
 export function editCaptureNodeAndDeleteRelationships(
   userId: string,
-  captureId: string,
+  captureUrn: CaptureUrn,
   plainText: string,
   html: string
 ): Promise<Capture> {
   const params = {
-    captureId,
+    captureUrn: captureUrn.toString(),
     userId,
     plainText: escape(plainText),
     html: escape(html)
   };
   const query = `
-    MATCH (capture:Capture {id:{captureId}})<-[:CREATED]-(u:User {id:{userId}})
+    MATCH (capture:Capture {id:{captureUrn}})<-[:CREATED]-(u:User {id:{userId}})
     OPTIONAL MATCH (capture)-[r]-(other)
     WHERE type(r)<>"CREATED" AND type(r)<>"INCLUDES"
     DELETE r
@@ -159,5 +160,5 @@ function formatCaptureRecord(record: any): Capture {
   if (!record) {
     throw new NotFoundError("Could not find record");
   }
-  return record.get("capture").properties as Capture;
+  return Capture.fromProperties(record.get("capture").properties);
 }

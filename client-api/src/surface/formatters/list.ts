@@ -6,21 +6,22 @@ import { RecommendationReason } from "../models/recommendation-reason";
 import { Annotation } from "../models/annotation";
 import { Entity } from "../../db/models/entity";
 import { Tag } from "../../db/models/Tag";
+import { CaptureUrn } from "../../urn/capture-urn";
 
 export function buildList(
   paths: Array<[Capture, Relationship, Node, Relationship, Capture]>,
-  captureOrder: string[]
+  captureOrder: CaptureUrn[]
 ): ListItem[] {
-  const relatedCaptureMap = new Map();
-  const rootCaptureMap = new Map();
+  const relatedCaptureMap = new Map<string, Capture>();
+  const rootCaptureMap = new Map<string, Capture>();
   paths.forEach(path => {
-    rootCaptureMap.set(path[0].id, path[0]);
+    rootCaptureMap.set(path[0].urn.getId(), path[0]);
     if (path[2] && path[2].labels[0] === "Capture") {
-      const capture = path[2].properties as Capture;
-      relatedCaptureMap.set(capture.id, capture);
+      const capture = Capture.fromProperties(path[2].properties);
+      relatedCaptureMap.set(capture.urn.getId(), capture);
     }
     if (path[4]) {
-      relatedCaptureMap.set(path[4].id, path[4]);
+      relatedCaptureMap.set(path[4].urn.getId(), path[4]);
     }
   });
   const tree = buildTree(paths);
@@ -33,7 +34,7 @@ export function buildList(
     );
     listItems.push(
       new ListItem(
-        key,
+        new CaptureUrn(key).toString(),
         new AnnotatedText(rootCaptureMap.get(key).body, []),
         [],
         relatedCaptures
@@ -41,7 +42,9 @@ export function buildList(
     );
   });
   listItems.sort(
-    (a, b) => captureOrder.indexOf(a.id) - captureOrder.indexOf(b.id)
+    (a, b) =>
+      captureOrder.findIndex(urn => urn.getId() === a.id) -
+      captureOrder.findIndex(urn => urn.getId() === b.id)
   );
   return listItems;
 }
@@ -91,7 +94,7 @@ function formatRelatedListItems(
     if (!rootCaptureMap.has(key) && !skip) {
       listItems.push(
         new ListItem(
-          key,
+          new CaptureUrn(key).toString(),
           // TODO add annotations
           new AnnotatedText(capture.body, annotations),
           reasons,
@@ -104,37 +107,37 @@ function formatRelatedListItems(
 }
 
 function buildTree(
-  paths
+  paths: Array<[Capture, Relationship, Node, Relationship, Capture]>
 ): Map<string, Map<string, Array<[Relationship, Node]>>> {
   const tree = new Map();
   paths.forEach(path => {
     const root = path[0];
-    if (!tree.has(root.id)) {
-      tree.set(root.id, new Map());
+    if (!tree.has(root.urn.getId())) {
+      tree.set(root.urn.getId(), new Map());
     }
     const relatedCaptureMap: Map<
       string,
       Array<[Relationship, Node]>
-    > = tree.get(root.id);
+    > = tree.get(root.urn.getId());
     let reasons: Array<[Relationship, Node]> = null;
     let capture: Capture = null;
     if (
       path[2] &&
       path[2].labels[0] === "Capture" &&
-      path[2].properties.id !== root.id
+      CaptureUrn.fromRaw(path[2].properties["id"]).getId() !== root.urn.getId()
     ) {
-      capture = path[2].properties as Capture;
-    } else if (path[4] && path[4].id !== root.id) {
+      capture = Capture.fromProperties(path[2].properties);
+    } else if (path[4] && path[4].urn.getId() !== root.urn.getId()) {
       capture = path[4];
     }
     if (capture) {
-      reasons = relatedCaptureMap.get(capture.id);
+      reasons = relatedCaptureMap.get(capture.urn.getId());
       if (!reasons) {
         reasons = [];
       }
-      if (capture.id !== root.id) {
+      if (capture.urn.getId() !== root.urn.getId()) {
         reasons.push([path[1], path[2]]);
-        relatedCaptureMap.set(capture.id, reasons);
+        relatedCaptureMap.set(capture.urn.getId(), reasons);
       }
     }
   });

@@ -2,7 +2,6 @@ import {
   create as createSession,
   edit as editSession
 } from "./services/session";
-import { getAuthenticatedUser } from "../filters/request-context";
 import { GraphNode } from "../surface/models/graph-node";
 import {
   createCapture,

@@ -44,7 +44,11 @@ export default {
       // @ts-ignore
       info
     ): Promise<GraphNode> {
-      return createSession(title, CaptureUrn.fromRaw(firstCaptureId), tags);
+      return createSession(
+        title,
+        firstCaptureId ? CaptureUrn.fromRaw(firstCaptureId) : null,
+        tags
+      );
     },
     editSession(
       // @ts-ignore

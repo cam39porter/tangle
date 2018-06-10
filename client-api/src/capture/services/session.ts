@@ -33,7 +33,7 @@ export function create(
         userId,
         session.id,
         SESSION_LABEL,
-        firstCaptureUrn.toString(),
+        firstCaptureUrn.toRaw(),
         CAPTURE_LABEL,
         INCLUDES_RELATIONSHIP
       );

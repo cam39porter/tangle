@@ -11,7 +11,7 @@ export function upsert(
 ): Promise<Link> {
   const params = { userId, id: toLinkUrn(userId, url), url };
   const query = `
-    MATCH (capture:Capture {id: "${captureUrn.toString()}"})
+    MATCH (capture:Capture {id: "${captureUrn.toRaw()}"})
     MERGE (link:Link {
       id: {id},
       url: {url},

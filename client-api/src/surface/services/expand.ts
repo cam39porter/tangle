@@ -38,7 +38,7 @@ function expandGraph(
 ): Promise<Graph> {
   const params = {
     userUrn,
-    captureIds: captureUrns.map(urn => urn.toString()),
+    captureIds: captureUrns.map(urn => urn.toRaw()),
     startUrn
   };
   const query = getExpansionQuery(startUrn, false);
@@ -54,7 +54,7 @@ function expandList(
 ): Promise<ListItem[]> {
   const params = {
     userUrn,
-    captureIds: captureUrns.map(urn => urn.toString()),
+    captureIds: captureUrns.map(urn => urn.toRaw()),
     startUrn
   };
   const query = getExpansionQuery(startUrn, true);

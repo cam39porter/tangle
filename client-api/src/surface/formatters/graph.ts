@@ -18,7 +18,7 @@ export function buildGraph(
       }
       const edge = formatEdge(
         path[1],
-        path[0].urn.getId(),
+        path[0].urn.toRaw(),
         path[2].properties["id"]
       );
       if (!hasEdge(edges, edge)) {
@@ -32,7 +32,7 @@ export function buildGraph(
       const edge = formatEdge(
         path[3],
         path[2].properties["id"],
-        path[4].urn.getId()
+        path[4].urn.toRaw()
       );
       if (!hasEdge(edges, edge)) {
         edges.set(formatEdgeId(edge.source, edge.destination), edge);

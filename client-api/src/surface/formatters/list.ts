@@ -34,7 +34,7 @@ export function buildList(
     );
     listItems.push(
       new ListItem(
-        new CaptureUrn(key).toString(),
+        new CaptureUrn(key).toRaw(),
         new AnnotatedText(rootCaptureMap.get(key).body, []),
         [],
         relatedCaptures
@@ -94,7 +94,7 @@ function formatRelatedListItems(
     if (!rootCaptureMap.has(key) && !skip) {
       listItems.push(
         new ListItem(
-          new CaptureUrn(key).toString(),
+          new CaptureUrn(key).toRaw(),
           // TODO add annotations
           new AnnotatedText(capture.body, annotations),
           reasons,

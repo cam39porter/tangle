@@ -82,7 +82,7 @@ export function createCapture(
       if (captureRelation) {
         return createRelationship(
           user.id,
-          capture.urn.toString(),
+          capture.urn.toRaw(),
           CAPTURE_LABEL,
           captureRelation.captureId,
           CAPTURE_LABEL,
@@ -126,7 +126,7 @@ function createTags(captureUrn: CaptureUrn, body: string): Promise<boolean> {
   const user: User = getAuthenticatedUser();
   return Promise.all(
     parseTags(body).map(tag =>
-      upsertTag(user.id, tag, captureUrn.toString(), "Capture")
+      upsertTag(user.id, tag, captureUrn.toRaw(), "Capture")
     )
   ).then(() => true);
 }

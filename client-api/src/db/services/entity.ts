@@ -12,13 +12,13 @@ export function upsertEntity(
   captureUrn: CaptureUrn
 ): Promise<Entity> {
   const entityUrn = toEntityUrn(userId, name, type);
-  captureUrn.toString();
+  captureUrn.toRaw();
   const params = {
     userId,
     entityUrn,
     name,
     type,
-    captureUrn: captureUrn.toString(),
+    captureUrn: captureUrn.toRaw(),
     salience
   };
   const query = `

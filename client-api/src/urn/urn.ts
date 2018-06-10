@@ -13,7 +13,7 @@ export class Urn {
   public getType(): string {
     return this.type;
   }
-  public toString(): string {
+  public toRaw(): string {
     return `urn:hex:${this.type}:${this.id}`;
   }
 }

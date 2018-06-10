@@ -35,7 +35,7 @@ export function getCapture(
   userId: string,
   captureUrn: CaptureUrn
 ): Promise<Capture> {
-  const params = { userId, captureUrn: captureUrn.toString() };
+  const params = { userId, captureUrn: captureUrn.toRaw() };
   const query = `
     MATCH (capture:Capture {id:{captureUrn}})<-[created:CREATED]-(user:User {id:{userId}})
     WHERE NOT EXISTS(capture.archived) OR capture.archived = false
@@ -85,7 +85,7 @@ export function archiveCaptureNode(
   userId: string,
   captureUrn: CaptureUrn
 ): Promise<Capture> {
-  const params = { userId, captureUrn: captureUrn.toString() };
+  const params = { userId, captureUrn: captureUrn.toRaw() };
   const query = `MATCH (capture:Capture {id:{captureUrn}})<-[:CREATED]-(u:User {id:{userId}})
   SET capture.archived = true
   RETURN capture
@@ -100,7 +100,7 @@ export function editCaptureNodeAndDeleteRelationships(
   html: string
 ): Promise<Capture> {
   const params = {
-    captureUrn: captureUrn.toString(),
+    captureUrn: captureUrn.toRaw(),
     userId,
     plainText: escape(plainText),
     html: escape(html)

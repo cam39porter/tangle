@@ -18,7 +18,7 @@ export function formatNode(node: Node, isRoot: boolean): GraphNode {
 
 export function formatCapture(capture: Capture, isRoot: boolean): GraphNode {
   return new GraphNode(
-    capture.urn.toString(),
+    capture.urn.toRaw(),
     CAPTURE_LABEL.name,
     capture.body,
     isRoot ? 0 : 1

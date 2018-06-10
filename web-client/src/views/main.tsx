@@ -401,7 +401,11 @@ class Main extends React.Component<Props, State> {
               <div>
                 <ListSessionHeader
                   startingTitle={
-                    this.state.sessionTitle || (pivot && pivot.text)
+                    this.state.sessionId &&
+                    pivot &&
+                    pivot.type === NodeType.Session
+                      ? pivot.text
+                      : undefined
                   }
                   handleEditTitle={title => {
                     if (!this.state.sessionId) {
@@ -417,10 +421,7 @@ class Main extends React.Component<Props, State> {
                       })
                       .then(({ data: res }) => {
                         this.setState({
-                          sessionTitle:
-                            res.editSession.text === "Untitled"
-                              ? undefined
-                              : res.editSession.text
+                          sessionTitle: res.editSession.text
                         });
                       })
                       .then(() => {

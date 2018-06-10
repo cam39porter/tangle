@@ -10,7 +10,7 @@ import "draft-js/dist/Draft.css";
 
 interface Props {
   handleEdit: () => void;
-  title?: string;
+  startingTitle?: string;
   handleOnChange: (title: string) => void;
 }
 
@@ -24,9 +24,9 @@ class ListSessionTitle extends React.Component<Props, State> {
 
     let editorState = Draft.EditorState.createEmpty();
 
-    if (this.props.title) {
+    if (this.props.startingTitle) {
       editorState = Draft.EditorState.createWithContent(
-        convertFromHTML(this.props.title)
+        convertFromHTML(this.props.startingTitle)
       );
     }
 
@@ -55,8 +55,6 @@ class ListSessionTitle extends React.Component<Props, State> {
             this.props.handleEdit();
             return "handled";
           }}
-          onFocus={this.props.handleEdit}
-          onBlur={this.props.handleEdit}
         />
       </div>
     );

@@ -10,7 +10,7 @@ import "draft-js/dist/Draft.css";
 
 interface Props {
   handleEdit: () => void;
-  tags?: Array<string>;
+  startingTags?: Array<string>;
   handleOnChange: (tags: string) => void;
 }
 
@@ -25,8 +25,8 @@ class ListSessionTags extends React.Component<Props, State> {
     let editorState = Draft.EditorState.createEmpty();
 
     let startingText: string | undefined;
-    if (this.props.tags) {
-      this.props.tags.forEach(tag => {
+    if (this.props.startingTags) {
+      this.props.startingTags.forEach(tag => {
         startingText = startingText ? startingText + `#${tag} ` : `#${tag} `;
       });
     }
@@ -61,8 +61,6 @@ class ListSessionTags extends React.Component<Props, State> {
             this.props.handleEdit();
             return "handled";
           }}
-          onFocus={this.props.handleEdit}
-          onBlur={this.props.handleEdit}
         />
       </div>
     );

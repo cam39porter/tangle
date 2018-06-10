@@ -136,8 +136,6 @@ interface State {
   // Session
   sessionId?: string;
   sessionTitle?: string;
-  sessionIsEditingTitle?: boolean;
-  sessionIsEditingTags?: boolean;
 }
 
 // Class
@@ -402,48 +400,39 @@ class Main extends React.Component<Props, State> {
             {this.state.sessionId && (
               <div>
                 <ListSessionHeader
-                  title={this.state.sessionTitle}
-                  tags={undefined}
-                  handleEditTags={noop}
+                  startingTitle={
+                    this.state.sessionTitle || (pivot && pivot.text)
+                  }
                   handleEditTitle={title => {
-                    let nextTitle = trim(title);
                     if (!this.state.sessionId) {
                       return;
                     }
 
-                    if (this.state.sessionIsEditingTitle) {
-                      this.props
-                        .editSession({
-                          variables: {
-                            sessionId: this.state.sessionId,
-                            title: nextTitle
-                          }
-                        })
-                        .then(({ data: res }) => {
-                          this.setState({
-                            sessionTitle:
-                              res.editSession.text === "Untitled brainstorm"
-                                ? undefined
-                                : res.editSession.text,
-                            sessionIsEditingTitle: !this.state
-                              .sessionIsEditingTitle
-                          });
-                        })
-                        .then(() => {
-                          refetch();
-                        })
-                        .catch(err => console.error(err));
-                    } else {
-                      this.setState({
-                        sessionIsEditingTitle: !this.state.sessionIsEditingTitle
-                      });
-                    }
+                    this.props
+                      .editSession({
+                        variables: {
+                          sessionId: this.state.sessionId,
+                          title
+                        }
+                      })
+                      .then(({ data: res }) => {
+                        this.setState({
+                          sessionTitle:
+                            res.editSession.text === "Untitled"
+                              ? undefined
+                              : res.editSession.text
+                        });
+                      })
+                      .then(() => {
+                        refetch();
+                      })
+                      .catch(err => console.error(err));
                   }}
+                  startingTags={undefined}
+                  handleEditTags={noop}
                   handleClose={() => {
                     this.setState({
-                      sessionTitle: "",
-                      sessionIsEditingTags: false,
-                      sessionIsEditingTitle: false
+                      sessionTitle: undefined
                     });
                     if (this.props.history.length > 2) {
                       this.props.history.goBack();

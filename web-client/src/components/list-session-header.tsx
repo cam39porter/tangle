@@ -11,9 +11,9 @@ import ReactTooltip from "react-tooltip";
 
 // Types
 interface Props {
-  title?: string;
+  startingTitle?: string;
   handleEditTitle: (title: string) => void;
-  tags?: Array<string>;
+  startingTags?: Array<string>;
   handleEditTags: (tags: string) => void;
   handleClose: () => void;
 }
@@ -30,7 +30,7 @@ class ListSessionHeader extends React.Component<Props, State> {
         <div className={`flex-grow pa2`}>
           <div className={`pv2`}>
             <ListSessionTitle
-              title={this.props.title}
+              startingTitle={this.props.startingTitle}
               handleEdit={() => {
                 this.props.handleEditTitle(this.title);
               }}
@@ -41,7 +41,7 @@ class ListSessionHeader extends React.Component<Props, State> {
           </div>
           <div className={`pv2`}>
             <ListSessionTags
-              tags={this.props.tags}
+              startingTags={this.props.startingTags}
               handleEdit={() => {
                 this.props.handleEditTags(this.tags);
               }}

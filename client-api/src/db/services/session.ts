@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid/v4";
 import { toSessionUrn } from "../helpers/urn-helpers";
 import { executeQuery } from "../db";
 import { Session } from "../models/session";
+import { NotFoundError } from "../../util/exceptions/not-found-error";
 
 export function get(userId: string, sessionId: string): Promise<Session> {
   const query = `
@@ -10,12 +11,20 @@ export function get(userId: string, sessionId: string): Promise<Session> {
   RETURN session`;
   const params = { userId, sessionId };
   return executeQuery(query, params).then((result: StatementResult) => {
-    const session = result.records[0].get("session").properties as Session;
-    if (!session.title) {
-      session.title = getDefaultTitle();
-    }
-    return session;
+    return formatSessionRecord(result.records[0]);
   });
+}
+
+export function deleteSession(
+  userId: string,
+  sessionId: string
+): Promise<boolean> {
+  const query = `
+  MATCH (s:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
+  DETACH DELETE s
+  `;
+  const params = { userId, sessionId };
+  return executeQuery(query, params).then(() => true);
 }
 
 export function edit(
@@ -29,11 +38,7 @@ export function edit(
     RETURN session`;
   const params = { userId, sessionId, title };
   return executeQuery(query, params).then((result: StatementResult) => {
-    const session = result.records[0].get("session").properties as Session;
-    if (!session.title) {
-      session.title = getDefaultTitle();
-    }
-    return session;
+    return formatSessionRecord(result.records[0]);
   });
 }
 
@@ -50,14 +55,13 @@ export function create(userId: string, title: string): Promise<Session> {
     RETURN session`;
   const params = { userId, sessionUrn, title };
   return executeQuery(query, params).then((result: StatementResult) => {
-    const session = result.records[0].get("session").properties as Session;
-    if (!session.title) {
-      session.title = getDefaultTitle();
-    }
-    return session;
+    return formatSessionRecord(result.records[0]);
   });
 }
 
-function getDefaultTitle(): string {
-  return "Untitled brainstorm";
+function formatSessionRecord(record: any): Session {
+  if (!record) {
+    throw new NotFoundError("Could not find record");
+  }
+  return record.get("session").properties as Session;
 }

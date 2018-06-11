@@ -1,6 +1,7 @@
 import {
   create as createSession,
-  edit as editSession
+  edit as editSession,
+  deleteSession
 } from "./services/session";
 import { GraphNode } from "../surface/models/graph-node";
 import {
@@ -62,6 +63,11 @@ export default {
     ): Promise<GraphNode> {
       return editSession(id, title, tags);
     },
+    // @ts-ignore
+    deleteSession(parent, { id }, context, info): Promise<boolean> {
+      return deleteSession(id);
+    },
+
     // @ts-ignore
     dismissCaptureRelation(
       // @ts-ignore

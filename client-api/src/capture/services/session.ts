@@ -1,7 +1,8 @@
 import { Session } from "../../db/models/session";
 import {
   create as createSession,
-  edit as editSession
+  edit as editSession,
+  deleteSession as deleteDB
 } from "../../db/services/session";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { GraphNode } from "../../surface/models/graph-node";
@@ -20,6 +21,8 @@ import {
   TAGGED_WITH_RELATIONSHIP
 } from "../../db/helpers/relationships";
 import { CaptureUrn } from "../../urn/capture-urn";
+import { formatSession } from "../../surface/formatters/graph-node";
+
 export function create(
   title: string,
   firstCaptureUrn: CaptureUrn,
@@ -55,11 +58,16 @@ export function edit(
   const userId = getAuthenticatedUser().id;
   return editSession(userId, id, title).then((session: Session) => {
     return deleteTags(userId, session.id).then(() =>
-      createTags(userId, session.id, tags).then(
-        () => new GraphNode(session.id, "Session", session.title, null)
+      createTags(userId, session.id, tags).then(() =>
+        formatSession(session, true)
       )
     );
   });
+}
+
+export function deleteSession(id: string): Promise<boolean> {
+  const userId = getAuthenticatedUser().id;
+  return deleteDB(userId, id);
 }
 
 function deleteTags(userId: string, sessionId: string): Promise<void> {

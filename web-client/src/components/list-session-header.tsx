@@ -26,7 +26,7 @@ class ListSessionHeader extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className={`flex pa2 pv3 w-100 bb b--light-gray bg-white`}>
+      <div className={`flex pa2 w-100 bg-white`}>
         <div className={`flex-grow pa2`}>
           <div className={`pv2`}>
             <ListSessionTitle
@@ -52,7 +52,7 @@ class ListSessionHeader extends React.Component<Props, State> {
           </div>
         </div>
         <div className={`ma2 pv1 w2`}>
-          <div data-tip={`exit the brainstorm`}>
+          <div data-tip={`Exit the brainstorm`}>
             <ButtonExit onClick={this.props.handleClose} />
           </div>
         </div>

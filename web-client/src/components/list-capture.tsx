@@ -22,7 +22,6 @@ interface Props {
   handleFocus: () => void;
   handleFocusWithId?: (id: string) => () => void;
   handleEdit: (text: string) => void;
-  isEditing: boolean;
   handleArchive: () => void;
   handleIsShowingRelated?: () => void;
   isShowingRelated?: boolean;

@@ -50,7 +50,7 @@ class ListSessionTitle extends React.Component<Props, State> {
         <Draft.Editor
           editorState={this.state.editorState}
           onChange={this.handleOnChange}
-          placeholder={`Title`}
+          placeholder={`Brainstorm title`}
           handleReturn={(e, editorState) => {
             this.props.handleEdit();
             return "handled";

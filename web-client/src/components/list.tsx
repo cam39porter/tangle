@@ -22,7 +22,6 @@ interface Props {
   isShowingRelated: (id: string) => boolean | undefined;
   handleFocus: (id: string) => (() => void);
   handleEdit: (id: string) => ((text: string) => void);
-  isEditing: (id: string) => boolean;
   handleArchive: (id: string) => (() => void);
   handleDismissCaptureRelation: (fromId: string, toId: string) => void;
 }
@@ -102,7 +101,6 @@ class List extends React.Component<Props, State> {
                   handleExpand={this.props.handleExpand(listItem.id)}
                   handleFocus={this.props.handleFocus(listItem.id)}
                   handleEdit={this.props.handleEdit(listItem.id)}
-                  isEditing={this.props.isEditing(listItem.id)}
                   handleArchive={this.props.handleArchive(listItem.id)}
                   handleIsShowingRelated={
                     listItem.relatedItems && listItem.relatedItems.length > 0
@@ -188,7 +186,6 @@ class List extends React.Component<Props, State> {
                                 handleEdit={this.props.handleEdit(
                                   relatedItem.id
                                 )}
-                                isEditing={this.props.isEditing(relatedItem.id)}
                                 handleArchive={this.props.handleArchive(
                                   relatedItem.id
                                 )}

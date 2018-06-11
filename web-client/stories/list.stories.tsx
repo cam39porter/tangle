@@ -84,7 +84,6 @@ stories.add("capture", () => (
     )}
     handleFocus={action("handleFocus")}
     handleEdit={action("handleEdit")}
-    isEditing={boolean("isEditing", false)}
     handleArchive={action("handleArchive")}
     isGraphFocus={boolean("isGraphFocus", false)}
   />
@@ -101,7 +100,6 @@ stories.add("list", () => (
     isShowingRelated={(id: string) => boolean(`isShowingRelated ${id}`, false)}
     handleFocus={(id: string) => action(`handleFocus ${id}`)}
     handleEdit={(id: string) => action(`handleEdit ${id}`)}
-    isEditing={(id: string) => boolean(`isEditing ${id}`, false)}
     handleArchive={(id: string) => action(`handleArchive ${id}`)}
     handleDismissCaptureRelation={(fromId, toId) =>
       action(`handleDismissCaptureRelation`)
@@ -120,7 +118,6 @@ stories.add("session", () => (
     isShowingRelated={(id: string) => boolean(`isShowingRelated ${id}`, false)}
     handleFocus={(id: string) => action(`handleFocus ${id}`)}
     handleEdit={(id: string) => action(`handleEdit ${id}`)}
-    isEditing={(id: string) => boolean(`isEditing ${id}`, false)}
     handleArchive={(id: string) => action(`handleArchive ${id}`)}
     handleDismissCaptureRelation={(fromId, toId) =>
       action(`handleDismissCaptureRelation`)

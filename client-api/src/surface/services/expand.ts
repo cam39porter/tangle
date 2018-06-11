@@ -110,9 +110,14 @@ function getExpansionQuery(startUrn: string, listMode: boolean): string {
   {roots:roots, startUrn:{startUrn}}) YIELD value
   WITH roots, value.r1 as r1, value.firstDegree as firstDegree, collect(roots) as allRoots
 
+  CALL apoc.cypher.run('
   OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]-
   (secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
   WHERE (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)
+  RETURN firstDegree, r2, secondDegree
+  ORDER BY r2.salience DESC LIMIT 5',
+  {firstDegree:firstDegree, userUrn:{userUrn}}) YIELD value
+  WITH roots, r1, value.firstDegree as firstDegree, value.r2 as r2, value.secondDegree as secondDegree
   RETURN roots, r1, firstDegree, r2, secondDegree
   `;
 }

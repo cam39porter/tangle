@@ -143,11 +143,11 @@ export function createCaptureNode(
     ${parentId ? "CREATE (capture)<-[:INCLUDES]-(parent)" : ""}
     RETURN capture`;
   const params = {
-    userId,
+    userId: userId.toRaw(),
     plainText: escape(plainText),
     html: escape(html),
     parentId,
-    captureUrn
+    captureUrn: captureUrn.toRaw()
   };
   return executeQuery(query, params).then(formatCaptureResult);
 }

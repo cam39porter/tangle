@@ -25,6 +25,7 @@ export function buildList(
     }
   });
   const tree = buildTree(paths);
+
   const listItems: ListItem[] = [];
   tree.forEach((value, key) => {
     const relatedCaptures = formatRelatedListItems(
@@ -43,8 +44,8 @@ export function buildList(
   });
   listItems.sort(
     (a, b) =>
-      captureOrder.findIndex(urn => urn.getId() === a.id) -
-      captureOrder.findIndex(urn => urn.getId() === b.id)
+      captureOrder.findIndex(urn => urn.toRaw() === a.id) -
+      captureOrder.findIndex(urn => urn.toRaw() === b.id)
   );
   return listItems;
 }

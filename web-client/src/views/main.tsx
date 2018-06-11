@@ -656,7 +656,7 @@ class Main extends React.Component<Props, State> {
               }}
             />
             {/* Fetch More data in list */}
-            {fetchMore ? (
+            {!isLoading && fetchMore ? (
               <div
                 className={`pv4 tc f6 ttu gray pointer`}
                 onClick={() => {

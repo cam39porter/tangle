@@ -134,6 +134,11 @@ interface State {
   // Session
   sessionId?: string;
   sessionTitle?: string;
+  // GraphQL
+  isLoading: boolean;
+  data: SurfaceResultsFieldsFragment | null;
+  header: string | null;
+  pivot: NodeFieldsFragment | null;
 }
 
 // Class
@@ -151,20 +156,103 @@ class Main extends React.Component<Props, State> {
       captureText: "",
       surfaceText: NetworkUtils.getQuery(nextProps.location.search),
       captures: new Map<string, CaptureState>(),
-      sessionId: NetworkUtils.getIsSessionId(nextProps.location.search)
+      sessionId: NetworkUtils.getIsSessionId(nextProps.location.search),
+      // GraphQL
+      isLoading: true,
+      data: null,
+      header: null,
+      pivot: null
     };
   }
 
   componentWillReceiveProps(nextProps: Props) {
+    let isLoading: boolean = true;
+    let data: SurfaceResultsFieldsFragment | null = null;
+    let header: string | null = null;
+    let pivot: NodeFieldsFragment | null = null;
+
+    // Most Recent
+    if (nextProps.mostRecent) {
+      isLoading = nextProps.mostRecent.loading;
+      data = nextProps.mostRecent.getMostRecent
+        ? nextProps.mostRecent.getMostRecent
+        : null;
+      header = "Most recent captures";
+    }
+
+    // Search
+    if (nextProps.search) {
+      isLoading = nextProps.search.loading;
+      data = nextProps.search.search ? nextProps.search.search : null;
+      header = `Search results for "${NetworkUtils.getQuery(
+        nextProps.location.search
+      )}"`;
+    }
+
+    // Random
+    if (nextProps.randomCapture) {
+      isLoading = nextProps.randomCapture.loading;
+      data = nextProps.randomCapture.getAll
+        ? nextProps.randomCapture.getAll
+        : null;
+      header = "Focusing on the random capture below";
+    }
+
+    // Detailed
+    if (nextProps.getDetailed) {
+      isLoading = nextProps.getDetailed.loading;
+      data = nextProps.getDetailed.getDetailed
+        ? nextProps.getDetailed.getDetailed
+        : null;
+      pivot =
+        nextProps.getDetailed.getDetailed &&
+        nextProps.getDetailed.getDetailed.pivot
+          ? nextProps.getDetailed.getDetailed.pivot
+          : null;
+
+      if (pivot) {
+        switch (pivot.type) {
+          case NodeType.Entity:
+            header = `Focusing on "${pivot.text}"`;
+            break;
+          case NodeType.Tag:
+            header = `Focusing on "#${pivot.text}"`;
+            break;
+          case NodeType.Session:
+            let length = data && data.list.length;
+            if (length) {
+              header = `${length} capture${
+                length > 1 ? "s" : ""
+              } in this brainstorm`;
+            } else {
+              header = `Capture your first thought!`;
+            }
+            break;
+          default:
+            header = `Focusing on the capture below`;
+        }
+      }
+    }
+
+    // Set loading state
+    header = isLoading ? "Loading..." : header;
+
     const sessionId = NetworkUtils.getIsSessionId(nextProps.location.search);
 
-    this.setState({
+    let nextState = {
       isCapturing:
         NetworkUtils.getCurrentLocation(nextProps.location.search) ===
         Location.MostRecent,
       surfaceText: NetworkUtils.getQuery(nextProps.location.search),
-      sessionId
-    });
+      sessionId,
+      // GraphQL
+      isLoading,
+      data,
+      header,
+      pivot
+    };
+
+    this.setState(nextState);
   }
 
   createCaptureState = (): CaptureState => {
@@ -221,78 +309,38 @@ class Main extends React.Component<Props, State> {
   };
 
   render() {
-    let isLoading;
-    let data;
+    let isLoading = this.state.isLoading;
+    let data = this.state.data;
+    let header = this.state.header;
+    let pivot = this.state.pivot;
     let refetch;
     let fetchMore;
-    let header;
-    let pivot: NodeFieldsFragment | undefined;
 
     // Most Recent
     if (this.props.mostRecent) {
-      isLoading = this.props.mostRecent.loading;
-      data = this.props.mostRecent.getMostRecent;
       refetch = this.props.mostRecent.refetch;
-      fetchMore = isLoading ? undefined : this.props.mostRecent.fetchMore;
-      header = "Most recent captures";
+      fetchMore = this.state.isLoading
+        ? undefined
+        : this.props.mostRecent.fetchMore;
     }
 
     // Search
     if (this.props.search) {
-      isLoading = this.props.search.loading;
-      data = this.props.search.search;
       refetch = this.props.search.refetch;
-      fetchMore = isLoading ? undefined : this.props.search.fetchMore;
-      header = `Search results for "${NetworkUtils.getQuery(
-        this.props.location.search
-      )}"`;
+      fetchMore = this.state.isLoading
+        ? undefined
+        : this.props.search.fetchMore;
     }
 
     // Random
     if (this.props.randomCapture) {
-      isLoading = this.props.randomCapture.loading;
-      data = this.props.randomCapture.getAll;
       refetch = this.props.randomCapture.refetch;
-      header = "Focusing on the random capture below";
     }
 
     // Detailed
     if (this.props.getDetailed) {
-      isLoading = this.props.getDetailed.loading;
-      data = this.props.getDetailed.getDetailed;
       refetch = this.props.getDetailed.refetch;
-      pivot =
-        (this.props.getDetailed.getDetailed &&
-          this.props.getDetailed.getDetailed.pivot) ||
-        undefined;
-
-      if (pivot) {
-        switch (pivot.type) {
-          case NodeType.Entity:
-            header = `Focusing on "${pivot.text}"`;
-            break;
-          case NodeType.Tag:
-            header = `Focusing on "#${pivot.text}"`;
-            break;
-          case NodeType.Session:
-            let tempData = data as SurfaceResultsFieldsFragment | undefined;
-            let length = tempData && tempData.list.length;
-            if (length) {
-              header = `${length} capture${
-                length > 1 ? "s" : ""
-              } in this brainstorm`;
-            } else {
-              header = `Capture your first thought!`;
-            }
-            break;
-          default:
-            header = `Focusing on the capture below`;
-        }
-      }
     }
-
-    // Set loading state
-    header = isLoading ? "Loading..." : header;
 
     let isLargeWindow = WindowUtils.getIsLargeWindow(this.props.windowWidth);
 
@@ -402,7 +450,7 @@ class Main extends React.Component<Props, State> {
             {this.state.sessionId && (
               <div className={`shadow-5`}>
                 <ListSessionHeader
-                  startingTitle={pivot && pivot.text}
+                  startingTitle={pivot ? pivot.text : undefined}
                   handleEditTitle={title => {
                     if (!this.state.sessionId) {
                       return;
@@ -512,7 +560,11 @@ class Main extends React.Component<Props, State> {
             {/* List */}
             <List
               // List
-              listData={isLoading ? [] : data.list}
+              listData={
+                data !== null && data.list !== null
+                  ? (data.list as ListFieldsFragment[])
+                  : ([] as ListFieldsFragment[])
+              }
               scrollToId={this.state.scrollToId}
               // Captures
               handleExpand={(id: string) => () => {
@@ -743,8 +795,8 @@ class Main extends React.Component<Props, State> {
             </div>
             <GraphVisualization
               refEChart={noop}
-              nodes={isLoading ? [] : data.graph.nodes}
-              edges={isLoading ? [] : data.graph.edges}
+              nodes={data && data.graph.nodes ? data.graph.nodes : []}
+              edges={data && data.graph.edges ? data.graph.edges : []}
               onClick={e => {
                 // to prevent selecting and edge for now
                 if (!e.data.id) {

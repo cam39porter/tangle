@@ -22,6 +22,7 @@ import {
 } from "../../db/helpers/relationships";
 import { CaptureUrn } from "../../urn/capture-urn";
 import { formatSession } from "../../surface/formatters/graph-node";
+import { SessionUrn } from "../../urn/session-urn";
 
 export function create(
   title: string,
@@ -34,7 +35,7 @@ export function create(
     if (firstCaptureUrn) {
       relationshipPromise = createRelationship(
         userId,
-        session.id,
+        session.urn.toRaw(),
         SESSION_LABEL,
         firstCaptureUrn.toRaw(),
         CAPTURE_LABEL,
@@ -43,41 +44,41 @@ export function create(
     } else {
       relationshipPromise = Promise.resolve(null);
     }
-    const tagUpserts = createTags(userId, session.id, tags);
+    const tagUpserts = createTags(userId, session.urn, tags);
     return Promise.all([relationshipPromise, tagUpserts]).then(() => {
-      return new GraphNode(session.id, "Session", session.title, null);
+      return formatSession(session, true);
     });
   });
 }
 
 export function edit(
-  id: string,
+  urn: SessionUrn,
   title: string,
   tags: string[]
 ): Promise<GraphNode> {
   const userId = getAuthenticatedUser().id;
-  return editSession(userId, id, title).then((session: Session) => {
-    return deleteTags(userId, session.id).then(() =>
-      createTags(userId, session.id, tags).then(() =>
+  return editSession(userId, urn, title).then((session: Session) => {
+    return deleteTags(userId, session.urn).then(() =>
+      createTags(userId, session.urn, tags).then(() =>
         formatSession(session, true)
       )
     );
   });
 }
 
-export function deleteSession(id: string): Promise<boolean> {
+export function deleteSession(id: SessionUrn): Promise<boolean> {
   const userId = getAuthenticatedUser().id;
   return deleteDB(userId, id);
 }
 
-function deleteTags(userId: string, sessionId: string): Promise<void> {
-  return getTags(userId, sessionId, "Session")
+function deleteTags(userId: string, sessionId: SessionUrn): Promise<void> {
+  return getTags(userId, sessionId.toRaw(), SESSION_LABEL.name)
     .then(tags => {
       return Promise.all(
         tags.map(tag =>
           deleteRelationship(
             userId,
-            sessionId,
+            sessionId.toRaw(),
             SESSION_LABEL,
             tag.id,
             TAG_LABEL,
@@ -91,12 +92,14 @@ function deleteTags(userId: string, sessionId: string): Promise<void> {
 
 function createTags(
   userId: string,
-  sessionId: string,
+  sessionId: SessionUrn,
   tags: string[]
 ): Promise<void> {
   if (tags && tags.length !== 0) {
     return Promise.all(
-      tags.map(tag => upsertTag(userId, tag, sessionId, "Session"))
+      tags.map(tag =>
+        upsertTag(userId, tag, sessionId.toRaw(), SESSION_LABEL.name)
+      )
     ).then(() => null);
   } else {
     return Promise.resolve(null);

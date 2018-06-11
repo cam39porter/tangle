@@ -28,7 +28,7 @@ export function formatCapture(capture: Capture, isRoot: boolean): GraphNode {
 
 export function formatSession(session: Session, isRoot: boolean): GraphNode {
   return new GraphNode(
-    session.id,
+    session.urn.toRaw(),
     SESSION_LABEL.name,
     session.title,
     isRoot ? 0 : 1

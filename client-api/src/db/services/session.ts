@@ -4,12 +4,13 @@ import { toSessionUrn } from "../helpers/urn-helpers";
 import { executeQuery } from "../db";
 import { Session } from "../models/session";
 import { NotFoundError } from "../../util/exceptions/not-found-error";
+import { SessionUrn } from "../../urn/session-urn";
 
-export function get(userId: string, sessionId: string): Promise<Session> {
+export function get(userId: string, sessionId: SessionUrn): Promise<Session> {
   const query = `
   MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
   RETURN session`;
-  const params = { userId, sessionId };
+  const params = { userId, sessionId: sessionId.toRaw() };
   return executeQuery(query, params).then((result: StatementResult) => {
     return formatSessionRecord(result.records[0]);
   });
@@ -17,26 +18,26 @@ export function get(userId: string, sessionId: string): Promise<Session> {
 
 export function deleteSession(
   userId: string,
-  sessionId: string
+  sessionId: SessionUrn
 ): Promise<boolean> {
   const query = `
   MATCH (s:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
   DETACH DELETE s
   `;
-  const params = { userId, sessionId };
+  const params = { userId, sessionId: sessionId.toRaw() };
   return executeQuery(query, params).then(() => true);
 }
 
 export function edit(
   userId: string,
-  sessionId: string,
+  sessionId: SessionUrn,
   title: string
 ): Promise<Session> {
   const query = `
     MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
     ${title ? "SET session.title = {title}" : "REMOVE session.title"}
     RETURN session`;
-  const params = { userId, sessionId, title };
+  const params = { userId, sessionId: sessionId.toRaw(), title };
   return executeQuery(query, params).then((result: StatementResult) => {
     return formatSessionRecord(result.records[0]);
   });
@@ -63,5 +64,5 @@ function formatSessionRecord(record: any): Session {
   if (!record) {
     throw new NotFoundError("Could not find record");
   }
-  return record.get("session").properties as Session;
+  return Session.fromProperties(record.get("session").properties);
 }

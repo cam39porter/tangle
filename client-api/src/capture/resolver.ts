@@ -11,6 +11,7 @@ import {
   archiveCapture
 } from "./services/capture";
 import { CaptureUrn } from "../urn/capture-urn";
+import { SessionUrn } from "../urn/session-urn";
 
 export default {
   Mutation: {
@@ -61,11 +62,11 @@ export default {
       // @ts-ignore
       info
     ): Promise<GraphNode> {
-      return editSession(id, title, tags);
+      return editSession(SessionUrn.fromRaw(id), title, tags);
     },
     // @ts-ignore
     deleteSession(parent, { id }, context, info): Promise<boolean> {
-      return deleteSession(id);
+      return deleteSession(SessionUrn.fromRaw(id));
     },
 
     // @ts-ignore

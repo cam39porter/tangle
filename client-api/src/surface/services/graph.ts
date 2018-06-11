@@ -39,7 +39,7 @@ export function getAllByUseCase(
 }
 
 function getAllRandom(): Promise<SurfaceResults> {
-  const userId = getAuthenticatedUser().id;
+  const userId = getAuthenticatedUser().urn;
   return getRandomCapture(userId).then(capture => {
     return expandCaptures(userId, [capture.urn], formatCapture(capture, true));
   });
@@ -49,15 +49,15 @@ export function getAllMostRecent(
   start: number,
   count: number
 ): Promise<SurfaceResults> {
-  const userId = getAuthenticatedUser().id;
-  return getMostRecent(userId, start, count).then(captures => {
+  const userUrn = getAuthenticatedUser().urn;
+  return getMostRecent(userUrn, start, count).then(captures => {
     const captureUrns = captures.map(c => c.urn);
-    return expandCaptures(userId, captureUrns, null);
+    return expandCaptures(userUrn, captureUrns, null);
   });
 }
 
 function getAllCapturedToday(timezoneOffset: number): Promise<SurfaceResults> {
-  const userId = getAuthenticatedUser().id;
+  const userId = getAuthenticatedUser().urn;
   const since = getCreatedSince(timezoneOffset);
   return getAllSince(userId, since).then(captures => {
     const captureUrns = captures.map(c => c.urn);
@@ -66,7 +66,7 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SurfaceResults> {
 }
 
 function getOthers(urn: string): Promise<SurfaceResults> {
-  const userUrn = getAuthenticatedUser().id;
+  const userUrn = getAuthenticatedUser().urn;
   return getUntypedNode(userUrn, urn).then(node => {
     return getCapturesByRelatedNode(userUrn, urn).then(captures => {
       return expandCaptures(
@@ -79,7 +79,7 @@ function getOthers(urn: string): Promise<SurfaceResults> {
 }
 
 function getCapture(urn: CaptureUrn): Promise<SurfaceResults> {
-  const userUrn = getAuthenticatedUser().id;
+  const userUrn = getAuthenticatedUser().urn;
   return getCaptureClient(userUrn, urn).then(capture =>
     expandCaptures(userUrn, [capture.urn], formatCapture(capture, true))
   );

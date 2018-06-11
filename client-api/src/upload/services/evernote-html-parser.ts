@@ -2,8 +2,9 @@ import * as cheerio from "cheerio";
 import * as h2p from "html2plaintext";
 import { toEvernoteNoteUrn } from "../../db/helpers/urn-helpers";
 import { EvernoteUpload } from "../models/evernote-upload";
+import { UserUrn } from "../../urn/user-urn";
 
-export function parseEvernoteHtml(userId: string, data): EvernoteUpload {
+export function parseEvernoteHtml(userId: UserUrn, data): EvernoteUpload {
   const $ = cheerio.load(data);
   const tagString = $("meta[name=keywords]").attr("content");
   const tags = tagString ? tagString.split(", ") : [];

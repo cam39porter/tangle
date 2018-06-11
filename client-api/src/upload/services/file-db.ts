@@ -9,14 +9,14 @@ const bucketName =
     : "tangle-dev-bulk-import";
 
 export function saveOverwrite(id: string, file): Promise<void> {
-  const userId = getAuthenticatedUser().id;
-  const dest = `users/${userId}/${id}`;
+  const userId = getAuthenticatedUser().urn;
+  const dest = `users/${userId.toRaw()}/${id}`;
   return writeToDb(dest, file);
 }
 
 export function saveSafely(id: string, file): Promise<void> {
-  const userId = getAuthenticatedUser().id;
-  const dest = `users/${userId}/${id}`;
+  const userId = getAuthenticatedUser().urn;
+  const dest = `users/${userId.toRaw()}/${id}`;
   return storage
     .bucket(bucketName)
     .getFiles({ prefix: dest })

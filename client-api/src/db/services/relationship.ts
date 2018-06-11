@@ -1,9 +1,10 @@
 import { executeQuery } from "../db";
 import { Label } from "../neo4j/label";
 import { Relationship } from "../neo4j/relationship";
+import { UserUrn } from "../../urn/user-urn";
 
 export function createRelationship(
-  userId: string,
+  userId: UserUrn,
   src: string,
   srcLabel: Label,
   dest: string,
@@ -28,7 +29,7 @@ export function createRelationship(
 }
 
 export function deleteRelationship(
-  userId: string,
+  userId: UserUrn,
   src: string,
   srcLabel: Label,
   dest: string,

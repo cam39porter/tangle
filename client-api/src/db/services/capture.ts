@@ -2,17 +2,18 @@ import { StatementResult, Node } from "neo4j-driver/types/v1";
 import { v4 as uuidv4 } from "uuid/v4";
 import { escape } from "../../helpers/capture-parser";
 import { executeQuery } from "../db";
-import { getLabel, toCaptureUrn } from "../helpers/urn-helpers";
+import { getLabel } from "../helpers/urn-helpers";
 import { Capture } from "../models/capture";
 import { NotFoundError } from "../../util/exceptions/not-found-error";
 import { CaptureUrn } from "../../urn/capture-urn";
+import { UserUrn } from "../../urn/user-urn";
 
 export function getMostRecent(
-  userId: string,
+  userId: UserUrn,
   start: number,
   count: number
 ): Promise<Capture[]> {
-  const params = { userId, start, count };
+  const params = { userId: userId.toRaw(), start, count };
   const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
   WHERE NOT EXISTS (capture.archived)
   RETURN capture
@@ -21,8 +22,11 @@ export function getMostRecent(
   return executeQuery(query, params).then(formatCaptureArray);
 }
 
-export function getAllSince(userId: string, since: number): Promise<Capture[]> {
-  const params = { userId, since };
+export function getAllSince(
+  userId: UserUrn,
+  since: number
+): Promise<Capture[]> {
+  const params = { userId: userId.toRaw(), since };
   const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
   WHERE capture.created > {since} AND NOT EXISTS (capture.archived)
   RETURN capture
@@ -32,10 +36,10 @@ export function getAllSince(userId: string, since: number): Promise<Capture[]> {
 }
 
 export function getCapture(
-  userId: string,
+  userId: UserUrn,
   captureUrn: CaptureUrn
 ): Promise<Capture> {
-  const params = { userId, captureUrn: captureUrn.toRaw() };
+  const params = { userId: userId.toRaw(), captureUrn: captureUrn.toRaw() };
   const query = `
     MATCH (capture:Capture {id:{captureUrn}})<-[created:CREATED]-(user:User {id:{userId}})
     WHERE NOT EXISTS(capture.archived) OR capture.archived = false
@@ -44,9 +48,9 @@ export function getCapture(
   return executeQuery(query, params).then(formatCaptureResult);
 }
 
-export function getUntypedNode(userId: string, nodeId: string): Promise<Node> {
+export function getUntypedNode(userId: UserUrn, nodeId: string): Promise<Node> {
   const label = getLabel(nodeId);
-  const params = { userId, nodeId };
+  const params = { userId: userId.toRaw(), nodeId };
   const query = `MATCH (n:${label} {id:{nodeId}, owner:{userId}})
   WHERE NOT EXISTS(n.archived) OR n.archived = false
   RETURN n
@@ -57,11 +61,11 @@ export function getUntypedNode(userId: string, nodeId: string): Promise<Node> {
 }
 
 export function getCapturesByRelatedNode(
-  userId: string,
+  userId: UserUrn,
   nodeId: string
 ): Promise<Capture[]> {
   const label = getLabel(nodeId);
-  const params = { userId, nodeId };
+  const params = { userId: userId.toRaw(), nodeId };
   const query = `MATCH (other:${label} {id:{nodeId}})-[r]-(capture:Capture)<-[:CREATED]-(u:User {id:{userId}})
   WHERE NOT EXISTS(capture.archived) OR capture.archived = false
   RETURN capture
@@ -71,8 +75,8 @@ export function getCapturesByRelatedNode(
   });
 }
 
-export function getRandomCapture(userId: string): Promise<Capture> {
-  const params = { userId };
+export function getRandomCapture(userId: UserUrn): Promise<Capture> {
+  const params = { userId: userId.toRaw() };
   const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
   WHERE NOT EXISTS (capture.archived) OR capture.archived = false
   RETURN capture, rand() as number
@@ -82,10 +86,10 @@ export function getRandomCapture(userId: string): Promise<Capture> {
 }
 
 export function archiveCaptureNode(
-  userId: string,
+  userId: UserUrn,
   captureUrn: CaptureUrn
 ): Promise<Capture> {
-  const params = { userId, captureUrn: captureUrn.toRaw() };
+  const params = { userId: userId.toRaw(), captureUrn: captureUrn.toRaw() };
   const query = `MATCH (capture:Capture {id:{captureUrn}})<-[:CREATED]-(u:User {id:{userId}})
   SET capture.archived = true
   RETURN capture
@@ -94,14 +98,14 @@ export function archiveCaptureNode(
 }
 
 export function editCaptureNodeAndDeleteRelationships(
-  userId: string,
+  userId: UserUrn,
   captureUrn: CaptureUrn,
   plainText: string,
   html: string
 ): Promise<Capture> {
   const params = {
     captureUrn: captureUrn.toRaw(),
-    userId,
+    userId: userId.toRaw(),
     plainText: escape(plainText),
     html: escape(html)
   };
@@ -117,13 +121,13 @@ export function editCaptureNodeAndDeleteRelationships(
 }
 
 export function createCaptureNode(
-  userId: string,
+  userId: UserUrn,
   plainText: string,
   html: string,
   parentId: string
 ): Promise<Capture> {
   const uuid = uuidv4();
-  const captureUrn = toCaptureUrn(uuid);
+  const captureUrn = new CaptureUrn(uuid);
   const parentQuery = parentId
     ? `OPTIONAL MATCH (u)-[:CREATED]-(parent {id:{parentId}}) WHERE parent:Session OR parent:EvernoteNote`
     : ``;
@@ -160,5 +164,13 @@ function formatCaptureRecord(record: any): Capture {
   if (!record) {
     throw new NotFoundError("Could not find record");
   }
-  return Capture.fromProperties(record.get("capture").properties);
+  return buildFromNeo(record.get("capture").properties);
+}
+
+export function buildFromNeo(props: any): Capture {
+  return new Capture(
+    CaptureUrn.fromRaw(props["id"]),
+    props["body"],
+    props["created"]
+  );
 }

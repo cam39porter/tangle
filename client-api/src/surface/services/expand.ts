@@ -9,9 +9,11 @@ import { SurfaceResults } from "../models/surface-results";
 import { PageInfo } from "../models/page-info";
 import { GraphNode } from "../models/graph-node";
 import { CaptureUrn } from "../../urn/capture-urn";
+import { buildFromNeo } from "../../db/services/capture";
+import { UserUrn } from "../../urn/user-urn";
 
 export function expandCaptures(
-  userUrn: string,
+  userUrn: UserUrn,
   captureUrns: CaptureUrn[],
   pivot: GraphNode = null
 ): Promise<SurfaceResults> {
@@ -32,12 +34,12 @@ export function expandCaptures(
 }
 
 function expandGraph(
-  userUrn: string,
+  userUrn: UserUrn,
   captureUrns: CaptureUrn[],
   startUrn: string = null
 ): Promise<Graph> {
   const params = {
-    userUrn,
+    userUrn: userUrn.toRaw(),
     captureIds: captureUrns.map(urn => urn.toRaw()),
     startUrn
   };
@@ -48,12 +50,12 @@ function expandGraph(
 }
 
 function expandList(
-  userUrn: string,
+  userUrn: UserUrn,
   captureUrns: CaptureUrn[],
   startUrn: string = null
 ): Promise<ListItem[]> {
   const params = {
-    userUrn,
+    userUrn: userUrn.toRaw(),
     captureIds: captureUrns.map(urn => urn.toRaw()),
     startUrn
   };
@@ -70,13 +72,13 @@ function formatDbResponse(
     [Capture, Relationship, Node, Relationship, Capture]
   > = result.records.map(record => {
     const root: Capture = record.get("roots")
-      ? Capture.fromProperties(record.get("roots").properties)
+      ? buildFromNeo(record.get("roots").properties)
       : (null as Capture);
     const r1: Relationship = record.get("r1") as Relationship;
     const intermediate: Node = record.get("firstDegree") as Node;
     const r2: Relationship = record.get("r2") as Relationship;
     const end: Capture = record.get("secondDegree")
-      ? Capture.fromProperties(record.get("secondDegree").properties)
+      ? buildFromNeo(record.get("secondDegree").properties)
       : (null as Capture);
     const ret: [Capture, Relationship, Node, Relationship, Capture] = [
       root,

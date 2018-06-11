@@ -9,7 +9,7 @@ export function search(
   start: number,
   count: number
 ): Promise<SurfaceResults> {
-  const userId = getAuthenticatedUser().id;
+  const userId = getAuthenticatedUser().urn;
   if (!rawQuery || rawQuery.length === 0) {
     return getRandomCapture();
   } else {
@@ -27,7 +27,7 @@ export function search(
 }
 
 function getRandomCapture(): Promise<SurfaceResults> {
-  const userId = getAuthenticatedUser().id;
+  const userId = getAuthenticatedUser().urn;
   return getRandomCaptureClient(userId).then(capture =>
     expandCaptures(userId, [capture.urn], null)
   );

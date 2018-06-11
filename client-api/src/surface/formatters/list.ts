@@ -7,6 +7,7 @@ import { Annotation } from "../models/annotation";
 import { Entity } from "../../db/models/entity";
 import { Tag } from "../../db/models/Tag";
 import { CaptureUrn } from "../../urn/capture-urn";
+import { buildFromNeo } from "../../db/services/capture";
 
 export function buildList(
   paths: Array<[Capture, Relationship, Node, Relationship, Capture]>,
@@ -17,7 +18,7 @@ export function buildList(
   paths.forEach(path => {
     rootCaptureMap.set(path[0].urn.getId(), path[0]);
     if (path[2] && path[2].labels[0] === "Capture") {
-      const capture = Capture.fromProperties(path[2].properties);
+      const capture = buildFromNeo(path[2].properties);
       relatedCaptureMap.set(capture.urn.getId(), capture);
     }
     if (path[4]) {
@@ -127,7 +128,7 @@ function buildTree(
       path[2].labels[0] === "Capture" &&
       CaptureUrn.fromRaw(path[2].properties["id"]).getId() !== root.urn.getId()
     ) {
-      capture = Capture.fromProperties(path[2].properties);
+      capture = buildFromNeo(path[2].properties);
     } else if (path[4] && path[4].urn.getId() !== root.urn.getId()) {
       capture = path[4];
     }

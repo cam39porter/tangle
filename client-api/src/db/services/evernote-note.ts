@@ -2,9 +2,13 @@ import { StatementResult } from "neo4j-driver/types/v1";
 import { EvernoteUpload } from "../../upload/models/evernote-upload";
 import { executeQuery } from "../db";
 import { EvernoteNote } from "../models/evernote-note";
+import { UserUrn } from "../../urn/user-urn";
 
-export function get(userId: string, noteId: string): Promise<EvernoteNote> {
-  const params = { userId, noteId };
+export function get(userId: UserUrn, noteId: string): Promise<EvernoteNote> {
+  const params = {
+    userId: userId.toRaw(),
+    noteId
+  };
   const query = `
     MATCH (u:User {id:{userId}})-[:CREATED]->(note:EvernoteNote {id:{noteId}})
     RETURN note`;
@@ -12,11 +16,11 @@ export function get(userId: string, noteId: string): Promise<EvernoteNote> {
 }
 
 export function create(
-  userId: string,
+  userId: UserUrn,
   upload: EvernoteUpload
 ): Promise<EvernoteNote> {
   const params = {
-    userId,
+    userId: userId.toRaw(),
     noteId: upload.id,
     created: upload.created,
     lastModified: upload.lastModified,
@@ -35,8 +39,8 @@ export function create(
   return executeQuery(query, params).then(formatNote);
 }
 
-export function deleteNote(userId: string, evernoteId: string): Promise<void> {
-  const params = { userId, evernoteId };
+export function deleteNote(userId: UserUrn, evernoteId: string): Promise<void> {
+  const params = { userId: userId.toRaw(), evernoteId };
   const query = `
     MATCH (u:User {id:{userId}})-[:CREATED]->(note:EvernoteNote {id:{evernoteId}})
     DETACH DELETE note

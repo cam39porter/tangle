@@ -3,18 +3,18 @@ import { executeQuery } from "../db";
 import { toEntityUrn } from "../helpers/urn-helpers";
 import { Entity } from "../models/entity";
 import { CaptureUrn } from "../../urn/capture-urn";
+import { UserUrn } from "../../urn/user-urn";
 
 export function upsertEntity(
-  userId: string,
+  userId: UserUrn,
   name: string,
   type: string,
   salience: number,
   captureUrn: CaptureUrn
 ): Promise<Entity> {
   const entityUrn = toEntityUrn(userId, name, type);
-  captureUrn.toRaw();
   const params = {
-    userId,
+    userId: userId.toRaw(),
     entityUrn,
     name,
     type,

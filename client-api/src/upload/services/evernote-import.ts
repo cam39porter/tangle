@@ -11,6 +11,7 @@ import { getAuthenticatedUser } from "../../filters/request-context";
 import { EvernoteUpload } from "../models/evernote-upload";
 import { parseEvernoteHtml } from "./evernote-html-parser";
 import { saveOverwrite, saveSafely } from "./file-db";
+import { UserUrn } from "../../urn/user-urn";
 
 const readFileAsync = promisify(fs.readFile);
 
@@ -19,7 +20,7 @@ export function importEvernoteNoteUpload(file): Promise<void> {
     const user: User = getAuthenticatedUser();
     let note: EvernoteUpload = null;
     try {
-      note = parseEvernoteHtml(user.id, data);
+      note = parseEvernoteHtml(user.urn, data);
     } catch (err) {
       console.error(err);
       throw new Error(
@@ -28,12 +29,12 @@ export function importEvernoteNoteUpload(file): Promise<void> {
     }
     return (
       saveSafely(note.id, file)
-        .then(() => createEvernoteNote(user.id, note))
+        .then(() => createEvernoteNote(user.urn, note))
         // TODO cmccrack require overwrite param from frontend to do this
         .catch(() => {
           return saveOverwrite(note.id, file).then(() =>
             deleteEvernoteNote(note.id).then(() =>
-              createEvernoteNote(user.id, note)
+              createEvernoteNote(user.urn, note)
             )
           );
         })
@@ -42,7 +43,7 @@ export function importEvernoteNoteUpload(file): Promise<void> {
 }
 
 export function deleteEvernoteNote(evernoteId: string): Promise<void> {
-  const userId = getAuthenticatedUser().id;
+  const userId = getAuthenticatedUser().urn;
   const archiveCaptures = getCapturesByRelatedNode(userId, evernoteId).then(
     captures => {
       return Promise.all(
@@ -56,7 +57,7 @@ export function deleteEvernoteNote(evernoteId: string): Promise<void> {
 }
 
 function createEvernoteNote(
-  userId: string,
+  userId: UserUrn,
   note: EvernoteUpload
 ): Promise<void> {
   return create(userId, note).then(() => {

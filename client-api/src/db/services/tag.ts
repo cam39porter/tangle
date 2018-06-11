@@ -2,9 +2,10 @@ import { StatementResult } from "neo4j-driver/types/v1";
 import { toTagUrn } from "../helpers/urn-helpers";
 import { executeQuery } from "../db";
 import { Tag } from "../models/tag";
+import { UserUrn } from "../../urn/user-urn";
 
 export function upsert(
-  userId: string,
+  userId: UserUrn,
   name: string,
   parentId: string,
   parentLabel: string
@@ -20,14 +21,14 @@ export function upsert(
   MATCH (parent:${parentLabel} {id:{parentId}})
   CREATE (tag)<-[:TAGGED_WITH]-(parent)
   RETURN tag`;
-  const params = { userId, id, name, parentId };
+  const params = { userId: userId.toRaw(), id, name, parentId };
   return executeQuery(query, params).then((result: StatementResult) => {
     return result.records[0].get("tag").properties as Tag;
   });
 }
 
 export function getTags(
-  userId: string,
+  userId: UserUrn,
   srcId: string,
   srcLabel: string
 ): Promise<Tag[]> {
@@ -35,7 +36,7 @@ export function getTags(
   MATCH (tag:Tag {owner:{userId}})<-[:TAGGED_WITH]-(src:${srcLabel} {id:{srcId}})
   RETURN tag
   `;
-  const params = { userId, srcId };
+  const params = { userId: userId.toRaw(), srcId };
   return executeQuery(query, params).then((result: StatementResult) => {
     return result.records.map(record => record.get("tag").properties as Tag);
   });

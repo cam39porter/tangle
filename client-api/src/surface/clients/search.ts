@@ -4,6 +4,7 @@ import { SearchResponse } from "elasticsearch";
 import { Capture } from "../../db/models/capture";
 import { SearchResults } from "../models/search-results";
 import { PageInfo } from "../models/page-info";
+import { buildFromNeo } from "../../db/services/capture";
 
 const client: elasticsearch.Client = new elasticsearch.Client({
   host:
@@ -15,7 +16,7 @@ export function search(
   start: number,
   count: number
 ): Promise<SearchResults> {
-  const userId = getAuthenticatedUser().id;
+  const userId = getAuthenticatedUser().urn;
   const esquery = {
     index: "neo4j-index-node",
     body: {
@@ -24,7 +25,7 @@ export function search(
       query: {
         bool: {
           must: { match: { plainText: rawQuery } },
-          filter: { match: { owner: userId } },
+          filter: { match: { owner: userId.toRaw() } },
           must_not: { match: { archived: "true" } }
         }
       }
@@ -32,7 +33,7 @@ export function search(
   };
   return client.search(esquery).then((resp: SearchResponse<Capture>) => {
     const results: Capture[] = resp.hits.hits.map(record =>
-      Capture.fromProperties(record._source)
+      buildFromNeo(record._source)
     );
     return new SearchResults(
       results,

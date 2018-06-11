@@ -31,7 +31,7 @@ export function dismissCaptureRelation(
   toId: string
 ): Promise<boolean> {
   return createRelationship(
-    getAuthenticatedUser().id,
+    getAuthenticatedUser().urn,
     fromId,
     CAPTURE_LABEL,
     toId,
@@ -41,14 +41,14 @@ export function dismissCaptureRelation(
 }
 
 export function archiveCapture(urn: CaptureUrn): Promise<GraphNode> {
-  const userId = getAuthenticatedUser().id;
+  const userId = getAuthenticatedUser().urn;
   return archiveCaptureNode(userId, urn).then(capture =>
     formatCapture(capture, false)
   );
 }
 
 export function editCapture(urn: CaptureUrn, body: string): Promise<GraphNode> {
-  const userId = getAuthenticatedUser().id;
+  const userId = getAuthenticatedUser().urn;
   const plainText = parseHtml(body);
   return editCaptureNodeAndDeleteRelationships(
     userId,
@@ -77,11 +77,11 @@ export function createCapture(
     );
   }
   const plainText = parseHtml(body);
-  return createCaptureNode(user.id, plainText, body, parentId)
+  return createCaptureNode(user.urn, plainText, body, parentId)
     .then((capture: Capture) => {
       if (captureRelation) {
         return createRelationship(
-          user.id,
+          user.urn,
           capture.urn.toRaw(),
           CAPTURE_LABEL,
           captureRelation.captureId,
@@ -126,7 +126,7 @@ function createTags(captureUrn: CaptureUrn, body: string): Promise<boolean> {
   const user: User = getAuthenticatedUser();
   return Promise.all(
     parseTags(body).map(tag =>
-      upsertTag(user.id, tag, captureUrn.toRaw(), "Capture")
+      upsertTag(user.urn, tag, captureUrn.toRaw(), "Capture")
     )
   ).then(() => true);
 }
@@ -134,7 +134,7 @@ function createTags(captureUrn: CaptureUrn, body: string): Promise<boolean> {
 function createLinks(captureUrn: CaptureUrn, body: string): Promise<boolean> {
   const user: User = getAuthenticatedUser();
   return Promise.all(
-    parseLinks(body).map(link => upsertLink(user.id, link, captureUrn))
+    parseLinks(body).map(link => upsertLink(user.urn, link, captureUrn))
   ).then(() => true);
 }
 
@@ -148,7 +148,7 @@ function createEntities(
     return Promise.all(
       nlp.entities.map(entity =>
         upsertEntity(
-          user.id,
+          user.urn,
           entity.name,
           entity.type,
           entity.salience,

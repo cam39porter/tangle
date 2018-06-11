@@ -23,13 +23,14 @@ import {
 import { CaptureUrn } from "../../urn/capture-urn";
 import { formatSession } from "../../surface/formatters/graph-node";
 import { SessionUrn } from "../../urn/session-urn";
+import { UserUrn } from "../../urn/user-urn";
 
 export function create(
   title: string,
   firstCaptureUrn: CaptureUrn,
   tags: string[]
 ): Promise<GraphNode> {
-  const userId = getAuthenticatedUser().id;
+  const userId = getAuthenticatedUser().urn;
   return createSession(userId, title).then((session: Session) => {
     let relationshipPromise;
     if (firstCaptureUrn) {
@@ -56,7 +57,7 @@ export function edit(
   title: string,
   tags: string[]
 ): Promise<GraphNode> {
-  const userId = getAuthenticatedUser().id;
+  const userId = getAuthenticatedUser().urn;
   return editSession(userId, urn, title).then((session: Session) => {
     return deleteTags(userId, session.urn).then(() =>
       createTags(userId, session.urn, tags).then(() =>
@@ -67,11 +68,11 @@ export function edit(
 }
 
 export function deleteSession(id: SessionUrn): Promise<boolean> {
-  const userId = getAuthenticatedUser().id;
+  const userId = getAuthenticatedUser().urn;
   return deleteDB(userId, id);
 }
 
-function deleteTags(userId: string, sessionId: SessionUrn): Promise<void> {
+function deleteTags(userId: UserUrn, sessionId: SessionUrn): Promise<void> {
   return getTags(userId, sessionId.toRaw(), SESSION_LABEL.name)
     .then(tags => {
       return Promise.all(
@@ -91,7 +92,7 @@ function deleteTags(userId: string, sessionId: SessionUrn): Promise<void> {
 }
 
 function createTags(
-  userId: string,
+  userId: UserUrn,
   sessionId: SessionUrn,
   tags: string[]
 ): Promise<void> {

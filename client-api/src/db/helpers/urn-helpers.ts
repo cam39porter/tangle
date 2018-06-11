@@ -1,5 +1,6 @@
 import { MalformedUrnError } from "../../util/exceptions/malformed-urn-error";
 import { UnsupportedUrnError } from "../../util/exceptions/unsupported-urn-error";
+import { UserUrn } from "../../urn/user-urn";
 
 const baseStr: string = "urn:hex";
 
@@ -7,32 +8,28 @@ function toUserUrn(id: string): string {
   return `${baseStr}:user:${id}`;
 }
 
-function toCaptureUrn(id: string): string {
-  return `${baseStr}:capture:${id}`;
+function toEntityUrn(userId: UserUrn, name: string, type: string): string {
+  return `${baseStr}:entity:(${userId.toRaw()};${name};${type})`;
 }
 
-function toEntityUrn(userId: string, name: string, type: string): string {
-  return `${baseStr}:entity:(${userId};${name};${type})`;
-}
-
-function toTagUrn(userId: string, name: string): string {
-  return `${baseStr}:tag:(${userId};${name})`;
+function toTagUrn(userId: UserUrn, name: string): string {
+  return `${baseStr}:tag:(${userId.toRaw()};${name})`;
 }
 
 function toSessionUrn(id: string): string {
   return `${baseStr}:session:${id}`;
 }
 
-function toLinkUrn(userId: string, url: string): string {
-  return `${baseStr}:link:${userId};${url}`;
+function toLinkUrn(userId: UserUrn, url: string): string {
+  return `${baseStr}:link:${userId.toRaw()};${url}`;
 }
 
 function toEvernoteNoteUrn(
-  userId: string,
+  userId: UserUrn,
   title: string,
   created: number
 ): string {
-  return `${baseStr}:evernoteNote:(${userId};${title};${created.toString()})`;
+  return `${baseStr}:evernoteNote:(${userId.toRaw()};${title};${created.toString()})`;
 }
 
 function getUrnType(urn: string): string {
@@ -64,7 +61,6 @@ const urnTypeToLabel = {
 
 export {
   toUserUrn,
-  toCaptureUrn,
   toEntityUrn,
   toTagUrn,
   toSessionUrn,

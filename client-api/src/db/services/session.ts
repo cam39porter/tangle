@@ -5,31 +5,32 @@ import { executeQuery } from "../db";
 import { Session } from "../models/session";
 import { NotFoundError } from "../../util/exceptions/not-found-error";
 import { SessionUrn } from "../../urn/session-urn";
+import { UserUrn } from "../../urn/user-urn";
 
-export function get(userId: string, sessionId: SessionUrn): Promise<Session> {
+export function get(userId: UserUrn, sessionId: SessionUrn): Promise<Session> {
   const query = `
   MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
   RETURN session`;
-  const params = { userId, sessionId: sessionId.toRaw() };
+  const params = { userId: userId.toRaw(), sessionId: sessionId.toRaw() };
   return executeQuery(query, params).then((result: StatementResult) => {
     return formatSessionRecord(result.records[0]);
   });
 }
 
 export function deleteSession(
-  userId: string,
+  userId: UserUrn,
   sessionId: SessionUrn
 ): Promise<boolean> {
   const query = `
   MATCH (s:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
   DETACH DELETE s
   `;
-  const params = { userId, sessionId: sessionId.toRaw() };
+  const params = { userId: userId.toRaw(), sessionId: sessionId.toRaw() };
   return executeQuery(query, params).then(() => true);
 }
 
 export function edit(
-  userId: string,
+  userId: UserUrn,
   sessionId: SessionUrn,
   title: string
 ): Promise<Session> {
@@ -37,13 +38,17 @@ export function edit(
     MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
     ${title ? "SET session.title = {title}" : "REMOVE session.title"}
     RETURN session`;
-  const params = { userId, sessionId: sessionId.toRaw(), title };
+  const params = {
+    userId: userId.toRaw(),
+    sessionId: sessionId.toRaw(),
+    title
+  };
   return executeQuery(query, params).then((result: StatementResult) => {
     return formatSessionRecord(result.records[0]);
   });
 }
 
-export function create(userId: string, title: string): Promise<Session> {
+export function create(userId: UserUrn, title: string): Promise<Session> {
   const uuid = uuidv4();
   const sessionUrn = toSessionUrn(uuid);
   const query = `
@@ -54,7 +59,7 @@ export function create(userId: string, title: string): Promise<Session> {
       owner:{userId}})
     CREATE (session)<-[:CREATED]-(u)
     RETURN session`;
-  const params = { userId, sessionUrn, title };
+  const params = { userId: userId.toRaw(), sessionUrn, title };
   return executeQuery(query, params).then((result: StatementResult) => {
     return formatSessionRecord(result.records[0]);
   });

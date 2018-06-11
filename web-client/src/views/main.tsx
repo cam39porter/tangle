@@ -133,7 +133,6 @@ interface State {
   scrollToId?: string;
   // Session
   sessionId?: string;
-  sessionTitle?: string;
   // GraphQL
   isLoading: boolean;
   data: SurfaceResultsFieldsFragment | null;
@@ -214,9 +213,11 @@ class Main extends React.Component<Props, State> {
         switch (pivot.type) {
           case NodeType.Entity:
             header = `Focusing on "${pivot.text}"`;
+            pivot = null;
             break;
           case NodeType.Tag:
             header = `Focusing on "#${pivot.text}"`;
+            pivot = null;
             break;
           case NodeType.Session:
             let length = data && data.list.length;
@@ -363,6 +364,7 @@ class Main extends React.Component<Props, State> {
                 });
               }}
             />
+
             {/* Capture Header */}
             {!this.state.sessionId && (
               <div
@@ -455,7 +457,6 @@ class Main extends React.Component<Props, State> {
                     if (!this.state.sessionId) {
                       return;
                     }
-
                     this.props
                       .editSession({
                         variables: {
@@ -463,29 +464,23 @@ class Main extends React.Component<Props, State> {
                           title
                         }
                       })
-                      .then(({ data: res }) => {
-                        this.setState({
-                          sessionTitle: res.editSession.text
-                        });
-                      })
-                      .then(() => {
-                        refetch();
-                      })
                       .catch(err => console.error(err));
                   }}
                   startingTags={undefined}
                   handleEditTags={noop}
                   handleClose={() => {
-                    this.setState({
-                      sessionTitle: undefined
-                    });
                     if (this.props.history.length > 2) {
                       this.props.history.goBack();
                     } else {
                       this.props.history.push("/");
                     }
+
+                    this.setState({
+                      pivot: null
+                    });
                   }}
                 />
+
                 {/* Session Capture */}
                 <div className={`ph3 pv4 bt bb b--light-gray bg-white`}>
                   <InputCapture
@@ -561,7 +556,7 @@ class Main extends React.Component<Props, State> {
             <List
               // List
               listData={
-                data !== null && data.list !== null
+                !isLoading && data !== null && data.list !== null
                   ? (data.list as ListFieldsFragment[])
                   : ([] as ListFieldsFragment[])
               }

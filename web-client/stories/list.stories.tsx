@@ -31,12 +31,8 @@ stories.add("header", () => (
 
 stories.add("session title", () => (
   <div>
+    <ListSessionTitle handleOnChange={action("handleChange")} />
     <ListSessionTitle
-      handleEdit={action("handleEdit")}
-      handleOnChange={action("handleChange")}
-    />
-    <ListSessionTitle
-      handleEdit={action("handleEdit")}
       handleOnChange={action("handleChange")}
       startingTitle={`This is an example title`}
     />
@@ -45,12 +41,8 @@ stories.add("session title", () => (
 
 stories.add("session tags", () => (
   <div>
+    <ListSessionTags handleOnChange={action("handleChange")} />
     <ListSessionTags
-      handleEdit={action("handleEdit")}
-      handleOnChange={action("handleChange")}
-    />
-    <ListSessionTags
-      handleEdit={action("handleEdit")}
       startingTags={["tag1", "tag2", "tag3"]}
       handleOnChange={action("handleChange")}
     />

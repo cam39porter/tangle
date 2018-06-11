@@ -8,8 +8,9 @@ import * as Draft from "draft-js";
 import { convertToHTML, convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 
+const TIME_TO_SAVE = 100; // ms
+
 interface Props {
-  handleEdit: () => void;
   startingTags?: Array<string>;
   handleOnChange: (tags: string) => void;
 }
@@ -19,14 +20,16 @@ interface State {
 }
 
 class ListSessionTags extends React.Component<Props, State> {
+  saveTimer;
+
   constructor(props: Props) {
     super(props);
 
     let editorState = Draft.EditorState.createEmpty();
 
     let startingText: string | undefined;
-    if (this.props.startingTags) {
-      this.props.startingTags.forEach(tag => {
+    if (props.startingTags) {
+      props.startingTags.forEach(tag => {
         startingText = startingText ? startingText + `#${tag} ` : `#${tag} `;
       });
     }
@@ -42,9 +45,18 @@ class ListSessionTags extends React.Component<Props, State> {
   }
 
   handleOnChange = (editorState: Draft.EditorState) => {
-    // inform parent components of state
-    this.props.handleOnChange(convertToHTML(editorState.getCurrentContent()));
+    const currentContent = this.state.editorState.getCurrentContent();
+    const newContent = editorState.getCurrentContent();
 
+    // Content has changed
+    if (currentContent !== newContent) {
+      // set timeout to capture after a given amount of time of no changes
+      this.saveTimer && clearTimeout(this.saveTimer);
+      this.saveTimer = setTimeout(
+        this.props.handleOnChange(convertToHTML(newContent)),
+        TIME_TO_SAVE
+      );
+    }
     this.setState({
       editorState
     });
@@ -57,10 +69,6 @@ class ListSessionTags extends React.Component<Props, State> {
           editorState={this.state.editorState}
           onChange={this.handleOnChange}
           placeholder={`Tags like #todo #ideas`}
-          handleReturn={(e, editorState) => {
-            this.props.handleEdit();
-            return "handled";
-          }}
         />
       </div>
     );

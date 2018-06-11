@@ -9,7 +9,7 @@ import * as Draft from "draft-js";
 import { convertToHTML, convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 
-const TIME_TO_AUTO_CAPTURE_EDIT = 500; // ms till change is automatically captured
+const TIME_TO_SAVE = 500; // ms till change is automatically captured
 
 interface Props {
   handleOnChange: (text: string) => void;
@@ -23,16 +23,16 @@ interface State {
 }
 
 class InputCapture extends React.Component<Props, State> {
-  captureTimer;
+  saveTimer;
 
   constructor(props: Props) {
     super(props);
 
     let editorState = Draft.EditorState.createEmpty();
 
-    if (this.props.startingHTML) {
+    if (props.startingHTML) {
       editorState = Draft.EditorState.createWithContent(
-        convertFromHTML(this.props.startingHTML)
+        convertFromHTML(props.startingHTML)
       );
     }
 
@@ -59,11 +59,8 @@ class InputCapture extends React.Component<Props, State> {
       this.props.handleOnChange(convertToHTML(newContent));
 
       // set timeout to capture after a given amount of time of no changes
-      this.captureTimer && clearTimeout(this.captureTimer);
-      this.captureTimer = setTimeout(
-        this.props.handleEdit,
-        TIME_TO_AUTO_CAPTURE_EDIT
-      );
+      this.saveTimer && clearTimeout(this.saveTimer);
+      this.saveTimer = setTimeout(this.props.handleEdit, TIME_TO_SAVE);
     }
 
     this.setState({

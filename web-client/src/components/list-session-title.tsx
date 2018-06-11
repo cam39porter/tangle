@@ -8,8 +8,9 @@ import * as Draft from "draft-js";
 import { convertToHTML, convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 
+const TIME_TO_SAVE = 100; // ms
+
 interface Props {
-  handleEdit: () => void;
   startingTitle?: string;
   handleOnChange: (title: string) => void;
 }
@@ -19,14 +20,16 @@ interface State {
 }
 
 class ListSessionTitle extends React.Component<Props, State> {
+  saveTimer;
+
   constructor(props: Props) {
     super(props);
 
     let editorState = Draft.EditorState.createEmpty();
 
-    if (this.props.startingTitle) {
+    if (props.startingTitle) {
       editorState = Draft.EditorState.createWithContent(
-        convertFromHTML(this.props.startingTitle)
+        convertFromHTML(props.startingTitle)
       );
     }
 
@@ -35,9 +38,29 @@ class ListSessionTitle extends React.Component<Props, State> {
     };
   }
 
+  componentWillReceiveProps(nextProps: Props) {
+    if (this.props.startingTitle !== nextProps.startingTitle) {
+      this.setState({
+        editorState: Draft.EditorState.createWithContent(
+          convertFromHTML(nextProps.startingTitle)
+        )
+      });
+    }
+  }
+
   handleOnChange = (editorState: Draft.EditorState) => {
-    // inform parent components of state
-    this.props.handleOnChange(convertToHTML(editorState.getCurrentContent()));
+    const currentContent = this.state.editorState.getCurrentContent();
+    const newContent = editorState.getCurrentContent();
+
+    // Content has changed
+    if (currentContent !== newContent) {
+      // set timeout to capture after a given amount of time of no changes
+      this.saveTimer && clearTimeout(this.saveTimer);
+      this.saveTimer = setTimeout(
+        this.props.handleOnChange(convertToHTML(newContent)),
+        TIME_TO_SAVE
+      );
+    }
 
     this.setState({
       editorState
@@ -51,10 +74,6 @@ class ListSessionTitle extends React.Component<Props, State> {
           editorState={this.state.editorState}
           onChange={this.handleOnChange}
           placeholder={`Brainstorm title`}
-          handleReturn={(e, editorState) => {
-            this.props.handleEdit();
-            return "handled";
-          }}
         />
       </div>
     );

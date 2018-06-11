@@ -24,9 +24,9 @@ class InputSurface extends React.Component<Props, State> {
 
     let editorState = Draft.EditorState.createEmpty();
 
-    if (this.props.startingHTML) {
+    if (props.startingHTML) {
       editorState = Draft.EditorState.createWithContent(
-        convertFromHTML(this.props.startingHTML)
+        convertFromHTML(props.startingHTML)
       );
     }
 

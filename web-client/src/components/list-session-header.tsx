@@ -21,9 +21,6 @@ interface Props {
 interface State {}
 
 class ListSessionHeader extends React.Component<Props, State> {
-  title = "";
-  tags = "";
-
   render() {
     return (
       <div className={`flex pa2 w-100 bg-white`}>
@@ -31,23 +28,13 @@ class ListSessionHeader extends React.Component<Props, State> {
           <div className={`pv2`}>
             <ListSessionTitle
               startingTitle={this.props.startingTitle}
-              handleEdit={() => {
-                this.props.handleEditTitle(this.title);
-              }}
-              handleOnChange={title => {
-                this.title = title;
-              }}
+              handleOnChange={this.props.handleEditTitle}
             />
           </div>
           <div className={`pv2`}>
             <ListSessionTags
               startingTags={this.props.startingTags}
-              handleEdit={() => {
-                this.props.handleEditTags(this.tags);
-              }}
-              handleOnChange={tags => {
-                this.tags = tags;
-              }}
+              handleOnChange={this.props.handleEditTags}
             />
           </div>
         </div>

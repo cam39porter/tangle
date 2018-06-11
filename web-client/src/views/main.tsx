@@ -285,7 +285,7 @@ class Main extends React.Component<Props, State> {
     if (!(cacheData && cacheData.list && cacheData.graph)) {
       return;
     }
-    let tempListItem: ListFieldsFragment = {
+    let tempListItem = {
       __typename: "ListItem",
       id: optimisticResponse.id,
       text: {
@@ -295,7 +295,7 @@ class Main extends React.Component<Props, State> {
       },
       reasons: [],
       relatedItems: []
-    };
+    } as ListFieldsFragment;
     let tempList = reverse(cacheData.list);
     tempList.push(tempListItem);
     let tempNode: NodeFieldsFragment = optimisticResponse;
@@ -452,7 +452,7 @@ class Main extends React.Component<Props, State> {
             {this.state.sessionId && (
               <div className={`shadow-5`}>
                 <ListSessionHeader
-                  startingTitle={pivot ? pivot.text : undefined}
+                  startingTitle={pivot ? pivot.text || undefined : undefined}
                   handleEditTitle={title => {
                     if (!this.state.sessionId) {
                       return;
@@ -461,7 +461,7 @@ class Main extends React.Component<Props, State> {
                       .editSession({
                         variables: {
                           sessionId: this.state.sessionId,
-                          title
+                          title: title === "" ? null : title
                         }
                       })
                       .catch(err => console.error(err));
@@ -474,10 +474,6 @@ class Main extends React.Component<Props, State> {
                     } else {
                       this.props.history.push("/");
                     }
-
-                    this.setState({
-                      pivot: null
-                    });
                   }}
                 />
 

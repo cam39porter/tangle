@@ -169,7 +169,7 @@ export const createSession = gql`
 `;
 
 export const editSession = gql`
-  mutation editSession($sessionId: String!, $title: String!) {
+  mutation editSession($sessionId: String!, $title: String) {
     editSession(id: $sessionId, title: $title) {
       ...NodeFields
     }

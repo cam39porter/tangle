@@ -285,6 +285,9 @@ class Main extends React.Component<Props, State> {
         : undefined;
     }
 
+    // Set loading state
+    header = isLoading ? "Loading..." : header;
+
     let isLargeWindow = WindowUtils.getIsLargeWindow(this.props.windowWidth);
 
     return (

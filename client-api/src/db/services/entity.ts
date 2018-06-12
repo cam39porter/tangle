@@ -15,13 +15,13 @@ function getEntityByNameNullable(
   type: string
 ): Promise<Entity | null> {
   const query = `
-  MATCH (tag:Entity {name: {name}, type:{type}, owner: {userUrn}})
-  RETURN tag`;
+  MATCH (entity:Entity {name: {name}, type:{type}, owner: {userUrn}})
+  RETURN entity`;
   const params = { userUrn: user.toRaw(), name, type };
   return executeQuery(query, params).then(result => {
     return (
       (result.records[0] &&
-        (result.records[0].get("tag").properties as Entity)) ||
+        (result.records[0].get("entity").properties as Entity)) ||
       null
     );
   });

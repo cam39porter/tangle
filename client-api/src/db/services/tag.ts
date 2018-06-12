@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid/v4";
 import { StatementResult } from "neo4j-driver/types/v1";
-import { executeQuery } from "../db";
+import { executeQuery, Param } from "../db";
 import { Tag } from "../models/tag";
 import { UserUrn } from "../../urn/user-urn";
 import { TagUrn } from "../../urn/tag-urn";
@@ -17,10 +17,11 @@ function getTagByNameNullable(
   const query = `
   MATCH (tag:Tag {name: {name}, owner: {userUrn}})
   RETURN tag`;
-  const params = { userUrn: user.toRaw(), name };
+  const params = [new Param("userUrn", user.toRaw()), new Param("name", name)];
   return executeQuery(query, params).then(result => {
     return (
-      (result.records[0] && (result.records[0].get("tag").properties as Tag)) ||
+      (result.records[0] &&
+        buildFromNeo(result.records[0].get("tag").properties)) ||
       null
     );
   });
@@ -66,14 +67,14 @@ function createWithRelationship(
   MATCH (parent:${parentLabel.name} {id:{parentId}})
   CREATE (tag)<-[:TAGGED_WITH]-(parent)
   RETURN tag`;
-  const params = {
-    userId: userId.toRaw(),
-    id: id.toRaw(),
-    name,
-    parentId: parentUrn.toRaw()
-  };
+  const params = [
+    new Param("userId", userId.toRaw()),
+    new Param("id", id.toRaw()),
+    new Param("name", name),
+    new Param("parentId", parentUrn.toRaw())
+  ];
   return executeQuery(query, params).then((result: StatementResult) => {
-    return result.records[0].get("tag").properties as Tag;
+    return buildFromNeo(result.records[0].get("tag").properties);
   });
 }
 
@@ -86,8 +87,17 @@ export function getTags(
   MATCH (tag:Tag {owner:{userId}})<-[:TAGGED_WITH]-(src:${srcLabel} {id:{srcId}})
   RETURN tag
   `;
-  const params = { userId: userId.toRaw(), srcId };
+  const params = [
+    new Param("userId", userId.toRaw()),
+    new Param("srcId", srcId)
+  ];
   return executeQuery(query, params).then((result: StatementResult) => {
-    return result.records.map(record => record.get("tag").properties as Tag);
+    return result.records.map(record =>
+      buildFromNeo(record.get("tag").properties)
+    );
   });
+}
+
+export function buildFromNeo(props: any): Tag {
+  return new Tag(TagUrn.fromRaw(props["id"]), props["name"], props["created"]);
 }

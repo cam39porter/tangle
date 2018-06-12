@@ -8,12 +8,21 @@ const driver = neo4j.driver(
 
 const session = driver.session();
 
+export class Param {
+  public key: string;
+  public value: string | number | string[];
+  constructor(key: string, value: string | number | string[]) {
+    this.key = key;
+    this.value = value;
+  }
+}
+
 function executeQuery(
   cypherQuery: string,
-  params: object
+  params: Param[]
 ): Promise<StatementResult> {
   return session
-    .run(cypherQuery, params)
+    .run(cypherQuery, toObj(params))
     .then(result => {
       session.close();
       return result;
@@ -24,6 +33,13 @@ function executeQuery(
       console.error(error);
       throw error;
     });
+}
+function toObj(params: Param[]): object {
+  const dict = {};
+  params.forEach(param => {
+    dict[param.key] = param.value;
+  });
+  return dict;
 }
 
 export { executeQuery };

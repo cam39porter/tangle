@@ -1,6 +1,6 @@
 import { StatementResult } from "neo4j-driver/types/v1";
 import { v4 as uuidv4 } from "uuid/v4";
-import { executeQuery } from "../db";
+import { executeQuery, Param } from "../db";
 import { Session } from "../models/session";
 import { NotFoundError } from "../../util/exceptions/not-found-error";
 import { SessionUrn } from "../../urn/session-urn";
@@ -10,7 +10,10 @@ export function get(userId: UserUrn, sessionId: SessionUrn): Promise<Session> {
   const query = `
   MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
   RETURN session`;
-  const params = { userId: userId.toRaw(), sessionId: sessionId.toRaw() };
+  const params = [
+    new Param("userId", userId.toRaw()),
+    new Param("sessionId", sessionId.toRaw())
+  ];
   return executeQuery(query, params).then((result: StatementResult) => {
     return formatSessionRecord(result.records[0]);
   });
@@ -24,7 +27,10 @@ export function deleteSession(
   MATCH (s:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
   DETACH DELETE s
   `;
-  const params = { userId: userId.toRaw(), sessionId: sessionId.toRaw() };
+  const params = [
+    new Param("userId", userId.toRaw()),
+    new Param("sessionId", sessionId.toRaw())
+  ];
   return executeQuery(query, params).then(() => true);
 }
 
@@ -37,11 +43,11 @@ export function edit(
     MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
     ${title ? "SET session.title = {title}" : "REMOVE session.title"}
     RETURN session`;
-  const params = {
-    userId: userId.toRaw(),
-    sessionId: sessionId.toRaw(),
-    title
-  };
+  const params = [
+    new Param("userId", userId.toRaw()),
+    new Param("sessionId", sessionId.toRaw()),
+    new Param("title", title)
+  ];
   return executeQuery(query, params).then((result: StatementResult) => {
     return formatSessionRecord(result.records[0]);
   });
@@ -58,11 +64,11 @@ export function create(userId: UserUrn, title: string): Promise<Session> {
       owner:{userId}})
     CREATE (session)<-[:CREATED]-(u)
     RETURN session`;
-  const params = {
-    userId: userId.toRaw(),
-    sessionUrn: sessionUrn.toRaw(),
-    title
-  };
+  const params = [
+    new Param("userId", userId.toRaw()),
+    new Param("sessionUrn", sessionUrn.toRaw()),
+    new Param("title", title)
+  ];
   return executeQuery(query, params).then((result: StatementResult) => {
     return formatSessionRecord(result.records[0]);
   });

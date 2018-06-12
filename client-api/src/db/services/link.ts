@@ -1,5 +1,5 @@
 import { StatementResult } from "neo4j-driver/types/v1";
-import { executeQuery } from "../db";
+import { executeQuery, Param } from "../db";
 import { Link } from "../models/link";
 import { CaptureUrn } from "../../urn/capture-urn";
 import { UserUrn } from "../../urn/user-urn";
@@ -11,12 +11,12 @@ export function upsert(
   captureUrn: CaptureUrn
 ): Promise<Link> {
   const uuid = uuidv4();
-  const params = {
-    userId: userId.toRaw(),
-    captureId: captureUrn.toRaw(),
-    id: uuid,
-    url
-  };
+  const params = [
+    new Param("userId", userId.toRaw()),
+    new Param("captureId", captureUrn.toRaw()),
+    new Param("id", uuid),
+    new Param("url", url)
+  ];
   const query = `
     MATCH (capture:Capture {id: {captureId}})
     MERGE (link:Link {

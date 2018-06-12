@@ -4,10 +4,10 @@ import { Capture } from "../../db/models/capture";
 import { AnnotatedText } from "../models/annotated-text";
 import { RecommendationReason } from "../models/recommendation-reason";
 import { Annotation } from "../models/annotation";
-import { Entity } from "../../db/models/entity";
-import { Tag } from "../../db/models/Tag";
 import { CaptureUrn } from "../../urn/capture-urn";
-import { buildFromNeo } from "../../db/services/capture";
+import { buildFromNeo as buildCaptureFromNeo } from "../../db/services/capture";
+import { buildFromNeo as buildEntityFromNeo } from "../../db/services/entity";
+import { buildFromNeo as buildTagFromNeo } from "../../db/services/tag";
 
 export function buildList(
   paths: Array<[Capture, Relationship, Node, Relationship, Capture]>,
@@ -18,7 +18,7 @@ export function buildList(
   paths.forEach(path => {
     rootCaptureMap.set(path[0].urn.getId(), path[0]);
     if (path[2] && path[2].labels[0] === "Capture") {
-      const capture = buildFromNeo(path[2].properties);
+      const capture = buildCaptureFromNeo(path[2].properties);
       relatedCaptureMap.set(capture.urn.getId(), capture);
     }
     if (path[4]) {
@@ -78,7 +78,7 @@ function formatRelatedListItems(
           return new RecommendationReason("DEFAULT", null);
         }
       } else if (node.labels[0] === "Entity") {
-        const entity = node.properties as Entity;
+        const entity = buildEntityFromNeo(node.properties);
         const start = capture.body.indexOf(entity.name);
         const end = start + entity.name.length;
         annotations.push(
@@ -86,7 +86,7 @@ function formatRelatedListItems(
         );
         return new RecommendationReason("SHARES_ENTITY", entity.name);
       } else if (node.labels[0] === "Tag") {
-        const tag = node.properties as Tag;
+        const tag = buildTagFromNeo(node.properties);
         const start = capture.body.indexOf(tag.name);
         const end = start + tag.name.length;
         annotations.push(
@@ -132,7 +132,7 @@ function buildTree(
       path[2].labels[0] === "Capture" &&
       CaptureUrn.fromRaw(path[2].properties["id"]).getId() !== root.urn.getId()
     ) {
-      capture = buildFromNeo(path[2].properties);
+      capture = buildCaptureFromNeo(path[2].properties);
     } else if (path[4] && path[4].urn.getId() !== root.urn.getId()) {
       capture = path[4];
     }

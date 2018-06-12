@@ -1,5 +1,5 @@
 import { StatementResult, Node, Relationship } from "neo4j-driver/types/v1";
-import { executeQuery } from "../../db/db";
+import { executeQuery, Param } from "../../db/db";
 import { buildGraph } from "../formatters/graph";
 import { Graph } from "../models/graph";
 import { Capture } from "../../db/models/capture";
@@ -38,11 +38,11 @@ function expandGraph(
   captureUrns: CaptureUrn[],
   startUrn: string = null
 ): Promise<Graph> {
-  const params = {
-    userUrn: userUrn.toRaw(),
-    captureIds: captureUrns.map(urn => urn.toRaw()),
-    startUrn
-  };
+  const params = [
+    new Param("userUrn", userUrn.toRaw()),
+    new Param("captureIds", captureUrns.map(urn => urn.toRaw())),
+    new Param("startUrn", startUrn)
+  ];
   const query = getExpansionQuery(startUrn, false);
   return executeQuery(query, params).then((result: StatementResult) => {
     return buildGraph(formatDbResponse(result));
@@ -54,11 +54,11 @@ function expandList(
   captureUrns: CaptureUrn[],
   startUrn: string = null
 ): Promise<ListItem[]> {
-  const params = {
-    userUrn: userUrn.toRaw(),
-    captureIds: captureUrns.map(urn => urn.toRaw()),
-    startUrn
-  };
+  const params = [
+    new Param("userUrn", userUrn.toRaw()),
+    new Param("captureIds", captureUrns.map(urn => urn.toRaw())),
+    new Param("startUrn", startUrn)
+  ];
   const query = getExpansionQuery(startUrn, true);
   return executeQuery(query, params).then((result: StatementResult) => {
     return buildList(formatDbResponse(result), captureUrns);

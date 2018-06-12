@@ -1,6 +1,6 @@
 import { StatementResult } from "neo4j-driver/types/v1";
 import { v4 as uuidv4 } from "uuid/v4";
-import { executeQuery } from "../db";
+import { executeQuery, Param } from "../db";
 import { Entity } from "../models/entity";
 import { CaptureUrn } from "../../urn/capture-urn";
 import { UserUrn } from "../../urn/user-urn";
@@ -17,7 +17,11 @@ function getEntityByNameNullable(
   const query = `
   MATCH (entity:Entity {name: {name}, type:{type}, owner: {userUrn}})
   RETURN entity`;
-  const params = { userUrn: user.toRaw(), name, type };
+  const params = [
+    new Param("userUrn", user.toRaw()),
+    new Param("name", name),
+    new Param("type", type)
+  ];
   return executeQuery(query, params).then(result => {
     return (
       (result.records[0] &&
@@ -58,14 +62,14 @@ function createWithRelationship(
   captureUrn: CaptureUrn
 ): Promise<Entity> {
   const uuid = uuidv4();
-  const params = {
-    userId: userId.toRaw(),
-    entityUrn: new EntityUrn(uuid).toRaw(),
-    name,
-    type,
-    captureUrn: captureUrn.toRaw(),
-    salience
-  };
+  const params = [
+    new Param("userId", userId.toRaw()),
+    new Param("entityUrn", new EntityUrn(uuid).toRaw()),
+    new Param("name", name),
+    new Param("type", type),
+    new Param("captureUrn", captureUrn.toRaw()),
+    new Param("salience", salience)
+  ];
   const query = `
   MATCH (capture {id: {captureUrn}})
   CREATE (entity:Entity {
@@ -82,7 +86,7 @@ function createWithRelationship(
   });
 }
 
-function buildFromNeo(props: any): Entity {
+export function buildFromNeo(props: any): Entity {
   return new Entity(
     EntityUrn.fromRaw(props["id"]),
     props["name"],

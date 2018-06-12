@@ -1,4 +1,4 @@
-import { executeQuery } from "../db";
+import { executeQuery, Param } from "../db";
 import { Label } from "../neo4j/label";
 import { Relationship } from "../neo4j/relationship";
 import { UserUrn } from "../../urn/user-urn";
@@ -11,11 +11,11 @@ export function createRelationship(
   destLabel: Label,
   relationshipType: Relationship
 ): Promise<void> {
-  const params = {
-    src,
-    dest,
-    userId: userId.toRaw()
-  };
+  const params = [
+    new Param("src", src),
+    new Param("dest", dest),
+    new Param("userId", userId.toRaw())
+  ];
   const query = `
     MATCH (from:${srcLabel.name} {id:{src}, owner:{userId}})
     MATCH (to:${destLabel.name} {id:{dest}, owner:{userId}})
@@ -36,11 +36,11 @@ export function deleteRelationship(
   destLabel: Label,
   relationshipType: Relationship
 ): Promise<void> {
-  const params = {
-    src,
-    dest,
-    userId
-  };
+  const params = [
+    new Param("src", src),
+    new Param("dest", dest),
+    new Param("userId", userId.toRaw())
+  ];
   const query = `
     MATCH (from:${srcLabel.name} {id:{src}, owner:{userId}})
       -[r:${relationshipType.name}]

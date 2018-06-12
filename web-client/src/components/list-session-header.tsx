@@ -28,13 +28,13 @@ class ListSessionHeader extends React.Component<Props, State> {
           <div className={`pv2`}>
             <ListSessionTitle
               startingTitle={this.props.startingTitle}
-              handleOnChange={this.props.handleEditTitle}
+              handleEdit={this.props.handleEditTitle}
             />
           </div>
           <div className={`pv2`}>
             <ListSessionTags
               startingTags={this.props.startingTags}
-              handleOnChange={this.props.handleEditTags}
+              handleEdit={this.props.handleEditTags}
             />
           </div>
         </div>

@@ -18,12 +18,10 @@ stories.addDecorator(withKnobs);
 
 stories.add("header", () => (
   <ListHeader
-    handleCaptureTextChange={action("handleCaptureTextChange")}
     handleCapture={action("handleCapture")}
     handleExpand={action("handleExpand")}
     isCapturing={boolean("isCapturing", true)}
     handleIsCapturing={action("handleIsCapture")}
-    handleSurfaceTextChange={action("handleSurfaceTextChange")}
     handleSurface={action("handleSurface")}
     handleClear={action("handleClear")}
   />
@@ -31,9 +29,9 @@ stories.add("header", () => (
 
 stories.add("session title", () => (
   <div>
-    <ListSessionTitle handleOnChange={action("handleChange")} />
+    <ListSessionTitle handleEdit={action("handleChange")} />
     <ListSessionTitle
-      handleOnChange={action("handleChange")}
+      handleEdit={action("handleChange")}
       startingTitle={`This is an example title`}
     />
   </div>
@@ -41,10 +39,10 @@ stories.add("session title", () => (
 
 stories.add("session tags", () => (
   <div>
-    <ListSessionTags handleOnChange={action("handleChange")} />
+    <ListSessionTags handleEdit={action("handleChange")} />
     <ListSessionTags
       startingTags={["tag1", "tag2", "tag3"]}
-      handleOnChange={action("handleChange")}
+      handleEdit={action("handleChange")}
     />
   </div>
 ));
@@ -65,7 +63,7 @@ stories.add("capture", () => (
   <ListCapture
     captureId={"id"}
     handleExpand={action("handleExpand")}
-    text={select(
+    startingText={select(
       "text",
       {
         "This is a short capture.": "short",

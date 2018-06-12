@@ -8,13 +8,14 @@ import * as Draft from "draft-js";
 // Utils
 import { convertToHTML, convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
+import EditorUtils from "../utils/editor";
+import { debounce, Cancelable } from "lodash";
 
 const TIME_TO_SAVE = 500; // ms till change is automatically captured
 
 interface Props {
-  handleOnChange: (text: string) => void;
-  handleCapture?: () => void;
-  handleEdit?: () => void;
+  handleCapture?: (text: string) => void;
+  handleEdit?: (text: string) => void;
   startingHTML?: string;
 }
 
@@ -23,7 +24,7 @@ interface State {
 }
 
 class InputCapture extends React.Component<Props, State> {
-  saveTimer;
+  saveEdit: ((text: string) => void) & Cancelable | undefined;
 
   constructor(props: Props) {
     super(props);
@@ -35,6 +36,9 @@ class InputCapture extends React.Component<Props, State> {
         convertFromHTML(props.startingHTML)
       );
     }
+
+    this.saveEdit =
+      this.props.handleEdit && debounce(this.props.handleEdit, TIME_TO_SAVE);
 
     this.state = {
       editorState
@@ -55,12 +59,7 @@ class InputCapture extends React.Component<Props, State> {
 
     // Content has changed
     if (currentContent !== newContent) {
-      // inform parent components of content change
-      this.props.handleOnChange(convertToHTML(newContent));
-
-      // set timeout to capture after a given amount of time of no changes
-      this.saveTimer && clearTimeout(this.saveTimer);
-      this.saveTimer = setTimeout(this.props.handleEdit, TIME_TO_SAVE);
+      this.saveEdit && this.saveEdit(convertToHTML(newContent));
     }
 
     this.setState({
@@ -82,10 +81,19 @@ class InputCapture extends React.Component<Props, State> {
               ) => {
                 if (command === "command-return") {
                   if (this.props.handleCapture) {
-                    this.props.handleCapture();
+                    console.log("here");
+                    this.props.handleCapture(
+                      convertToHTML(editorState.getCurrentContent())
+                    );
+
+                    let cleanEditorState = EditorUtils.cleanEditorState(
+                      editorState
+                    );
+
                     this.setState({
-                      editorState: Draft.EditorState.createEmpty()
+                      editorState: cleanEditorState
                     });
+
                     return "handled";
                   }
                 }

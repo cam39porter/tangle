@@ -5,20 +5,18 @@ import * as React from "react";
 import InputCapture from "./input-capture";
 import InputSurface from "./input-surface";
 import ButtonToggle from "./button-toggle";
-import ButtonCapture from "./button-capture";
-import ButtonSurface from "./button-surface";
+// import ButtonCapture from "./button-capture";
+// import ButtonSurface from "./button-surface";
 import ButtonZap from "./button-zap";
 import ButtonExit from "./button-exit";
 import ReactTooltip from "react-tooltip";
 
 interface Props {
-  handleCaptureTextChange: (text: string) => void;
-  handleCapture: () => void;
+  handleCapture: (text: string) => void;
   handleExpand: () => void;
   isCapturing: boolean;
   handleIsCapturing: () => void;
-  handleSurfaceTextChange: (text: string) => void;
-  handleSurface: () => void;
+  handleSurface: (text: string) => void;
   surfaceStartingText?: string;
   handleClear: () => void;
 }
@@ -26,26 +24,21 @@ interface Props {
 const ListHeader = (props: Props) => {
   return (
     <div className={`flex ph2 br4 bg-white`}>
-      <div className={`flex-column justify-center`}>
-        {props.isCapturing ? (
+      {/* <div className={`flex-column justify-center`}>
+        {props.isCapturing ?  (
           <div data-tip={`Add this to your tangle`}>
             <ButtonCapture onClick={props.handleCapture} />
-          </div>
-        ) : (
+          </div> :
           <div data-tip={`Search your tangle`}>
             <ButtonSurface onClick={props.handleSurface} />
           </div>
         )}
-      </div>
+      </div> */}
       <div className={`flex-grow pa3`}>
         {props.isCapturing ? (
-          <InputCapture
-            handleOnChange={props.handleCaptureTextChange}
-            handleCapture={props.handleCapture}
-          />
+          <InputCapture handleCapture={props.handleCapture} />
         ) : (
           <InputSurface
-            handleOnChange={props.handleSurfaceTextChange}
             handleSurface={props.handleSurface}
             startingHTML={props.surfaceStartingText}
           />

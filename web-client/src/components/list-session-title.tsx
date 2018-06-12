@@ -7,12 +7,13 @@ import * as Draft from "draft-js";
 // Utils
 import { convertToHTML, convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
+import { debounce, Cancelable } from "lodash";
 
-const TIME_TO_SAVE = 100; // ms
+const TIME_TO_SAVE = 500; // ms
 
 interface Props {
   startingTitle?: string;
-  handleOnChange: (title: string) => void;
+  handleEdit: (title: string) => void;
 }
 
 interface State {
@@ -20,7 +21,7 @@ interface State {
 }
 
 class ListSessionTitle extends React.Component<Props, State> {
-  saveTimer;
+  saveEdit: ((text: string) => void) & Cancelable | undefined;
 
   constructor(props: Props) {
     super(props);
@@ -33,19 +34,12 @@ class ListSessionTitle extends React.Component<Props, State> {
       );
     }
 
+    this.saveEdit =
+      this.props.handleEdit && debounce(this.props.handleEdit, TIME_TO_SAVE);
+
     this.state = {
       editorState
     };
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    if (this.props.startingTitle !== nextProps.startingTitle) {
-      this.setState({
-        editorState: Draft.EditorState.createWithContent(
-          convertFromHTML(nextProps.startingTitle)
-        )
-      });
-    }
   }
 
   handleOnChange = (editorState: Draft.EditorState) => {
@@ -54,12 +48,7 @@ class ListSessionTitle extends React.Component<Props, State> {
 
     // Content has changed
     if (currentContent !== newContent) {
-      // set timeout to capture after a given amount of time of no changes
-      this.saveTimer && clearTimeout(this.saveTimer);
-      this.saveTimer = setTimeout(
-        this.props.handleOnChange(convertToHTML(newContent)),
-        TIME_TO_SAVE
-      );
+      this.saveEdit && this.saveEdit(convertToHTML(newContent));
     }
 
     this.setState({

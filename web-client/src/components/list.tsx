@@ -97,7 +97,7 @@ class List extends React.Component<Props, State> {
               <ScrollContainerElement name={listItem.id}>
                 <ListCapture
                   captureId={listItem.id}
-                  text={listItem.text.text}
+                  startingText={listItem.text.text}
                   handleExpand={this.props.handleExpand(listItem.id)}
                   handleFocus={this.props.handleFocus(listItem.id)}
                   handleEdit={this.props.handleEdit(listItem.id)}
@@ -175,7 +175,7 @@ class List extends React.Component<Props, State> {
                             <ScrollContainerElement name={relatedItem.id}>
                               <ListCapture
                                 captureId={relatedItem.id}
-                                text={relatedItem.text.text}
+                                startingText={relatedItem.text.text}
                                 handleExpand={this.props.handleExpand(
                                   relatedItem.id
                                 )}

@@ -12,15 +12,9 @@ const stories = storiesOf("Input", module);
 stories.addDecorator(withKnobs);
 
 stories.add("capture", () => (
-  <InputCapture
-    handleCapture={action("captured")}
-    handleOnChange={action("text changed")}
-  />
+  <InputCapture handleCapture={action("captured")} />
 ));
 
 stories.add("surface", () => (
-  <InputSurface
-    handleSurface={action("surfaced")}
-    handleOnChange={action("text changed")}
-  />
+  <InputSurface handleSurface={action("surfaced")} />
 ));

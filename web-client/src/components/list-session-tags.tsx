@@ -12,7 +12,7 @@ const TIME_TO_SAVE = 100; // ms
 
 interface Props {
   startingTags?: Array<string>;
-  handleOnChange: (tags: string) => void;
+  handleEdit: (tags: string) => void;
 }
 
 interface State {
@@ -53,7 +53,7 @@ class ListSessionTags extends React.Component<Props, State> {
       // set timeout to capture after a given amount of time of no changes
       this.saveTimer && clearTimeout(this.saveTimer);
       this.saveTimer = setTimeout(
-        this.props.handleOnChange(convertToHTML(newContent)),
+        this.props.handleEdit(convertToHTML(newContent)),
         TIME_TO_SAVE
       );
     }

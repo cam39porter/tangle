@@ -17,7 +17,7 @@ import { AnnotationFieldsFragment } from "../__generated__/types";
 
 interface Props {
   captureId: string;
-  text: string;
+  startingText: string;
   handleExpand: () => void;
   handleFocus: () => void;
   handleFocusWithId?: (id: string) => () => void;
@@ -67,20 +67,12 @@ interface State {
 // }
 
 class ListCapture extends React.Component<Props, State> {
-  text: string = "";
-
   constructor(nextProps: Props) {
     super(nextProps);
-
-    this.text = nextProps.text;
 
     this.state = {
       isShowingButtons: false
     };
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    this.text = nextProps.text;
   }
 
   componentDidMount() {
@@ -137,13 +129,10 @@ class ListCapture extends React.Component<Props, State> {
               }}
             >
               <InputCapture
-                handleOnChange={text => {
-                  this.text = text;
+                handleEdit={text => {
+                  this.props.handleEdit(text);
                 }}
-                handleEdit={() => {
-                  this.props.handleEdit(this.text);
-                }}
-                startingHTML={this.props.text}
+                startingHTML={this.props.startingText}
               />
             </div>
           </div>

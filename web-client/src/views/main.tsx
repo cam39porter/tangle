@@ -126,7 +126,6 @@ interface State {
   listHeaderHeight: number;
   // Header
   isCapturing: boolean;
-  captureText: string;
   surfaceText: string;
   // Captures
   captures: Map<string, CaptureState>;
@@ -152,7 +151,6 @@ class Main extends React.Component<Props, State> {
       isCapturing:
         NetworkUtils.getCurrentLocation(nextProps.location.search) ===
         Location.MostRecent,
-      captureText: "",
       surfaceText: NetworkUtils.getQuery(nextProps.location.search),
       captures: new Map<string, CaptureState>(),
       sessionId: NetworkUtils.getIsSessionId(nextProps.location.search),
@@ -373,26 +371,18 @@ class Main extends React.Component<Props, State> {
                 } shadow-5`}
               >
                 <ListHeader
-                  handleCaptureTextChange={nextCaptureText => {
-                    this.setState({
-                      captureText: nextCaptureText
-                    });
-                  }}
-                  handleCapture={() => {
-                    if (!this.state.captureText) {
-                      return;
-                    }
+                  handleCapture={text => {
                     this.props
                       .createCapture({
                         variables: {
-                          body: this.state.captureText
+                          body: text
                         },
                         optimisticResponse: {
                           createCapture: {
                             __typename: "Node",
                             id: `optimistic:${NetworkUtils.getRandomId()}`,
                             type: NodeType.Capture,
-                            text: this.state.captureText,
+                            text: text,
                             level: 0
                           } as NodeFieldsFragment
                         },
@@ -424,18 +414,13 @@ class Main extends React.Component<Props, State> {
                       isCapturing: !this.state.isCapturing
                     });
                   }}
-                  handleSurfaceTextChange={nextSurfaceText => {
-                    this.setState({
-                      surfaceText: nextSurfaceText
-                    });
-                  }}
-                  handleSurface={() => {
-                    let query = trim(this.state.surfaceText);
+                  handleSurface={text => {
+                    let query = trim(text);
                     if (!query) {
                       return;
                     }
                     this.props.history.push(
-                      `?query=${encodeURIComponent(query)}`
+                      `?query=${encodeURIComponent(text)}`
                     );
                   }}
                   handleClear={() => {
@@ -449,92 +434,88 @@ class Main extends React.Component<Props, State> {
             )}
 
             {/* Session Title / Tags */}
-            {this.state.sessionId && (
-              <div className={`shadow-5`}>
-                <ListSessionHeader
-                  startingTitle={pivot ? pivot.text || undefined : undefined}
-                  handleEditTitle={title => {
-                    if (!this.state.sessionId) {
-                      return;
-                    }
-                    this.props
-                      .editSession({
-                        variables: {
-                          sessionId: this.state.sessionId,
-                          title: title === "" ? null : title
-                        }
-                      })
-                      .catch(err => console.error(err));
-                  }}
-                  startingTags={undefined}
-                  handleEditTags={noop}
-                  handleClose={() => {
-                    if (this.props.history.length > 2) {
-                      this.props.history.goBack();
-                    } else {
-                      this.props.history.push("/");
-                    }
-                  }}
-                />
-
-                {/* Session Capture */}
-                <div className={`ph3 pv4 bt bb b--light-gray bg-white`}>
-                  <InputCapture
-                    handleCapture={() => {
-                      if (!this.state.captureText || !this.state.sessionId) {
+            {!isLoading &&
+              this.state.sessionId && (
+                <div className={`shadow-5`}>
+                  <ListSessionHeader
+                    startingTitle={pivot ? pivot.text || undefined : undefined}
+                    handleEditTitle={title => {
+                      if (!this.state.sessionId) {
                         return;
                       }
-
-                      let previousCaptureId;
-
-                      if (
-                        this.props.getDetailed &&
-                        this.props.getDetailed.getDetailed
-                      ) {
-                        let list = this.props.getDetailed.getDetailed.list;
-
-                        if (list.length > 0) {
-                          let previousCapture = list[
-                            list.length - 1
-                          ] as ListFieldsFragment;
-                          previousCaptureId = previousCapture.id;
-                        }
-                      }
-
                       this.props
-                        .createSessionCapture({
+                        .editSession({
                           variables: {
-                            body: this.state.captureText,
                             sessionId: this.state.sessionId,
-                            previousCaptureId: previousCaptureId
-                              ? previousCaptureId
-                              : this.state.sessionId
-                          },
-                          optimisticResponse: {
-                            createCapture: {
-                              __typename: "Node",
-                              id: `optimistic:${NetworkUtils.getRandomId()}`,
-                              type: NodeType.Capture,
-                              text: this.state.captureText,
-                              level: 0
-                            } as NodeFieldsFragment
-                          },
-                          update: this.optimisticUpdateOnCapture
-                        })
-                        .then(() => {
-                          refetch();
+                            title: title === "" ? null : title
+                          }
                         })
                         .catch(err => console.error(err));
                     }}
-                    handleOnChange={nextCaptureText => {
-                      this.setState({
-                        captureText: nextCaptureText
-                      });
+                    startingTags={undefined}
+                    handleEditTags={noop}
+                    handleClose={() => {
+                      if (this.props.history.length > 2) {
+                        this.props.history.goBack();
+                      } else {
+                        this.props.history.push("/");
+                      }
                     }}
                   />
+
+                  {/* Session Capture */}
+                  <div className={`ph3 pv4 bt bb b--light-gray bg-white`}>
+                    <InputCapture
+                      handleCapture={text => {
+                        if (!this.state.sessionId) {
+                          return;
+                        }
+
+                        let previousCaptureId;
+
+                        if (
+                          this.props.getDetailed &&
+                          this.props.getDetailed.getDetailed
+                        ) {
+                          let list = this.props.getDetailed.getDetailed.list;
+
+                          if (list.length > 0) {
+                            let previousCapture = list[
+                              list.length - 1
+                            ] as ListFieldsFragment;
+                            previousCaptureId = previousCapture.id;
+                          }
+                        }
+
+                        this.props
+                          .createSessionCapture({
+                            variables: {
+                              body: text,
+                              sessionId: this.state.sessionId,
+                              previousCaptureId: previousCaptureId
+                                ? previousCaptureId
+                                : this.state.sessionId
+                            },
+                            optimisticResponse: {
+                              createCapture: {
+                                __typename: "Node",
+                                id: `optimistic:${NetworkUtils.getRandomId()}`,
+                                type: NodeType.Capture,
+                                text: text,
+                                level: 0
+                              } as NodeFieldsFragment
+                            },
+                            update: this.optimisticUpdateOnCapture
+                          })
+                          .then(() => {
+                            refetch();
+                          })
+                          .catch(err => console.error(err));
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
 
           {/* List */}
@@ -630,7 +611,7 @@ class Main extends React.Component<Props, State> {
                         __typename: "Node",
                         id: `optimistic:${NetworkUtils.getRandomId()}`,
                         type: NodeType.Capture,
-                        text: this.state.captureText,
+                        text: "",
                         level: 0
                       } as NodeFieldsFragment
                     },
@@ -685,7 +666,7 @@ class Main extends React.Component<Props, State> {
                         __typename: "Node",
                         id: `optimistic:${NetworkUtils.getRandomId()}`,
                         type: NodeType.Capture,
-                        text: this.state.captureText,
+                        text: "",
                         level: 0
                       } as NodeFieldsFragment
                     },

@@ -9,8 +9,7 @@ import { convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 
 interface Props {
-  handleOnChange: (text: string) => void;
-  handleSurface: () => void;
+  handleSurface: (text: string) => void;
   startingHTML?: string;
 }
 
@@ -36,9 +35,6 @@ class InputSurface extends React.Component<Props, State> {
   }
 
   handleOnChange = (editorState: Draft.EditorState) => {
-    // inform parent components of state
-    this.props.handleOnChange(editorState.getCurrentContent().getPlainText());
-
     this.setState({
       editorState
     });
@@ -53,8 +49,10 @@ class InputSurface extends React.Component<Props, State> {
               editorState={this.state.editorState}
               onChange={this.handleOnChange}
               placeholder={`Search your tangle...`}
-              handleReturn={(e, editorState) => {
-                this.props.handleSurface();
+              handleReturn={(_, editorState) => {
+                this.props.handleSurface(
+                  editorState.getCurrentContent().getPlainText()
+                );
                 return "handled";
               }}
               spellCheck={true}

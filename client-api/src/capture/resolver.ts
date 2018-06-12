@@ -34,7 +34,12 @@ export default {
       // @ts-ignore
       info
     ): Promise<GraphNode> {
-      return createCapture(body, sessionId, "HTML", captureRelation);
+      return createCapture(
+        body,
+        (sessionId && SessionUrn.fromRaw(sessionId)) || null,
+        "HTML",
+        captureRelation
+      );
     },
     createSession(
       // @ts-ignore

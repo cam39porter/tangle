@@ -25,6 +25,8 @@ import {
 import { formatCapture } from "../../surface/formatters/graph-node";
 import { GraphNode } from "../../surface/models/graph-node";
 import { CaptureUrn } from "../../urn/capture-urn";
+import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
+import { SessionUrn } from "../../urn/session-urn";
 
 export function dismissCaptureRelation(
   fromId: string,
@@ -62,7 +64,7 @@ export function editCapture(urn: CaptureUrn, body: string): Promise<GraphNode> {
 
 export function createCapture(
   body: string,
-  parentId: string,
+  parentUrn: EvernoteNoteUrn | SessionUrn | null,
   contentType: string,
   captureRelation: CaptureRelation
 ): Promise<GraphNode> {
@@ -70,14 +72,14 @@ export function createCapture(
   if (
     captureRelation &&
     captureRelation.relationshipType.name === PREVIOUS_RELATIONSHIP.name &&
-    !parentId
+    !parentUrn
   ) {
     throw new GraphQLError(
       "Malformed request. SessionId is required if captureRelation is present and of type PREVIOUS"
     );
   }
   const plainText = parseHtml(body);
-  return createCaptureNode(user.urn, plainText, body, parentId)
+  return createCaptureNode(user.urn, plainText, body, parentUrn)
     .then((capture: Capture) => {
       if (captureRelation) {
         return createRelationship(

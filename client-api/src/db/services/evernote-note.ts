@@ -3,6 +3,7 @@ import { EvernoteUpload } from "../../upload/models/evernote-upload";
 import { executeQuery, Param } from "../db";
 import { EvernoteNote } from "../models/evernote-note";
 import { UserUrn } from "../../urn/user-urn";
+import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
 
 export function get(userId: UserUrn, noteId: string): Promise<EvernoteNote> {
   const params = [
@@ -17,11 +18,12 @@ export function get(userId: UserUrn, noteId: string): Promise<EvernoteNote> {
 
 export function create(
   userId: UserUrn,
+  noteUrn: EvernoteNoteUrn,
   upload: EvernoteUpload
 ): Promise<EvernoteNote> {
   const params = [
     new Param("userId", userId.toRaw()),
-    new Param("noteId", upload.id),
+    new Param("noteId", noteUrn.toRaw()),
     new Param("created", upload.created),
     new Param("lastModified", upload.lastModified),
     new Param("title", upload.title)
@@ -39,10 +41,13 @@ export function create(
   return executeQuery(query, params).then(formatNote);
 }
 
-export function deleteNote(userId: UserUrn, evernoteId: string): Promise<void> {
+export function deleteNote(
+  userId: UserUrn,
+  evernoteUrn: EvernoteNoteUrn
+): Promise<void> {
   const params = [
     new Param("userId", userId.toRaw()),
-    new Param("evernoteId", evernoteId)
+    new Param("evernoteId", evernoteUrn.toRaw())
   ];
   const query = `
     MATCH (u:User {id:{userId}})-[:CREATED]->(note:EvernoteNote {id:{evernoteId}})

@@ -7,6 +7,9 @@ import { Capture } from "../models/capture";
 import { NotFoundError } from "../../util/exceptions/not-found-error";
 import { CaptureUrn } from "../../urn/capture-urn";
 import { UserUrn } from "../../urn/user-urn";
+import { Urn } from "../../urn/urn";
+import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
+import { SessionUrn } from "../../urn/session-urn";
 
 export function getMostRecent(
   userId: UserUrn,
@@ -58,11 +61,11 @@ export function getCapture(
   return executeQuery(query, params).then(formatCaptureResult);
 }
 
-export function getUntypedNode(userId: UserUrn, nodeId: string): Promise<Node> {
-  const label = getLabel(nodeId);
+export function getUntypedNode(userId: UserUrn, nodeUrn: Urn): Promise<Node> {
+  const label = getLabel(nodeUrn);
   const params = [
     new Param("userId", userId.toRaw()),
-    new Param("nodeId", nodeId)
+    new Param("nodeId", nodeUrn.toRaw())
   ];
   const query = `MATCH (n:${label} {id:{nodeId}, owner:{userId}})
   WHERE NOT EXISTS(n.archived) OR n.archived = false
@@ -75,12 +78,12 @@ export function getUntypedNode(userId: UserUrn, nodeId: string): Promise<Node> {
 
 export function getCapturesByRelatedNode(
   userId: UserUrn,
-  nodeId: string
+  nodeId: Urn
 ): Promise<Capture[]> {
   const label = getLabel(nodeId);
   const params = [
     new Param("userId", userId.toRaw()),
-    new Param("nodeId", nodeId)
+    new Param("nodeId", nodeId.toRaw())
   ];
   const query = `MATCH (other:${label} {id:{nodeId}})-[r]-(capture:Capture)<-[:CREATED]-(u:User {id:{userId}})
   WHERE NOT EXISTS(capture.archived) OR capture.archived = false
@@ -143,11 +146,11 @@ export function createCaptureNode(
   userId: UserUrn,
   plainText: string,
   html: string,
-  parentId: string
+  parentUrn: EvernoteNoteUrn | SessionUrn | null
 ): Promise<Capture> {
   const uuid = uuidv4();
   const captureUrn = new CaptureUrn(uuid);
-  const parentQuery = parentId
+  const parentQuery = parentUrn
     ? `OPTIONAL MATCH (u)-[:CREATED]-(parent {id:{parentId}}) WHERE parent:Session OR parent:EvernoteNote`
     : ``;
   const query = `MATCH (u:User {id:{userId}})
@@ -159,13 +162,13 @@ export function createCaptureNode(
       created:TIMESTAMP(),
       owner:{userId}
     })
-    ${parentId ? "CREATE (capture)<-[:INCLUDES]-(parent)" : ""}
+    ${parentUrn ? "CREATE (capture)<-[:INCLUDES]-(parent)" : ""}
     RETURN capture`;
   const params = [
     new Param("userId", userId.toRaw()),
     new Param("plainText", escape(plainText)),
     new Param("html", escape(html)),
-    new Param("parentId", parentId),
+    new Param("parentId", parentUrn ? parentUrn.toRaw() : null),
     new Param("captureUrn", captureUrn.toRaw())
   ];
   return executeQuery(query, params).then(formatCaptureResult);

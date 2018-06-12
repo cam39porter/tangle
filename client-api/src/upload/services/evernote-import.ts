@@ -12,6 +12,8 @@ import { EvernoteUpload } from "../models/evernote-upload";
 import { parseEvernoteHtml } from "./evernote-html-parser";
 import { saveOverwrite, saveSafely } from "./file-db";
 import { UserUrn } from "../../urn/user-urn";
+import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
+import { v4 as uuidv4 } from "uuid/v4";
 
 const readFileAsync = promisify(fs.readFile);
 
@@ -20,21 +22,23 @@ export function importEvernoteNoteUpload(file): Promise<void> {
     const user: User = getAuthenticatedUser();
     let note: EvernoteUpload = null;
     try {
-      note = parseEvernoteHtml(user.urn, data);
+      note = parseEvernoteHtml(data);
     } catch (err) {
       console.error(err);
       throw new Error(
         "Could not parse html. Please email cole@usetangle.com with your issue"
       );
     }
+    const uuid = uuidv4();
+    const noteUrn = new EvernoteNoteUrn(uuid);
     return (
-      saveSafely(note.id, file)
-        .then(() => createEvernoteNote(user.urn, note))
+      saveSafely(noteUrn, file)
+        .then(() => createEvernoteNote(user.urn, noteUrn, note))
         // TODO cmccrack require overwrite param from frontend to do this
         .catch(() => {
-          return saveOverwrite(note.id, file).then(() =>
-            deleteEvernoteNote(note.id).then(() =>
-              createEvernoteNote(user.urn, note)
+          return saveOverwrite(noteUrn, file).then(() =>
+            deleteEvernoteNote(noteUrn).then(() =>
+              createEvernoteNote(user.urn, noteUrn, note)
             )
           );
         })
@@ -42,9 +46,9 @@ export function importEvernoteNoteUpload(file): Promise<void> {
   });
 }
 
-export function deleteEvernoteNote(evernoteId: string): Promise<void> {
+export function deleteEvernoteNote(noteUrn: EvernoteNoteUrn): Promise<void> {
   const userId = getAuthenticatedUser().urn;
-  const archiveCaptures = getCapturesByRelatedNode(userId, evernoteId).then(
+  const archiveCaptures = getCapturesByRelatedNode(userId, noteUrn).then(
     captures => {
       return Promise.all(
         captures.map(capture => archiveCaptureNode(userId, capture.urn))
@@ -52,23 +56,27 @@ export function deleteEvernoteNote(evernoteId: string): Promise<void> {
     }
   );
   return archiveCaptures.then(() => {
-    deleteNote(userId, evernoteId);
+    deleteNote(userId, noteUrn);
   });
 }
 
 function createEvernoteNote(
   userId: UserUrn,
+  noteUrn: EvernoteNoteUrn,
   note: EvernoteUpload
 ): Promise<void> {
-  return create(userId, note).then(() => {
-    return createEvernoteCaptures(note).then(() => null);
+  return create(userId, noteUrn, note).then(() => {
+    return createEvernoteCaptures(noteUrn, note).then(() => null);
   });
 }
 
-function createEvernoteCaptures(note: EvernoteUpload): Promise<void> {
+function createEvernoteCaptures(
+  noteUrn: EvernoteNoteUrn,
+  note: EvernoteUpload
+): Promise<void> {
   const batchCreates = Promise.all(
     note.contents.map(content => {
-      return createCapture(content, note.id, "HTML", null);
+      return createCapture(content, noteUrn, "HTML", null);
     })
   );
   return batchCreates.then(() => null);

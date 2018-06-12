@@ -2,6 +2,7 @@ import { SurfaceResults } from "./models/surface-results";
 import { getAllByUseCase, getNode, getAllMostRecent } from "./services/graph";
 import { search } from "./services/search";
 import { PageInfo } from "./models/page-info";
+import { Urn } from "../urn/urn";
 
 export default {
   Query: {
@@ -18,7 +19,7 @@ export default {
     },
     // @ts-ignore
     getDetailed(parent, { id }, context, info): Promise<SurfaceResults> {
-      return getNode(id);
+      return getNode(Urn.fromRaw(id));
     },
     getAll(
       // @ts-ignore

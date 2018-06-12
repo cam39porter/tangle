@@ -1,6 +1,7 @@
 import * as Storage from "@google-cloud/storage";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { ConflictError } from "../../util/exceptions/confict-error";
+import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
 
 const storage = Storage();
 const bucketName =
@@ -8,15 +9,15 @@ const bucketName =
     ? "tangle-prod-bulk-import"
     : "tangle-dev-bulk-import";
 
-export function saveOverwrite(id: string, file): Promise<void> {
+export function saveOverwrite(urn: EvernoteNoteUrn, file): Promise<void> {
   const userId = getAuthenticatedUser().urn;
-  const dest = `users/${userId.toRaw()}/${id}`;
+  const dest = `users/${userId.toRaw()}/${urn}`;
   return writeToDb(dest, file);
 }
 
-export function saveSafely(id: string, file): Promise<void> {
+export function saveSafely(urn: EvernoteNoteUrn, file): Promise<void> {
   const userId = getAuthenticatedUser().urn;
-  const dest = `users/${userId.toRaw()}/${id}`;
+  const dest = `users/${userId.toRaw()}/${urn.toRaw()}`;
   return storage
     .bucket(bucketName)
     .getFiles({ prefix: dest })

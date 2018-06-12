@@ -8,16 +8,16 @@ import {
   getUntypedNode
 } from "../../db/services/capture";
 import { getAuthenticatedUser } from "../../filters/request-context";
-import { getUrnType } from "../../db/helpers/urn-helpers";
 import { NotImplementedError } from "../../util/exceptions/not-implemented-error";
 import { SurfaceResults } from "../models/surface-results";
 import { expandCaptures } from "./expand";
 import { formatCapture, formatNode } from "../formatters/graph-node";
 import { CaptureUrn } from "../../urn/capture-urn";
+import { Urn } from "../../urn/urn";
 
-export function getNode(urn: string): Promise<SurfaceResults> {
-  if (getUrnType(urn) === "capture") {
-    return getCapture(CaptureUrn.fromRaw(urn));
+export function getNode(urn: Urn): Promise<SurfaceResults> {
+  if (CaptureUrn.isCaptureUrn(urn)) {
+    return getCapture(CaptureUrn.fromUrn(urn));
   } else {
     return getOthers(urn);
   }
@@ -65,7 +65,7 @@ function getAllCapturedToday(timezoneOffset: number): Promise<SurfaceResults> {
   });
 }
 
-function getOthers(urn: string): Promise<SurfaceResults> {
+function getOthers(urn: Urn): Promise<SurfaceResults> {
   const userUrn = getAuthenticatedUser().urn;
   return getUntypedNode(userUrn, urn).then(node => {
     return getCapturesByRelatedNode(userUrn, urn).then(captures => {

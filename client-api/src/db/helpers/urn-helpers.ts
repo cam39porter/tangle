@@ -1,30 +1,10 @@
-import { MalformedUrnError } from "../../util/exceptions/malformed-urn-error";
 import { UnsupportedUrnError } from "../../util/exceptions/unsupported-urn-error";
-import { UserUrn } from "../../urn/user-urn";
+import { Urn } from "../../urn/urn";
 
-const baseStr: string = "urn:hex";
-
-function toEvernoteNoteUrn(
-  userId: UserUrn,
-  title: string,
-  created: number
-): string {
-  return `${baseStr}:evernoteNote:(${userId.toRaw()};${title};${created.toString()})`;
-}
-
-function getUrnType(urn: string): string {
-  const type = urn.split(":")[2];
-  if (!type) {
-    throw new MalformedUrnError(`${urn} is malformed`);
-  }
-  return type;
-}
-
-function getLabel(urn: string): string {
-  const urnType = getUrnType(urn);
-  const label = urnTypeToLabel[getUrnType(urn)];
+function getLabel(urn: Urn): string {
+  const label = urnTypeToLabel[urn.getType()];
   if (!label) {
-    throw new UnsupportedUrnError(`${urnType} is not supported`);
+    throw new UnsupportedUrnError(`${urn.toRaw()} is not supported`);
   }
   return label;
 }
@@ -39,4 +19,4 @@ const urnTypeToLabel = {
   evernoteNote: "EvernoteNote"
 };
 
-export { toEvernoteNoteUrn, getUrnType, getLabel };
+export { getLabel };

@@ -1,4 +1,8 @@
 export class Urn {
+  public static fromRaw(raw: string): Urn {
+    return new Urn(raw.split(":")[3], raw.split(":")[2]);
+  }
+
   protected id: string;
   protected type: string;
 

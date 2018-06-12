@@ -6,3 +6,4 @@ export const DISMISSED_RELATION_RELATIONSHIP = new Relationship(
 );
 export const PREVIOUS_RELATIONSHIP = new Relationship("PREVIOUS");
 export const INCLUDES_RELATIONSHIP = new Relationship("INCLUDES");
+export const REFERENCES_RELATIONSHIP = new Relationship("REFERENCES");

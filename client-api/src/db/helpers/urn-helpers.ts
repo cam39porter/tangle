@@ -4,10 +4,6 @@ import { UserUrn } from "../../urn/user-urn";
 
 const baseStr: string = "urn:hex";
 
-function toEntityUrn(userId: UserUrn, name: string, type: string): string {
-  return `${baseStr}:entity:(${userId.toRaw()};${name};${type})`;
-}
-
 function toLinkUrn(userId: UserUrn, url: string): string {
   return `${baseStr}:link:${userId.toRaw()};${url}`;
 }
@@ -47,4 +43,4 @@ const urnTypeToLabel = {
   evernoteNote: "EvernoteNote"
 };
 
-export { toEntityUrn, toLinkUrn, toEvernoteNoteUrn, getUrnType, getLabel };
+export { toLinkUrn, toEvernoteNoteUrn, getUrnType, getLabel };

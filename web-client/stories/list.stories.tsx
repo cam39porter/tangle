@@ -7,7 +7,6 @@ import { withKnobs, boolean, select } from "@storybook/addon-knobs/react";
 import { listData } from "./data";
 import ListHeader from "../src/components/list-header";
 import ListSessionTitle from "../src/components/list-session-title";
-import ListSessionTags from "../src/components/list-session-tags";
 import ListSessionHeader from "../src/components/list-session-header";
 import ListCapture from "../src/components/list-capture";
 import List from "../src/components/list";
@@ -37,23 +36,11 @@ stories.add("session title", () => (
   </div>
 ));
 
-stories.add("session tags", () => (
-  <div>
-    <ListSessionTags handleEdit={action("handleChange")} />
-    <ListSessionTags
-      startingTags={["tag1", "tag2", "tag3"]}
-      handleEdit={action("handleChange")}
-    />
-  </div>
-));
-
 stories.add("session header", () => (
   <div>
     <ListSessionHeader
       startingTitle={"This is a title"}
       handleEditTitle={action("handleEditTitle")}
-      handleEditTags={action("handleEditTags")}
-      startingTags={["tag1", "tag2", "tag3"]}
       handleClose={action("handleClose")}
     />
   </div>

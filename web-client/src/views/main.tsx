@@ -452,8 +452,6 @@ class Main extends React.Component<Props, State> {
                         })
                         .catch(err => console.error(err));
                     }}
-                    startingTags={undefined}
-                    handleEditTags={noop}
                     handleClose={() => {
                       if (this.props.history.length > 2) {
                         this.props.history.goBack();

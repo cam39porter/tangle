@@ -3,7 +3,6 @@ import * as React from "react";
 
 // Components
 import ListSessionTitle from "./list-session-title";
-import ListSessionTags from "./list-session-tags";
 import ButtonExit from "./button-exit";
 import ReactTooltip from "react-tooltip";
 
@@ -13,8 +12,6 @@ import ReactTooltip from "react-tooltip";
 interface Props {
   startingTitle?: string;
   handleEditTitle: (title: string) => void;
-  startingTags?: Array<string>;
-  handleEditTags: (tags: string) => void;
   handleClose: () => void;
 }
 
@@ -29,12 +26,6 @@ class ListSessionHeader extends React.Component<Props, State> {
             <ListSessionTitle
               startingTitle={this.props.startingTitle}
               handleEdit={this.props.handleEditTitle}
-            />
-          </div>
-          <div className={`pv2`}>
-            <ListSessionTags
-              startingTags={this.props.startingTags}
-              handleEdit={this.props.handleEditTags}
             />
           </div>
         </div>

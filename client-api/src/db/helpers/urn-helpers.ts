@@ -4,10 +4,6 @@ import { UserUrn } from "../../urn/user-urn";
 
 const baseStr: string = "urn:hex";
 
-function toLinkUrn(userId: UserUrn, url: string): string {
-  return `${baseStr}:link:${userId.toRaw()};${url}`;
-}
-
 function toEvernoteNoteUrn(
   userId: UserUrn,
   title: string,
@@ -43,4 +39,4 @@ const urnTypeToLabel = {
   evernoteNote: "EvernoteNote"
 };
 
-export { toLinkUrn, toEvernoteNoteUrn, getUrnType, getLabel };
+export { toEvernoteNoteUrn, getUrnType, getLabel };

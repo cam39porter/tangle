@@ -4,6 +4,7 @@ import * as React from "react";
 // Components
 import ReactTooltip from "react-tooltip";
 import * as Draft from "draft-js";
+import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 import { convertToHTML, convertFromHTML } from "draft-convert";
@@ -21,6 +22,7 @@ interface Props {
 
 interface State {
   editorState: Draft.EditorState;
+  editorWidth: number;
 }
 
 class InputCapture extends React.Component<Props, State> {
@@ -41,7 +43,8 @@ class InputCapture extends React.Component<Props, State> {
       this.props.handleEdit && debounce(this.props.handleEdit, TIME_TO_SAVE);
 
     this.state = {
-      editorState
+      editorState,
+      editorWidth: 0
     };
   }
 
@@ -71,7 +74,20 @@ class InputCapture extends React.Component<Props, State> {
     return (
       <div className={`flex w-100`}>
         <div className={`flex-grow`}>
-          <div className={`f6 lh-copy`}>
+          <ReactResizeDetector
+            handleHeight={true}
+            onResize={(width, _) => {
+              this.setState({
+                editorWidth: width
+              });
+            }}
+          />
+          <div
+            className={`f6 lh-copy`}
+            style={{
+              width: `${this.state.editorWidth}px`
+            }}
+          >
             <Draft.Editor
               editorState={this.state.editorState}
               onChange={this.handleOnChange}

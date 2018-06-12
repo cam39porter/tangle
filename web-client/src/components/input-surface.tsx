@@ -7,6 +7,7 @@ import * as Draft from "draft-js";
 // Utils
 import { convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
+import ReactResizeDetector from "react-resize-detector";
 
 interface Props {
   handleSurface: (text: string) => void;
@@ -15,6 +16,7 @@ interface Props {
 
 interface State {
   editorState: Draft.EditorState;
+  editorWidth: number;
 }
 
 class InputSurface extends React.Component<Props, State> {
@@ -30,7 +32,8 @@ class InputSurface extends React.Component<Props, State> {
     }
 
     this.state = {
-      editorState
+      editorState,
+      editorWidth: 0
     };
   }
 
@@ -44,7 +47,20 @@ class InputSurface extends React.Component<Props, State> {
     return (
       <div className={`w-100 flex`}>
         <div className={`flex-grow`}>
-          <div className={`f6 lh-copy`}>
+          <ReactResizeDetector
+            handleHeight={true}
+            onResize={(width, _) => {
+              this.setState({
+                editorWidth: width
+              });
+            }}
+          />
+          <div
+            className={`f6 lh-copy`}
+            style={{
+              width: `${this.state.editorWidth}px`
+            }}
+          >
             <Draft.Editor
               editorState={this.state.editorState}
               onChange={this.handleOnChange}

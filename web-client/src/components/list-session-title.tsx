@@ -8,6 +8,7 @@ import * as Draft from "draft-js";
 import { convertToHTML, convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 import { debounce, Cancelable } from "lodash";
+import ReactResizeDetector from "react-resize-detector";
 
 const TIME_TO_SAVE = 500; // ms
 
@@ -18,6 +19,7 @@ interface Props {
 
 interface State {
   editorState: Draft.EditorState;
+  editorWidth: number;
 }
 
 class ListSessionTitle extends React.Component<Props, State> {
@@ -38,7 +40,8 @@ class ListSessionTitle extends React.Component<Props, State> {
       this.props.handleEdit && debounce(this.props.handleEdit, TIME_TO_SAVE);
 
     this.state = {
-      editorState
+      editorState,
+      editorWidth: 0
     };
   }
 
@@ -59,11 +62,26 @@ class ListSessionTitle extends React.Component<Props, State> {
   render() {
     return (
       <div className={`f3`}>
-        <Draft.Editor
-          editorState={this.state.editorState}
-          onChange={this.handleOnChange}
-          placeholder={`Brainstorm title`}
+        <ReactResizeDetector
+          handleHeight={true}
+          onResize={(width, _) => {
+            this.setState({
+              editorWidth: width
+            });
+          }}
         />
+        <div
+          className={`f3`}
+          style={{
+            width: `${this.state.editorWidth}px`
+          }}
+        >
+          <Draft.Editor
+            editorState={this.state.editorState}
+            onChange={this.handleOnChange}
+            placeholder={`Brainstorm title`}
+          />
+        </div>
       </div>
     );
   }

@@ -21,7 +21,7 @@ function getEntityByNameNullable(
   return executeQuery(query, params).then(result => {
     return (
       (result.records[0] &&
-        (result.records[0].get("entity").properties as Entity)) ||
+        buildFromNeo(result.records[0].get("entity").properties)) ||
       null
     );
   });
@@ -40,7 +40,7 @@ export function upsertEntity(
         userId,
         captureUrn.toRaw(),
         CAPTURE_LABEL,
-        existingEntity.id,
+        existingEntity.urn.toRaw(),
         ENTITY_LABEL,
         REFERENCES_RELATIONSHIP
       ).then(() => existingEntity);
@@ -78,6 +78,14 @@ function createWithRelationship(
   RETURN entity
 `;
   return executeQuery(query, params).then((result: StatementResult) => {
-    return result.records[0].get("entity").properties as Entity;
+    return buildFromNeo(result.records[0].get("entity").properties);
   });
+}
+
+function buildFromNeo(props: any): Entity {
+  return new Entity(
+    EntityUrn.fromRaw(props["id"]),
+    props["name"],
+    props["type"]
+  );
 }

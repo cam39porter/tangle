@@ -81,7 +81,7 @@ function deleteTags(userId: UserUrn, sessionId: SessionUrn): Promise<void> {
             userId,
             sessionId.toRaw(),
             SESSION_LABEL,
-            tag.id,
+            tag.urn.toRaw(),
             TAG_LABEL,
             TAGGED_WITH_RELATIONSHIP
           )

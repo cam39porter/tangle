@@ -58,7 +58,11 @@ export function create(userId: UserUrn, title: string): Promise<Session> {
       owner:{userId}})
     CREATE (session)<-[:CREATED]-(u)
     RETURN session`;
-  const params = { userId: userId.toRaw(), sessionUrn, title };
+  const params = {
+    userId: userId.toRaw(),
+    sessionUrn: sessionUrn.toRaw(),
+    title
+  };
   return executeQuery(query, params).then((result: StatementResult) => {
     return formatSessionRecord(result.records[0]);
   });

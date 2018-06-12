@@ -14,7 +14,7 @@ export function createRelationship(
   const params = {
     src,
     dest,
-    userId
+    userId: userId.toRaw()
   };
   const query = `
     MATCH (from:${srcLabel.name} {id:{src}, owner:{userId}})

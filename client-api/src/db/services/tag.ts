@@ -38,7 +38,7 @@ export function upsert(
         userId,
         parentUrn.toRaw(),
         parentLabel,
-        existingTag.id,
+        existingTag.urn.toRaw(),
         TAG_LABEL,
         TAGGED_WITH_RELATIONSHIP
       ).then(() => existingTag);

@@ -1,9 +1,11 @@
+import { EntityUrn } from "../../urn/entity-urn";
+
 export class Entity {
-  public id: string;
+  public urn: EntityUrn;
   public name: string;
   public type: string;
-  constructor(id: string, name: string, type: string) {
-    this.id = id;
+  constructor(urn: EntityUrn, name: string, type: string) {
+    this.urn = urn;
     this.name = name;
     this.type = type;
   }

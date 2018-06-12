@@ -1,9 +1,11 @@
+import { TagUrn } from "../../urn/tag-urn";
+
 export class Tag {
-  public id: string;
+  public urn: TagUrn;
   public name: string;
   public created: number;
-  constructor(id: string, name: string, created: number) {
-    this.id = id;
+  constructor(urn: TagUrn, name: string, created: number) {
+    this.urn = urn;
     this.name = name;
     this.created = created;
   }

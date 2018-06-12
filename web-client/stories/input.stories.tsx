@@ -12,9 +12,23 @@ const stories = storiesOf("Input", module);
 stories.addDecorator(withKnobs);
 
 stories.add("capture", () => (
-  <InputCapture handleCapture={action("captured")} />
+  <div
+    className={`pa4`}
+    style={{
+      width: "32.5em"
+    }}
+  >
+    <InputCapture handleCapture={action("captured")} />
+  </div>
 ));
 
 stories.add("surface", () => (
-  <InputSurface handleSurface={action("surfaced")} />
+  <div
+    className={`pa4`}
+    style={{
+      width: "32.5em"
+    }}
+  >
+    <InputSurface handleSurface={action("surfaced")} />
+  </div>
 ));

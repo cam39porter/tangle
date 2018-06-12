@@ -68,7 +68,8 @@ import GraphVisualization from "../components/graph-visualization";
 import MenuBar from "../components/menu-bar";
 import Navigation from "../components/navigation";
 import ListSessionHeader from "../components/list-session-header";
-import ListHeader from "../components/list-header";
+import ListHeaderCapture from "../components/list-capture-header";
+import InputSurface from "../components/input-surface";
 import InputCapture from "../components/input-capture";
 import ReactResizeDetector from "react-resize-detector";
 
@@ -125,7 +126,7 @@ interface CaptureState {
 interface State {
   listHeaderHeight: number;
   // Header
-  isCapturing: boolean;
+  isSearching: boolean;
   surfaceText: string;
   // Captures
   captures: Map<string, CaptureState>;
@@ -148,7 +149,7 @@ class Main extends React.Component<Props, State> {
 
     this.state = {
       listHeaderHeight: 0,
-      isCapturing:
+      isSearching:
         NetworkUtils.getCurrentLocation(nextProps.location.search) ===
         Location.MostRecent,
       surfaceText: NetworkUtils.getQuery(nextProps.location.search),
@@ -239,8 +240,8 @@ class Main extends React.Component<Props, State> {
     const sessionId = NetworkUtils.getIsSessionId(nextProps.location.search);
 
     let nextState = {
-      isCapturing:
-        NetworkUtils.getCurrentLocation(nextProps.location.search) ===
+      isSearching:
+        NetworkUtils.getCurrentLocation(nextProps.location.search) !==
         Location.MostRecent,
       surfaceText: NetworkUtils.getQuery(nextProps.location.search),
       sessionId,
@@ -363,14 +364,32 @@ class Main extends React.Component<Props, State> {
               }}
             />
 
+            {/* Search Bar */}
+            {!this.state.sessionId && (
+              <div className={`pt4 bg-accent`}>
+                <div className={`mh4`}>
+                  <InputSurface
+                    handleSurface={text => {
+                      let query = trim(text);
+                      if (!query) {
+                        return;
+                      }
+                      this.props.history.push(
+                        `?query=${encodeURIComponent(text)}`
+                      );
+                    }}
+                    startingHTML={NetworkUtils.getQuery(
+                      this.props.location.search
+                    )}
+                  />
+                </div>
+              </div>
+            )}
+
             {/* Capture Header */}
             {!this.state.sessionId && (
-              <div
-                className={`pa4 ${
-                  this.state.isCapturing ? "bg-accent" : "bg-base"
-                } shadow-5`}
-              >
-                <ListHeader
+              <div className={`pt4 bg-accent`}>
+                <ListHeaderCapture
                   handleCapture={text => {
                     this.props
                       .createCapture({
@@ -393,42 +412,6 @@ class Main extends React.Component<Props, State> {
                       })
                       .catch(err => console.error(err));
                   }}
-                  handleExpand={() => {
-                    this.props
-                      .createSession({
-                        variables: {
-                          firstCaptureId: null,
-                          title: null
-                        }
-                      })
-                      .then(({ data: res }) => {
-                        this.props.history.push(
-                          `?id=${encodeURIComponent(res.createSession.id)}`
-                        );
-                      })
-                      .catch(err => console.error(err));
-                  }}
-                  isCapturing={this.state.isCapturing}
-                  handleIsCapturing={() => {
-                    this.setState({
-                      isCapturing: !this.state.isCapturing
-                    });
-                  }}
-                  handleSurface={text => {
-                    let query = trim(text);
-                    if (!query) {
-                      return;
-                    }
-                    this.props.history.push(
-                      `?query=${encodeURIComponent(text)}`
-                    );
-                  }}
-                  handleClear={() => {
-                    this.props.history.push(`/`);
-                  }}
-                  surfaceStartingText={NetworkUtils.getQuery(
-                    this.props.location.search
-                  )}
                 />
               </div>
             )}
@@ -645,7 +628,7 @@ class Main extends React.Component<Props, State> {
                   })
                   .then(() => {
                     if (shouldRedirect) {
-                      this.props.history.goBack();
+                      this.props.history.replace("/");
                     } else {
                       refetch();
                     }
@@ -751,6 +734,24 @@ class Main extends React.Component<Props, State> {
             </div>
             <div className={`absolute top-0 left-0 ma4 z-max`}>
               <Navigation
+                handleHome={() => {
+                  this.props.history.push(`/`);
+                }}
+                handleSession={() => {
+                  this.props
+                    .createSession({
+                      variables: {
+                        firstCaptureId: null,
+                        title: null
+                      }
+                    })
+                    .then(({ data: res }) => {
+                      this.props.history.push(
+                        `?id=${encodeURIComponent(res.createSession.id)}`
+                      );
+                    })
+                    .catch(err => console.error(err));
+                }}
                 handleSurprise={() => {
                   this.props.history.push("?random=true");
                   if (

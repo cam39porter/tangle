@@ -5,7 +5,7 @@ import { action } from "@storybook/addon-actions";
 import { withKnobs, boolean, select } from "@storybook/addon-knobs/react";
 
 import { listData } from "./data";
-import ListHeader from "../src/components/list-header";
+import ListCaptureHeader from "../src/components/list-capture-header";
 import ListSessionTitle from "../src/components/list-session-title";
 import ListSessionHeader from "../src/components/list-session-header";
 import ListCapture from "../src/components/list-capture";
@@ -15,15 +15,8 @@ const stories = storiesOf("List", module);
 
 stories.addDecorator(withKnobs);
 
-stories.add("header", () => (
-  <ListHeader
-    handleCapture={action("handleCapture")}
-    handleExpand={action("handleExpand")}
-    isCapturing={boolean("isCapturing", true)}
-    handleIsCapturing={action("handleIsCapture")}
-    handleSurface={action("handleSurface")}
-    handleClear={action("handleClear")}
-  />
+stories.add("capture header", () => (
+  <ListCaptureHeader handleCapture={action("handleCapture")} />
 ));
 
 stories.add("session title", () => (

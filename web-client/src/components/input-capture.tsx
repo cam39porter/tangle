@@ -5,6 +5,7 @@ import * as React from "react";
 import ReactTooltip from "react-tooltip";
 import * as Draft from "draft-js";
 import ReactResizeDetector from "react-resize-detector";
+import ButtonCapture from "./button-capture";
 
 // Utils
 import { convertToHTML, convertFromHTML } from "draft-convert";
@@ -23,6 +24,7 @@ interface Props {
 interface State {
   editorState: Draft.EditorState;
   editorWidth: number;
+  isShowingCaptureButton: boolean;
 }
 
 class InputCapture extends React.Component<Props, State> {
@@ -44,7 +46,8 @@ class InputCapture extends React.Component<Props, State> {
 
     this.state = {
       editorState,
-      editorWidth: 0
+      editorWidth: 0,
+      isShowingCaptureButton: false
     };
   }
 
@@ -72,7 +75,43 @@ class InputCapture extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className={`flex w-100`}>
+      <div
+        className={`relative flex w-100`}
+        onMouseEnter={() => {
+          this.setState({
+            isShowingCaptureButton: true
+          });
+        }}
+        onMouseLeave={() => {
+          this.setState({
+            isShowingCaptureButton: false
+          });
+        }}
+      >
+        {this.props.handleCapture && (
+          <div
+            className={`absolute flex bottom--2 right-0 br-100 z-max bg-white`}
+          >
+            <ButtonCapture
+              onClick={() => {
+                if (!this.props.handleCapture) {
+                  return;
+                }
+                this.props.handleCapture(
+                  convertToHTML(this.state.editorState.getCurrentContent())
+                );
+
+                let cleanEditorState = EditorUtils.cleanEditorState(
+                  this.state.editorState
+                );
+
+                this.setState({
+                  editorState: cleanEditorState
+                });
+              }}
+            />
+          </div>
+        )}
         <div className={`flex-grow`}>
           <ReactResizeDetector
             handleHeight={true}
@@ -97,7 +136,6 @@ class InputCapture extends React.Component<Props, State> {
               ) => {
                 if (command === "command-return") {
                   if (this.props.handleCapture) {
-                    console.log("here");
                     this.props.handleCapture(
                       convertToHTML(editorState.getCurrentContent())
                     );

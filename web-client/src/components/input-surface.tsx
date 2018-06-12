@@ -3,6 +3,7 @@ import * as React from "react";
 
 // Components
 import * as Draft from "draft-js";
+import ButtonSurface from "./button-surface";
 
 // Utils
 import { convertFromHTML } from "draft-convert";
@@ -45,8 +46,17 @@ class InputSurface extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className={`w-100 flex`}>
-        <div className={`flex-grow`}>
+      <div className={`flex pa2 bg-white br4`}>
+        <div className={`flex-column`}>
+          <ButtonSurface
+            onClick={() => {
+              this.props.handleSurface(
+                this.state.editorState.getCurrentContent().getPlainText()
+              );
+            }}
+          />
+        </div>
+        <div className={`flex-grow pv2`}>
           <ReactResizeDetector
             handleHeight={true}
             onResize={(width, _) => {

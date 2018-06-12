@@ -1,5 +1,5 @@
 export class Relationship {
-  public name;
+  public name: string;
   constructor(name: string) {
     this.name = name;
   }

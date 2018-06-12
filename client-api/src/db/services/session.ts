@@ -1,6 +1,5 @@
 import { StatementResult } from "neo4j-driver/types/v1";
 import { v4 as uuidv4 } from "uuid/v4";
-import { toSessionUrn } from "../helpers/urn-helpers";
 import { executeQuery } from "../db";
 import { Session } from "../models/session";
 import { NotFoundError } from "../../util/exceptions/not-found-error";
@@ -50,7 +49,7 @@ export function edit(
 
 export function create(userId: UserUrn, title: string): Promise<Session> {
   const uuid = uuidv4();
-  const sessionUrn = toSessionUrn(uuid);
+  const sessionUrn = new SessionUrn(uuid);
   const query = `
     MATCH (u:User {id:{userId}})
     CREATE (session:Session {id:{sessionUrn},

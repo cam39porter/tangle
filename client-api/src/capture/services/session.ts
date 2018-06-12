@@ -98,9 +98,7 @@ function createTags(
 ): Promise<void> {
   if (tags && tags.length !== 0) {
     return Promise.all(
-      tags.map(tag =>
-        upsertTag(userId, tag, sessionId.toRaw(), SESSION_LABEL.name)
-      )
+      tags.map(tag => upsertTag(userId, tag, sessionId, SESSION_LABEL))
     ).then(() => null);
   } else {
     return Promise.resolve(null);

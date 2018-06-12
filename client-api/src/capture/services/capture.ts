@@ -126,7 +126,7 @@ function createTags(captureUrn: CaptureUrn, body: string): Promise<boolean> {
   const user: User = getAuthenticatedUser();
   return Promise.all(
     parseTags(body).map(tag =>
-      upsertTag(user.urn, tag, captureUrn.toRaw(), "Capture")
+      upsertTag(user.urn, tag, captureUrn, CAPTURE_LABEL)
     )
   ).then(() => true);
 }

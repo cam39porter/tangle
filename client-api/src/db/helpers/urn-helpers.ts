@@ -4,20 +4,8 @@ import { UserUrn } from "../../urn/user-urn";
 
 const baseStr: string = "urn:hex";
 
-function toUserUrn(id: string): string {
-  return `${baseStr}:user:${id}`;
-}
-
 function toEntityUrn(userId: UserUrn, name: string, type: string): string {
   return `${baseStr}:entity:(${userId.toRaw()};${name};${type})`;
-}
-
-function toTagUrn(userId: UserUrn, name: string): string {
-  return `${baseStr}:tag:(${userId.toRaw()};${name})`;
-}
-
-function toSessionUrn(id: string): string {
-  return `${baseStr}:session:${id}`;
 }
 
 function toLinkUrn(userId: UserUrn, url: string): string {
@@ -59,13 +47,4 @@ const urnTypeToLabel = {
   evernoteNote: "EvernoteNote"
 };
 
-export {
-  toUserUrn,
-  toEntityUrn,
-  toTagUrn,
-  toSessionUrn,
-  toLinkUrn,
-  toEvernoteNoteUrn,
-  getUrnType,
-  getLabel
-};
+export { toEntityUrn, toLinkUrn, toEvernoteNoteUrn, getUrnType, getLabel };

@@ -11,8 +11,7 @@ export function formatNode(node: Node, isRoot: boolean): GraphNode {
     node.properties["body"] ||
       node.properties["name"] ||
       node.properties["title"] ||
-      node.properties["url"] ||
-      "Untitled",
+      node.properties["url"],
     isRoot ? 0 : 1
   );
 }

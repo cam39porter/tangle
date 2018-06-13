@@ -65,7 +65,7 @@ import { RouteComponentProps } from "react-router";
 // Components
 import List from "../components/list";
 import GraphVisualization from "../components/graph-visualization";
-import MenuBar from "../components/menu-bar";
+// import MenuBar from "../components/menu-bar";
 import Navigation from "../components/navigation";
 import ListSessionHeader from "../components/list-session-header";
 import ListHeaderCapture from "../components/list-capture-header";
@@ -346,6 +346,42 @@ class Main extends React.Component<Props, State> {
 
     return (
       <div className={`flex w-100 vh-100`}>
+        {/* Navigation */}
+        <div className={`vh-100`}>
+          <Navigation
+            handleHome={() => {
+              this.props.history.push(`/`);
+            }}
+            handleSearch={() => {
+              this.props.history.push(`/?query`);
+            }}
+            handleSession={() => {
+              this.props
+                .createSession({
+                  variables: {
+                    firstCaptureId: null,
+                    title: null
+                  }
+                })
+                .then(({ data: res }) => {
+                  this.props.history.push(
+                    `?id=${encodeURIComponent(res.createSession.id)}`
+                  );
+                })
+                .catch(err => console.error(err));
+            }}
+            handleSurprise={() => {
+              this.props.history.push("?random=true");
+              if (
+                NetworkUtils.getCurrentLocation(this.props.location.search) ===
+                Location.Random
+              ) {
+                refetch();
+              }
+            }}
+          />
+        </div>
+
         {/* Sidebar */}
         <div
           className={`shadow-3 bg-light-gray z-5`}
@@ -354,7 +390,7 @@ class Main extends React.Component<Props, State> {
           }}
         >
           {/* Header */}
-          <div>
+          <div className={`bg-dark-gray`}>
             <ReactResizeDetector
               handleHeight={true}
               onResize={(_, height) => {
@@ -365,56 +401,58 @@ class Main extends React.Component<Props, State> {
             />
 
             {/* Search Bar */}
-            {!this.state.sessionId && (
-              <div className={`pt4 bg-accent`}>
-                <div className={`mh4`}>
-                  <InputSurface
-                    handleSurface={text => {
-                      let query = trim(text);
-                      if (!query) {
-                        return;
-                      }
-                      this.props.history.push(
-                        `?query=${encodeURIComponent(text)}`
-                      );
-                    }}
-                    startingHTML={NetworkUtils.getQuery(
-                      this.props.location.search
-                    )}
-                  />
+            {!this.state.sessionId &&
+              this.state.isSearching && (
+                <div className={`pt4 bg-accent`}>
+                  <div className={`mh4`}>
+                    <InputSurface
+                      handleSurface={text => {
+                        let query = trim(text);
+                        if (!query) {
+                          return;
+                        }
+                        this.props.history.push(
+                          `?query=${encodeURIComponent(text)}`
+                        );
+                      }}
+                      startingHTML={NetworkUtils.getQuery(
+                        this.props.location.search
+                      )}
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Capture Header */}
-            {!this.state.sessionId && (
-              <div className={`pt4 bg-accent`}>
-                <ListHeaderCapture
-                  handleCapture={text => {
-                    this.props
-                      .createCapture({
-                        variables: {
-                          body: text
-                        },
-                        optimisticResponse: {
-                          createCapture: {
-                            __typename: "Node",
-                            id: `optimistic:${NetworkUtils.getRandomId()}`,
-                            type: NodeType.Capture,
-                            text: text,
-                            level: 0
-                          } as NodeFieldsFragment
-                        },
-                        update: this.optimisticUpdateOnCapture
-                      })
-                      .then(() => {
-                        refetch();
-                      })
-                      .catch(err => console.error(err));
-                  }}
-                />
-              </div>
-            )}
+            {!this.state.sessionId &&
+              !this.state.isSearching && (
+                <div className={`pt4 bg-accent`}>
+                  <ListHeaderCapture
+                    handleCapture={text => {
+                      this.props
+                        .createCapture({
+                          variables: {
+                            body: text
+                          },
+                          optimisticResponse: {
+                            createCapture: {
+                              __typename: "Node",
+                              id: `optimistic:${NetworkUtils.getRandomId()}`,
+                              type: NodeType.Capture,
+                              text: text,
+                              level: 0
+                            } as NodeFieldsFragment
+                          },
+                          update: this.optimisticUpdateOnCapture
+                        })
+                        .then(() => {
+                          refetch();
+                        })
+                        .catch(err => console.error(err));
+                    }}
+                  />
+                </div>
+              )}
 
             {/* Session Title / Tags */}
             {!isLoading &&
@@ -501,7 +539,7 @@ class Main extends React.Component<Props, State> {
 
           {/* List */}
           <div
-            className={`flex-column overflow-auto`}
+            className={`flex-column ph2 overflow-auto`}
             style={{
               height: `${this.props.windowHeight -
                 this.state.listHeaderHeight}px`
@@ -729,41 +767,9 @@ class Main extends React.Component<Props, State> {
         {/* Graph */}
         {isLargeWindow ? (
           <div className={`relative flex-grow`}>
-            <div className={`absolute top-0 right-0 ma4 z-max`}>
+            {/* <div className={`absolute top-0 right-0 ma4 z-max`}>
               <MenuBar />
-            </div>
-            <div className={`absolute top-0 left-0 ma4 z-max`}>
-              <Navigation
-                handleHome={() => {
-                  this.props.history.push(`/`);
-                }}
-                handleSession={() => {
-                  this.props
-                    .createSession({
-                      variables: {
-                        firstCaptureId: null,
-                        title: null
-                      }
-                    })
-                    .then(({ data: res }) => {
-                      this.props.history.push(
-                        `?id=${encodeURIComponent(res.createSession.id)}`
-                      );
-                    })
-                    .catch(err => console.error(err));
-                }}
-                handleSurprise={() => {
-                  this.props.history.push("?random=true");
-                  if (
-                    NetworkUtils.getCurrentLocation(
-                      this.props.location.search
-                    ) === Location.Random
-                  ) {
-                    refetch();
-                  }
-                }}
-              />
-            </div>
+            </div> */}
             <GraphVisualization
               refEChart={noop}
               nodes={data && data.graph.nodes ? data.graph.nodes : []}

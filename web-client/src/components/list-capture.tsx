@@ -138,7 +138,7 @@ class ListCapture extends React.Component<Props, State> {
           </div>
           {this.state.isShowingButtons && (
             <div
-              className={`absolute flex top--1 right-0 h2 ph2 br4 shadow-1 z-max bg-white`}
+              className={`absolute flex top--1 right-0 h2 ph2 br4 shadow-1 z-max bg-white gray`}
             >
               <div className={`w2`}>
                 <div data-tip={`Enter a brainstorm starting with this capture`}>
@@ -151,7 +151,7 @@ class ListCapture extends React.Component<Props, State> {
                 </div>
               </div>
               {this.props.handleIsShowingRelated && (
-                <div className={`w2`}>
+                <div className={`w2 accent`}>
                   <div
                     data-tip={`${
                       this.props.isShowingRelated ? "Hide" : "Show"

@@ -90,7 +90,7 @@ class InputCapture extends React.Component<Props, State> {
       >
         {this.props.handleCapture && (
           <div
-            className={`absolute flex bottom--2 right-0 br-100 z-max bg-white`}
+            className={`absolute flex bottom--2 right-0 br-100 z-max bg-white gray`}
           >
             <ButtonCapture
               onClick={() => {

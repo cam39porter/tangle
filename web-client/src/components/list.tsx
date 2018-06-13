@@ -153,7 +153,7 @@ class List extends React.Component<Props, State> {
                               {this.state.isHoveringOverMap.get(
                                 relatedItem.id
                               ) && (
-                                <div className={`dtc v-mid`}>
+                                <div className={`dtc v-mid gray`}>
                                   <div
                                     data-tip={"Mark this capture as unrelated"}
                                   >

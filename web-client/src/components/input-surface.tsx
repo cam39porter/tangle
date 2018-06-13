@@ -47,7 +47,7 @@ class InputSurface extends React.Component<Props, State> {
   render() {
     return (
       <div className={`flex pa2 bg-white br4`}>
-        <div className={`flex-column`}>
+        <div className={`flex-column gray`}>
           <ButtonSurface
             onClick={() => {
               this.props.handleSurface(

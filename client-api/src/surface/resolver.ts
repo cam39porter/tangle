@@ -3,6 +3,9 @@ import { getAllByUseCase, getNode, getAllMostRecent } from "./services/graph";
 import { search } from "./services/search";
 import { PageInfo } from "./models/page-info";
 import { Urn } from "../urn/urn";
+import { CollectionResult } from "./models/collection-result";
+import { Session } from "./models/session";
+import { getRecentSessions } from "./services/session";
 
 export default {
   Query: {
@@ -45,6 +48,17 @@ export default {
         searchResults.pageInfo = new PageInfo(start, count, null);
         return searchResults;
       });
+    },
+    getRecentSessions(
+      // @ts-ignore
+      parent,
+      { pagingContext },
+      // @ts-ignore
+      context,
+      // @ts-ignore
+      info
+    ): Promise<CollectionResult<Session>> {
+      return getRecentSessions(pagingContext);
     }
   }
 };

@@ -5,6 +5,20 @@ type SurfaceResults {
   pageInfo: PageInfo!
 }
 
+type SessionCollection {
+  items: [Session!]
+  pagingInfo: PagingInfo
+}
+
+type Session {
+  id: String!
+  title: String
+  created: Float!
+  # lastModified: Int!
+  # items: [SessionItem!]! TODO
+  # itemPage: PagingInfo!
+}
+
 type ListItem {
   id: String!
   text: AnnotatedText!
@@ -86,6 +100,11 @@ type PageInfo {
   total: Int
 }
 
+type PagingInfo {
+  nextPageId: String # if empty, no more pages
+  total: Int # total number of records, empty if this number is not available
+}
+
 schema {
   query: Query
   mutation: Mutation
@@ -96,6 +115,8 @@ type Query {
   getDetailed(id: String!): SurfaceResults!
   getAll(useCase: String!, timezoneOffset: Int): SurfaceResults!
   getMostRecent(start: Int = 0, count: Int = 10): SurfaceResults!
+  # getSession(id: String!): Session!
+  getRecentSessions(pagingContext: PagingContext!): SessionCollection!
 }
 
 enum GetAllUseCase {
@@ -112,6 +133,11 @@ enum CaptureRelationType {
 input CaptureRelation {
   captureId: String
   relationshipType: CaptureRelationType
+}
+
+input PagingContext {
+  pageId: String
+  count: Int!
 }
 
 type Mutation {

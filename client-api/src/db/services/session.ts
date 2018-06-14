@@ -6,6 +6,28 @@ import { NotFoundError } from "../../util/exceptions/not-found-error";
 import { SessionUrn } from "../../urn/session-urn";
 import { UserUrn } from "../../urn/user-urn";
 
+export function getMostRecent(
+  user: UserUrn,
+  before: number | null,
+  count: number
+): Promise<Session[]> {
+  const query = `
+  MATCH (session:Session)
+  WHERE session.owner = {userUrn}
+  ${before ? "AND session.created <= {before}" : ""}
+  RETURN session
+  ORDER BY session.created DESC
+  LIMIT {count} `;
+  const params = [
+    new Param("userUrn", user.toRaw()),
+    new Param("before", before),
+    new Param("count", count)
+  ];
+  return executeQuery(query, params).then(result => {
+    return result.records.map(record => formatSessionRecord(record));
+  });
+}
+
 export function get(userId: UserUrn, sessionId: SessionUrn): Promise<Session> {
   const query = `
   MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})

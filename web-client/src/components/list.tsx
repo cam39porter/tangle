@@ -5,8 +5,8 @@ import * as React from "react";
 import ListCapture from "./list-capture";
 import ScrollContainer from "./scroll-container";
 import ScrollContainerElement from "./scroll-container-element";
-import ButtonExit from "./button-exit";
-import ReactTooltip from "react-tooltip";
+// import ButtonExit from "./button-exit";
+// import ReactTooltip from "react-tooltip";
 
 // Types
 import { ListFieldsFragment } from "../__generated__/types";
@@ -116,91 +116,6 @@ class List extends React.Component<Props, State> {
                   isGraphFocus={this.props.scrollToId === listItem.id}
                 />
               </ScrollContainerElement>
-              {this.props.isShowingRelated(listItem.id) &&
-                listItem.relatedItems &&
-                listItem.relatedItems.length > 0 && (
-                  <div className={`pb4`}>
-                    {listItem.relatedItems.map(relatedItem => {
-                      if (!relatedItem) {
-                        return null;
-                      }
-                      return (
-                        <div
-                          className={`flex`}
-                          key={relatedItem.id}
-                          onMouseEnter={() => {
-                            let nextIsHoverOverMap = this.state
-                              .isHoveringOverMap;
-                            nextIsHoverOverMap.set(relatedItem.id, true);
-                            this.setState({
-                              isHoveringOverMap: nextIsHoverOverMap
-                            });
-                          }}
-                          onMouseLeave={() => {
-                            let nextIsShowingDismissRelationMap = this.state
-                              .isHoveringOverMap;
-                            nextIsShowingDismissRelationMap.set(
-                              relatedItem.id,
-                              false
-                            );
-                            this.setState({
-                              isHoveringOverMap: nextIsShowingDismissRelationMap
-                            });
-                          }}
-                        >
-                          <div className={`flex-column w2`}>
-                            <div className={`dt w-100 h-100`}>
-                              {this.state.isHoveringOverMap.get(
-                                relatedItem.id
-                              ) && (
-                                <div className={`dtc v-mid gray`}>
-                                  <div
-                                    data-tip={"Mark this capture as unrelated"}
-                                  >
-                                    <ButtonExit
-                                      onClick={() => {
-                                        this.props.handleDismissCaptureRelation(
-                                          listItem.id,
-                                          relatedItem.id
-                                        );
-                                      }}
-                                    />
-                                  </div>
-                                  <ReactTooltip />
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <div className={`flex-grow`}>
-                            <ScrollContainerElement name={relatedItem.id}>
-                              <ListCapture
-                                captureId={relatedItem.id}
-                                startingText={relatedItem.text.text}
-                                handleExpand={this.props.handleExpand(
-                                  relatedItem.id
-                                )}
-                                handleFocus={this.props.handleFocus(
-                                  relatedItem.id
-                                )}
-                                handleFocusWithId={this.props.handleFocus}
-                                handleEdit={this.props.handleEdit(
-                                  relatedItem.id
-                                )}
-                                handleArchive={this.props.handleArchive(
-                                  relatedItem.id
-                                )}
-                                annotations={relatedItem.text.annotations}
-                                isGraphFocus={
-                                  this.props.scrollToId === relatedItem.id
-                                }
-                              />
-                            </ScrollContainerElement>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
             </div>
           ))}
         </div>

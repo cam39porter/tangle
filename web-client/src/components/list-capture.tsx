@@ -34,38 +34,6 @@ interface State {
   isShowingButtons: boolean;
 }
 
-// function annotate(
-//   captureId: string,
-//   text: string,
-//   annotations: Array<AnnotationFieldsFragment>
-// ): string {
-//   let annotatedText = "";
-
-//   for (let i = 0; i < text.length; i++) {
-//     let starts = annotations.filter(a => a.start === i);
-//     let ends = annotations.filter(a => a.end === i);
-//     let nextCharacter = text.charAt(i);
-//     let nextAnnotations = "";
-
-//     ends.forEach(a => {
-//       nextAnnotations = nextAnnotations + "</span>";
-//     });
-//     starts.forEach(a => {
-//       nextAnnotations =
-//         nextAnnotations +
-//         `<span class="${a.linkToId ? "pointer accent" : "accent"}" ${
-//           a.linkToId
-//             ? `id="${captureId}:${a.linkToId}:${a.start}:${a.end}"`
-//             : ""
-//         }>`;
-//     });
-
-//     annotatedText = annotatedText + nextAnnotations + nextCharacter;
-//   }
-
-//   return annotatedText;
-// }
-
 class ListCapture extends React.Component<Props, State> {
   constructor(nextProps: Props) {
     super(nextProps);
@@ -73,25 +41,6 @@ class ListCapture extends React.Component<Props, State> {
     this.state = {
       isShowingButtons: false
     };
-  }
-
-  componentDidMount() {
-    // add links to annotations
-    // this.props.annotations &&
-    //   this.props.annotations.forEach(a => {
-    //     if (a.linkToId === null) {
-    //       return;
-    //     }
-    //     let annotationNode = document.getElementById(
-    //       `${this.props.captureId}:${a.linkToId}:${a.start}:${a.end}`
-    //     );
-    //     annotationNode &&
-    //       annotationNode.addEventListener("click", () => {
-    //         this.props.handleFocusWithId &&
-    //           a.linkToId &&
-    //           this.props.handleFocusWithId(a.linkToId)();
-    //       });
-    //   });
   }
 
   render() {
@@ -112,14 +61,9 @@ class ListCapture extends React.Component<Props, State> {
           id={`list-capture`}
           className={`relative flex flex-wrap pa3 w-100 br4 ba ${
             this.props.isGraphFocus || this.state.isShowingButtons
-              ? "b--accent"
+              ? "b--accent shadow-1 z-max"
               : "b--light-gray"
-          } bg-white pointer`}
-          onClick={e => {
-            if (e.target["id"] === `list-capture`) {
-              this.props.handleFocus();
-            }
-          }}
+          } bg-white`}
         >
           <div className={`flex-grow dt`}>
             <div

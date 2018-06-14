@@ -16,7 +16,7 @@ interface Props {
 
 const ListCaptureHeader = (props: Props) => {
   return (
-    <div className={`pa2 pv4 shadow-5 bb b--light-gray bg-white`}>
+    <div className={`ma2 pa3 pb4 br4 bb b--light-gray bg-near-white`}>
       <InputCapture handleCapture={props.handleCapture} />
     </div>
   );

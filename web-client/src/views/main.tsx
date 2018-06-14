@@ -68,7 +68,7 @@ import GraphVisualization from "../components/graph-visualization";
 // import MenuBar from "../components/menu-bar";
 import Navigation from "../components/navigation";
 import ListSessionHeader from "../components/list-session-header";
-import ListHeaderCapture from "../components/list-capture-header";
+// import ListHeaderCapture from "../components/list-capture-header";
 import InputSurface from "../components/input-surface";
 import InputCapture from "../components/input-capture";
 import ReactResizeDetector from "react-resize-detector";
@@ -346,51 +346,15 @@ class Main extends React.Component<Props, State> {
 
     return (
       <div className={`flex w-100 vh-100`}>
-        {/* Navigation */}
-        <div className={`vh-100`}>
-          <Navigation
-            handleHome={() => {
-              this.props.history.push(`/`);
-            }}
-            handleSearch={() => {
-              this.props.history.push(`/?query`);
-            }}
-            handleSession={() => {
-              this.props
-                .createSession({
-                  variables: {
-                    firstCaptureId: null,
-                    title: null
-                  }
-                })
-                .then(({ data: res }) => {
-                  this.props.history.push(
-                    `?id=${encodeURIComponent(res.createSession.id)}`
-                  );
-                })
-                .catch(err => console.error(err));
-            }}
-            handleSurprise={() => {
-              this.props.history.push("?random=true");
-              if (
-                NetworkUtils.getCurrentLocation(this.props.location.search) ===
-                Location.Random
-              ) {
-                refetch();
-              }
-            }}
-          />
-        </div>
-
         {/* Sidebar */}
         <div
-          className={`shadow-3 bg-light-gray z-5`}
+          className={`bg-near-white z-5 shadow-5`}
           style={{
             width: isLargeWindow ? "32.5em" : "100%"
           }}
         >
           {/* Header */}
-          <div className={`bg-dark-gray`}>
+          <div className={``}>
             <ReactResizeDetector
               handleHeight={true}
               onResize={(_, height) => {
@@ -400,141 +364,34 @@ class Main extends React.Component<Props, State> {
               }}
             />
 
-            {/* Search Bar */}
-            {!this.state.sessionId &&
-              this.state.isSearching && (
-                <div className={`pt4 bg-accent`}>
-                  <div className={`mh4`}>
-                    <InputSurface
-                      handleSurface={text => {
-                        let query = trim(text);
-                        if (!query) {
-                          return;
-                        }
-                        this.props.history.push(
-                          `?query=${encodeURIComponent(text)}`
-                        );
-                      }}
-                      startingHTML={NetworkUtils.getQuery(
-                        this.props.location.search
-                      )}
-                    />
-                  </div>
-                </div>
-              )}
-
-            {/* Capture Header */}
-            {!this.state.sessionId &&
-              !this.state.isSearching && (
-                <div className={`pt4 bg-accent`}>
-                  <ListHeaderCapture
-                    handleCapture={text => {
-                      this.props
-                        .createCapture({
-                          variables: {
-                            body: text
-                          },
-                          optimisticResponse: {
-                            createCapture: {
-                              __typename: "Node",
-                              id: `optimistic:${NetworkUtils.getRandomId()}`,
-                              type: NodeType.Capture,
-                              text: text,
-                              level: 0
-                            } as NodeFieldsFragment
-                          },
-                          update: this.optimisticUpdateOnCapture
-                        })
-                        .then(() => {
-                          refetch();
-                        })
-                        .catch(err => console.error(err));
-                    }}
-                  />
-                </div>
-              )}
-
             {/* Session Title / Tags */}
-            {!isLoading &&
-              this.state.sessionId && (
-                <div className={`shadow-5`}>
-                  <ListSessionHeader
-                    startingTitle={pivot ? pivot.text || undefined : undefined}
-                    handleEditTitle={title => {
-                      if (!this.state.sessionId) {
-                        return;
-                      }
-                      this.props
-                        .editSession({
-                          variables: {
-                            sessionId: this.state.sessionId,
-                            title: title === "" ? null : title
-                          }
-                        })
-                        .catch(err => console.error(err));
-                    }}
-                    handleClose={() => {
-                      if (this.props.history.length > 2) {
-                        this.props.history.goBack();
-                      } else {
-                        this.props.history.push("/");
-                      }
-                    }}
-                  />
-
-                  {/* Session Capture */}
-                  <div className={`ph3 pv4 bt bb b--light-gray bg-white`}>
-                    <InputCapture
-                      handleCapture={text => {
-                        if (!this.state.sessionId) {
-                          return;
+            {!isLoading && (
+              <div className={`pa2`}>
+                <ListSessionHeader
+                  startingTitle={pivot ? pivot.text || undefined : undefined}
+                  handleEditTitle={title => {
+                    if (!this.state.sessionId) {
+                      return;
+                    }
+                    this.props
+                      .editSession({
+                        variables: {
+                          sessionId: this.state.sessionId,
+                          title: title === "" ? null : title
                         }
-
-                        let previousCaptureId;
-
-                        if (
-                          this.props.getDetailed &&
-                          this.props.getDetailed.getDetailed
-                        ) {
-                          let list = this.props.getDetailed.getDetailed.list;
-
-                          if (list.length > 0) {
-                            let previousCapture = list[
-                              list.length - 1
-                            ] as ListFieldsFragment;
-                            previousCaptureId = previousCapture.id;
-                          }
-                        }
-
-                        this.props
-                          .createSessionCapture({
-                            variables: {
-                              body: text,
-                              sessionId: this.state.sessionId,
-                              previousCaptureId: previousCaptureId
-                                ? previousCaptureId
-                                : this.state.sessionId
-                            },
-                            optimisticResponse: {
-                              createCapture: {
-                                __typename: "Node",
-                                id: `optimistic:${NetworkUtils.getRandomId()}`,
-                                type: NodeType.Capture,
-                                text: text,
-                                level: 0
-                              } as NodeFieldsFragment
-                            },
-                            update: this.optimisticUpdateOnCapture
-                          })
-                          .then(() => {
-                            refetch();
-                          })
-                          .catch(err => console.error(err));
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
+                      })
+                      .catch(err => console.error(err));
+                  }}
+                  handleClose={() => {
+                    if (this.props.history.length > 2) {
+                      this.props.history.goBack();
+                    } else {
+                      this.props.history.push("/");
+                    }
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           {/* List */}
@@ -762,37 +619,179 @@ class Main extends React.Component<Props, State> {
               <div className={`pv4`} />
             )}
           </div>
+
+          {/* Header */}
+          <div className={`bg-dark-gray`}>
+            <ReactResizeDetector
+              handleHeight={true}
+              onResize={(_, height) => {
+                this.setState({
+                  listHeaderHeight: height
+                });
+              }}
+            />
+
+            {/* Session Title / Tags */}
+            {!isLoading && (
+              <div className={`shadow-5`}>
+                {/* Session Capture */}
+                <div className={`ph3 pv4 bt bb b--light-gray`}>
+                  <InputCapture
+                    handleCapture={text => {
+                      if (!this.state.sessionId) {
+                        this.props
+                          .createCapture({
+                            variables: {
+                              body: text
+                            },
+                            optimisticResponse: {
+                              createCapture: {
+                                __typename: "Node",
+                                id: `optimistic:${NetworkUtils.getRandomId()}`,
+                                type: NodeType.Capture,
+                                text: text,
+                                level: 0
+                              } as NodeFieldsFragment
+                            },
+                            update: this.optimisticUpdateOnCapture
+                          })
+                          .then(() => {
+                            refetch();
+                          })
+                          .catch(err => console.error(err));
+
+                        return;
+                      }
+
+                      let previousCaptureId;
+
+                      if (
+                        this.props.getDetailed &&
+                        this.props.getDetailed.getDetailed
+                      ) {
+                        let list = this.props.getDetailed.getDetailed.list;
+
+                        if (list.length > 0) {
+                          let previousCapture = list[
+                            list.length - 1
+                          ] as ListFieldsFragment;
+                          previousCaptureId = previousCapture.id;
+                        }
+                      }
+
+                      this.props
+                        .createSessionCapture({
+                          variables: {
+                            body: text,
+                            sessionId: this.state.sessionId,
+                            previousCaptureId: previousCaptureId
+                              ? previousCaptureId
+                              : this.state.sessionId
+                          },
+                          optimisticResponse: {
+                            createCapture: {
+                              __typename: "Node",
+                              id: `optimistic:${NetworkUtils.getRandomId()}`,
+                              type: NodeType.Capture,
+                              text: text,
+                              level: 0
+                            } as NodeFieldsFragment
+                          },
+                          update: this.optimisticUpdateOnCapture
+                        })
+                        .then(() => {
+                          refetch();
+                        })
+                        .catch(err => console.error(err));
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Graph */}
         {isLargeWindow ? (
-          <div className={`relative flex-grow`}>
-            {/* <div className={`absolute top-0 right-0 ma4 z-max`}>
-              <MenuBar />
-            </div> */}
-            <GraphVisualization
-              refEChart={noop}
-              nodes={data && data.graph.nodes ? data.graph.nodes : []}
-              edges={data && data.graph.edges ? data.graph.edges : []}
-              onClick={e => {
-                // to prevent selecting and edge for now
-                if (!e.data.id) {
-                  return;
-                }
-                this.props.history.push(`?id=${encodeURIComponent(e.data.id)}`);
-              }}
-              onMouseOver={e => {
-                this.setState({
-                  scrollToId: e.data.id
-                });
-              }}
-              onMouseOut={e => {
-                this.setState({
-                  scrollToId: undefined
-                });
-              }}
-              showTooltip={false}
-            />
+          <div className={`relative flex-column flex-grow`}>
+            <div className={`flex pa2`}>
+              <div className={`flex flex-grow br4 bg-dark-gray shadow-1`}>
+                {/* Navigation */}
+                <div className={`flex-grow`}>
+                  <Navigation
+                    handleHome={() => {
+                      this.props.history.push(`/`);
+                    }}
+                    handleSession={() => {
+                      this.props
+                        .createSession({
+                          variables: {
+                            firstCaptureId: null,
+                            title: null
+                          }
+                        })
+                        .then(({ data: res }) => {
+                          this.props.history.push(
+                            `?id=${encodeURIComponent(res.createSession.id)}`
+                          );
+                        })
+                        .catch(err => console.error(err));
+                    }}
+                    handleSurprise={() => {
+                      this.props.history.push("?random=true");
+                      if (
+                        NetworkUtils.getCurrentLocation(
+                          this.props.location.search
+                        ) === Location.Random
+                      ) {
+                        refetch();
+                      }
+                    }}
+                  />
+                </div>
+                {/* Search */}
+                <div
+                  className={`flex-column justify-around ph2`}
+                  style={{
+                    minWidth: "20em"
+                  }}
+                >
+                  <InputSurface
+                    handleSurface={text => {
+                      let query = trim(text);
+                      if (!query) {
+                        return;
+                      }
+                      this.props.history.push(
+                        `?query=${encodeURIComponent(text)}`
+                      );
+                    }}
+                    startingHTML={NetworkUtils.getQuery(
+                      this.props.location.search
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={`flex-grow`}>
+              <GraphVisualization
+                refEChart={noop}
+                nodes={data && data.graph.nodes ? data.graph.nodes : []}
+                edges={data && data.graph.edges ? data.graph.edges : []}
+                onClick={e => {
+                  // to prevent selecting and edge for now
+                  if (!e.data.id) {
+                    return;
+                  }
+                  this.props.history.push(
+                    `?id=${encodeURIComponent(e.data.id)}`
+                  );
+                }}
+                onMouseOver={noop}
+                onMouseOut={noop}
+                showTooltip={false}
+              />
+            </div>
           </div>
         ) : null}
       </div>

@@ -20,7 +20,7 @@ interface State {}
 class ListSessionHeader extends React.Component<Props, State> {
   render() {
     return (
-      <div className={`flex pa2 w-100 bg-white`}>
+      <div className={`flex pa2 w-100 br4 bg-white shadow-1`}>
         <div className={`flex-grow pa2`}>
           <div className={`pv2`}>
             <ListSessionTitle

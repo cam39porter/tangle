@@ -3,6 +3,9 @@ import { User } from "../db/models/user";
 import { createUser, getUser } from "../db/services/user";
 import { setAuthenticatedUser } from "./request-context";
 import { UserUrn } from "../urn/user-urn";
+import { Logger } from "../util/logging/logger";
+
+const LOGGER = new Logger("src/filters/auth.ts");
 
 function initAuth(): void {
   admin.initializeApp({
@@ -27,12 +30,12 @@ function authFilter(req, res, next): void {
             next();
           })
           .catch(error => {
-            console.log(error);
+            LOGGER.error(error);
             res.send(500, error);
           });
       })
       .catch(error => {
-        console.log(error);
+        LOGGER.error(error);
         res.send(401, error);
       });
   } else {

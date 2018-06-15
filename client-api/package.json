@@ -52,7 +52,8 @@
     "neo4j-driver": "1.5.3",
     "request-context": "2.0.0",
     "typescript": "2.8.3",
-    "uuid": "3.2.1"
+    "uuid": "3.2.1",
+    "winston": "3.0.0"
   },
   "devDependencies": {
     "@types/body-parser": "1.17.0",
@@ -65,6 +66,7 @@
     "@types/jest": "22.2.3",
     "@types/neo4j": "2.0.2",
     "@types/node": "9.6.5",
+    "@types/winston": "2.3.9",
     "graphql-request": "1.5.1",
     "jest": "22.4.3",
     "ngrok": "3.0.0",

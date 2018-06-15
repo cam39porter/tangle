@@ -1,5 +1,8 @@
 import language from "@google-cloud/language";
 import { NLPEntity, NLPEntityResponse } from "../models/nlp";
+import { Logger } from "../../util/logging/logger";
+
+const LOGGER = new Logger("src/nlp/services/nlp.ts");
 
 const client = process.env.GCLOUD_APPLICATION_CREDENTIALS
   ? new language.LanguageServiceClient({
@@ -26,7 +29,7 @@ function getNLPResponse(
       return resp;
     })
     .catch(err => {
-      console.error("ERROR:", err);
+      LOGGER.error("Failed to get NLP response, error: ", err);
     });
 }
 

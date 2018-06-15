@@ -119,7 +119,6 @@ function createRelations(
   return Promise.all(promises)
     .then(() => true)
     .catch(err => {
-      console.log(err);
       throw err;
     });
 }

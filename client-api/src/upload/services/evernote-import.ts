@@ -14,7 +14,9 @@ import { saveOverwrite, saveSafely } from "./file-db";
 import { UserUrn } from "../../urn/user-urn";
 import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
 import { v4 as uuidv4 } from "uuid/v4";
+import { Logger } from "../../util/logging/logger";
 
+const LOGGER = new Logger("src/upload/services/evernote-import.ts");
 const readFileAsync = promisify(fs.readFile);
 
 export function importEvernoteNoteUpload(file): Promise<void> {
@@ -24,7 +26,7 @@ export function importEvernoteNoteUpload(file): Promise<void> {
     try {
       note = parseEvernoteHtml(data);
     } catch (err) {
-      console.error(err);
+      LOGGER.error(`Could not parse html, error ${err}`);
       throw new Error(
         "Could not parse html. Please email cole@usetangle.com with your issue"
       );

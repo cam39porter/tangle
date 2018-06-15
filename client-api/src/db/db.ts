@@ -1,5 +1,8 @@
 import { v1 as neo4j } from "neo4j-driver";
 import { StatementResult } from "neo4j-driver/types/v1";
+import { Logger } from "../util/logging/logger";
+
+const LOGGER = new Logger("src/db/db.ts");
 
 const driver = neo4j.driver(
   process.env.NEO4J_ENDPOINT,
@@ -29,8 +32,8 @@ function executeQuery(
     })
     .catch(error => {
       session.close();
-      console.log(cypherQuery);
-      console.error(error);
+      LOGGER.error(`Recieved error for query: ${cypherQuery}`);
+      LOGGER.error(`Error response: ${error}`);
       throw error;
     });
 }

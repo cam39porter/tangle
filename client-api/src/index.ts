@@ -18,6 +18,9 @@ import { authFilter, initAuth } from "./filters/auth";
 import surfaceResolvers from "./surface/resolver";
 import { importEvernoteNoteUpload } from "./upload/services/evernote-import";
 import { ConflictError } from "./util/exceptions/confict-error";
+import { Logger } from "./util/logging/logger";
+
+const LOGGER = new Logger("src/index.ts");
 
 const schema = fs.readFileSync(
   path.join(__dirname, "../data-template/schema.graphql"),
@@ -72,7 +75,7 @@ app.post("/uploadHtml", (req, res) => {
       if (error instanceof ConflictError) {
         res.status(409).end("Object already exists, please delete it first");
       } else {
-        console.log(error);
+        LOGGER.error(error);
         res.sendStatus(500);
       }
     });
@@ -81,5 +84,5 @@ app.post("/uploadHtml", (req, res) => {
 app.get("/graphiql", graphiqlExpress({ endpointURL: "/graphql" })); // if you want GraphiQL enabled
 
 app.listen(PORT, () => {
-  console.log("Api listening on port " + PORT);
+  LOGGER.info("Api listening on port " + PORT);
 });

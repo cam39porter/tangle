@@ -2,6 +2,9 @@ import * as Storage from "@google-cloud/storage";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { ConflictError } from "../../util/exceptions/confict-error";
 import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
+import { Logger } from "../../util/logging/logger";
+
+const LOGGER = new Logger("src/upload/services/file-db.ts");
 
 const storage = Storage();
 const bucketName =
@@ -37,9 +40,9 @@ function writeToDb(dest: string, file): Promise<void> {
     .bucket(bucketName)
     .upload(`${file.path}`, { destination: dest })
     .then(() => {
-      console.log(`${file} uploaded to ${bucketName}.`);
+      LOGGER.info(`${file} uploaded to ${bucketName}.`);
     })
     .catch(err => {
-      console.error("ERROR:", err);
+      LOGGER.error("ERROR:", err);
     });
 }

@@ -9,7 +9,7 @@ import { SurfaceResults } from "../models/surface-results";
 import { PageInfo } from "../models/page-info";
 import { GraphNode } from "../models/graph-node";
 import { CaptureUrn } from "../../urn/capture-urn";
-import { buildFromNeo } from "../../db/services/capture";
+import { formatBasicCapture } from "../../db/formatters/capture";
 import { UserUrn } from "../../urn/user-urn";
 import { SessionUrn } from "../../urn/session-urn";
 import { PagingContext } from "../models/paging-context";
@@ -114,13 +114,13 @@ function formatDbResponse(
     [Capture, Relationship, Node, Relationship, Capture]
   > = result.records.map(record => {
     const root: Capture = record.get("roots")
-      ? buildFromNeo(record.get("roots").properties)
+      ? formatBasicCapture(record.get("roots"))
       : (null as Capture);
     const r1: Relationship = record.get("r1") as Relationship;
     const intermediate: Node = record.get("firstDegree") as Node;
     const r2: Relationship = record.get("r2") as Relationship;
     const end: Capture = record.get("secondDegree")
-      ? buildFromNeo(record.get("secondDegree").properties)
+      ? formatBasicCapture(record.get("secondDegree"))
       : (null as Capture);
     const ret: [Capture, Relationship, Node, Relationship, Capture] = [
       root,

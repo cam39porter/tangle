@@ -4,7 +4,7 @@ import { SearchResponse } from "elasticsearch";
 import { Capture } from "../../db/models/capture";
 import { SearchResults } from "../models/search-results";
 import { PageInfo } from "../models/page-info";
-import { buildFromNeo } from "../../db/services/capture";
+import { buildFromProps } from "../../db/formatters/capture";
 
 const client: elasticsearch.Client = new elasticsearch.Client({
   host:
@@ -33,7 +33,7 @@ export function search(
   };
   return client.search(esquery).then((resp: SearchResponse<Capture>) => {
     const results: Capture[] = resp.hits.hits.map(record =>
-      buildFromNeo(record._source)
+      buildFromProps(record._source)
     );
     return new SearchResults(
       results,

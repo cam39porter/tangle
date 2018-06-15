@@ -4,12 +4,13 @@ import { escape } from "../../helpers/capture-parser";
 import { executeQuery, Param } from "../db";
 import { getLabel } from "../helpers/urn-helpers";
 import { Capture } from "../models/capture";
-import { NotFoundError } from "../../util/exceptions/not-found-error";
 import { CaptureUrn } from "../../urn/capture-urn";
 import { UserUrn } from "../../urn/user-urn";
 import { Urn } from "../../urn/urn";
 import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
 import { SessionUrn } from "../../urn/session-urn";
+import { formatBasicCapture } from "../formatters/capture";
+import { NotFoundError } from "../../util/exceptions/not-found-error";
 
 export function getMostRecent(
   userId: UserUrn,
@@ -176,24 +177,14 @@ export function createCaptureNode(
 
 // TODO RM all these as use formatter
 function formatCaptureArray(result: StatementResult): Capture[] {
-  return result.records.map(formatCaptureRecord);
+  return result.records.map(record =>
+    formatBasicCapture(record.get("capture"))
+  );
 }
 
 function formatCaptureResult(result: StatementResult): Capture {
-  return formatCaptureRecord(result.records[0]);
-}
-
-function formatCaptureRecord(record: any): Capture {
-  if (!record) {
-    throw new NotFoundError("Could not find record");
+  if (!result.records[0]) {
+    throw new NotFoundError("Could not find capture");
   }
-  return buildFromNeo(record.get("capture").properties);
-}
-
-export function buildFromNeo(props: any): Capture {
-  return new Capture(
-    CaptureUrn.fromRaw(props["id"]),
-    props["body"],
-    props["created"]
-  );
+  return formatBasicCapture(result.records[0].get("capture"));
 }

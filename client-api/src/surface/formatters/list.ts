@@ -5,7 +5,7 @@ import { AnnotatedText } from "../models/annotated-text";
 import { RecommendationReason } from "../models/recommendation-reason";
 import { Annotation } from "../models/annotation";
 import { CaptureUrn } from "../../urn/capture-urn";
-import { buildFromNeo as buildCaptureFromNeo } from "../../db/services/capture";
+import { formatBasicCapture } from "../../db/formatters/capture";
 import { buildFromNeo as buildEntityFromNeo } from "../../db/services/entity";
 import { buildFromNeo as buildTagFromNeo } from "../../db/services/tag";
 
@@ -18,7 +18,7 @@ export function buildList(
   paths.forEach(path => {
     rootCaptureMap.set(path[0].urn.getId(), path[0]);
     if (path[2] && path[2].labels[0] === "Capture") {
-      const capture = buildCaptureFromNeo(path[2].properties);
+      const capture = formatBasicCapture(path[2]);
       relatedCaptureMap.set(capture.urn.getId(), capture);
     }
     if (path[4]) {
@@ -132,7 +132,7 @@ function buildTree(
       path[2].labels[0] === "Capture" &&
       CaptureUrn.fromRaw(path[2].properties["id"]).getId() !== root.urn.getId()
     ) {
-      capture = buildCaptureFromNeo(path[2].properties);
+      capture = formatBasicCapture(path[2]);
     } else if (path[4] && path[4].urn.getId() !== root.urn.getId()) {
       capture = path[4];
     }

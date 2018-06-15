@@ -4,8 +4,11 @@ import { search } from "./services/search";
 import { PageInfo } from "./models/page-info";
 import { Urn } from "../urn/urn";
 import { CollectionResult } from "./models/collection-result";
-import { Session } from "./models/session";
-import { getRecentSessions } from "./services/session";
+import { getRecentSessions, getSession } from "./services/session";
+import { PagingContext } from "./models/paging-context";
+import { SessionUrn } from "../urn/session-urn";
+import { Session } from "../db/models/session";
+import { Capture } from "../db/models/capture";
 
 export default {
   Query: {
@@ -58,7 +61,37 @@ export default {
       // @ts-ignore
       info
     ): Promise<CollectionResult<Session>> {
-      return getRecentSessions(pagingContext);
+      return getRecentSessions(pagingContext || PagingContext.DEFAULT);
+    },
+    getSession(
+      // @ts-ignore
+      parent,
+      // @ts-ignore
+      { id, itemsPagingContext },
+      // @ts-ignore
+      context,
+      // @ts-ignore
+      info
+    ): Promise<Session> {
+      return getSession(
+        SessionUrn.fromRaw(id),
+        itemsPagingContext || PagingContext.DEFAULT
+      );
+    }
+  },
+  SessionItem: {
+    __resolveType(): string {
+      return "Capture";
+    }
+  },
+  Capture: {
+    id(capture: Capture): string {
+      return capture.urn.toRaw();
+    }
+  },
+  Session: {
+    id(session: Session): string {
+      return session.urn.toRaw();
     }
   }
 };

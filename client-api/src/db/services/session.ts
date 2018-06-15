@@ -5,6 +5,10 @@ import { Session } from "../models/session";
 import { NotFoundError } from "../../util/exceptions/not-found-error";
 import { SessionUrn } from "../../urn/session-urn";
 import { UserUrn } from "../../urn/user-urn";
+import { PagingContext } from "../../surface/models/paging-context";
+import { buildFromNeo } from "./capture";
+import { CollectionResult } from "../../surface/models/collection-result";
+import { PagingInfo } from "../../surface/models/paging-info";
 
 export function getMostRecent(
   user: UserUrn,
@@ -17,7 +21,7 @@ export function getMostRecent(
   ${before ? "AND session.created <= {before}" : ""}
   RETURN session
   ORDER BY session.created DESC
-  LIMIT {count} `;
+  LIMIT {count}`;
   const params = [
     new Param("userUrn", user.toRaw()),
     new Param("before", before),
@@ -28,16 +32,28 @@ export function getMostRecent(
   });
 }
 
-export function get(userId: UserUrn, sessionId: SessionUrn): Promise<Session> {
+export function get(
+  userId: UserUrn,
+  sessionId: SessionUrn,
+  itemsPagingContext: PagingContext
+): Promise<Session> {
   const query = `
-  MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
-  RETURN session`;
+  MATCH (session:Session {id:{sessionId}, owner:{userId}})
+  WITH session
+  MATCH (session)-[:INCLUDES]->(capture:Capture {owner:{userId}})
+  RETURN session, collect(capture)[{start}..{start}+{count}] as captures, COUNT(capture) AS totalCaptures
+  `;
   const params = [
     new Param("userId", userId.toRaw()),
-    new Param("sessionId", sessionId.toRaw())
+    new Param("sessionId", sessionId.toRaw()),
+    new Param(
+      "start",
+      itemsPagingContext.pageId ? parseInt(itemsPagingContext.pageId, 10) : 0
+    ),
+    new Param("count", itemsPagingContext.count)
   ];
   return executeQuery(query, params).then((result: StatementResult) => {
-    return formatSessionRecord(result.records[0]);
+    return formatSessionRecord(result.records[0], itemsPagingContext);
   });
 }
 
@@ -96,9 +112,28 @@ export function create(userId: UserUrn, title: string): Promise<Session> {
   });
 }
 
-function formatSessionRecord(record: any): Session {
+function formatSessionRecord(
+  record: any,
+  itemsPagingContext?: PagingContext
+): Session {
   if (!record) {
     throw new NotFoundError("Could not find record");
   }
-  return Session.fromProperties(record.get("session").properties);
+  const session = Session.fromProperties(record.get("session").properties);
+  if (record.has("captures")) {
+    const captures = record
+      .get("captures")
+      .map(capture => buildFromNeo(capture.properties));
+    const start = itemsPagingContext.pageId
+      ? parseInt(itemsPagingContext.pageId, 10)
+      : 0;
+    session.itemCollection = new CollectionResult(
+      captures,
+      new PagingInfo(
+        (start + itemsPagingContext.count).toString(),
+        record.get("totalCaptures")
+      )
+    );
+  }
+  return session;
 }

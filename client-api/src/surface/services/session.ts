@@ -1,10 +1,13 @@
 import { PagingContext } from "../models/paging-context";
-import { Session } from "../models/session";
-import { Session as BackendSession } from "../../db/models/session";
+import { Session } from "../../db/models/session";
 import { getAuthenticatedUser } from "../../filters/request-context";
-import { getMostRecent } from "../../db/services/session";
+import {
+  getMostRecent,
+  get as getBackendSession
+} from "../../db/services/session";
 import { CollectionResult } from "../models/collection-result";
 import { PagingInfo } from "../models/paging-info";
+import { SessionUrn } from "../../urn/session-urn";
 
 export function getRecentSessions(
   pagingContext: PagingContext
@@ -18,27 +21,24 @@ export function getRecentSessions(
       if (hasNextPage(sessions, pagingContext.count)) {
         const last = sessions.pop();
         return new CollectionResult(
-          sessions.map(formatFrontendSession),
+          sessions,
           new PagingInfo(last.created.toString(), null)
         );
       } else {
-        return new CollectionResult(
-          sessions.map(formatFrontendSession),
-          new PagingInfo(null, null)
-        );
+        return new CollectionResult(sessions, new PagingInfo(null, null));
       }
     }
   );
 }
 
-function hasNextPage<T>(sessions: T[], count: number): boolean {
-  return sessions.length > count;
+export function getSession(
+  sessionUrn: SessionUrn,
+  itemsPagingContext: PagingContext
+): Promise<Session> {
+  const userUrn = getAuthenticatedUser().urn;
+  return getBackendSession(userUrn, sessionUrn, itemsPagingContext);
 }
 
-function formatFrontendSession(backendSession: BackendSession): Session {
-  return new Session(
-    backendSession.urn.toRaw(),
-    backendSession.title,
-    backendSession.created
-  );
+function hasNextPage<T>(sessions: T[], count: number): boolean {
+  return sessions.length > count;
 }

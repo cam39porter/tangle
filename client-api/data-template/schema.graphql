@@ -10,13 +10,24 @@ type SessionCollection {
   pagingInfo: PagingInfo
 }
 
+type SessionItemCollection {
+  items: [SessionItem!]
+  pagingInfo: PagingInfo!
+}
+
+union SessionItem = Capture
+
 type Session {
-  id: String!
+  id: ID!
   title: String
   created: Float!
-  # lastModified: Int!
-  # items: [SessionItem!]! TODO
-  # itemPage: PagingInfo!
+  itemCollection: SessionItemCollection!
+}
+
+type Capture {
+  id: ID!
+  body: String!
+  created: Float!
 }
 
 type ListItem {
@@ -115,8 +126,8 @@ type Query {
   getDetailed(id: String!): SurfaceResults!
   getAll(useCase: String!, timezoneOffset: Int): SurfaceResults!
   getMostRecent(start: Int = 0, count: Int = 10): SurfaceResults!
-  # getSession(id: String!): Session!
-  getRecentSessions(pagingContext: PagingContext!): SessionCollection!
+  getSession(id: String!, itemsPagingContext: PagingContext): Session!
+  getRecentSessions(pagingContext: PagingContext): SessionCollection!
 }
 
 enum GetAllUseCase {

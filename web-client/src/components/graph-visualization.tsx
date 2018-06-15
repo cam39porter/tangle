@@ -20,7 +20,7 @@ const NOT_FOCUS_COLOR = "#CCCCCC";
 const TAG_COLOR = "#333333";
 const ENTITY_COLOR = "#555555";
 const SESSION_COLOR = "#111C77";
-const OTHER_COLOR = "#FFFFFF";
+const OTHER_COLOR = "#F4F4F4";
 
 const TEXT_COLOR = "#777777";
 

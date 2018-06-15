@@ -61,7 +61,7 @@ class ListSessionTitle extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className={`f3`}>
+      <div className={``}>
         <ReactResizeDetector
           handleHeight={true}
           onResize={(width, _) => {
@@ -71,7 +71,7 @@ class ListSessionTitle extends React.Component<Props, State> {
           }}
         />
         <div
-          className={`f3`}
+          className={`f4`}
           style={{
             width: `${this.state.editorWidth}px`
           }}

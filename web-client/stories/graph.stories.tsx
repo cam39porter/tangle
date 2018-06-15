@@ -12,7 +12,7 @@ const stories = storiesOf("Graph", module);
 stories.addDecorator(withKnobs);
 
 stories.add("visualization", () => (
-  <div className={`w-100 vh-100`}>
+  <div className={`w-100 vh-100 bg-near-white`}>
     <GraphVisualization
       refEChart={action("refEChart")}
       nodes={nodes}

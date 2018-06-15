@@ -8,7 +8,6 @@ import ButtonZap from "./button-zap";
 import ButtonArchive from "./button-archive";
 import ButtonRelated from "./button-related";
 import InputCapture from "./input-capture";
-import ReactTooltip from "react-tooltip";
 
 // Utils
 
@@ -34,7 +33,7 @@ interface State {
   isShowingButtons: boolean;
 }
 
-class ListCapture extends React.Component<Props, State> {
+class CardCapture extends React.Component<Props, State> {
   constructor(nextProps: Props) {
     super(nextProps);
 
@@ -59,10 +58,7 @@ class ListCapture extends React.Component<Props, State> {
       >
         <div
           id={`list-capture`}
-          className={`relative flex flex-wrap pa3 w-100 br4 ba ${
-            this.props.isGraphFocus || this.state.isShowingButtons
-              ? "b--accent shadow-1 z-max"
-              : "b--light-gray"
+          className={`relative flex flex-wrap pa3 w-100 br4 ba bw1 b--light-gray
           } bg-white`}
         >
           <div className={`flex-grow dt`}>
@@ -85,12 +81,12 @@ class ListCapture extends React.Component<Props, State> {
               className={`absolute flex top--1 right-0 h2 ph2 br4 shadow-1 z-max bg-white gray`}
             >
               <div className={`w2`}>
-                <div data-tip={`Enter a brainstorm starting with this capture`}>
+                <div>
                   <ButtonZap onClick={this.props.handleExpand} />
                 </div>
               </div>
               <div className={`w2`}>
-                <div data-tip={`Delete this capture`}>
+                <div>
                   <ButtonArchive onClick={this.props.handleArchive} />
                 </div>
               </div>
@@ -108,14 +104,12 @@ class ListCapture extends React.Component<Props, State> {
                   </div>
                 </div>
               )}
-              <ReactTooltip />
             </div>
           )}
         </div>
-        <ReactTooltip />
       </div>
     );
   }
 }
 
-export default ListCapture;
+export default CardCapture;

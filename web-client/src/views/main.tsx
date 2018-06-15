@@ -63,7 +63,8 @@ import { graphql, compose, QueryProps, MutationFunc } from "react-apollo";
 import { RouteComponentProps } from "react-router";
 
 // Components
-import List from "../components/list";
+import CardCapture from "../components/card-capture";
+import ListCaptures from "../components/list-captures";
 import GraphVisualization from "../components/graph-visualization";
 // import MenuBar from "../components/menu-bar";
 import Navigation from "../components/navigation";
@@ -124,7 +125,8 @@ interface CaptureState {
 }
 
 interface State {
-  listHeaderHeight: number;
+  sidebarHeaderHeight: number;
+  sidebarFooterHeight: number;
   // Header
   isSearching: boolean;
   surfaceText: string;
@@ -133,6 +135,8 @@ interface State {
   scrollToId?: string;
   // Session
   sessionId?: string;
+  // Graph
+  graphFocus?: { id: string; text: string };
   // GraphQL
   isLoading: boolean;
   data: SurfaceResultsFieldsFragment | null;
@@ -148,7 +152,8 @@ class Main extends React.Component<Props, State> {
     super(nextProps);
 
     this.state = {
-      listHeaderHeight: 0,
+      sidebarHeaderHeight: 0,
+      sidebarFooterHeight: 0,
       isSearching:
         NetworkUtils.getCurrentLocation(nextProps.location.search) ===
         Location.MostRecent,
@@ -359,14 +364,14 @@ class Main extends React.Component<Props, State> {
               handleHeight={true}
               onResize={(_, height) => {
                 this.setState({
-                  listHeaderHeight: height
+                  sidebarHeaderHeight: height
                 });
               }}
             />
 
             {/* Session Title / Tags */}
             {!isLoading && (
-              <div className={`pa2`}>
+              <div className={``}>
                 <ListSessionHeader
                   startingTitle={pivot ? pivot.text || undefined : undefined}
                   handleEditTitle={title => {
@@ -399,14 +404,15 @@ class Main extends React.Component<Props, State> {
             className={`flex-column ph2 overflow-auto`}
             style={{
               height: `${this.props.windowHeight -
-                this.state.listHeaderHeight}px`
+                this.state.sidebarHeaderHeight -
+                this.state.sidebarFooterHeight}px`
             }}
           >
             {/* List Header Description */}
             <div className={`pv4 ph3 gray`}>{header}</div>
 
             {/* List */}
-            <List
+            <ListCaptures
               // List
               listData={
                 !isLoading && data !== null && data.list !== null
@@ -621,72 +627,28 @@ class Main extends React.Component<Props, State> {
           </div>
 
           {/* Header */}
-          <div className={`bg-dark-gray`}>
+          <div className={``}>
             <ReactResizeDetector
               handleHeight={true}
               onResize={(_, height) => {
                 this.setState({
-                  listHeaderHeight: height
+                  sidebarFooterHeight: height
                 });
               }}
             />
-
-            {/* Session Title / Tags */}
-            {!isLoading && (
-              <div className={`shadow-5`}>
-                {/* Session Capture */}
-                <div className={`ph3 pv4 bt bb b--light-gray`}>
-                  <InputCapture
-                    handleCapture={text => {
-                      if (!this.state.sessionId) {
-                        this.props
-                          .createCapture({
-                            variables: {
-                              body: text
-                            },
-                            optimisticResponse: {
-                              createCapture: {
-                                __typename: "Node",
-                                id: `optimistic:${NetworkUtils.getRandomId()}`,
-                                type: NodeType.Capture,
-                                text: text,
-                                level: 0
-                              } as NodeFieldsFragment
-                            },
-                            update: this.optimisticUpdateOnCapture
-                          })
-                          .then(() => {
-                            refetch();
-                          })
-                          .catch(err => console.error(err));
-
-                        return;
-                      }
-
-                      let previousCaptureId;
-
-                      if (
-                        this.props.getDetailed &&
-                        this.props.getDetailed.getDetailed
-                      ) {
-                        let list = this.props.getDetailed.getDetailed.list;
-
-                        if (list.length > 0) {
-                          let previousCapture = list[
-                            list.length - 1
-                          ] as ListFieldsFragment;
-                          previousCaptureId = previousCapture.id;
-                        }
-                      }
-
+            {/* Capture Input */}
+            <div
+              className={`pa2 bt bw2 b--accent bg-white`}
+              style={{ minHeight: "10em" }}
+            >
+              <div className={`pa3`}>
+                <InputCapture
+                  handleCapture={text => {
+                    if (!this.state.sessionId) {
                       this.props
-                        .createSessionCapture({
+                        .createCapture({
                           variables: {
-                            body: text,
-                            sessionId: this.state.sessionId,
-                            previousCaptureId: previousCaptureId
-                              ? previousCaptureId
-                              : this.state.sessionId
+                            body: text
                           },
                           optimisticResponse: {
                             createCapture: {
@@ -703,95 +665,168 @@ class Main extends React.Component<Props, State> {
                           refetch();
                         })
                         .catch(err => console.error(err));
-                    }}
-                  />
-                </div>
+
+                      return;
+                    }
+
+                    let previousCaptureId;
+
+                    if (
+                      this.props.getDetailed &&
+                      this.props.getDetailed.getDetailed
+                    ) {
+                      let list = this.props.getDetailed.getDetailed.list;
+
+                      if (list.length > 0) {
+                        let previousCapture = list[
+                          list.length - 1
+                        ] as ListFieldsFragment;
+                        previousCaptureId = previousCapture.id;
+                      }
+                    }
+
+                    this.props
+                      .createSessionCapture({
+                        variables: {
+                          body: text,
+                          sessionId: this.state.sessionId,
+                          previousCaptureId: previousCaptureId
+                            ? previousCaptureId
+                            : this.state.sessionId
+                        },
+                        optimisticResponse: {
+                          createCapture: {
+                            __typename: "Node",
+                            id: `optimistic:${NetworkUtils.getRandomId()}`,
+                            type: NodeType.Capture,
+                            text: text,
+                            level: 0
+                          } as NodeFieldsFragment
+                        },
+                        update: this.optimisticUpdateOnCapture
+                      })
+                      .then(() => {
+                        refetch();
+                      })
+                      .catch(err => console.error(err));
+                  }}
+                />
               </div>
-            )}
+            </div>
           </div>
         </div>
 
         {/* Graph */}
         {isLargeWindow ? (
-          <div className={`relative flex-column flex-grow`}>
-            <div className={`flex pa2`}>
-              <div className={`flex flex-grow br4 bg-dark-gray shadow-1`}>
-                {/* Navigation */}
-                <div className={`flex-grow`}>
-                  <Navigation
-                    handleHome={() => {
-                      this.props.history.push(`/`);
+          <div className={`relative flex-grow bg-near-white`}>
+            <div className={`absolute w-100 top-0 z-max pa2`}>
+              <div className={`flex`}>
+                <div className={`flex flex-grow br4 bg-dark-gray shadow-1`}>
+                  {/* Navigation */}
+                  <div className={`flex-grow`}>
+                    <Navigation
+                      handleHome={() => {
+                        this.props.history.push(`/`);
+                      }}
+                      handleSession={() => {
+                        this.props
+                          .createSession({
+                            variables: {
+                              firstCaptureId: null,
+                              title: null
+                            }
+                          })
+                          .then(({ data: res }) => {
+                            this.props.history.push(
+                              `?id=${encodeURIComponent(res.createSession.id)}`
+                            );
+                          })
+                          .catch(err => console.error(err));
+                      }}
+                      handleSurprise={() => {
+                        this.props.history.push("?random=true");
+                        if (
+                          NetworkUtils.getCurrentLocation(
+                            this.props.location.search
+                          ) === Location.Random
+                        ) {
+                          refetch();
+                        }
+                      }}
+                    />
+                  </div>
+                  {/* Search */}
+                  <div
+                    className={`flex-column justify-around ph2`}
+                    style={{
+                      minWidth: "20em"
                     }}
-                    handleSession={() => {
-                      this.props
-                        .createSession({
-                          variables: {
-                            firstCaptureId: null,
-                            title: null
-                          }
-                        })
-                        .then(({ data: res }) => {
-                          this.props.history.push(
-                            `?id=${encodeURIComponent(res.createSession.id)}`
-                          );
-                        })
-                        .catch(err => console.error(err));
-                    }}
-                    handleSurprise={() => {
-                      this.props.history.push("?random=true");
-                      if (
-                        NetworkUtils.getCurrentLocation(
-                          this.props.location.search
-                        ) === Location.Random
-                      ) {
-                        refetch();
-                      }
-                    }}
-                  />
-                </div>
-                {/* Search */}
-                <div
-                  className={`flex-column justify-around ph2`}
-                  style={{
-                    minWidth: "20em"
-                  }}
-                >
-                  <InputSurface
-                    handleSurface={text => {
-                      let query = trim(text);
-                      if (!query) {
-                        return;
-                      }
-                      this.props.history.push(
-                        `?query=${encodeURIComponent(text)}`
-                      );
-                    }}
-                    startingHTML={NetworkUtils.getQuery(
-                      this.props.location.search
-                    )}
-                  />
+                  >
+                    <InputSurface
+                      handleSurface={text => {
+                        let query = trim(text);
+                        if (!query) {
+                          return;
+                        }
+                        this.props.history.push(
+                          `?query=${encodeURIComponent(text)}`
+                        );
+                      }}
+                      startingHTML={NetworkUtils.getQuery(
+                        this.props.location.search
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-            <div className={`flex-grow`}>
-              <GraphVisualization
-                refEChart={noop}
-                nodes={data && data.graph.nodes ? data.graph.nodes : []}
-                edges={data && data.graph.edges ? data.graph.edges : []}
-                onClick={e => {
-                  // to prevent selecting and edge for now
-                  if (!e.data.id) {
-                    return;
-                  }
-                  this.props.history.push(
-                    `?id=${encodeURIComponent(e.data.id)}`
-                  );
-                }}
-                onMouseOver={noop}
-                onMouseOut={noop}
-                showTooltip={false}
-              />
-            </div>
+            <GraphVisualization
+              refEChart={noop}
+              nodes={data && data.graph.nodes ? data.graph.nodes : []}
+              edges={data && data.graph.edges ? data.graph.edges : []}
+              onClick={e => {
+                // to prevent selecting and edge for now
+
+                if (
+                  !(
+                    e.data.category === ("focus" as string) ||
+                    e.data.category === ("not_focus" as string)
+                  )
+                ) {
+                  return;
+                }
+
+                // Entity click
+                // Tag click
+                // Capture that is in current session
+                // Session
+
+                this.setState({
+                  graphFocus: { id: e.data.id, text: e.data.name }
+                });
+              }}
+              onMouseOver={noop}
+              onMouseOut={noop}
+              showTooltip={false}
+            />
+            {/* Graph Focus */}
+            {this.state.graphFocus ? (
+              <div
+                className={`absolute bottom-1 right-1`}
+                style={{ minWidth: "25em" }}
+                id={this.state.graphFocus.id}
+              >
+                <CardCapture
+                  captureId={this.state.graphFocus.id}
+                  startingText={this.state.graphFocus.text}
+                  handleExpand={noop}
+                  handleFocus={noop}
+                  isGraphFocus={false}
+                  handleEdit={noop}
+                  handleArchive={noop}
+                />
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>

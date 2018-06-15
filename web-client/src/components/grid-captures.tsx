@@ -2,7 +2,7 @@
 import * as React from "react";
 
 // Components
-import ListCapture from "./list-capture";
+import CardCapture from "./card-capture";
 import ScrollContainer from "./scroll-container";
 import ScrollContainerElement from "./scroll-container-element";
 // import ButtonExit from "./button-exit";
@@ -30,7 +30,7 @@ interface State {
   isHoveringOverMap: Map<string, boolean>;
 }
 
-class List extends React.Component<Props, State> {
+class GridCaptures extends React.Component<Props, State> {
   _scrollContainer: ScrollContainer | null = null;
 
   constructor(props: Props) {
@@ -91,11 +91,17 @@ class List extends React.Component<Props, State> {
       <ScrollContainer
         ref={scrollContainer => (this._scrollContainer = scrollContainer)}
       >
-        <div className={``}>
+        <div className={`flex flex-wrap justify-around`}>
           {this.props.listData.map(listItem => (
-            <div className={``} key={listItem.id}>
+            <div
+              className={`pa3`}
+              style={{
+                maxWidth: "25em",
+                minWidth: "25em"
+              }}
+            >
               <ScrollContainerElement name={listItem.id}>
-                <ListCapture
+                <CardCapture
                   captureId={listItem.id}
                   startingText={listItem.text.text}
                   handleExpand={this.props.handleExpand(listItem.id)}
@@ -124,4 +130,4 @@ class List extends React.Component<Props, State> {
   }
 }
 
-export default List;
+export default GridCaptures;

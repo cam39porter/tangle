@@ -41,6 +41,7 @@ export function get(
   MATCH (session:Session {id:{sessionId}, owner:{userId}})
   WITH session
   MATCH (session)-[:INCLUDES]->(capture:Capture {owner:{userId}})
+  WITH session, capture ORDER BY capture.created
   RETURN session, collect(capture)[{start}..{start}+{count}] as captures, COUNT(capture) AS totalCaptures
   `;
   const params = [

@@ -43,7 +43,8 @@ export function get(
   const query = `
   MATCH (session:Session {id:{sessionId}, owner:{userId}})
   WITH session
-  MATCH (session)-[:INCLUDES]->(capture:Capture {owner:{userId}})
+  OPTIONAL MATCH (session)-[:INCLUDES]->(capture:Capture {owner:{userId}})
+  WHERE (NOT EXISTS(capture.archived) or capture.archived = false)
   WITH session, capture ORDER BY capture.created
   RETURN session, collect(capture)[{start}..{start}+{count}] as captures, COUNT(capture) AS totalCaptures
   `;
@@ -54,7 +55,7 @@ export function get(
       "start",
       itemsPagingContext.pageId ? parseInt(itemsPagingContext.pageId, 10) : 0
     ),
-    new Param("count", itemsPagingContext.count)
+    new Param("count", itemsPagingContext.count + 1)
   ];
   return executeQuery(query, params).then((result: StatementResult) => {
     if (!result.records[0]) {

@@ -11,6 +11,12 @@ import { GraphNode } from "../models/graph-node";
 import { CaptureUrn } from "../../urn/capture-urn";
 import { buildFromNeo } from "../../db/services/capture";
 import { UserUrn } from "../../urn/user-urn";
+import { SessionUrn } from "../../urn/session-urn";
+import { PagingContext } from "../models/paging-context";
+import { getAuthenticatedUser } from "../../filters/request-context";
+import { formatCaptureWithSessions } from "../../db/formatters/capture";
+import { CollectionResult } from "../models/collection-result";
+import { transformFromCountPlusOne } from "../../helpers/page";
 
 export function expandCaptures(
   userUrn: UserUrn,
@@ -49,6 +55,42 @@ function expandGraph(
   });
 }
 
+export function getRelatedCapturesBySession(
+  sessionUrn: SessionUrn,
+  pagingContext: PagingContext
+): Promise<CollectionResult<Capture>> {
+  const userUrn = getAuthenticatedUser().urn;
+  const query = `
+  MATCH (rootSession:Session {id:{sessionUrn}, owner:{userUrn}})-[:INCLUDES]-
+  (firstCaptures:Capture {owner:{userUrn}})-[r1:TAGGED_WITH|REFERENCES]->
+  (firstDegree)<-[r2:TAGGED_WITH|REFERENCES]-
+  (secondDegree:Capture {owner:{userUrn}})
+  WHERE (firstDegree:Tag OR firstDegree:Entity)
+  AND (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)
+  WITH r1, r2, secondDegree as capture
+  OPTIONAL MATCH (capture)<-[:INCLUDES]-(session:Session {owner:{userUrn}})
+  WITH r1, r2, capture, collect(session) as sessions
+  ORDER BY r1.salience * r2.salience
+  SKIP {start} LIMIT {count}
+  RETURN capture, sessions
+  `;
+  const params = [
+    new Param("userUrn", userUrn.toRaw()),
+    new Param("sessionUrn", sessionUrn.toRaw()),
+    new Param("start", parseFloat(pagingContext.pageId)),
+    new Param("count", pagingContext.count + 1)
+  ];
+  return executeQuery(query, params).then(result => {
+    const captures: Capture[] = result.records.map(record => {
+      return formatCaptureWithSessions(
+        record.get("capture"),
+        record.get("sessions")
+      );
+    });
+    const end = parseFloat(pagingContext.pageId) + pagingContext.count;
+    return transformFromCountPlusOne(captures, pagingContext, end.toString());
+  });
+}
 function expandList(
   userUrn: UserUrn,
   captureUrns: CaptureUrn[],

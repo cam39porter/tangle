@@ -21,13 +21,19 @@ type Session {
   id: ID!
   title: String
   created: Float!
-  itemCollection: SessionItemCollection!
+  itemCollection: SessionItemCollection
+}
+
+type CaptureCollection {
+  items: [Capture!]!
+  pagingInfo: PagingInfo!
 }
 
 type Capture {
   id: ID!
   body: String!
   created: Float!
+  parents: [Session!]
 }
 
 type ListItem {
@@ -128,6 +134,10 @@ type Query {
   getMostRecent(start: Int = 0, count: Int = 10): SurfaceResults!
   getSession(id: String!, itemsPagingContext: PagingContext): Session!
   getRecentSessions(pagingContext: PagingContext): SessionCollection!
+  getRelatedCapturesBySession(
+    id: String!
+    pagingContext: PagingContext
+  ): CaptureCollection!
 }
 
 enum GetAllUseCase {

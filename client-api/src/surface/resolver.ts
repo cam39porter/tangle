@@ -9,6 +9,7 @@ import { PagingContext } from "./models/paging-context";
 import { SessionUrn } from "../urn/session-urn";
 import { Session } from "../db/models/session";
 import { Capture } from "../db/models/capture";
+import { getRelatedCapturesBySession } from "./services/expand";
 
 export default {
   Query: {
@@ -76,6 +77,21 @@ export default {
       return getSession(
         SessionUrn.fromRaw(id),
         itemsPagingContext || PagingContext.DEFAULT
+      );
+    },
+    getRelatedCapturesBySession(
+      // @ts-ignore
+      parent,
+      // @ts-ignore
+      { id, pagingContext },
+      // @ts-ignore
+      context,
+      // @ts-ignore
+      info
+    ): Promise<CollectionResult<Capture>> {
+      return getRelatedCapturesBySession(
+        SessionUrn.fromRaw(id),
+        pagingContext || PagingContext.INTERVAL_DEFAULT
       );
     }
   },

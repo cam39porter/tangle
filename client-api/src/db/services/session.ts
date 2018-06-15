@@ -6,9 +6,10 @@ import { NotFoundError } from "../../util/exceptions/not-found-error";
 import { SessionUrn } from "../../urn/session-urn";
 import { UserUrn } from "../../urn/user-urn";
 import { PagingContext } from "../../surface/models/paging-context";
-import { buildFromNeo } from "./capture";
-import { CollectionResult } from "../../surface/models/collection-result";
-import { PagingInfo } from "../../surface/models/paging-info";
+import {
+  formatBasicSession,
+  formatSessionWithCaptures
+} from "../formatters/session";
 
 export function getMostRecent(
   user: UserUrn,
@@ -28,7 +29,9 @@ export function getMostRecent(
     new Param("count", count)
   ];
   return executeQuery(query, params).then(result => {
-    return result.records.map(record => formatSessionRecord(record));
+    return result.records.map(record =>
+      formatBasicSession(record.get("session"))
+    );
   });
 }
 
@@ -54,7 +57,18 @@ export function get(
     new Param("count", itemsPagingContext.count)
   ];
   return executeQuery(query, params).then((result: StatementResult) => {
-    return formatSessionRecord(result.records[0], itemsPagingContext);
+    if (!result.records[0]) {
+      throw new NotFoundError(
+        `Session with id ${sessionId.toRaw()} could not be found.`
+      );
+    }
+    const row = result.records[0];
+    return formatSessionWithCaptures(
+      row.get("session"),
+      row.get("captures"),
+      row.get("totalCaptures"),
+      itemsPagingContext
+    );
   });
 }
 
@@ -88,7 +102,12 @@ export function edit(
     new Param("title", title)
   ];
   return executeQuery(query, params).then((result: StatementResult) => {
-    return formatSessionRecord(result.records[0]);
+    if (!result.records[0]) {
+      throw new NotFoundError(
+        `Session with id ${sessionId.toRaw()} could not be found.`
+      );
+    }
+    return formatBasicSession(result.records[0].get("session"));
   });
 }
 
@@ -109,32 +128,11 @@ export function create(userId: UserUrn, title: string): Promise<Session> {
     new Param("title", title)
   ];
   return executeQuery(query, params).then((result: StatementResult) => {
-    return formatSessionRecord(result.records[0]);
+    if (!result.records[0]) {
+      throw new NotFoundError(
+        `Session with id ${sessionUrn.toRaw()} could not be found.`
+      );
+    }
+    return formatBasicSession(result.records[0].get("session"));
   });
-}
-
-function formatSessionRecord(
-  record: any,
-  itemsPagingContext?: PagingContext
-): Session {
-  if (!record) {
-    throw new NotFoundError("Could not find record");
-  }
-  const session = Session.fromProperties(record.get("session").properties);
-  if (record.has("captures")) {
-    const captures = record
-      .get("captures")
-      .map(capture => buildFromNeo(capture.properties));
-    const start = itemsPagingContext.pageId
-      ? parseInt(itemsPagingContext.pageId, 10)
-      : 0;
-    session.itemCollection = new CollectionResult(
-      captures,
-      new PagingInfo(
-        (start + itemsPagingContext.count).toString(),
-        record.get("totalCaptures")
-      )
-    );
-  }
-  return session;
 }

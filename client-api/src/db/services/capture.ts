@@ -174,6 +174,7 @@ export function createCaptureNode(
   return executeQuery(query, params).then(formatCaptureResult);
 }
 
+// TODO RM all these as use formatter
 function formatCaptureArray(result: StatementResult): Capture[] {
   return result.records.map(formatCaptureRecord);
 }

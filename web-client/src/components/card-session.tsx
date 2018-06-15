@@ -7,12 +7,12 @@ import * as React from "react";
 import ButtonArchive from "./button-archive";
 
 // Utils
+import { noop } from "lodash";
 
 interface Props {
+  id: string;
   title: string;
   created: string;
-  handleOpen: () => void;
-  handleArchive: () => void;
 }
 
 interface State {
@@ -49,7 +49,7 @@ class CardSession extends React.Component<Props, State> {
               ? "ba br4 b--accent shadow-1 z-max"
               : "bb b--light-gray"
           } bg-white pointer`}
-          onClick={this.props.handleOpen}
+          onClick={noop}
         >
           <div className={`flex-grow dt`}>
             <div className={`dtc v-mid f4 dark-gray`}>{this.props.title}</div>
@@ -60,7 +60,7 @@ class CardSession extends React.Component<Props, State> {
               className={`absolute flex top--1 right-0 h2 ph2 br4 shadow-1 z-max bg-white gray`}
             >
               <div className={`w2`}>
-                <ButtonArchive onClick={this.props.handleArchive} />
+                <ButtonArchive onClick={noop} />
               </div>
             </div>
           )}

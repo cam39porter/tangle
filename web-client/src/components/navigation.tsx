@@ -9,13 +9,11 @@ import ButtonSettings from "./button-settings";
 // import ButtonImport from "./button-import";
 // import BulkImport from "./bulk-import";
 // import ButtonSurface from "./button-surface";
-import ReactToolTip from "react-tooltip";
 
-interface Props {
-  handleHome: () => void;
-  handleSurprise: () => void;
-  handleSession: () => void;
-}
+// Utils
+import { noop } from "lodash";
+
+interface Props {}
 
 interface State {
   isShowingSettings: boolean;
@@ -36,20 +34,14 @@ class NavigationSurprise extends React.Component<Props, State> {
     return (
       <div className={`flex bg-dark-gray light-gray br4`}>
         <div className={`flex flex-grow`}>
-          <div
-            className={`pa2 dim`}
-            data-tip={`View your most recent captures`}
-          >
-            <ButtonHome onClick={this.props.handleHome} />
+          <div className={`pa2 dim`}>
+            <ButtonHome onClick={noop} />
           </div>
-          <div className={`pa2 dim`} data-tip={`Start a new brainstorm`}>
-            <ButtonZap onClick={this.props.handleSession} />
+          <div className={`pa2 dim`}>
+            <ButtonZap onClick={noop} />
           </div>
-          <div
-            className={`pa2 dim`}
-            data-tip={`Surprise me with a random capture`}
-          >
-            <ButtonSurprise onClick={this.props.handleSurprise} />
+          <div className={`pa2 dim`}>
+            <ButtonSurprise onClick={noop} />
           </div>
         </div>
         <div className={`pa2 dim`} data-tip={`Your settings`}>
@@ -62,7 +54,6 @@ class NavigationSurprise extends React.Component<Props, State> {
             }}
           />
         </div>
-        <ReactToolTip />
       </div>
     );
   }

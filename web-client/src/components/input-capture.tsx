@@ -1,8 +1,22 @@
 // React
 import * as React from "react";
 
+// GraphQL
+import {
+  // Create Session Capture
+  createSessionCaptureMutation as createSessionCaptureResponse,
+  createSessionCaptureMutationVariables,
+  // Create Capture
+  createCaptureMutation as createCaptureResponse,
+  createCaptureMutationVariables,
+  // Edit Capture
+  editCaptureMutation as editCaptureResponse,
+  editCaptureMutationVariables
+} from "../__generated__/types";
+import { createSessionCapture, createCapture, editCapture } from "../queries";
+import { graphql, compose, MutationFunc } from "react-apollo";
+
 // Components
-import ReactTooltip from "react-tooltip";
 import * as Draft from "draft-js";
 import ReactResizeDetector from "react-resize-detector";
 import ButtonCapture from "./button-capture";
@@ -16,8 +30,20 @@ import { debounce, Cancelable } from "lodash";
 const TIME_TO_SAVE = 500; // ms till change is automatically captured
 
 interface Props {
-  handleCapture?: (text: string) => void;
-  handleEdit?: (text: string) => void;
+  createSessionCapture: MutationFunc<
+    createSessionCaptureResponse,
+    createSessionCaptureMutationVariables
+  >;
+  createCapture: MutationFunc<
+    createCaptureResponse,
+    createCaptureMutationVariables
+  >;
+  editCapture: MutationFunc<editCaptureResponse, editCaptureMutationVariables>;
+  sessionData: {
+    sessionId: string;
+    previousId: string;
+  };
+  captureId?: string;
   startingHTML?: string;
 }
 
@@ -41,8 +67,21 @@ class InputCapture extends React.Component<Props, State> {
       );
     }
 
-    this.saveEdit =
-      this.props.handleEdit && debounce(this.props.handleEdit, TIME_TO_SAVE);
+    this.saveEdit = this.props.captureId
+      ? debounce(text => {
+          this.props.captureId &&
+            this.props
+              .editCapture({
+                variables: {
+                  id: this.props.captureId,
+                  body: text
+                }
+              })
+              .catch(err => {
+                console.error(err);
+              });
+        }, TIME_TO_SAVE)
+      : undefined;
 
     this.state = {
       editorState,
@@ -88,16 +127,30 @@ class InputCapture extends React.Component<Props, State> {
           });
         }}
       >
-        {this.props.handleCapture && (
+        {!this.props.captureId && (
           <div className={`absolute flex top--1 right--1 br-100 z-max gray`}>
             <ButtonCapture
               onClick={() => {
-                if (!this.props.handleCapture) {
-                  return;
+                if (this.props.sessionData) {
+                  this.props.createSessionCapture({
+                    variables: {
+                      sessionId: this.props.sessionData.sessionId,
+                      previousCaptureId: this.props.sessionData.previousId,
+                      body: convertToHTML(
+                        this.state.editorState.getCurrentContent()
+                      )
+                    }
+                  });
                 }
-                this.props.handleCapture(
-                  convertToHTML(this.state.editorState.getCurrentContent())
-                );
+                {
+                  this.props.createCapture({
+                    variables: {
+                      body: convertToHTML(
+                        this.state.editorState.getCurrentContent()
+                      )
+                    }
+                  });
+                }
 
                 let cleanEditorState = EditorUtils.cleanEditorState(
                   this.state.editorState
@@ -133,11 +186,27 @@ class InputCapture extends React.Component<Props, State> {
                 editorState: Draft.EditorState
               ) => {
                 if (command === "command-return") {
-                  if (this.props.handleCapture) {
-                    this.props.handleCapture(
-                      convertToHTML(editorState.getCurrentContent())
-                    );
-
+                  if (!this.props.captureId) {
+                    if (this.props.sessionData) {
+                      this.props.createSessionCapture({
+                        variables: {
+                          sessionId: this.props.sessionData.sessionId,
+                          previousCaptureId: this.props.sessionData.previousId,
+                          body: convertToHTML(
+                            convertToHTML(editorState.getCurrentContent())
+                          )
+                        }
+                      });
+                    }
+                    {
+                      this.props.createCapture({
+                        variables: {
+                          body: convertToHTML(
+                            convertToHTML(editorState.getCurrentContent())
+                          )
+                        }
+                      });
+                    }
                     let cleanEditorState = EditorUtils.cleanEditorState(
                       editorState
                     );
@@ -167,10 +236,33 @@ class InputCapture extends React.Component<Props, State> {
             />
           </div>
         </div>
-        <ReactTooltip />
       </div>
     );
   }
 }
 
-export default InputCapture;
+const withCreateSessionCapture = graphql<createSessionCaptureResponse, Props>(
+  createSessionCapture,
+  {
+    name: "createSessionCapture",
+    alias: "withCreateSessionCapture"
+  }
+);
+
+const withCreateCapture = graphql<createCaptureResponse, Props>(createCapture, {
+  name: "createCapture",
+  alias: "withCreateCapture"
+});
+
+const withEditCapture = graphql<editCaptureResponse, Props>(editCapture, {
+  name: "editCapture",
+  alias: "withEditCapture"
+});
+
+const InputCaptureWithData = compose(
+  withCreateSessionCapture,
+  withCreateCapture,
+  withEditCapture
+)(InputCapture);
+
+export default InputCaptureWithData;

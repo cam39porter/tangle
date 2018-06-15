@@ -1,32 +1,35 @@
 // React
 import * as React from "react";
 
-// Router
+// GraphQL
+import {
+  // Archive Capture
+  archiveCaptureMutation as archiveCaptureResponse,
+  archiveCaptureMutationVariables,
+  // Edit Capture
+  editCaptureMutation as editCaptureResponse,
+  editCaptureMutationVariables
+} from "../__generated__/types";
+
+import { graphql, compose, MutationFunc } from "react-apollo";
+
+import { archiveCapture, editCapture } from "../queries";
 
 // Components
-import ButtonZap from "./button-zap";
 import ButtonArchive from "./button-archive";
-import ButtonRelated from "./button-related";
 import InputCapture from "./input-capture";
 
 // Utils
 
 // Types
-import { AnnotationFieldsFragment } from "../__generated__/types";
-
 interface Props {
+  archiveCapture: MutationFunc<
+    archiveCaptureResponse,
+    archiveCaptureMutationVariables
+  >;
+  editCapture: MutationFunc<editCaptureResponse, editCaptureMutationVariables>;
   captureId: string;
   startingText: string;
-  handleExpand: () => void;
-  handleFocus: () => void;
-  handleFocusWithId?: (id: string) => () => void;
-  handleEdit: (text: string) => void;
-  handleArchive: () => void;
-  handleIsShowingRelated?: () => void;
-  isShowingRelated?: boolean;
-  annotations?: Array<AnnotationFieldsFragment>;
-  clearOnEnter?: boolean;
-  isGraphFocus: boolean;
 }
 
 interface State {
@@ -69,9 +72,7 @@ class CardCapture extends React.Component<Props, State> {
               }}
             >
               <InputCapture
-                handleEdit={text => {
-                  this.props.handleEdit(text);
-                }}
+                captureId={this.props.captureId}
                 startingHTML={this.props.startingText}
               />
             </div>
@@ -82,28 +83,17 @@ class CardCapture extends React.Component<Props, State> {
             >
               <div className={`w2`}>
                 <div>
-                  <ButtonZap onClick={this.props.handleExpand} />
+                  <ButtonArchive
+                    onClick={() => {
+                      this.props
+                        .archiveCapture({
+                          variables: { id: this.props.captureId }
+                        })
+                        .catch(err => console.error(err));
+                    }}
+                  />
                 </div>
               </div>
-              <div className={`w2`}>
-                <div>
-                  <ButtonArchive onClick={this.props.handleArchive} />
-                </div>
-              </div>
-              {this.props.handleIsShowingRelated && (
-                <div className={`w2 accent`}>
-                  <div
-                    data-tip={`${
-                      this.props.isShowingRelated ? "Hide" : "Show"
-                    } related captures`}
-                  >
-                    <ButtonRelated
-                      isUp={!!this.props.isShowingRelated}
-                      onClick={this.props.handleIsShowingRelated}
-                    />
-                  </div>
-                </div>
-              )}
             </div>
           )}
         </div>
@@ -112,4 +102,22 @@ class CardCapture extends React.Component<Props, State> {
   }
 }
 
-export default CardCapture;
+const withArchiveCapture = graphql<archiveCaptureResponse, Props>(
+  archiveCapture,
+  {
+    name: "archiveCapture",
+    alias: "withArchiveCapture"
+  }
+);
+
+const withEditCapture = graphql<editCaptureResponse, Props>(editCapture, {
+  name: "editCapture",
+  alias: "withEditCapture"
+});
+
+const CardCaptureWithData = compose(
+  withEditCapture,
+  withArchiveCapture
+)(CardCapture);
+
+export default CardCaptureWithData;

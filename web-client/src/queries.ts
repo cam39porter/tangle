@@ -94,6 +94,62 @@ export const surfaceResultsFragment = gql`
   ${graphFragment}
 `;
 
+export const pagingInfoFragment = gql`
+  fragment PagingInfoFields on PagingInfo {
+    nextPageId
+    total
+  }
+`;
+
+export const captureFragment = gql`
+  fragment CaptureFields on Capture {
+    id
+    body
+    created
+  }
+`;
+
+export const sessionItemCollectionFragment = gql`
+  fragment SessionItemCollectionFields on SessionItemCollection {
+    items {
+      ... on Capture {
+        ...CaptureFields
+      }
+    }
+    pagingInfo {
+      ...PagingInfoFields
+    }
+  }
+  ${captureFragment}
+  ${pagingInfoFragment}
+`;
+
+export const sessionFragment = gql`
+  fragment SessionFields on Session {
+    id
+    title
+    created
+    itemCollection {
+      ...SessionItemCollectionFields
+    }
+  }
+  ${sessionItemCollectionFragment}
+`;
+
+export const sessionCollectionFragment = gql`
+  fragment SessionCollectionFields on SessionCollection {
+    items {
+      id
+      title
+      created
+    }
+    pagingInfo {
+      ...PagingInfoFields
+    }
+  }
+  ${pagingInfoFragment}
+`;
+
 // Queries
 export const mostRecent = gql`
   query getMostRecent($start: Int!, $count: Int!) {
@@ -129,6 +185,24 @@ export const search = gql`
     }
   }
   ${surfaceResultsFragment}
+`;
+
+export const getRecentSessions = gql`
+  query getRecentSessions($pageId: String, $count: Int!) {
+    getRecentSessions(pagingContext: { pageId: $pageId, count: $count }) {
+      ...SessionCollectionFields
+    }
+  }
+  ${sessionCollectionFragment}
+`;
+
+export const getSession = gql`
+  query getSession($id: String!, $pageId: String, $count: Int!) {
+    getSession(id: $id, itemsPagingContext:  { pageId: $pageId, count: $count}) {
+      ...SessionFields
+    }
+    ${sessionFragment}
+  }
 `;
 
 // Mutations

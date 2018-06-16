@@ -1,5 +1,10 @@
 import { SurfaceResults } from "./models/surface-results";
-import { getAllByUseCase, getNode, getAllMostRecent } from "./services/graph";
+import {
+  getAllByUseCase,
+  getNode,
+  getAllMostRecent,
+  getMostRecentCaptures
+} from "./services/graph";
 import { search } from "./services/search";
 import { PageInfo } from "./models/page-info";
 import { Urn } from "../urn/urn";
@@ -48,10 +53,12 @@ export default {
       // @ts-ignore
       info
     ): Promise<SurfaceResults> {
-      return getAllMostRecent(start, count).then(searchResults => {
-        searchResults.pageInfo = new PageInfo(start, count, null);
-        return searchResults;
-      });
+      return getAllMostRecent(new PagingContext(start.toString(), count)).then(
+        searchResults => {
+          searchResults.pageInfo = new PageInfo(start, count, null);
+          return searchResults;
+        }
+      );
     },
     getRecentSessions(
       // @ts-ignore
@@ -93,6 +100,18 @@ export default {
         SessionUrn.fromRaw(id),
         pagingContext || PagingContext.INTERVAL_DEFAULT
       );
+    },
+    getRecentCaptures(
+      // @ts-ignore
+      parent,
+      // @ts-ignore
+      { pagingContext },
+      // @ts-ignore
+      context,
+      // @ts-ignore
+      info
+    ): Promise<CollectionResult<Capture>> {
+      return getMostRecentCaptures(pagingContext || PagingContext.DEFAULT);
     }
   },
   SessionItem: {

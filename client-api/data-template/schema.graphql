@@ -134,6 +134,7 @@ type Query {
   getMostRecent(start: Int = 0, count: Int = 10): SurfaceResults!
   getSession(id: String!, itemsPagingContext: PagingContext): Session!
   getRecentSessions(pagingContext: PagingContext): SessionCollection!
+  getRecentCaptures(pagingContext: PagingContext): CaptureCollection!
   getRelatedCapturesBySession(
     id: String!
     pagingContext: PagingContext

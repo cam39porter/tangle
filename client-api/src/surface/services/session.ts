@@ -6,8 +6,8 @@ import {
   get as getBackendSession
 } from "../../db/services/session";
 import { CollectionResult } from "../models/collection-result";
-import { PagingInfo } from "../models/paging-info";
 import { SessionUrn } from "../../urn/session-urn";
+import { transformFromCountPlusOne } from "../../helpers/page";
 
 export function getRecentSessions(
   pagingContext: PagingContext
@@ -18,15 +18,12 @@ export function getRecentSessions(
     : null;
   return getMostRecent(userUrn, before, pagingContext.count + 1).then(
     sessions => {
-      if (hasNextPage(sessions, pagingContext.count)) {
-        const last = sessions.pop();
-        return new CollectionResult(
-          sessions,
-          new PagingInfo(last.created.toString(), null)
-        );
-      } else {
-        return new CollectionResult(sessions, new PagingInfo(null, null));
-      }
+      return transformFromCountPlusOne(
+        sessions,
+        pagingContext,
+        sessions.length > 0 ? sessions.slice(-1)[0].created.toString() : null,
+        null
+      );
     }
   );
 }
@@ -37,8 +34,4 @@ export function getSession(
 ): Promise<Session> {
   const userUrn = getAuthenticatedUser().urn;
   return getBackendSession(userUrn, sessionUrn, itemsPagingContext);
-}
-
-function hasNextPage<T>(sessions: T[], count: number): boolean {
-  return sessions.length > count;
 }

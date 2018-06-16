@@ -9,7 +9,10 @@ import { UserUrn } from "../../urn/user-urn";
 import { Urn } from "../../urn/urn";
 import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
 import { SessionUrn } from "../../urn/session-urn";
-import { formatBasicCapture } from "../formatters/capture";
+import {
+  formatBasicCapture,
+  formatCaptureWithSessions
+} from "../formatters/capture";
 import { NotFoundError } from "../../util/exceptions/not-found-error";
 
 export function getMostRecent(
@@ -24,10 +27,15 @@ export function getMostRecent(
   ];
   const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
   WHERE NOT EXISTS (capture.archived)
-  RETURN capture
+  OPTIONAL MATCH (capture)<-[:INCLUDES]-(session:Session {owner:{userId}})
+  RETURN capture, collect(session) as sessions
   ORDER BY capture.created DESC
   SKIP {start} LIMIT {count}`;
-  return executeQuery(query, params).then(formatCaptureArray);
+  return executeQuery(query, params).then(result => {
+    return result.records.map(record =>
+      formatCaptureWithSessions(record.get("capture"), record.get("sessions"))
+    );
+  });
 }
 
 export function getAllSince(

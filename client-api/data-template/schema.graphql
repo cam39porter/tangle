@@ -5,6 +5,11 @@ type SurfaceResults {
   pageInfo: PageInfo!
 }
 
+type SearchResults {
+  captures: CaptureCollection
+  sessions: SessionCollection
+}
+
 type SessionCollection {
   items: [Session!]
   pagingInfo: PagingInfo
@@ -129,6 +134,11 @@ schema {
 
 type Query {
   search(rawQuery: String!, start: Int = 0, count: Int = 10): SurfaceResults!
+  searchV2(
+    rawQuery: String!
+    capturePagingContext: PagingContext
+    sessionPagingContext: PagingContext
+  ): SearchResults!
   getDetailed(id: String!): SurfaceResults!
   getAll(useCase: String!, timezoneOffset: Int): SurfaceResults!
   getMostRecent(start: Int = 0, count: Int = 10): SurfaceResults!

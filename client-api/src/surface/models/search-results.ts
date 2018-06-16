@@ -1,11 +1,15 @@
 import { Capture } from "../../db/models/capture";
-import { PageInfo } from "./page-info";
+import { Session } from "../../db/models/session";
+import { CollectionResult } from "./collection-result";
 
 export class SearchResults {
-  public results: Capture[];
-  public pageInfo: PageInfo;
-  constructor(results: Capture[], pageInfo: PageInfo) {
-    this.results = results;
-    this.pageInfo = pageInfo;
+  public captures: CollectionResult<Capture>;
+  public sessions: CollectionResult<Session>;
+  constructor(
+    captures: CollectionResult<Capture>,
+    sessions: CollectionResult<Session>
+  ) {
+    this.captures = captures;
+    this.sessions = sessions;
   }
 }

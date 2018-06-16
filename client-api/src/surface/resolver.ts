@@ -5,7 +5,7 @@ import {
   getAllMostRecent,
   getMostRecentCaptures
 } from "./services/graph";
-import { search } from "./services/search";
+import { search, searchV2 } from "./services/search";
 import { PageInfo } from "./models/page-info";
 import { Urn } from "../urn/urn";
 import { CollectionResult } from "./models/collection-result";
@@ -15,6 +15,7 @@ import { SessionUrn } from "../urn/session-urn";
 import { Session } from "../db/models/session";
 import { Capture } from "../db/models/capture";
 import { getRelatedCapturesBySession } from "./services/expand";
+import { SearchResults } from "./models/search-results";
 
 export default {
   Query: {
@@ -29,6 +30,25 @@ export default {
     ): Promise<SurfaceResults> {
       return search(rawQuery, start, count);
     },
+    searchV2(
+      // @ts-ignore
+      parent,
+      // @ts-ignore
+      { rawQuery, capturePagingContext },
+      // @ts-ignore
+      context,
+      // @ts-ignore
+      info
+    ): Promise<SearchResults> {
+      return searchV2(
+        rawQuery,
+        new PagingContext(
+          (capturePagingContext && capturePagingContext.pageId) || 0,
+          (capturePagingContext && capturePagingContext.count) || 10
+        )
+      );
+    },
+
     // @ts-ignore
     getDetailed(parent, { id }, context, info): Promise<SurfaceResults> {
       return getNode(Urn.fromRaw(id));

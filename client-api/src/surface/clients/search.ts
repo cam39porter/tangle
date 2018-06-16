@@ -1,10 +1,12 @@
 import { getAuthenticatedUser } from "../../filters/request-context";
 import * as elasticsearch from "elasticsearch";
-import { SearchResponse } from "elasticsearch";
+import { SearchResponse as ESResponse } from "elasticsearch";
 import { Capture } from "../../db/models/capture";
-import { SearchResults } from "../models/search-results";
-import { PageInfo } from "../models/page-info";
-import { buildFromProps } from "../../db/formatters/capture";
+import { SearchResponse } from "../models/search-response";
+import { PagingContext } from "../models/paging-context";
+import { CollectionResult } from "../models/collection-result";
+import { PagingInfo } from "../models/paging-info";
+import { CaptureUrn } from "../../urn/capture-urn";
 
 const client: elasticsearch.Client = new elasticsearch.Client({
   host:
@@ -13,15 +15,15 @@ const client: elasticsearch.Client = new elasticsearch.Client({
 
 export function search(
   rawQuery: string,
-  start: number,
-  count: number
-): Promise<SearchResults> {
+  capturePagingContext: PagingContext
+): Promise<SearchResponse> {
   const userId = getAuthenticatedUser().urn;
+  const start = parseFloat(capturePagingContext.pageId);
   const esquery = {
     index: "neo4j-index-node",
     body: {
       from: start,
-      size: count,
+      size: capturePagingContext.count,
       query: {
         bool: {
           must: { match: { plainText: rawQuery } },
@@ -31,13 +33,20 @@ export function search(
       }
     }
   };
-  return client.search(esquery).then((resp: SearchResponse<Capture>) => {
-    const results: Capture[] = resp.hits.hits.map(record =>
-      buildFromProps(record._source)
+  return client.search(esquery).then((resp: ESResponse<Capture>) => {
+    const results: CaptureUrn[] = resp.hits.hits.map(record =>
+      CaptureUrn.fromRaw(record._source["id"])
     );
-    return new SearchResults(
-      results,
-      new PageInfo(start, count, resp.hits.total)
+    const nextCapturePageId =
+      start + capturePagingContext.count < resp.hits.total
+        ? (start + capturePagingContext.count).toString()
+        : null;
+    return new SearchResponse(
+      new CollectionResult(
+        results,
+        new PagingInfo(nextCapturePageId, resp.hits.total)
+      ),
+      null
     );
   });
 }

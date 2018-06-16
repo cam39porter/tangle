@@ -1,8 +1,15 @@
-import { getRandomCapture as getRandomCaptureClient } from "../../db/services/capture";
+import {
+  getRandomCapture as getRandomCaptureClient,
+  batchGetCaptures
+} from "../../db/services/capture";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { search as searchClient } from "../clients/search";
 import { SurfaceResults } from "../models/surface-results";
 import { expandCaptures } from "./expand";
+import { PagingContext } from "../models/paging-context";
+import { SearchResults } from "../models/search-results";
+import { PageInfo } from "../models/page-info";
+import { CollectionResult } from "../models/collection-result";
 
 export function search(
   rawQuery: string,
@@ -13,17 +20,39 @@ export function search(
   if (!rawQuery || rawQuery.length === 0) {
     return getRandomCapture();
   } else {
-    return searchClient(rawQuery, start, count).then(searchResults => {
-      return expandCaptures(
-        userId,
-        searchResults.results.map(capture => capture.urn),
-        null
-      ).then(surfaceResults => {
-        surfaceResults.pageInfo = searchResults.pageInfo;
-        return surfaceResults;
-      });
+    return searchClient(
+      rawQuery,
+      new PagingContext(start.toString(), count)
+    ).then(searchResults => {
+      return expandCaptures(userId, searchResults.captures.items, null).then(
+        surfaceResults => {
+          const pagingInfo = searchResults.captures.pagingInfo;
+          surfaceResults.pageInfo = new PageInfo(
+            parseFloat(pagingInfo.nextPageId),
+            count,
+            pagingInfo.total
+          );
+          return surfaceResults;
+        }
+      );
     });
   }
+}
+
+export function searchV2(
+  rawQuery: string,
+  capturePagingContext: PagingContext
+): Promise<SearchResults> {
+  const userId = getAuthenticatedUser().urn;
+  return searchClient(rawQuery, capturePagingContext).then(searchResults => {
+    return batchGetCaptures(userId, searchResults.captures.items).then(
+      captures =>
+        new SearchResults(
+          new CollectionResult(captures, searchResults.captures.pagingInfo),
+          null
+        )
+    );
+  });
 }
 
 function getRandomCapture(): Promise<SurfaceResults> {

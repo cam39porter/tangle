@@ -38,6 +38,25 @@ export function getMostRecent(
   });
 }
 
+export function batchGetCaptures(
+  userId: UserUrn,
+  captures: CaptureUrn[]
+): Promise<Capture[]> {
+  const params = [
+    new Param("userId", userId.toRaw()),
+    new Param("captureUrns", captures.map(urn => urn.toRaw()))
+  ];
+  const query = `MATCH (capture:Capture {owner:{userId}})
+  WHERE capture.id IN {captureUrns}
+  OPTIONAL MATCH (capture)<-[:INCLUDES]-(session:Session {owner:{userId}})
+  RETURN capture, collect(session) as sessions`;
+  return executeQuery(query, params).then(result => {
+    return result.records.map(record =>
+      formatCaptureWithSessions(record.get("capture"), record.get("sessions"))
+    );
+  });
+}
+
 export function getAllSince(
   userId: UserUrn,
   since: number

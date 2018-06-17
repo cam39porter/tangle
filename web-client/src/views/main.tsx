@@ -37,7 +37,7 @@ class Main extends React.Component<Props, State> {
     // let isLargeWindow = WindowUtils.getIsLargeWindow(this.props.windowWidth);
 
     return (
-      <div className={`flex w-100 vh-100`}>
+      <div className={`flex w-100 vh-100 bg-near-white`}>
         {/* Navigation */}
         <div className={`flex`}>
           <Route component={Navigation} />

@@ -107,6 +107,31 @@ class Surface extends React.Component<Props, State> {
                   );
                 }}
               />
+              <Route
+                path={`/search`}
+                render={props => {
+                  const query = NetworkUtils.getQuery(
+                    this.props.location.search
+                  );
+
+                  if (this.state.isGraphView) {
+                    return (
+                      <SearchGraph
+                        headerHeight={this.state.headerHeight}
+                        query={query}
+                        {...props}
+                      />
+                    );
+                  }
+                  return (
+                    <SearchGrid
+                      headerHeight={this.state.headerHeight}
+                      query={query}
+                      {...props}
+                    />
+                  );
+                }}
+              />
               {/* Related */}
               <Route
                 path={`/session/:id/related`}

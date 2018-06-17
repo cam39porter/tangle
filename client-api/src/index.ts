@@ -11,7 +11,7 @@ import { makeExecutableSchema } from "graphql-tools";
 import { graphiqlExpress, graphqlExpress } from "apollo-server-express";
 import * as formidable from "express-formidable";
 import * as fs from "fs";
-import { GraphQLSchema } from "graphql";
+import { GraphQLSchema, GraphQLError } from "graphql";
 import * as path from "path";
 import captureResolvers from "./capture/resolver";
 import { authFilter, initAuth } from "./filters/auth";
@@ -60,7 +60,7 @@ app.use(authFilter);
 app.use(
   "/graphql",
   bodyParser.json(),
-  graphqlExpress({ schema: executableSchema })
+  graphqlExpress({ schema: executableSchema, formatError: maskError })
 );
 app.use(formidable());
 app.post("/uploadHtml", (req, res) => {
@@ -86,3 +86,12 @@ app.get("/graphiql", graphiqlExpress({ endpointURL: "/graphql" })); // if you wa
 app.listen(PORT, () => {
   LOGGER.info("Api listening on port " + PORT);
 });
+
+function maskError(error: GraphQLError): GraphQLError {
+  LOGGER.error(error.message, error.stack);
+  if (process.env.NODE_ENV === "production") {
+    return new GraphQLError("Error");
+  } else {
+    return error;
+  }
+}

@@ -10,6 +10,7 @@ import { PagingContext } from "../models/paging-context";
 import { SearchResults } from "../models/search-results";
 import { PageInfo } from "../models/page-info";
 import { CollectionResult } from "../models/collection-result";
+import { batchGetSessions } from "../../db/services/session";
 
 export function search(
   rawQuery: string,
@@ -22,6 +23,7 @@ export function search(
   } else {
     return searchClient(
       rawQuery,
+      new PagingContext(start.toString(), count),
       new PagingContext(start.toString(), count)
     ).then(searchResults => {
       return expandCaptures(userId, searchResults.captures.items, null).then(
@@ -41,17 +43,26 @@ export function search(
 
 export function searchV2(
   rawQuery: string,
-  capturePagingContext: PagingContext
+  capturePagingContext: PagingContext,
+  sessionPagingContext: PagingContext
 ): Promise<SearchResults> {
   const userId = getAuthenticatedUser().urn;
-  return searchClient(rawQuery, capturePagingContext).then(searchResults => {
-    return batchGetCaptures(userId, searchResults.captures.items).then(
-      captures =>
-        new SearchResults(
-          new CollectionResult(captures, searchResults.captures.pagingInfo),
-          null
-        )
-    );
+  return searchClient(
+    rawQuery,
+    capturePagingContext,
+    sessionPagingContext
+  ).then(searchResults => {
+    return Promise.all([
+      batchGetCaptures(userId, searchResults.captures.items),
+      batchGetSessions(userId, searchResults.sessions.items)
+    ]).then(promises => {
+      const captures = promises[0];
+      const sessions = promises[1];
+      return new SearchResults(
+        new CollectionResult(captures, searchResults.captures.pagingInfo),
+        new CollectionResult(sessions, searchResults.sessions.pagingInfo)
+      );
+    });
   });
 }
 

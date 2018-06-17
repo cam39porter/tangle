@@ -34,7 +34,7 @@ export default {
       // @ts-ignore
       parent,
       // @ts-ignore
-      { rawQuery, capturePagingContext },
+      { rawQuery, capturePagingContext, sessionPagingContext },
       // @ts-ignore
       context,
       // @ts-ignore
@@ -45,6 +45,10 @@ export default {
         new PagingContext(
           (capturePagingContext && capturePagingContext.pageId) || 0,
           (capturePagingContext && capturePagingContext.count) || 10
+        ),
+        new PagingContext(
+          (sessionPagingContext && sessionPagingContext.pageId) || 0,
+          (sessionPagingContext && sessionPagingContext.count) || 10
         )
       );
     },

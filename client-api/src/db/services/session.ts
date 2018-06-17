@@ -10,6 +10,7 @@ import {
   formatBasicSession,
   formatSessionWithCaptures
 } from "../formatters/session";
+import { hydrate } from "../../helpers/array-helpers";
 
 export function getMostRecent(
   user: UserUrn,
@@ -32,6 +33,25 @@ export function getMostRecent(
     return result.records.map(record =>
       formatBasicSession(record.get("session"))
     );
+  });
+}
+
+export function batchGetSessions(
+  userId: UserUrn,
+  sessionUrns: SessionUrn[]
+): Promise<Session[]> {
+  const params = [
+    new Param("userId", userId.toRaw()),
+    new Param("sessionUrns", sessionUrns.map(urn => urn.toRaw()))
+  ];
+  const query = `MATCH (session:Session {owner:{userId}})
+  WHERE session.id IN {sessionUrns}
+  RETURN session`;
+  return executeQuery(query, params).then(result => {
+    const sessions = result.records.map(record =>
+      formatBasicSession(record.get("session"))
+    );
+    return hydrate(sessionUrns, sessions, session => session.urn);
   });
 }
 

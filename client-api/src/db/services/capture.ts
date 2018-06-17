@@ -14,6 +14,7 @@ import {
   formatCaptureWithSessions
 } from "../formatters/capture";
 import { NotFoundError } from "../../util/exceptions/not-found-error";
+import { hydrate } from "../../helpers/array-helpers";
 
 export function getMostRecent(
   userId: UserUrn,
@@ -40,20 +41,21 @@ export function getMostRecent(
 
 export function batchGetCaptures(
   userId: UserUrn,
-  captures: CaptureUrn[]
+  captureUrns: CaptureUrn[]
 ): Promise<Capture[]> {
   const params = [
     new Param("userId", userId.toRaw()),
-    new Param("captureUrns", captures.map(urn => urn.toRaw()))
+    new Param("captureUrns", captureUrns.map(urn => urn.toRaw()))
   ];
   const query = `MATCH (capture:Capture {owner:{userId}})
   WHERE capture.id IN {captureUrns}
   OPTIONAL MATCH (capture)<-[:INCLUDES]-(session:Session {owner:{userId}})
   RETURN capture, collect(session) as sessions`;
   return executeQuery(query, params).then(result => {
-    return result.records.map(record =>
+    const captures = result.records.map(record =>
       formatCaptureWithSessions(record.get("capture"), record.get("sessions"))
     );
+    return hydrate(captureUrns, captures, capture => capture.urn);
   });
 }
 

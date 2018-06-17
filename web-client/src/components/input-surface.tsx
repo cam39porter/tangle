@@ -7,19 +7,18 @@ import { withRouter, RouteComponentProps } from "react-router";
 // Components
 import * as Draft from "draft-js";
 import ButtonSurface from "./button-surface";
+import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 import { convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
-import ReactResizeDetector from "react-resize-detector";
 import { trim } from "lodash";
+import { NetworkUtils } from "../utils";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
 
-interface Props extends RouteProps {
-  startingHTML?: string;
-}
+interface Props extends RouteProps {}
 
 interface State {
   editorState: Draft.EditorState;
@@ -32,9 +31,10 @@ class InputSurface extends React.Component<Props, State> {
 
     let editorState = Draft.EditorState.createEmpty();
 
-    if (props.startingHTML) {
+    const startingHTML = NetworkUtils.getQuery(this.props.location.search);
+    if (startingHTML) {
       editorState = Draft.EditorState.createWithContent(
-        convertFromHTML(props.startingHTML)
+        convertFromHTML(startingHTML)
       );
     }
 

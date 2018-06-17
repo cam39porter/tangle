@@ -13,6 +13,7 @@ interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
   isGraphView: boolean;
+  handleIsGraphView: () => void;
 }
 
 interface State {}
@@ -34,15 +35,7 @@ class HeaderSurface extends React.Component<Props, State> {
             </div>
             <div
               className={`ph2 flex-column justify-around items-center dark-gray pointer`}
-              onClick={() => {
-                let nextPath = this.props.isGraphView
-                  ? this.props.location.pathname.replace(/\/graph$/, "")
-                  : this.props.location.pathname + "/graph";
-
-                this.props.history.push(
-                  `${nextPath}${this.props.location.search}`
-                );
-              }}
+              onClick={this.props.handleIsGraphView}
             >
               {this.props.isGraphView ? "List" : "Graph"}
             </div>

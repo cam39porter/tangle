@@ -15,8 +15,6 @@ import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
 import GridCaptures from "../components/grid-captures";
-import HeaderSurface from "../components/header-surface";
-import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 
@@ -27,20 +25,15 @@ interface RouteProps extends RouteComponentProps<{}> {}
 interface Props extends RouteProps {
   data: QueryProps<searchV2QueryVariables> & Partial<searchV2QueryResponse>;
   query: string;
-}
-
-interface State {
   headerHeight: number;
 }
+
+interface State {}
 
 // Class
 class SearchGrid extends React.Component<Props, State> {
   constructor(nextProps: Props) {
     super(nextProps);
-
-    this.state = {
-      headerHeight: 0
-    };
   }
 
   render() {
@@ -51,23 +44,10 @@ class SearchGrid extends React.Component<Props, State> {
     }
 
     return (
-      <div className={`flex-column`}>
-        <div>
-          <ReactResizeDetector
-            handleHeight={true}
-            onResize={(_, height) => {
-              this.setState({
-                headerHeight: height
-              });
-            }}
-          />
-          <HeaderSurface isGraphView={false} />
-        </div>
-        <GridCaptures
-          captures={results.captures.items}
-          headerHeight={this.state.headerHeight}
-        />
-      </div>
+      <GridCaptures
+        captures={results.captures.items}
+        headerHeight={this.props.headerHeight}
+      />
     );
   }
 }

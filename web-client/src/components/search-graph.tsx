@@ -6,11 +6,11 @@ import { RouteComponentProps } from "react-router";
 
 // GraphQL
 import {
-  getDetailedQuery as getDetailedQueryResponse,
-  getDetailedQueryVariables
+  searchQuery as searchQueryResponse,
+  searchQueryVariables
 } from "../__generated__/types";
 
-import { graphGetDetailed } from "../queries";
+import { graphSearch } from "../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
@@ -23,21 +23,21 @@ import GraphVisualization from "../components/graph-visualization";
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
-  data: QueryProps<getDetailedQueryVariables> &
-    Partial<getDetailedQueryResponse>;
+  data: QueryProps<searchQueryVariables> & Partial<searchQueryResponse>;
   headerHeight: number;
+  query: string;
 }
 
 interface State {}
 
 // Class
-class RelatedGraph extends React.Component<Props, State> {
+class SearchGraph extends React.Component<Props, State> {
   constructor(nextProps: Props) {
     super(nextProps);
   }
 
   render() {
-    const surfaceResults = this.props.data.getDetailed;
+    const surfaceResults = this.props.data.search;
 
     if (!(surfaceResults && surfaceResults.graph)) {
       return <div />;
@@ -52,20 +52,17 @@ class RelatedGraph extends React.Component<Props, State> {
   }
 }
 
-const withGetDetailed = graphql<getDetailedQueryResponse, Props>(
-  graphGetDetailed,
-  {
-    alias: "withGetDetailed",
-    options: (props: Props) => ({
-      variables: {
-        id: decodeURIComponent(props.match.params["id"])
-      },
-      fetchPolicy: "network-only"
-    })
-  }
-);
-
-const RelatedGraphWithData = compose(withGetDetailed)(RelatedGraph);
+const withSearch = graphql<searchQueryResponse, Props>(graphSearch, {
+  alias: "withSearch",
+  options: (props: Props) => ({
+    variables: {
+      rawQuery: props.query,
+      start: 0,
+      count: 10
+    },
+    fetchPolicy: "network-only"
+  })
+});
 
 // Export
-export default RelatedGraphWithData;
+export default compose(withSearch)(SearchGraph);

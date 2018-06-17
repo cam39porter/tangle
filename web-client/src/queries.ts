@@ -163,8 +163,30 @@ export const captureCollectionFragment = gql`
   ${pagingInfoFragment}
 `;
 
+export const searchResultsFragment = gql`
+  fragment SearchResultsFields on SearchResults {
+    captures {
+      ...CaptureCollectionFields
+    }
+    sessions {
+      ...SessionCollectionFields
+    }
+  }
+  ${captureCollectionFragment}
+  ${sessionCollectionFragment}
+`;
+
 // Queries
-export const mostRecent = gql`
+export const graphSearch = gql`
+  query search($rawQuery: String!, $start: Int!, $count: Int!) {
+    search(rawQuery: $rawQuery, start: $start, count: $count) {
+      ...SurfaceResultsFields
+    }
+  }
+  ${surfaceResultsFragment}
+`;
+
+export const graphGetRecent = gql`
   query getMostRecent($start: Int!, $count: Int!) {
     getMostRecent(start: $start, count: $count) {
       ...SurfaceResultsFields
@@ -173,27 +195,9 @@ export const mostRecent = gql`
   ${surfaceResultsFragment}
 `;
 
-export const randomCapture = gql`
-  query randomCapture {
-    getAll(useCase: "RANDOM") {
-      ...SurfaceResultsFields
-    }
-  }
-  ${surfaceResultsFragment}
-`;
-
-export const getDetailed = gql`
+export const graphGetDetailed = gql`
   query getDetailed($id: String!) {
     getDetailed(id: $id) {
-      ...SurfaceResultsFields
-    }
-  }
-  ${surfaceResultsFragment}
-`;
-
-export const search = gql`
-  query search($rawQuery: String!, $start: Int!, $count: Int!) {
-    search(rawQuery: $rawQuery, start: $start, count: $count) {
       ...SurfaceResultsFields
     }
   }
@@ -207,6 +211,15 @@ export const getRecentSessions = gql`
     }
   }
   ${sessionCollectionFragment}
+`;
+
+export const getRecentCaptures = gql`
+  query getRecentCaptures($pageId: String, $count: Int!) {
+    getRecentCaptures(pagingContext: { pageId: $pageId, count: $count }) {
+      ...CaptureCollectionFields
+    }
+  }
+  ${captureCollectionFragment}
 `;
 
 export const getSession = gql`
@@ -235,6 +248,25 @@ export const getRelatedCapturesBySession = gql`
     }
   }
   ${captureCollectionFragment}
+`;
+
+export const search = gql`
+  query searchV2(
+    $rawQuery: String!
+    $sessionPageId: String
+    $sessionCount: Int!
+    $capturePageId: String
+    $captureCount: Int!
+  ) {
+    searchV2(
+      rawQuery: $rawQuery
+      capturePagingContext: { pageId: $capturePageId, count: $captureCount }
+      sessionPagingContext: { pageId: $sessionPageId, count: $sessionCount }
+    ) {
+      ...SearchResultsFields
+    }
+  }
+  ${searchResultsFragment}
 `;
 
 // Mutations

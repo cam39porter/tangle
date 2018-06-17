@@ -6,11 +6,11 @@ import { RouteComponentProps } from "react-router";
 
 // GraphQL
 import {
-  getRelatedCapturesBySessionQuery as getRelatedCapturesBySessionResponse,
-  getRelatedCapturesBySessionQueryVariables
+  searchV2Query as searchV2QueryResponse,
+  searchV2QueryVariables
 } from "../__generated__/types";
 
-import { getRelatedCapturesBySession } from "../queries";
+import { search } from "../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
@@ -25,8 +25,8 @@ import ReactResizeDetector from "react-resize-detector";
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
-  data: QueryProps<getRelatedCapturesBySessionQueryVariables> &
-    Partial<getRelatedCapturesBySessionResponse>;
+  data: QueryProps<searchV2QueryVariables> & Partial<searchV2QueryResponse>;
+  query: string;
 }
 
 interface State {
@@ -34,7 +34,7 @@ interface State {
 }
 
 // Class
-class RelatedGrid extends React.Component<Props, State> {
+class SearchGrid extends React.Component<Props, State> {
   constructor(nextProps: Props) {
     super(nextProps);
 
@@ -44,9 +44,9 @@ class RelatedGrid extends React.Component<Props, State> {
   }
 
   render() {
-    const relatedCaptures = this.props.data.getRelatedCapturesBySession;
+    const results = this.props.data.searchV2;
 
-    if (!relatedCaptures) {
+    if (!(results && results.captures)) {
       return <div />;
     }
 
@@ -64,7 +64,7 @@ class RelatedGrid extends React.Component<Props, State> {
           <HeaderSurface isGraphView={false} />
         </div>
         <GridCaptures
-          captures={relatedCaptures.items}
+          captures={results.captures.items}
           headerHeight={this.state.headerHeight}
         />
       </div>
@@ -72,23 +72,19 @@ class RelatedGrid extends React.Component<Props, State> {
   }
 }
 
-const withGetRelatedCapturesBySession = graphql<
-  getRelatedCapturesBySessionResponse,
-  Props
->(getRelatedCapturesBySession, {
-  alias: "withGetRelatedCapturesBySession",
+const withSearch = graphql<searchV2QueryResponse, Props>(search, {
+  alias: "withSearch",
   options: (props: Props) => ({
     variables: {
-      sessionId: decodeURIComponent(props.match.params["id"]),
-      count: 5
+      rawQuery: props.query,
+      sessionPageId: null,
+      sessionCount: 10,
+      capturePageId: null,
+      captureCount: 10
     },
     fetchPolicy: "network-only"
   })
 });
 
-const RelatedGridWithData = compose(withGetRelatedCapturesBySession)(
-  RelatedGrid
-);
-
 // Export
-export default RelatedGridWithData;
+export default compose(withSearch)(SearchGrid);

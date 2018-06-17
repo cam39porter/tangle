@@ -1,85 +1,63 @@
 // React
 import * as React from "react";
 
-import { RouteComponentProps } from "react-router";
+// Router
+import { RouteComponentProps, withRouter } from "react-router";
 
 // Components
-import ButtonCapture from "./button-capture";
-import ButtonExit from "./button-exit";
-import ButtonZap from "./button-zap";
-import ButtonSettings from "./button-settings";
+import InputSurface from "./input-surface";
 
 // Utils
-import { noop } from "lodash";
-import { NetworkUtils } from "../utils";
-
+// Types
 interface RouteProps extends RouteComponentProps<{}> {}
 
-interface Props extends RouteProps {}
-
-interface State {
-  isShowingSettings: boolean;
-  isShowingImport: boolean;
+interface Props extends RouteProps {
+  isGraphView: boolean;
 }
+
+interface State {}
 
 class HeaderSurface extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-
-    this.state = {
-      isShowingSettings: false,
-      isShowingImport: false
-    };
   }
 
   render() {
-    const isCapturing = NetworkUtils.getCapture(this.props.location.search)
-      ? true
-      : false;
-    const query = NetworkUtils.getQuery(this.props.location.search);
-
     return (
-      <div className={`flex-column pa2 pt4 bg-dark-gray light-gray`}>
-        <div className={`flex-column flex-grow`}>
-          <div className={`pa2 dim bg-accent br-100`}>
-            {isCapturing ? (
-              <ButtonExit
-                onClick={() => {
-                  this.props.history.push(
-                    `${this.props.location.pathname}?${
-                      query ? `query=${query}` : ``
-                    }`
-                  );
-                }}
-              />
-            ) : (
-              <ButtonCapture
-                onClick={() => {
-                  this.props.history.push(
-                    `${this.props.location.pathname}?${
-                      query ? `query=${query}` : ``
-                    }&capture=true`
-                  );
-                }}
-              />
-            )}
+      <div className={`bb bw1 b--light-gray`}>
+        <div className={`flex pa2`}>
+          <div className={`flex-grow flex`}>
+            <div
+              className={`ph2 flex-column justify-around items-center dark-gray`}
+            >
+              Description
+            </div>
+            <div
+              className={`ph2 flex-column justify-around items-center dark-gray pointer`}
+              onClick={() => {
+                let nextPath = this.props.isGraphView
+                  ? this.props.location.pathname.replace(/\/graph$/, "")
+                  : this.props.location.pathname + "/graph";
+
+                this.props.history.push(
+                  `${nextPath}${this.props.location.search}`
+                );
+              }}
+            >
+              {this.props.isGraphView ? "List" : "Graph"}
+            </div>
           </div>
-          <div className={`pa2 dim`}>
-            <ButtonZap onClick={noop} />
-          </div>
-        </div>
-        <div className={`pa2 dim`} data-tip={`Your settings`}>
-          <ButtonSettings
-            onClick={() => {
-              this.setState({
-                isShowingImport: false,
-                isShowingSettings: !this.state.isShowingSettings
-              });
+          <div
+            className={`flex-grow`}
+            style={{
+              maxWidth: "20em"
             }}
-          />
+          >
+            <InputSurface />
+          </div>
         </div>
       </div>
     );
   }
 }
-export default HeaderSurface;
+export default withRouter(HeaderSurface);

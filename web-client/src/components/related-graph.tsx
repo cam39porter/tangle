@@ -10,11 +10,13 @@ import {
   getDetailedQueryVariables
 } from "../__generated__/types";
 
-import { getDetailed } from "../queries";
+import { graphGetDetailed } from "../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
 import GraphVisualization from "../components/graph-visualization";
+import HeaderSurface from "../components/header-surface";
+import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 
@@ -25,10 +27,11 @@ interface RouteProps extends RouteComponentProps<{}> {}
 interface Props extends RouteProps {
   getDetailed: QueryProps<getDetailedQueryVariables> &
     Partial<getDetailedQueryResponse>;
-  headerHeight: number;
 }
 
-interface State {}
+interface State {
+  headerHeight: number;
+}
 
 // Class
 class RelatedGraph extends React.Component<Props, State> {
@@ -44,24 +47,40 @@ class RelatedGraph extends React.Component<Props, State> {
     }
 
     return (
-      <GraphVisualization
-        nodes={surfaceResults.graph.nodes}
-        edges={surfaceResults.graph.edges}
-      />
+      <div className={`flex-column`}>
+        <div>
+          <ReactResizeDetector
+            handleHeight={true}
+            onResize={(_, height) => {
+              this.setState({
+                headerHeight: height
+              });
+            }}
+          />
+          <HeaderSurface isGraphView={true} />
+        </div>
+        <GraphVisualization
+          nodes={surfaceResults.graph.nodes}
+          edges={surfaceResults.graph.edges}
+        />
+      </div>
     );
   }
 }
 
-const withGetDetailed = graphql<getDetailedQueryResponse, Props>(getDetailed, {
-  name: "getDetailed",
-  alias: "withGetDetailed",
-  options: (props: Props) => ({
-    variables: {
-      id: decodeURIComponent(props.match.params["id"])
-    },
-    fetchPolicy: "network-only"
-  })
-});
+const withGetDetailed = graphql<getDetailedQueryResponse, Props>(
+  graphGetDetailed,
+  {
+    name: "getDetailed",
+    alias: "withGetDetailed",
+    options: (props: Props) => ({
+      variables: {
+        id: decodeURIComponent(props.match.params["id"])
+      },
+      fetchPolicy: "network-only"
+    })
+  }
+);
 
 const RelatedGraphWithData = compose(withGetDetailed)(RelatedGraph);
 

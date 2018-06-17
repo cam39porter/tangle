@@ -7,9 +7,10 @@ import ReactECharts from "echarts-for-react";
 // Config / Utils
 import config from "../cfg";
 import { isEqual } from "lodash";
+import windowSize from "react-window-size";
 
 // Types
-import { GraphEvent } from "../types";
+// import { GraphEvent } from "../types";
 import {
   NodeFieldsFragment,
   EdgeFieldsFragment,
@@ -31,15 +32,15 @@ interface Props {
   refEChart?: (eChart: ReactECharts) => void;
   nodes: Array<NodeFieldsFragment>;
   edges: Array<EdgeFieldsFragment>;
-  onClick: (e: GraphEvent) => void;
-  onMouseOver: (e: GraphEvent) => void;
-  onMouseOut: (e: GraphEvent) => void;
-  showTooltip: boolean;
+  headerHeight: number;
+  // Window Size
+  windowWidth: number;
+  windowHeight: number;
 }
 
 interface State {}
 
-class Graph extends React.Component<Props, State> {
+class GraphVisualization extends React.Component<Props, State> {
   eChart: ReactECharts | null = null;
 
   shouldComponentUpdate(nextProps: Props) {
@@ -203,9 +204,9 @@ class Graph extends React.Component<Props, State> {
 
   getEvents() {
     return {
-      click: this.props.onClick,
-      mouseover: this.props.onMouseOver,
-      mouseout: this.props.onMouseOut
+      // click: this.props.onClick,
+      // mouseover: this.props.onMouseOver,
+      // mouseout: this.props.onMouseOut
     };
   }
 
@@ -221,7 +222,7 @@ class Graph extends React.Component<Props, State> {
         show: false
       },
       tooltip: {
-        show: this.props.showTooltip,
+        show: false,
         trigger: "item",
         showContent: true,
         confine: true,
@@ -312,15 +313,38 @@ class Graph extends React.Component<Props, State> {
 
   render() {
     return (
-      <ReactECharts
-        ref={this.props.refEChart}
-        style={{ height: "100%", width: "100%" }}
-        option={this.getOption()}
-        opts={{ renderer: "canvas" }}
-        onEvents={this.getEvents()}
-      />
+      <div
+        className={`vh-100`}
+        style={
+          {
+            // minHeight: `${this.props.windowHeight - this.props.headerHeight}px`
+          }
+        }
+      >
+        <ReactECharts
+          ref={this.props.refEChart}
+          style={{ height: "100%", width: "100%" }}
+          option={this.getOption()}
+          opts={{ renderer: "canvas" }}
+          onEvents={this.getEvents()}
+        />
+        {/* {this.state.graphFocus ? (
+          <div
+            className={`absolute bottom-1 right-1`}
+            style={{ minWidth: "25em" }}
+            id={this.state.graphFocus.id}
+          >
+            <CardCapture
+              captureId={this.state.graphFocus.id}
+              startingText={this.state.graphFocus.text}
+            />
+          </div>
+        ) : null} */}
+      </div>
     );
   }
 }
 
-export default Graph;
+const GraphWithData = windowSize(GraphVisualization);
+
+export default GraphWithData;

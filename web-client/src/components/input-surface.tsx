@@ -1,6 +1,9 @@
 // React
 import * as React from "react";
 
+// Router
+import { withRouter, RouteComponentProps } from "react-router";
+
 // Components
 import * as Draft from "draft-js";
 import ButtonSurface from "./button-surface";
@@ -9,9 +12,12 @@ import ButtonSurface from "./button-surface";
 import { convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 import ReactResizeDetector from "react-resize-detector";
+import { trim } from "lodash";
 
-interface Props {
-  handleSurface: (text: string) => void;
+// Types
+interface RouteProps extends RouteComponentProps<{}> {}
+
+interface Props extends RouteProps {
   startingHTML?: string;
 }
 
@@ -44,15 +50,23 @@ class InputSurface extends React.Component<Props, State> {
     });
   };
 
+  handleSearch = (editorState: Draft.EditorState) => {
+    const query = trim(editorState.getCurrentContent().getPlainText());
+
+    if (!query) {
+      return;
+    }
+
+    this.props.history.push(`${this.props.match.url}/search?query=${query}`);
+  };
+
   render() {
     return (
-      <div className={`flex ph2 bg-light-gray br4`}>
-        <div className={`flex-column gray`}>
+      <div className={`flex ph2 bg-white br4`}>
+        <div className={`flex-column justify-around gray`}>
           <ButtonSurface
             onClick={() => {
-              this.props.handleSurface(
-                this.state.editorState.getCurrentContent().getPlainText()
-              );
+              this.handleSearch(this.state.editorState);
             }}
           />
         </div>
@@ -76,9 +90,7 @@ class InputSurface extends React.Component<Props, State> {
               onChange={this.handleOnChange}
               placeholder={`Search your tangle...`}
               handleReturn={(_, editorState) => {
-                this.props.handleSurface(
-                  editorState.getCurrentContent().getPlainText()
-                );
+                this.handleSearch(editorState);
                 return "handled";
               }}
             />
@@ -89,4 +101,4 @@ class InputSurface extends React.Component<Props, State> {
   }
 }
 
-export default InputSurface;
+export default withRouter(InputSurface);

@@ -22,7 +22,7 @@ interface State {
   isShowingImport: boolean;
 }
 
-class Navigation extends React.Component<Props, State> {
+class HeaderSurface extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -57,8 +57,8 @@ class Navigation extends React.Component<Props, State> {
                 onClick={() => {
                   this.props.history.push(
                     `${this.props.location.pathname}?${
-                      query ? `query=${query}&` : ``
-                    }capture=true`
+                      query ? `query=${query}` : ``
+                    }&capture=true`
                   );
                 }}
               />
@@ -82,4 +82,4 @@ class Navigation extends React.Component<Props, State> {
     );
   }
 }
-export default Navigation;
+export default HeaderSurface;

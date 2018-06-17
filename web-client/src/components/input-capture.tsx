@@ -19,7 +19,7 @@ import { graphql, compose, MutationFunc } from "react-apollo";
 // Components
 import * as Draft from "draft-js";
 import ReactResizeDetector from "react-resize-detector";
-import ButtonCapture from "./button-capture";
+// import ButtonCapture from "./button-capture";
 
 // Utils
 import { convertToHTML, convertFromHTML } from "draft-convert";
@@ -127,8 +127,8 @@ class InputCapture extends React.Component<Props, State> {
           });
         }}
       >
-        {!this.props.captureId && (
-          <div className={`absolute flex top--1 right--1 br-100 z-max gray`}>
+        {/* {!this.props.captureId && (
+          <div className={`absolute flex top--2 right--2 br-100 z-max gray`}>
             <ButtonCapture
               onClick={() => {
                 if (this.props.sessionData) {
@@ -162,7 +162,7 @@ class InputCapture extends React.Component<Props, State> {
               }}
             />
           </div>
-        )}
+        )} */}
         <div className={`flex-grow`}>
           <ReactResizeDetector
             handleHeight={true}

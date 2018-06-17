@@ -10,10 +10,11 @@ interface Props {
 
 const ButtonEdit = (props: Props) => {
   return (
-    <span className={`dt pa2 f6 tc pointer`} onClick={props.onClick}>
-      <div className={`dtc v-mid h-100 w-100`}>
-        <Edit size={16} />
-      </div>
+    <span
+      className={`flex-column pa2 justify-around pointer`}
+      onClick={props.onClick}
+    >
+      <Edit size={16} />
     </span>
   );
 };

@@ -20,8 +20,7 @@ export interface GraphEvent {
 
 // Location
 export enum Location {
-  MostRecent,
-  Search,
-  Detail,
-  Random
+  Query,
+  Capture,
+  None
 }

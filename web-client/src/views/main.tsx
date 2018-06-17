@@ -5,21 +5,18 @@ import * as React from "react";
 import { RouteComponentProps, Switch, Route } from "react-router";
 
 // Components
-// import CardCapture from "../components/card-capture";
-import ListSessions from "../components/list-sessions";
-// import GraphVisualization from "../components/graph-visualization";
-// import Navigation from "../components/navigation";
-// import ListSessionHeader from "../components/list-session-header";
-// import InputSurface from "../components/input-surface";
+import Session from "../views/session";
+import Navigation from "../components/navigation";
+import Surface from "./surface";
+import Capture from "./capture";
 
 // Utils
-import { WindowUtils } from "../utils";
+import { NetworkUtils } from "../utils";
 import windowSize from "react-window-size";
 
 // Constants
 
 // Types
-
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
@@ -32,108 +29,39 @@ interface State {}
 
 // Class
 class Main extends React.Component<Props, State> {
-  constructor(nextProps: Props) {
-    super(nextProps);
+  constructor(props: Props) {
+    super(props);
   }
 
   render() {
-    let isLargeWindow = WindowUtils.getIsLargeWindow(this.props.windowWidth);
+    // let isLargeWindow = WindowUtils.getIsLargeWindow(this.props.windowWidth);
 
     return (
       <div className={`flex w-100 vh-100`}>
-        {/* Sidebar */}
-        <div
-          className={`bg-near-white z-5 shadow-5`}
-          style={{
-            width: isLargeWindow ? "32.5em" : "100%"
-          }}
-        >
-          <Switch>
-            <Route path={this.props.match.url} component={ListSessions} />
-          </Switch>
+        {/* Navigation */}
+        <div className={`flex`}>
+          <Route component={Navigation} />
         </div>
-
-        {/* Graph */}
-        {/* {isLargeWindow ? (
-          <div className={`relative flex-grow bg-near-white`}>
-            <div className={`absolute w-100 top-0 z-max pa2`}>
-              <div className={`flex`}>
-                <div className={`flex flex-grow br4 bg-dark-gray shadow-1`}>
-                  <div className={`flex-grow`}>
-                    <Navigation />
-                  </div>
-                  <div
-                    className={`flex-column justify-around ph2`}
-                    style={{
-                      minWidth: "20em"
-                    }}
-                  >
-                    <InputSurface
-                      handleSurface={text => {
-                        let query = trim(text);
-                        if (!query) {
-                          return;
-                        }
-                        this.props.history.push(
-                          `?query=${encodeURIComponent(text)}`
-                        );
-                      }}
-                      startingHTML={NetworkUtils.getQuery(
-                        this.props.location.search
-                      )}
-                    />
-                  </div>
-                </div>
-              </div>
+        <div className={`relative flex-grow`}>
+          {/* Capture */}
+          {NetworkUtils.getCapture(this.props.location.search) && (
+            <div className={`absolute top-0 left-0 z-max vh-100 w-100`}>
+              <Capture />
             </div>
-            <GraphVisualization
-              refEChart={noop}
-              nodes={data && data.graph.nodes ? data.graph.nodes : []}
-              edges={data && data.graph.edges ? data.graph.edges : []}
-              onClick={e => {
-                // to prevent selecting and edge for now
+          )}
+          <div className={`flex`}>
+            {/* Session */}
+            <Switch>
+              <Route path={`/session/:id`} component={Session} />
+            </Switch>
 
-                if (
-                  !(
-                    e.data.category === ("focus" as string) ||
-                    e.data.category === ("not_focus" as string)
-                  )
-                ) {
-                  return;
-                }
-
-                // Entity click
-                // Tag click
-                // Capture that is in current session
-                // Session
-
-                this.setState({
-                  graphFocus: { id: e.data.id, text: e.data.name }
-                });
-              }}
-              onMouseOver={noop}
-              onMouseOut={noop}
-              showTooltip={false}
-            />
-            {this.state.graphFocus ? (
-              <div
-                className={`absolute bottom-1 right-1`}
-                style={{ minWidth: "25em" }}
-                id={this.state.graphFocus.id}
-              >
-                <CardCapture
-                  captureId={this.state.graphFocus.id}
-                  startingText={this.state.graphFocus.text}
-                  handleExpand={noop}
-                  handleFocus={noop}
-                  isGraphFocus={false}
-                  handleEdit={noop}
-                  handleArchive={noop}
-                />
-              </div>
-            ) : null}
+            {/* Surface */}
+            <Switch>
+              <Route path={`/session/:id`} component={Surface} />
+              <Route path={`/`} component={Surface} />
+            </Switch>
           </div>
-        ) : null} */}
+        </div>
       </div>
     );
   }

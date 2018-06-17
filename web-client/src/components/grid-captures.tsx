@@ -5,40 +5,30 @@ import * as React from "react";
 import CardCapture from "./card-capture";
 import ScrollContainer from "./scroll-container";
 import ScrollContainerElement from "./scroll-container-element";
-// import ButtonExit from "./button-exit";
-// import ReactTooltip from "react-tooltip";
+import { CaptureFieldsFragment } from "../__generated__/types";
+
+// Utils
+import windowSize from "react-window-size";
 
 // Types
-import { ListFieldsFragment } from "../__generated__/types";
 
 interface Props {
-  listData: Array<ListFieldsFragment>;
+  captures: Array<CaptureFieldsFragment>;
   scrollToId?: string;
-  handleExpand: (id: string) => (() => void);
-  handleIsShowingRelated: (
-    id: string,
-    callback?: () => void
-  ) => (() => void) | undefined;
-  isShowingRelated: (id: string) => boolean | undefined;
-  handleFocus: (id: string) => (() => void);
-  handleEdit: (id: string) => ((text: string) => void);
-  handleArchive: (id: string) => (() => void);
-  handleDismissCaptureRelation: (fromId: string, toId: string) => void;
+  sessionId?: string;
+  headerHeight: number;
+  // Window Size
+  windowWidth: number;
+  windowHeight: number;
 }
 
-interface State {
-  isHoveringOverMap: Map<string, boolean>;
-}
+interface State {}
 
 class GridCaptures extends React.Component<Props, State> {
   _scrollContainer: ScrollContainer | null = null;
 
   constructor(props: Props) {
     super(props);
-
-    this.state = {
-      isHoveringOverMap: new Map<string, boolean>()
-    };
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -48,86 +38,44 @@ class GridCaptures extends React.Component<Props, State> {
   }
 
   scrollTo = (id: string) => {
-    // check if this is a root capture and if so scroll
-    let rootIndex = this.props.listData.findIndex(
-      listItem => listItem.id === id
-    );
-    if (rootIndex >= 0) {
-      this._scrollContainer && this._scrollContainer.scrollTo(id);
-      return;
-    }
-
-    // not a rootCapture so showRelated for rootCapture and then scroll
-    this.props.listData.forEach(rootListItem => {
-      let childListItemIndex =
-        rootListItem.relatedItems &&
-        rootListItem.relatedItems.findIndex(childItem => {
-          if (childItem) {
-            return childItem.id === id;
-          }
-          return false;
-        });
-      if (childListItemIndex !== null && childListItemIndex >= 0) {
-        let parentIsShowingRelated = this.props.isShowingRelated(
-          rootListItem.id
-        );
-        if (!parentIsShowingRelated) {
-          let handleParentIsShowingRelated = this.props.handleIsShowingRelated(
-            rootListItem.id,
-            () => {
-              this._scrollContainer && this._scrollContainer.scrollTo(id);
-            }
-          );
-          handleParentIsShowingRelated && handleParentIsShowingRelated();
-        } else {
-          this._scrollContainer && this._scrollContainer.scrollTo(id);
-        }
-      }
-    });
+    this._scrollContainer && this._scrollContainer.scrollTo(id);
   };
 
   render() {
     return (
-      <ScrollContainer
-        ref={scrollContainer => (this._scrollContainer = scrollContainer)}
-      >
-        <div className={`flex flex-wrap justify-around`}>
-          {this.props.listData.map(listItem => (
-            <div
-              className={`pa3`}
-              style={{
-                maxWidth: "25em",
-                minWidth: "25em"
-              }}
-            >
-              <ScrollContainerElement name={listItem.id}>
-                <CardCapture
-                  captureId={listItem.id}
-                  startingText={listItem.text.text}
-                  handleExpand={this.props.handleExpand(listItem.id)}
-                  handleFocus={this.props.handleFocus(listItem.id)}
-                  handleEdit={this.props.handleEdit(listItem.id)}
-                  handleArchive={this.props.handleArchive(listItem.id)}
-                  handleIsShowingRelated={
-                    listItem.relatedItems && listItem.relatedItems.length > 0
-                      ? this.props.handleIsShowingRelated(listItem.id)
-                      : undefined
-                  }
-                  isShowingRelated={
-                    listItem.relatedItems && listItem.relatedItems.length > 0
-                      ? this.props.isShowingRelated(listItem.id)
-                      : undefined
-                  }
-                  annotations={listItem.text.annotations}
-                  isGraphFocus={this.props.scrollToId === listItem.id}
-                />
-              </ScrollContainerElement>
-            </div>
-          ))}
-        </div>
-      </ScrollContainer>
+      <div className={``}>
+        <ScrollContainer
+          ref={scrollContainer => (this._scrollContainer = scrollContainer)}
+        >
+          <div
+            className={`flex-column items-center ph2 pv4 overflow-auto`}
+            style={{
+              height: `${this.props.windowHeight - this.props.headerHeight}px`
+            }}
+          >
+            {this.props.captures.map(capture => (
+              <div
+                className={`pv4`}
+                style={{
+                  width: "35em"
+                }}
+                key={capture.id}
+              >
+                <ScrollContainerElement name={capture.id}>
+                  <CardCapture
+                    captureId={capture.id}
+                    startingText={capture.body}
+                  />
+                </ScrollContainerElement>
+              </div>
+            ))}
+          </div>
+        </ScrollContainer>
+      </div>
     );
   }
 }
 
-export default GridCaptures;
+const GridCapturesWithData = windowSize(GridCaptures);
+
+export default GridCapturesWithData;

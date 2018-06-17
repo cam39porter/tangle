@@ -1,11 +1,19 @@
 // React
 import * as React from "react";
 
+// GraphQL
+import {
+  editSessionMutation as editSessionResponse,
+  editSessionMutationVariables
+} from "../__generated__/types";
+import { editSession } from "../queries";
+import { graphql, compose, MutationFunc } from "react-apollo";
+
 // Components
 import * as Draft from "draft-js";
 
 // Utils
-import { convertToHTML, convertFromHTML } from "draft-convert";
+import { convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 import { debounce, Cancelable } from "lodash";
 import ReactResizeDetector from "react-resize-detector";
@@ -13,8 +21,9 @@ import ReactResizeDetector from "react-resize-detector";
 const TIME_TO_SAVE = 500; // ms
 
 interface Props {
+  editSession: MutationFunc<editSessionResponse, editSessionMutationVariables>;
+  sessionId: string;
   startingTitle?: string;
-  handleEdit: (title: string) => void;
 }
 
 interface State {
@@ -22,7 +31,7 @@ interface State {
   editorWidth: number;
 }
 
-class ListSessionTitle extends React.Component<Props, State> {
+class HeaderSession extends React.Component<Props, State> {
   saveEdit: ((text: string) => void) & Cancelable | undefined;
 
   constructor(props: Props) {
@@ -36,8 +45,18 @@ class ListSessionTitle extends React.Component<Props, State> {
       );
     }
 
-    this.saveEdit =
-      this.props.handleEdit && debounce(this.props.handleEdit, TIME_TO_SAVE);
+    this.saveEdit = debounce((text: string) => {
+      this.props
+        .editSession({
+          variables: {
+            sessionId: this.props.sessionId,
+            title: text
+          }
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }, TIME_TO_SAVE);
 
     this.state = {
       editorState,
@@ -51,7 +70,7 @@ class ListSessionTitle extends React.Component<Props, State> {
 
     // Content has changed
     if (currentContent !== newContent) {
-      this.saveEdit && this.saveEdit(convertToHTML(newContent));
+      this.saveEdit && this.saveEdit(newContent.getPlainText());
     }
 
     this.setState({
@@ -87,4 +106,11 @@ class ListSessionTitle extends React.Component<Props, State> {
   }
 }
 
-export default ListSessionTitle;
+const withEditSession = graphql<editSessionResponse, Props>(editSession, {
+  name: "editSession",
+  alias: "withEditSession"
+});
+
+const ListSessionTitleWithData = compose(withEditSession)(HeaderSession);
+
+export default ListSessionTitleWithData;

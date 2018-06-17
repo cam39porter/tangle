@@ -150,6 +150,19 @@ export const sessionCollectionFragment = gql`
   ${pagingInfoFragment}
 `;
 
+export const captureCollectionFragment = gql`
+  fragment CaptureCollectionFields on CaptureCollection {
+    items {
+      ...CaptureFields
+    }
+    pagingInfo {
+      ...PagingInfoFields
+    }
+  }
+  ${captureFragment}
+  ${pagingInfoFragment}
+`;
+
 // Queries
 export const mostRecent = gql`
   query getMostRecent($start: Int!, $count: Int!) {
@@ -197,12 +210,31 @@ export const getRecentSessions = gql`
 `;
 
 export const getSession = gql`
-  query getSession($id: String!, $pageId: String, $count: Int!) {
-    getSession(id: $id, itemsPagingContext:  { pageId: $pageId, count: $count}) {
+  query getSession($sessionId: String!, $pageId: String, $count: Int!) {
+    getSession(
+      id: $sessionId
+      itemsPagingContext: { pageId: $pageId, count: $count }
+    ) {
       ...SessionFields
     }
-    ${sessionFragment}
   }
+  ${sessionFragment}
+`;
+
+export const getRelatedCapturesBySession = gql`
+  query getRelatedCapturesBySession(
+    $sessionId: String!
+    $pageId: String
+    $count: Int!
+  ) {
+    getRelatedCapturesBySession(
+      id: $sessionId
+      pagingContext: { pageId: $pageId, count: $count }
+    ) {
+      ...CaptureCollectionFields
+    }
+  }
+  ${captureCollectionFragment}
 `;
 
 // Mutations
@@ -274,5 +306,11 @@ export const createSessionCapture = gql`
 export const dismissCaptureRelation = gql`
   mutation dismissCaptureRelation($fromId: String!, $toId: String!) {
     dismissCaptureRelation(fromId: $fromId, toId: $toId)
+  }
+`;
+
+export const deleteSession = gql`
+  mutation deleteSession($sessionId: String!) {
+    deleteSession(id: $sessionId)
   }
 `;

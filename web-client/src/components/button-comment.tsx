@@ -10,10 +10,11 @@ interface Props {
 
 const ButtonComment = (props: Props) => {
   return (
-    <span className={`dt pa2 f6 tc pointer`} onClick={props.onClick}>
-      <div className={`dtc v-mid h-100 w-100`}>
-        <MessageSquare size={16} />
-      </div>
+    <span
+      className={`flex-column pa2 justify-around pointer`}
+      onClick={props.onClick}
+    >
+      <MessageSquare size={16} />
     </span>
   );
 };

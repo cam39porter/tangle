@@ -10,10 +10,11 @@ interface Props {
 
 const ButtonSurface = (props: Props) => {
   return (
-    <span className={`dt pa2 f6 tc pointer`} onClick={props.onClick}>
-      <div className={`dtc v-mid h-100 w-100`}>
-        <Search size={16} />
-      </div>
+    <span
+      className={`flex-column justify-around pa2 pointer`}
+      onClick={props.onClick}
+    >
+      <Search size={16} />
     </span>
   );
 };

@@ -60,7 +60,6 @@ function verifyOwner(result: StatementResult, userUrn: UserUrn): void {
 }
 
 function verifyNode(element: object, userUrn: UserUrn): void {
-  LOGGER.info("verifying ownership");
   if (
     element["properties"] &&
     element["properties"].owner &&

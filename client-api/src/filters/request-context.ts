@@ -10,7 +10,9 @@ export class RequestContext {
 }
 
 export function setAuthenticatedUser(user: User, next: any): void {
-  const session = createNamespace("request");
+  const session = getNamespace("request")
+    ? getNamespace("request")
+    : createNamespace("request");
   session.run(() => {
     session.set("user", user);
     next();
@@ -19,7 +21,7 @@ export function setAuthenticatedUser(user: User, next: any): void {
 
 export function hasAuthenticatedUser(): boolean {
   const session = getNamespace("request");
-  return session ? true : false;
+  return session && session.active ? true : false;
 }
 
 export function getAuthenticatedUser(): User {

@@ -52,12 +52,17 @@ class InputSurface extends React.Component<Props, State> {
 
   handleSearch = (editorState: Draft.EditorState) => {
     const query = trim(editorState.getCurrentContent().getPlainText());
+    const url = this.props.match.url;
 
     if (!query) {
+      if (url === "/") {
+        this.props.history.push(`${url}recent`);
+      } else {
+        this.props.history.push(`${url}/related`);
+      }
       return;
     }
 
-    let url = this.props.match.url;
     if (url === "/") {
       this.props.history.push(`${url}search?query=${query}`);
     } else {

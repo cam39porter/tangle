@@ -38,7 +38,6 @@ class SearchGrid extends React.Component<Props, State> {
 
   render() {
     const results = this.props.data.searchV2;
-
     if (!(results && results.captures && results.sessions)) {
       return <div />;
     }

@@ -8,6 +8,7 @@ import { RouteComponentProps, Switch, Route, Redirect } from "react-router";
 import RecentGrid from "../components/recent-grid";
 import RelatedGrid from "../components/related-grid";
 import SearchGrid from "../components/search-grid";
+import RecentGraph from "../components/recent-graph";
 import RelatedGraph from "../components/related-graph";
 import SearchGraph from "../components/search-graph";
 import HeaderSurface from "../components/header-surface";
@@ -70,15 +71,15 @@ class Surface extends React.Component<Props, State> {
                     this.props.location.search
                   );
 
-                  // if (this.state.isGraphView) {
-                  //   return (
-                  //     <SearchGraph
-                  //       headerHeight={this.state.headerHeight}
-                  //       query={query}
-                  //       {...props}
-                  //     />
-                  //   );
-                  // }
+                  if (this.state.isGraphView) {
+                    return (
+                      <RecentGraph
+                        headerHeight={this.state.headerHeight}
+                        query={query}
+                        {...props}
+                      />
+                    );
+                  }
                   return (
                     <RecentGrid
                       headerHeight={this.state.headerHeight}
@@ -95,15 +96,16 @@ class Surface extends React.Component<Props, State> {
                     this.props.location.search
                   );
 
-                  // if (this.state.isGraphView) {
-                  //   return (
-                  //     <SearchGraph
-                  //       headerHeight={this.state.headerHeight}
-                  //       query={query}
-                  //       {...props}
-                  //     />
-                  //   );
-                  // }
+                  if (this.state.isGraphView) {
+                    return (
+                      <RecentGraph
+                        headerHeight={this.state.headerHeight}
+                        query={query}
+                        {...props}
+                      />
+                    );
+                  }
+
                   return (
                     <RecentGrid
                       headerHeight={this.state.headerHeight}

@@ -2,9 +2,10 @@
 import * as React from "react";
 
 // Router
-import { RouteComponentProps, Switch, Route } from "react-router";
+import { RouteComponentProps, Switch, Route, Redirect } from "react-router";
 
 // Components
+import RecentGrid from "../components/recent-grid";
 import RelatedGrid from "../components/related-grid";
 import SearchGrid from "../components/search-grid";
 import RelatedGraph from "../components/related-graph";
@@ -62,16 +63,58 @@ class Surface extends React.Component<Props, State> {
           </div>
           <div className={`flex-grow`}>
             <Switch>
+              {/* Recent */}
+              <Route
+                path={`/session/:id/recent`}
+                render={props => {
+                  const query = NetworkUtils.getQuery(
+                    this.props.location.search
+                  );
+
+                  // if (this.state.isGraphView) {
+                  //   return (
+                  //     <SearchGraph
+                  //       headerHeight={this.state.headerHeight}
+                  //       query={query}
+                  //       {...props}
+                  //     />
+                  //   );
+                  // }
+                  return (
+                    <RecentGrid
+                      headerHeight={this.state.headerHeight}
+                      query={query}
+                      {...props}
+                    />
+                  );
+                }}
+              />
+              <Route
+                path={`/recent`}
+                render={props => {
+                  const query = NetworkUtils.getQuery(
+                    this.props.location.search
+                  );
+
+                  // if (this.state.isGraphView) {
+                  //   return (
+                  //     <SearchGraph
+                  //       headerHeight={this.state.headerHeight}
+                  //       query={query}
+                  //       {...props}
+                  //     />
+                  //   );
+                  // }
+                  return (
+                    <RecentGrid
+                      headerHeight={this.state.headerHeight}
+                      query={query}
+                      {...props}
+                    />
+                  );
+                }}
+              />
               {/* Search  */}
-              {/* <Route
-                path={`/session/:id/search/graph`}
-                render={props => (
-                  <RelatedGraph
-                  headerHeight={this.state.headerHeight}
-                  {...props}
-                  />
-                )}
-              /> */}
               <Route
                 path={`/session/:id/search`}
                 render={props => {
@@ -142,6 +185,7 @@ class Surface extends React.Component<Props, State> {
                   );
                 }}
               />
+              <Redirect from={"/"} to={`/recent`} />
             </Switch>
           </div>
         </div>

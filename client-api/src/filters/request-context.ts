@@ -1,16 +1,36 @@
-import * as requestContext from "request-context";
 import { User } from "../db/models/user";
+import { createNamespace, getNamespace } from "continuation-local-storage";
 
-function setAuthenticatedUser(user: User): void {
-  requestContext.set("request:user", user);
+export class RequestContext {
+  public user: User;
+
+  constructor(user: User) {
+    this.user = user;
+  }
 }
 
-function getAuthenticatedUser(): User {
-  const userJson = requestContext.get("request:user");
+export function setAuthenticatedUser(user: User, next: any): void {
+  const session = createNamespace("request");
+  session.run(() => {
+    session.set("user", user);
+    next();
+  });
+}
+
+export function hasAuthenticatedUser(): boolean {
+  const session = getNamespace("request");
+  return session ? true : false;
+}
+
+export function getAuthenticatedUser(): User {
+  const session = getNamespace("request");
+  const userJson = session.get("user");
   if (!userJson) {
     throw new Error("Authenticated user has not yet been set. Cannot proceed");
   }
   return userJson as User;
 }
 
-export { setAuthenticatedUser, getAuthenticatedUser };
+export function getContext(): RequestContext {
+  return new RequestContext(getAuthenticatedUser());
+}

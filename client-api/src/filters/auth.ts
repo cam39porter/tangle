@@ -16,9 +16,12 @@ function initAuth(): void {
 
 function authFilter(req, res, next): void {
   if (process.env.NODE_ENV !== "production" && req.get("dev-override-id")) {
-    setDevOverride(UserUrn.fromRaw(req.get("dev-override-id")))
-      .then(() => next())
-      .catch(err => res.send(500, err));
+    setDevOverride(UserUrn.fromRaw(req.get("dev-override-id")), next).catch(
+      err => {
+        LOGGER.error(err);
+        res.send(500, err);
+      }
+    );
   } else if (req.get("authorization")) {
     const encodedToken = parseAuthorization(req.get("authorization"));
     verify(encodedToken)
@@ -26,7 +29,7 @@ function authFilter(req, res, next): void {
         const user = new User(new UserUrn(token.uid), token.email, token.name);
         createUser(user)
           .then(() => {
-            setAuthenticatedUser(user);
+            setAuthenticatedUser(user, next);
             next();
           })
           .catch(error => {
@@ -43,8 +46,8 @@ function authFilter(req, res, next): void {
   }
 }
 
-function setDevOverride(urn: UserUrn): Promise<void> {
-  return getUser(urn).then(setAuthenticatedUser);
+function setDevOverride(urn: UserUrn, next: any): Promise<void> {
+  return getUser(urn).then(user => setAuthenticatedUser(user, next));
 }
 
 function verify(encodedToken): Promise<admin.auth.DecodedIdToken> {

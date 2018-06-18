@@ -4,7 +4,6 @@
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
 import * as express from "express";
-import * as requestContext from "request-context";
 
 import { makeExecutableSchema } from "graphql-tools";
 
@@ -53,7 +52,6 @@ if (process.env.NODE_ENV === "production") {
   app.use(cors());
 }
 
-app.use(requestContext.middleware("request"));
 app.use(authFilter);
 
 // bodyParser is needed just for POST.

@@ -102,7 +102,7 @@ class Session extends React.Component<Props, State> {
               <div>
                 <ButtonExit
                   onClick={() => {
-                    this.props.history.push("/");
+                    this.props.history.push(`/${this.props.location.search}`);
                   }}
                 />
               </div>

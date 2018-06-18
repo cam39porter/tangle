@@ -59,8 +59,8 @@ class CardSession extends React.Component<Props, State> {
       >
         <div
           id={`list-session`}
-          className={`relative flex flex-wrap pa3 w-100 ${
-            this.state.isShowingButtons ? "ba br4 b--accent shadow-1 z-max" : ""
+          className={`relative flex flex-wrap pa3 w-100 br4 ${
+            this.state.isShowingButtons ? "ba b--accent shadow-1 z-max" : ""
           } bg-white pointer`}
           onClick={() => {
             this.props.history.push(

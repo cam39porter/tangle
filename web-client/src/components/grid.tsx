@@ -70,7 +70,7 @@ class GridCaptures extends React.Component<Props, State> {
                 Sessions
               </div>
               {!!this.props.sessions.length && (
-                <div className={`pa2 br4 bg-white`}>
+                <div className={`br4 bg-white`}>
                   {this.props.sessions.map(session => (
                     <div
                       className={``}

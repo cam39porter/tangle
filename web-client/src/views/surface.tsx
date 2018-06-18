@@ -184,7 +184,11 @@ class Surface extends React.Component<Props, State> {
                   );
                 }}
               />
-              <Redirect exact={true} from={"/"} to={`/recent`} />
+              <Redirect
+                exact={true}
+                from={"/"}
+                to={`/recent${this.props.location.search}`}
+              />
             </Switch>
           </div>
         </div>

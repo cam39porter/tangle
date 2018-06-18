@@ -39,7 +39,12 @@ class Navigation extends React.Component<Props, State> {
     const query = NetworkUtils.getQuery(this.props.location.search);
 
     return (
-      <div className={`flex-column pa2 pt4 bg-dark-gray light-gray`}>
+      <div
+        className={`flex-column pa2 pt4 bg-dark-gray light-gray`}
+        style={{
+          userSelect: "none"
+        }}
+      >
         <div className={`flex-column flex-grow`}>
           <div className={`pa2 dim bg-accent br-100`}>
             {isCapturing ? (

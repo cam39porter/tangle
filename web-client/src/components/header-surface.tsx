@@ -41,13 +41,25 @@ class HeaderSurface extends React.Component<Props, State> {
     const params = this.props.location.search;
 
     return (
-      <div className={`bb bw1 b--light-gray`}>
+      <div
+        className={`bb bw1 b--light-gray`}
+        style={{
+          userSelect: "none"
+        }}
+      >
         <div className={`flex justify-between pa2`}>
-          <div className={`flex`}>
+          <div className={`ph2 flex`}>
             <div className={`flex-column items w4 dark-gray`}>
-              <div className={`mb2 bb b--accent`}>
+              <div
+                className={`mb2 bb b--accent`}
+                onClick={() => {
+                  this.setState({
+                    isShowingMore: !this.state.isShowingMore
+                  });
+                }}
+              >
                 {this.props.location.pathname.includes("/recent") && (
-                  <HeaderItem name="Recent Captures" />
+                  <HeaderItem name="Recent" />
                 )}
                 {this.props.location.pathname.includes("/related") && (
                   <HeaderItem name="Related Captures" />
@@ -60,13 +72,16 @@ class HeaderSurface extends React.Component<Props, State> {
                 <div>
                   {!this.props.location.pathname.includes("/recent") && (
                     <HeaderItem
-                      name="Recent Captures"
+                      name="Recent"
                       onClick={() => {
                         if (url === "/") {
                           this.props.history.push(`${url}recent${params}`);
                         } else {
                           this.props.history.push(`${url}/recent${params}`);
                         }
+                        this.setState({
+                          isShowingMore: false
+                        });
                       }}
                     />
                   )}
@@ -79,6 +94,9 @@ class HeaderSurface extends React.Component<Props, State> {
                         } else {
                           this.props.history.push(`${url}/related${params}`);
                         }
+                        this.setState({
+                          isShowingMore: false
+                        });
                       }}
                     />
                   )}
@@ -91,6 +109,9 @@ class HeaderSurface extends React.Component<Props, State> {
                         } else {
                           this.props.history.push(`${url}/search${params}`);
                         }
+                        this.setState({
+                          isShowingMore: false
+                        });
                       }}
                     />
                   )}

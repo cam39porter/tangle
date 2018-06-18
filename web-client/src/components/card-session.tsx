@@ -1,6 +1,9 @@
 // React
 import * as React from "react";
 
+// Router
+import { withRouter, RouteComponentProps } from "react-router";
+
 // GraphQL
 import {
   deleteSessionMutation as deleteSessionResponse,
@@ -13,9 +16,11 @@ import { graphql, compose, MutationFunc } from "react-apollo";
 import ButtonArchive from "./button-archive";
 
 // Utils
-import { noop } from "lodash";
 
-interface Props {
+// Types
+interface RouteProps extends RouteComponentProps<{}> {}
+
+interface Props extends RouteProps {
   id: string;
   title: string;
   created: string;
@@ -55,14 +60,18 @@ class CardSession extends React.Component<Props, State> {
         <div
           id={`list-session`}
           className={`relative flex flex-wrap pa3 w-100 ${
-            this.state.isShowingButtons
-              ? "ba br4 b--accent shadow-1 z-max"
-              : "bb b--light-gray"
+            this.state.isShowingButtons ? "ba br4 b--accent shadow-1 z-max" : ""
           } bg-white pointer`}
-          onClick={noop}
+          onClick={() => {
+            this.props.history.push(
+              `/session/${encodeURIComponent(this.props.id)}/related`
+            );
+          }}
         >
           <div className={`flex-grow dt`}>
-            <div className={`dtc v-mid f4 dark-gray`}>{this.props.title}</div>
+            <div className={`dtc v-mid f5 dark-gray`}>
+              {this.props.title || "Untitled "}
+            </div>
             <div className={`dtc v-mid tr f6 gray`}>{this.props.created}</div>
           </div>
           {this.state.isShowingButtons && (
@@ -97,6 +106,9 @@ const withDeleteSession = graphql<deleteSessionResponse, Props>(deleteSession, {
   alias: "withDeleteSession"
 });
 
-const CardSessionWithData = compose(withDeleteSession)(CardSession);
+const CardSessionWithData = compose(
+  withDeleteSession,
+  withRouter
+)(CardSession);
 
 export default CardSessionWithData;

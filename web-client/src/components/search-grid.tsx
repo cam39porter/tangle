@@ -14,7 +14,7 @@ import { search } from "../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
-import GridCaptures from "../components/grid-captures";
+import Grid from "../components/grid";
 
 // Utils
 
@@ -39,12 +39,13 @@ class SearchGrid extends React.Component<Props, State> {
   render() {
     const results = this.props.data.searchV2;
 
-    if (!(results && results.captures)) {
+    if (!(results && results.captures && results.sessions)) {
       return <div />;
     }
 
     return (
-      <GridCaptures
+      <Grid
+        sessions={results.sessions.items}
         captures={results.captures.items}
         headerHeight={this.props.headerHeight}
       />

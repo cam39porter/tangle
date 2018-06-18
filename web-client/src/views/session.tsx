@@ -41,7 +41,9 @@ interface State {
   footerHeight: number;
 }
 
-class ListCaptures extends React.Component<Props, State> {
+const WIDTH = "30em";
+
+class Session extends React.Component<Props, State> {
   _scrollContainer: ScrollContainer | null = null;
 
   constructor(props: Props) {
@@ -122,7 +124,7 @@ class ListCaptures extends React.Component<Props, State> {
               <div
                 className={``}
                 style={{
-                  width: "35em"
+                  width: WIDTH
                 }}
                 key={capture.id}
               >
@@ -164,6 +166,6 @@ const withGetSession = graphql<getSessionResponse, Props>(getSession, {
   })
 });
 
-const ListCapturesWithData = windowSize(compose(withGetSession)(ListCaptures));
+const ListCapturesWithData = windowSize(compose(withGetSession)(Session));
 
 export default ListCapturesWithData;

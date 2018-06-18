@@ -45,7 +45,6 @@ class Surface extends React.Component<Props, State> {
             <ReactResizeDetector
               handleHeight={true}
               onResize={(_, height) => {
-                console.log(height);
                 this.setState({
                   headerHeight: height
                 });
@@ -185,7 +184,7 @@ class Surface extends React.Component<Props, State> {
                   );
                 }}
               />
-              <Redirect from={"/"} to={`/recent`} />
+              <Redirect exact={true} from={"/"} to={`/recent`} />
             </Switch>
           </div>
         </div>

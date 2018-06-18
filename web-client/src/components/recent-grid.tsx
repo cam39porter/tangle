@@ -16,7 +16,7 @@ import { getRecentCaptures, getRecentSessions } from "../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
-import GridCaptures from "../components/grid-captures";
+import Grid from "../components/grid";
 
 // Utils
 
@@ -50,7 +50,8 @@ class SearchGrid extends React.Component<Props, State> {
     }
 
     return (
-      <GridCaptures
+      <Grid
+        sessions={sessions.items}
         captures={captures.items}
         headerHeight={this.props.headerHeight}
       />

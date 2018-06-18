@@ -14,7 +14,7 @@ import { graphSearch } from "../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
-import GraphVisualization from "../components/graph-visualization";
+import Graph from "../components/graph";
 
 // Utils
 
@@ -44,7 +44,7 @@ class SearchGraph extends React.Component<Props, State> {
     }
 
     return (
-      <GraphVisualization
+      <Graph
         nodes={surfaceResults.graph.nodes}
         edges={surfaceResults.graph.edges}
       />

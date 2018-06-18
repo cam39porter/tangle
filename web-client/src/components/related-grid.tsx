@@ -14,7 +14,7 @@ import { getRelatedCapturesBySession } from "../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
-import GridCaptures from "../components/grid-captures";
+import Grid from "../components/grid";
 
 // Utils
 
@@ -37,15 +37,16 @@ class RelatedGrid extends React.Component<Props, State> {
   }
 
   render() {
-    const relatedCaptures = this.props.data.getRelatedCapturesBySession;
+    const captures = this.props.data.getRelatedCapturesBySession;
 
-    if (!relatedCaptures) {
+    if (!captures) {
       return <div />;
     }
 
     return (
-      <GridCaptures
-        captures={relatedCaptures.items}
+      <Grid
+        sessions={[]}
+        captures={captures.items}
         headerHeight={this.props.headerHeight}
       />
     );

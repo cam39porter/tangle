@@ -71,6 +71,7 @@ export function getRelatedCapturesBySession(
   OPTIONAL MATCH (capture)<-[:INCLUDES]-(session:Session {owner:{userUrn}})
   WITH r1, r2, capture, collect(session) as sessions
   ORDER BY r1.salience * r2.salience
+  WITH DISTINCT capture as capture, sessions
   SKIP {start} LIMIT {count}
   RETURN capture, sessions
   `;

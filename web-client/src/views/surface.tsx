@@ -36,40 +36,30 @@ class Surface extends React.Component<Props, State> {
     };
   }
 
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
-    if (this.state.isGraphView !== nextState.isGraphView) {
-      return true;
-    }
-    if (
-      this.props.location.pathname + this.props.location.search !==
-      nextProps.location.pathname + nextProps.location.search
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-
   render() {
     return (
       <div className={`flex-grow bg-near-white ba b--light-gray`}>
         <div className={`flex-column`}>
-          <ReactResizeDetector
-            handleHeight={true}
-            onResize={(_, height) => {
-              this.setState({
-                headerHeight: height
-              });
-            }}
-          />
-          <HeaderSurface
-            isGraphView={this.state.isGraphView}
-            handleIsGraphView={() => {
-              this.setState({
-                isGraphView: !this.state.isGraphView
-              });
-            }}
-          />
+          <div>
+            <ReactResizeDetector
+              handleHeight={true}
+              onResize={(_, height) => {
+                console.log(height);
+                this.setState({
+                  headerHeight: height
+                });
+              }}
+            />
+
+            <HeaderSurface
+              isGraphView={this.state.isGraphView}
+              handleIsGraphView={() => {
+                this.setState({
+                  isGraphView: !this.state.isGraphView
+                });
+              }}
+            />
+          </div>
           <div className={`flex-grow`}>
             <Switch>
               {/* Search  */}

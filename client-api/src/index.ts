@@ -51,13 +51,12 @@ if (process.env.NODE_ENV === "production") {
 } else {
   app.use(cors());
 }
-
+app.use(bodyParser.json());
 app.use(authFilter);
 
 // bodyParser is needed just for POST.
 app.use(
   "/graphql",
-  bodyParser.json(),
   graphqlExpress({ schema: executableSchema, formatError: maskError })
 );
 app.use(formidable());
@@ -78,8 +77,6 @@ app.post("/uploadHtml", (req, res) => {
       }
     });
 });
-
-app.get("/graphiql", graphiqlExpress({ endpointURL: "/graphql" })); // if you want GraphiQL enabled
 
 app.listen(PORT, () => {
   LOGGER.info("Api listening on port " + PORT);

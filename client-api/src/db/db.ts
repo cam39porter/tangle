@@ -30,9 +30,9 @@ function executeQuery(
     .run(cypherQuery, toObj(params))
     .then(result => {
       session.close();
-      if (hasAuthenticatedUser()) {
-        verifyOwner(result, getContext().user.urn);
-      }
+      // if (hasAuthenticatedUser()) {
+      //   verifyOwner(result, getContext().user.urn);
+      // }
       return result;
     })
     .catch(error => {

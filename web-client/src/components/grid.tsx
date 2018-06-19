@@ -1,6 +1,9 @@
 // React
 import * as React from "react";
 
+// Router
+import { withRouter, RouteComponentProps } from "react-router";
+
 // Components
 import CardCapture from "./card-capture";
 import CardSession from "./card-session";
@@ -10,12 +13,15 @@ import {
   CaptureFieldsFragment,
   SessionFieldsFragment
 } from "../__generated__/types";
+import { compose } from "react-apollo";
 
 // Utils
 import windowSize from "react-window-size";
 
 // Types
-interface Props {
+interface RouteProps extends RouteComponentProps<{}> {}
+
+interface Props extends RouteProps {
   sessions: Array<SessionFieldsFragment>;
   captures: Array<CaptureFieldsFragment>;
   scrollToId?: string;
@@ -71,23 +77,33 @@ class GridCaptures extends React.Component<Props, State> {
               </div>
               {!!this.props.sessions.length && (
                 <div className={`br4 bg-white`}>
-                  {this.props.sessions.map(session => (
-                    <div
-                      className={``}
-                      style={{
-                        width: WIDTH
-                      }}
-                      key={session.id}
-                    >
-                      <ScrollContainerElement name={session.id}>
-                        <CardSession
-                          id={session.id}
-                          title={session.title}
-                          created={session.created}
-                        />
-                      </ScrollContainerElement>
-                    </div>
-                  ))}
+                  {this.props.sessions.map(session => {
+                    // Do not render current session in the list
+                    if (
+                      session.id ===
+                      decodeURIComponent(this.props.match.params["id"])
+                    ) {
+                      return null;
+                    }
+
+                    return (
+                      <div
+                        className={``}
+                        style={{
+                          width: WIDTH
+                        }}
+                        key={session.id}
+                      >
+                        <ScrollContainerElement name={session.id}>
+                          <CardSession
+                            id={session.id}
+                            title={session.title}
+                            created={session.created}
+                          />
+                        </ScrollContainerElement>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -125,6 +141,7 @@ class GridCaptures extends React.Component<Props, State> {
   }
 }
 
-const GridCapturesWithData = windowSize(GridCaptures);
-
-export default GridCapturesWithData;
+export default compose(
+  windowSize,
+  withRouter
+)(GridCaptures);

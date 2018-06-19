@@ -46,10 +46,10 @@ class HeaderSession extends React.Component<Props, State> {
     }
 
     this.saveEdit = debounce((text: string) => {
-      this.props
+      props
         .editSession({
           variables: {
-            sessionId: this.props.sessionId,
+            sessionId: props.sessionId,
             title: text
           }
         })
@@ -90,7 +90,7 @@ class HeaderSession extends React.Component<Props, State> {
           }}
         />
         <div
-          className={`f4`}
+          className={`f3 fw5`}
           style={{
             width: `${this.state.editorWidth}px`
           }}
@@ -98,6 +98,9 @@ class HeaderSession extends React.Component<Props, State> {
           <Draft.Editor
             editorState={this.state.editorState}
             onChange={this.handleOnChange}
+            handleReturn={() => {
+              return "handled";
+            }}
             placeholder={`Brainstorm title`}
           />
         </div>

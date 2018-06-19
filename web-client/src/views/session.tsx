@@ -17,6 +17,7 @@ import { graphql, compose, QueryProps } from "react-apollo";
 import ListSessionTitle from "../components/header-session";
 import ButtonExit from "../components/button-exit";
 import CardCapture from "../components/card-capture";
+import InputCapture from "../components/input-capture";
 import ScrollContainer from "../components/scroll-container";
 import ScrollContainerElement from "../components/scroll-container-element";
 import ReactResizeDetector from "react-resize-detector";
@@ -77,10 +78,20 @@ class Session extends React.Component<Props, State> {
       return <div />;
     }
 
+    let sessionItems = sessionCaptures.itemCollection.items;
+
+    let sessionId = decodeURIComponent(this.props.match.params["id"]);
+
     return (
       <div className={`flex-grow bg-near-white ba b--light-gray`}>
         {/* Header */}
-        <div className={``}>
+        <div
+          className={`flex bb bw1 b--light-gray`}
+          style={{
+            minHeight: "4em",
+            userSelect: "none"
+          }}
+        >
           <ReactResizeDetector
             handleHeight={true}
             onResize={(_, height) => {
@@ -89,24 +100,14 @@ class Session extends React.Component<Props, State> {
               });
             }}
           />
-          <div className={`flex pv3 h3 w-100 bg-white bb bt bw2 b--light-gray`}>
-            <div className={`flex-column justify-around flex-grow`}>
-              <div className={`ph3`}>
-                <ListSessionTitle
-                  sessionId={sessionCaptures.id}
-                  startingTitle={sessionCaptures.title}
-                />
-              </div>
-            </div>
-            <div
-              className={`pr1 flex-column justify-around`}
-              onClick={() => {
-                this.props.history.push(`/${this.props.location.search}`);
-              }}
-            >
-              <div>
-                <ButtonExit />
-              </div>
+          <div
+            className={`flex-column justify-around`}
+            onClick={() => {
+              this.props.history.push(`/${this.props.location.search}`);
+            }}
+          >
+            <div>
+              <ButtonExit />
             </div>
           </div>
         </div>
@@ -121,7 +122,21 @@ class Session extends React.Component<Props, State> {
                 this.state.footerHeight}px`
             }}
           >
-            {sessionCaptures.itemCollection.items.map(capture => (
+            <div
+              className={``}
+              style={{
+                width: WIDTH
+              }}
+            >
+              <div className={`pa3 br4 bg-white ba bw1 b--light-gray`}>
+                <ListSessionTitle
+                  key={sessionCaptures.id}
+                  sessionId={sessionCaptures.id}
+                  startingTitle={sessionCaptures.title}
+                />
+              </div>
+            </div>
+            {sessionItems.map(capture => (
               <div
                 className={``}
                 style={{
@@ -137,6 +152,22 @@ class Session extends React.Component<Props, State> {
                 </ScrollContainerElement>
               </div>
             ))}
+            <div
+              className={`pa3 br4 bg-white ba bw1 b--light-gray`}
+              style={{
+                width: WIDTH
+              }}
+            >
+              <InputCapture
+                sessionData={{
+                  sessionId,
+                  previousId:
+                    sessionItems.length > 0
+                      ? sessionItems[sessionItems.length - 1].id
+                      : sessionId
+                }}
+              />
+            </div>
           </div>
         </ScrollContainer>
         {/* Footer */}

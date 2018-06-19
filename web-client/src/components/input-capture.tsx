@@ -14,9 +14,23 @@ import {
   createCaptureMutationVariables,
   // Edit Capture
   editCaptureMutation as editCaptureResponse,
-  editCaptureMutationVariables
+  editCaptureMutationVariables,
+  // Types
+  NodeType,
+  // CaptureCollectionFieldsFragment,
+  SessionItemCollectionFieldsFragment,
+  SurfaceResultsFieldsFragment,
+  NodeFieldsFragment,
+  CaptureFieldsFragment
 } from "../__generated__/types";
-import { createSessionCapture, createCapture, editCapture } from "../queries";
+import {
+  createSessionCapture,
+  createCapture,
+  editCapture,
+  // captureCollectionFragment,
+  sessionItemCollectionFragment,
+  surfaceResultsFragment
+} from "../queries";
 import { graphql, compose, MutationFunc, withApollo } from "react-apollo";
 
 // Components
@@ -29,7 +43,6 @@ import { convertToHTML, convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 import EditorUtils from "../utils/editor";
 import { debounce, Cancelable } from "lodash";
-import { NetworkUtils } from "../utils/index";
 
 const TIME_TO_SAVE = 500; // ms till change is automatically captured
 
@@ -62,6 +75,7 @@ interface State {
 
 class InputCapture extends React.Component<Props, State> {
   saveEdit: ((text: string) => void) & Cancelable | undefined;
+  numberOfOptimisticCaptures: number = 0;
 
   constructor(props: Props) {
     super(props);
@@ -157,18 +171,116 @@ class InputCapture extends React.Component<Props, State> {
                 editorState: Draft.EditorState
               ) => {
                 if (command === "command-return") {
-                  if (!this.props.captureId) {
-                    if (
-                      this.props.sessionData &&
-                      !NetworkUtils.getCapture(this.props.location.search)
-                    ) {
+                  let content = editorState.getCurrentContent();
+                  if (!this.props.captureId && content.getPlainText()) {
+                    let body = convertToHTML(content);
+                    if (this.props.sessionData) {
                       this.props
                         .createSessionCapture({
                           variables: {
                             sessionId: this.props.sessionData.sessionId,
                             previousCaptureId: this.props.sessionData
                               .previousId,
-                            body: convertToHTML(editorState.getCurrentContent())
+                            body
+                          },
+                          optimisticResponse: {
+                            createCapture: {
+                              __typename: "Node",
+                              id: `${(this.numberOfOptimisticCaptures =
+                                this.numberOfOptimisticCaptures +
+                                1)}:optimistic`,
+                              type: NodeType.Capture,
+                              text: body,
+                              level: 0
+                            } as NodeFieldsFragment
+                          },
+                          update: (store, { data }) => {
+                            let captureNode =
+                              data &&
+                              (data["createCapture"] as NodeFieldsFragment);
+
+                            if (!captureNode) {
+                              return;
+                            }
+
+                            const captureItem = {
+                              __typename: "Capture",
+                              id: captureNode.id,
+                              created: 0,
+                              body: captureNode.text || ""
+                            } as CaptureFieldsFragment;
+
+                            // Capture Collection
+                            // let captureCollection: CaptureCollectionFieldsFragment | null = store.readFragment(
+                            //   {
+                            //     id: "CaptureCollection",
+                            //     fragment: captureCollectionFragment,
+                            //     fragmentName: "CaptureCollectionFields"
+                            //   }
+                            // );
+                            // if (captureCollection) {
+                            //   const reversedItems = reverse(
+                            //     captureCollection.items
+                            //   );
+                            //   reversedItems.push(captureItem);
+                            //   store.writeFragment({
+                            //     id: "CaptureCollection",
+                            //     fragment: captureCollectionFragment,
+                            //     fragmentName: "CaptureCollectionFields",
+                            //     data: {
+                            //       __typename: "CaptureCollection",
+                            //       items: reverse(reversedItems),
+                            //       pagingInfo: captureCollection.pagingInfo
+                            //     }
+                            //   });
+                            // }
+
+                            // SessionItemsCollection
+                            let sessionItemCollection: SessionItemCollectionFieldsFragment | null = store.readFragment(
+                              {
+                                id: "SessionItemCollection",
+                                fragment: sessionItemCollectionFragment,
+                                fragmentName: "SessionItemCollectionFields"
+                              }
+                            );
+
+                            if (
+                              sessionItemCollection &&
+                              sessionItemCollection.items
+                            ) {
+                              sessionItemCollection.items.push(captureItem);
+                              store.writeFragment({
+                                id: "SessionItemCollection",
+                                fragment: sessionItemCollectionFragment,
+                                fragmentName: "SessionItemCollectionFields",
+                                data: {
+                                  __typename: "SessionItemCollection",
+                                  items: sessionItemCollection.items,
+                                  pagingInfo: sessionItemCollection.pagingInfo
+                                }
+                              });
+                            }
+
+                            // SurfaceResults
+                            const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
+                              {
+                                id: "SurfaceResults",
+                                fragment: surfaceResultsFragment,
+                                fragmentName: "SurfaceResultsFields"
+                              }
+                            );
+                            if (surfaceResults && surfaceResults.graph) {
+                              surfaceResults.graph.nodes.push(captureNode);
+                              store.writeFragment({
+                                id: "SurfaceResults",
+                                fragment: surfaceResultsFragment,
+                                fragmentName: "SurfaceResultsFields",
+                                data: {
+                                  __typename: "SurfaceResults",
+                                  ...surfaceResults
+                                }
+                              });
+                            }
                           }
                         })
                         .catch(err => {
@@ -178,7 +290,7 @@ class InputCapture extends React.Component<Props, State> {
                       this.props
                         .createCapture({
                           variables: {
-                            body: convertToHTML(editorState.getCurrentContent())
+                            body
                           }
                         })
                         .catch(err => {

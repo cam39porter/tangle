@@ -44,6 +44,7 @@ class HeaderSurface extends React.Component<Props, State> {
       <div
         className={`bb bw1 b--light-gray`}
         style={{
+          minHeight: "4em",
           userSelect: "none"
         }}
       >

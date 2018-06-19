@@ -8,18 +8,30 @@ import {
   archiveCaptureMutationVariables,
   // Edit Capture
   editCaptureMutation as editCaptureResponse,
-  editCaptureMutationVariables
+  editCaptureMutationVariables,
+  // Types
+  NodeType,
+  CaptureCollectionFieldsFragment,
+  SessionItemCollectionFieldsFragment,
+  SurfaceResultsFieldsFragment
 } from "../__generated__/types";
 
 import { graphql, compose, MutationFunc } from "react-apollo";
 
-import { archiveCapture, editCapture } from "../queries";
+import {
+  archiveCapture,
+  editCapture,
+  captureCollectionFragment,
+  sessionItemCollectionFragment,
+  surfaceResultsFragment
+} from "../queries";
 
 // Components
 import ButtonArchive from "./button-archive";
 import InputCapture from "./input-capture";
 
 // Utils
+import { remove } from "lodash";
 
 // Types
 interface Props {
@@ -87,7 +99,98 @@ class CardCapture extends React.Component<Props, State> {
                     onClick={() => {
                       this.props
                         .archiveCapture({
-                          variables: { id: this.props.captureId }
+                          variables: { id: this.props.captureId },
+                          optimisticResponse: {
+                            archiveCapture: {
+                              __typename: "Node",
+                              id: this.props.captureId,
+                              type: NodeType.Capture,
+                              text: null,
+                              level: null
+                            }
+                          },
+                          update: store => {
+                            // Capture Collection
+                            let captureCollection: CaptureCollectionFieldsFragment | null = store.readFragment(
+                              {
+                                id: "CaptureCollection",
+                                fragment: captureCollectionFragment,
+                                fragmentName: "CaptureCollectionFields"
+                              }
+                            );
+                            if (captureCollection) {
+                              store.writeFragment({
+                                id: "CaptureCollection",
+                                fragment: captureCollectionFragment,
+                                fragmentName: "CaptureCollectionFields",
+                                data: {
+                                  __typename: "CaptureCollection",
+                                  items: captureCollection.items.filter(
+                                    capture =>
+                                      capture.id !== this.props.captureId
+                                  ),
+                                  pagingInfo: captureCollection.pagingInfo
+                                }
+                              });
+                            }
+
+                            // SessionItemsCollection
+                            let sessionItemCollection: SessionItemCollectionFieldsFragment | null = store.readFragment(
+                              {
+                                id: "SessionItemCollection",
+                                fragment: sessionItemCollectionFragment,
+                                fragmentName: "SessionItemCollectionFields"
+                              }
+                            );
+                            if (
+                              sessionItemCollection &&
+                              sessionItemCollection.items
+                            ) {
+                              store.writeFragment({
+                                id: "SessionItemCollection",
+                                fragment: sessionItemCollectionFragment,
+                                fragmentName: "SessionItemCollectionFields",
+                                data: {
+                                  __typename: "SessionItemCollection",
+                                  items: sessionItemCollection.items.filter(
+                                    capture =>
+                                      capture.id !== this.props.captureId
+                                  ),
+                                  pagingInfo: sessionItemCollection.pagingInfo
+                                }
+                              });
+                            }
+
+                            // SurfaceResults
+                            const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
+                              {
+                                id: "SurfaceResults",
+                                fragment: surfaceResultsFragment,
+                                fragmentName: "SurfaceResultsFields"
+                              }
+                            );
+                            if (surfaceResults && surfaceResults.graph) {
+                              remove(
+                                surfaceResults.graph.nodes,
+                                node => node.id === this.props.captureId
+                              );
+                              remove(
+                                surfaceResults.graph.edges,
+                                edge =>
+                                  edge.source === this.props.captureId ||
+                                  edge.destination === this.props.captureId
+                              );
+                              store.writeFragment({
+                                id: "SurfaceResults",
+                                fragment: surfaceResultsFragment,
+                                fragmentName: "SurfaceResultsFields",
+                                data: {
+                                  __typename: "SurfaceResults",
+                                  ...surfaceResults
+                                }
+                              });
+                            }
+                          }
                         })
                         .catch(err => console.error(err));
                     }}

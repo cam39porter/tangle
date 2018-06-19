@@ -75,6 +75,10 @@ const client = new ApolloClient({
       switch (object.__typename) {
         case "SurfaceResults":
           return "SurfaceResults";
+        case "CaptureCollection":
+          return "CaptureCollection";
+        case "SessionItemCollection":
+          return "SessionItemCollection";
         default:
           return defaultDataIdFromObject(object);
       }

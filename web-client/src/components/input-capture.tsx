@@ -1,6 +1,9 @@
 // React
 import * as React from "react";
 
+// Router
+import { withRouter, RouteComponentProps } from "react-router";
+
 // GraphQL
 import {
   // Create Session Capture
@@ -14,7 +17,7 @@ import {
   editCaptureMutationVariables
 } from "../__generated__/types";
 import { createSessionCapture, createCapture, editCapture } from "../queries";
-import { graphql, compose, MutationFunc } from "react-apollo";
+import { graphql, compose, MutationFunc, withApollo } from "react-apollo";
 
 // Components
 import * as Draft from "draft-js";
@@ -26,10 +29,14 @@ import { convertToHTML, convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 import EditorUtils from "../utils/editor";
 import { debounce, Cancelable } from "lodash";
+import { NetworkUtils } from "../utils/index";
 
 const TIME_TO_SAVE = 500; // ms till change is automatically captured
 
-interface Props {
+// Types
+interface RouteProps extends RouteComponentProps<{}> {}
+
+interface Props extends RouteProps {
   createSessionCapture: MutationFunc<
     createSessionCaptureResponse,
     createSessionCaptureMutationVariables
@@ -127,42 +134,6 @@ class InputCapture extends React.Component<Props, State> {
           });
         }}
       >
-        {/* {!this.props.captureId && (
-          <div className={`absolute flex top--2 right--2 br-100 z-max gray`}>
-            <ButtonCapture
-              onClick={() => {
-                if (this.props.sessionData) {
-                  this.props.createSessionCapture({
-                    variables: {
-                      sessionId: this.props.sessionData.sessionId,
-                      previousCaptureId: this.props.sessionData.previousId,
-                      body: convertToHTML(
-                        this.state.editorState.getCurrentContent()
-                      )
-                    }
-                  });
-                }
-                {
-                  this.props.createCapture({
-                    variables: {
-                      body: convertToHTML(
-                        this.state.editorState.getCurrentContent()
-                      )
-                    }
-                  });
-                }
-
-                let cleanEditorState = EditorUtils.cleanEditorState(
-                  this.state.editorState
-                );
-
-                this.setState({
-                  editorState: cleanEditorState
-                });
-              }}
-            />
-          </div>
-        )} */}
         <div className={`flex-grow`}>
           <ReactResizeDetector
             handleHeight={true}
@@ -187,26 +158,34 @@ class InputCapture extends React.Component<Props, State> {
               ) => {
                 if (command === "command-return") {
                   if (!this.props.captureId) {
-                    if (this.props.sessionData) {
-                      this.props.createSessionCapture({
-                        variables: {
-                          sessionId: this.props.sessionData.sessionId,
-                          previousCaptureId: this.props.sessionData.previousId,
-                          body: convertToHTML(
-                            convertToHTML(editorState.getCurrentContent())
-                          )
-                        }
-                      });
+                    if (
+                      this.props.sessionData &&
+                      !NetworkUtils.getCapture(this.props.location.search)
+                    ) {
+                      this.props
+                        .createSessionCapture({
+                          variables: {
+                            sessionId: this.props.sessionData.sessionId,
+                            previousCaptureId: this.props.sessionData
+                              .previousId,
+                            body: convertToHTML(editorState.getCurrentContent())
+                          }
+                        })
+                        .catch(err => {
+                          console.error(err);
+                        });
+                    } else {
+                      this.props
+                        .createCapture({
+                          variables: {
+                            body: convertToHTML(editorState.getCurrentContent())
+                          }
+                        })
+                        .catch(err => {
+                          console.error(err);
+                        });
                     }
-                    {
-                      this.props.createCapture({
-                        variables: {
-                          body: convertToHTML(
-                            convertToHTML(editorState.getCurrentContent())
-                          )
-                        }
-                      });
-                    }
+
                     let cleanEditorState = EditorUtils.cleanEditorState(
                       editorState
                     );
@@ -260,9 +239,11 @@ const withEditCapture = graphql<editCaptureResponse, Props>(editCapture, {
 });
 
 const InputCaptureWithData = compose(
+  withRouter,
   withCreateSessionCapture,
   withCreateCapture,
-  withEditCapture
+  withEditCapture,
+  withApollo
 )(InputCapture);
 
 export default InputCaptureWithData;

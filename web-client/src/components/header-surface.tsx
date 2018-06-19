@@ -85,21 +85,22 @@ class HeaderSurface extends React.Component<Props, State> {
                       }}
                     />
                   )}
-                  {!this.props.location.pathname.includes("/related") && (
-                    <HeaderItem
-                      name="Related Captures"
-                      onClick={() => {
-                        if (url === "/") {
-                          this.props.history.push(`${url}related${params}`);
-                        } else {
-                          this.props.history.push(`${url}/related${params}`);
-                        }
-                        this.setState({
-                          isShowingMore: false
-                        });
-                      }}
-                    />
-                  )}
+                  {this.props.match.path !== "/" &&
+                    !this.props.location.pathname.includes("/related") && (
+                      <HeaderItem
+                        name="Related Captures"
+                        onClick={() => {
+                          if (url === "/") {
+                            this.props.history.push(`${url}related${params}`);
+                          } else {
+                            this.props.history.push(`${url}/related${params}`);
+                          }
+                          this.setState({
+                            isShowingMore: false
+                          });
+                        }}
+                      />
+                    )}
                   {!this.props.location.pathname.includes("/search") && (
                     <HeaderItem
                       name="Search Results"

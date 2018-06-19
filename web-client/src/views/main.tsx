@@ -44,23 +44,23 @@ class Main extends React.Component<Props, State> {
         </div>
         <div className={`relative flex-grow`}>
           {/* Capture */}
-          {NetworkUtils.getCapture(this.props.location.search) && (
+          {NetworkUtils.getCapture(this.props.location.search) ? (
             <div className={`absolute top-0 left-0 z-max vh-100 w-100`}>
               <Capture />
             </div>
+          ) : (
+            <div className={`flex`}>
+              {/* Surface */}
+              <Switch>
+                <Route path={`/session/:id`} component={Surface} />
+                <Route path={`/`} component={Surface} />
+              </Switch>
+              {/* Session */}
+              <Switch>
+                <Route path={`/session/:id`} component={Session} />
+              </Switch>
+            </div>
           )}
-          <div className={`flex`}>
-            {/* Session */}
-            <Switch>
-              <Route path={`/session/:id`} component={Session} />
-            </Switch>
-
-            {/* Surface */}
-            <Switch>
-              <Route path={`/session/:id`} component={Surface} />
-              <Route path={`/`} component={Surface} />
-            </Switch>
-          </div>
         </div>
       </div>
     );

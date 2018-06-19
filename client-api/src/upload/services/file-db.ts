@@ -1,5 +1,8 @@
 import * as Storage from "@google-cloud/storage";
-import { getAuthenticatedUser } from "../../filters/request-context";
+import {
+  getAuthenticatedUser,
+  getRequestContext
+} from "../../filters/request-context";
 import { ConflictError } from "../../util/exceptions/confict-error";
 import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
 import { Logger } from "../../util/logging/logger";
@@ -40,9 +43,9 @@ function writeToDb(dest: string, file): Promise<void> {
     .bucket(bucketName)
     .upload(`${file.path}`, { destination: dest })
     .then(() => {
-      LOGGER.info(`${file} uploaded to ${bucketName}.`);
+      LOGGER.info(getRequestContext(), `${file} uploaded to ${bucketName}.`);
     })
     .catch(err => {
-      LOGGER.error("ERROR:", err);
+      LOGGER.error(getRequestContext(), "ERROR:", err);
     });
 }

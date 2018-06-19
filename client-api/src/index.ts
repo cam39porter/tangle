@@ -7,7 +7,7 @@ import * as express from "express";
 
 import { makeExecutableSchema } from "graphql-tools";
 
-import { graphiqlExpress, graphqlExpress } from "apollo-server-express";
+import { graphqlExpress } from "apollo-server-express";
 import * as formidable from "express-formidable";
 import * as fs from "fs";
 import { GraphQLSchema, GraphQLError } from "graphql";
@@ -18,6 +18,9 @@ import surfaceResolvers from "./surface/resolver";
 import { importEvernoteNoteUpload } from "./upload/services/evernote-import";
 import { ConflictError } from "./util/exceptions/confict-error";
 import { Logger } from "./util/logging/logger";
+import { getRequestContext, RequestContext } from "./filters/request-context";
+import * as morgan from "morgan";
+import * as rfs from "rotating-file-stream";
 
 const LOGGER = new Logger("src/index.ts");
 
@@ -37,10 +40,22 @@ const executableSchema: GraphQLSchema = makeExecutableSchema({
 
 initAuth();
 
+morgan.token("reqId", req => {
+  const requestContext = req["requestContext"] as RequestContext;
+  return requestContext.reqId;
+});
+morgan.token("userId", req => {
+  const requestContext = req["requestContext"] as RequestContext;
+  return requestContext.user.urn.toRaw();
+});
+
 const PORT = 8080;
 const app = express();
 
-if (process.env.NODE_ENV === "production") {
+if (
+  process.env.NODE_ENV === "production" ||
+  process.env.NODE_ENV === "development"
+) {
   app.use(
     cors({
       origin: ["https://web-client-prod-dot-opit-193719.appspot.com"],
@@ -52,7 +67,29 @@ if (process.env.NODE_ENV === "production") {
   app.use(cors());
 }
 app.use(bodyParser.json());
-app.use(authFilter);
+app.use(authFilter); // REQUEST CONTEXT SET HERE
+
+const logDirectory = path.join(__dirname, "../log");
+app.use(setRequestContext);
+
+const morganFormat =
+  "[:date[iso]] [:reqId] [:userId] :remote-addr :remote-user :method :url HTTP/:http-version " +
+  ":status :res[content-length] :response-time ms";
+// ensure log directory exists
+if (process.env.NODE_ENV === "production") {
+  // tslint:disable-next-line:no-unused-expression
+  fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+  // create a rotating write stream
+  const accessLogStream = rfs("access.log", {
+    interval: "1d", // rotate daily
+    path: logDirectory
+  });
+
+  // setup the logger
+  app.use(morgan(morganFormat, { stream: accessLogStream }));
+} else {
+  app.use(morgan(morganFormat));
+}
 
 // bodyParser is needed just for POST.
 app.use(
@@ -72,18 +109,23 @@ app.post("/uploadHtml", (req, res) => {
       if (error instanceof ConflictError) {
         res.status(409).end("Object already exists, please delete it first");
       } else {
-        LOGGER.error(error);
+        LOGGER.error(getRequestContext(), error);
         res.sendStatus(500);
       }
     });
 });
 
 app.listen(PORT, () => {
-  LOGGER.info("Api listening on port " + PORT);
+  LOGGER.info(null, "Api listening on port " + PORT);
 });
 
+function setRequestContext(req, _, next): void {
+  req.requestContext = getRequestContext();
+  next();
+}
+
 function maskError(error: GraphQLError): GraphQLError {
-  LOGGER.error(error.message, error.stack);
+  LOGGER.error(getRequestContext(), error.message, error.stack);
   if (process.env.NODE_ENV === "production") {
     return new GraphQLError("Error");
   } else {

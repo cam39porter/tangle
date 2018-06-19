@@ -1,11 +1,13 @@
 import { User } from "../db/models/user";
 import { createNamespace, getNamespace } from "continuation-local-storage";
+import { v4 as uuidv4 } from "uuid/v4";
 
 export class RequestContext {
   public user: User;
-
+  public reqId: string;
   constructor(user: User) {
     this.user = user;
+    this.reqId = uuidv4();
   }
 }
 
@@ -33,6 +35,6 @@ export function getAuthenticatedUser(): User {
   return userJson as User;
 }
 
-export function getContext(): RequestContext {
+export function getRequestContext(): RequestContext {
   return new RequestContext(getAuthenticatedUser());
 }

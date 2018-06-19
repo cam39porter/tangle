@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
 import { User } from "../db/models/user";
 import { createUser, getUser } from "../db/services/user";
-import { setAuthenticatedUser } from "./request-context";
+import { setAuthenticatedUser, getRequestContext } from "./request-context";
 import { UserUrn } from "../urn/user-urn";
 import { Logger } from "../util/logging/logger";
 
@@ -18,7 +18,7 @@ function authFilter(req, res, next): void {
   if (process.env.NODE_ENV !== "production" && req.get("dev-override-id")) {
     setDevOverride(UserUrn.fromRaw(req.get("dev-override-id")), next).catch(
       err => {
-        LOGGER.error(err);
+        LOGGER.error(getRequestContext(), err);
         res.send(500, err);
       }
     );
@@ -33,12 +33,12 @@ function authFilter(req, res, next): void {
             next();
           })
           .catch(error => {
-            LOGGER.error(error);
+            LOGGER.error(getRequestContext(), error);
             res.send(500, error);
           });
       })
       .catch(error => {
-        LOGGER.error(error);
+        LOGGER.error(getRequestContext(), error);
         res.send(401, error);
       });
   } else {

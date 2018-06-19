@@ -7,7 +7,10 @@ import {
   getCapturesByRelatedNode
 } from "../../db/services/capture";
 import { create, deleteNote } from "../../db/services/evernote-note";
-import { getAuthenticatedUser } from "../../filters/request-context";
+import {
+  getAuthenticatedUser,
+  getRequestContext
+} from "../../filters/request-context";
 import { EvernoteUpload } from "../models/evernote-upload";
 import { parseEvernoteHtml } from "./evernote-html-parser";
 import { saveOverwrite, saveSafely } from "./file-db";
@@ -26,7 +29,7 @@ export function importEvernoteNoteUpload(file): Promise<void> {
     try {
       note = parseEvernoteHtml(data);
     } catch (err) {
-      LOGGER.error(`Could not parse html, error ${err}`);
+      LOGGER.error(getRequestContext(), `Could not parse html, error ${err}`);
       throw new Error(
         "Could not parse html. Please email cole@usetangle.com with your issue"
       );

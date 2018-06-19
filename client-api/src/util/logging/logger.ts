@@ -1,4 +1,5 @@
 import * as winston from "winston";
+import { RequestContext } from "../../filters/request-context";
 
 /**
  * Configures the winston logger. There are also file and remote transports available
@@ -20,12 +21,26 @@ const winstonLogger = winston.createLogger({
   ),
   exitOnError: false
 });
-
+if (process.env.NODE_ENV !== "production") {
+  winstonLogger.add(
+    new winston.transports.Console({
+      format: winston.format.simple()
+    })
+  );
+}
 /**
  * Exports a wrapper for all the loggers we use in this configuration
  */
-const formatStr = (scope: string, message: string): string =>
-  `[${scope}] ${message}`;
+const formatStr = (
+  requestContext: RequestContext,
+  scope: string,
+  message: string
+): string => {
+  return `[${scope}] [${requestContext &&
+    requestContext.reqId}] [${requestContext &&
+    requestContext.user &&
+    requestContext.user.urn}] ${message}`;
+};
 
 const parse = (args: any[]) => (args.length > 0 ? args : "");
 
@@ -35,13 +50,34 @@ export class Logger {
     this.scope = scope;
   }
 
-  public info(message: string, ...args: any[]): void {
-    winstonLogger.info(formatStr(this.scope, message), parse(args));
+  public info(
+    requestContext: RequestContext,
+    message: string,
+    ...args: any[]
+  ): void {
+    winstonLogger.info(
+      formatStr(requestContext, this.scope, message),
+      parse(args)
+    );
   }
-  public warn(message: string, ...args: any[]): void {
-    winstonLogger.warn(formatStr(this.scope, message), parse(args));
+  public warn(
+    requestContext: RequestContext,
+    message: string,
+    ...args: any[]
+  ): void {
+    winstonLogger.warn(
+      formatStr(requestContext, this.scope, message),
+      parse(args)
+    );
   }
-  public error(message: string, ...args: any[]): void {
-    winstonLogger.error(formatStr(this.scope, message), parse(args));
+  public error(
+    requestContext: RequestContext,
+    message: string,
+    ...args: any[]
+  ): void {
+    winstonLogger.error(
+      formatStr(requestContext, this.scope, message),
+      parse(args)
+    );
   }
 }

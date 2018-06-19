@@ -1,8 +1,9 @@
 import { v1 as neo4j } from "neo4j-driver";
 import { StatementResult } from "neo4j-driver/types/v1";
 import { Logger } from "../util/logging/logger";
-import { getContext, hasAuthenticatedUser } from "../filters/request-context";
-import { UserUrn } from "../urn/user-urn";
+import { getRequestContext } from "../filters/request-context";
+// import { getContext, hasAuthenticatedUser } from "../filters/request-context";
+// import { UserUrn } from "../urn/user-urn";
 
 const LOGGER = new Logger("src/db/db.ts");
 
@@ -37,39 +38,40 @@ function executeQuery(
     })
     .catch(error => {
       session.close();
-      LOGGER.error(`Recieved error for query: ${cypherQuery}`);
-      LOGGER.error(`Error response: ${error}`);
+      const context = getRequestContext();
+      LOGGER.error(context, `Recieved error for query: ${cypherQuery}`);
+      LOGGER.error(context, `Error response: ${error}`);
       throw error;
     });
 }
 
-function verifyOwner(result: StatementResult, userUrn: UserUrn): void {
-  if (result.records) {
-    result.records.forEach(record => {
-      record.forEach(value => {
-        if (Array.isArray(value)) {
-          value.forEach(element => {
-            verifyNode(element, userUrn);
-          });
-        } else {
-          verifyNode(value, userUrn);
-        }
-      });
-    });
-  }
-}
+// function verifyOwner(result: StatementResult, userUrn: UserUrn): void {
+//   if (result.records) {
+//     result.records.forEach(record => {
+//       record.forEach(value => {
+//         if (Array.isArray(value)) {
+//           value.forEach(element => {
+//             verifyNode(element, userUrn);
+//           });
+//         } else {
+//           verifyNode(value, userUrn);
+//         }
+//       });
+//     });
+//   }
+// }
 
-function verifyNode(element: object, userUrn: UserUrn): void {
-  if (
-    element["properties"] &&
-    element["properties"].owner &&
-    element["properties"].owner !== userUrn.toRaw()
-  ) {
-    throw new Error(
-      "Attempting to return data that is not owned by the currently authenticated user"
-    );
-  }
-}
+// function verifyNode(element: object, userUrn: UserUrn): void {
+//   if (
+//     element["properties"] &&
+//     element["properties"].owner &&
+//     element["properties"].owner !== userUrn.toRaw()
+//   ) {
+//     throw new Error(
+//       "Attempting to return data that is not owned by the currently authenticated user"
+//     );
+//   }
+// }
 
 function toObj(params: Param[]): object {
   const dict = {};

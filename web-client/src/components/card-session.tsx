@@ -69,15 +69,13 @@ class CardSession extends React.Component<Props, State> {
           className={`relative flex flex-wrap pa3 w-100 br4 ${
             this.state.isShowingButtons ? "ba b--accent shadow-1 z-max" : ""
           } bg-white pointer`}
+          onClick={() => {
+            this.props.history.push(
+              `/session/${encodeURIComponent(this.props.id)}/related`
+            );
+          }}
         >
-          <div
-            className={`flex-grow dt`}
-            onClick={() => {
-              this.props.history.push(
-                `/session/${encodeURIComponent(this.props.id)}/related`
-              );
-            }}
-          >
+          <div className={`flex-grow dt`}>
             <div className={`dtc v-mid f5 dark-gray`}>
               {this.props.title || "Untitled "}
             </div>
@@ -87,77 +85,80 @@ class CardSession extends React.Component<Props, State> {
             <div
               className={`absolute flex top--1 right-0 h2 ph2 br4 shadow-1 z-max bg-white gray`}
             >
-              <div className={`w2`}>
-                <ButtonArchive
-                  onClick={() => {
-                    this.props
-                      .deleteSession({
-                        variables: {
-                          sessionId: this.props.id
-                        },
-                        optimisticResponse: {
-                          deleteSession: true
-                        },
-                        update: store => {
-                          // SessionCollection
-                          let sessionCollection: SessionCollectionFieldsFragment | null = store.readFragment(
-                            {
-                              id: "SessionCollection",
-                              fragment: sessionCollectionFragment,
-                              fragmentName: "SessionCollectionFields"
-                            }
-                          );
-                          if (sessionCollection && sessionCollection.items) {
-                            store.writeFragment({
-                              id: "SessionCollection",
-                              fragment: sessionCollectionFragment,
-                              fragmentName: "SessionCollectionFields",
-                              data: {
-                                __typename: "SessionCollection",
-                                items: sessionCollection.items.filter(
-                                  capture => capture.id !== this.props.id
-                                ),
-                                pagingInfo: sessionCollection.pagingInfo
-                              }
-                            });
-                          }
+              <div
+                className={`w2`}
+                onClick={e => {
+                  e.stopPropagation();
 
-                          // SurfaceResults
-                          const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
-                            {
-                              id: "SurfaceResults",
-                              fragment: surfaceResultsFragment,
-                              fragmentName: "SurfaceResultsFields"
-                            }
-                          );
-                          if (surfaceResults && surfaceResults.graph) {
-                            remove(
-                              surfaceResults.graph.nodes,
-                              node => node.id === this.props.id
-                            );
-                            remove(
-                              surfaceResults.graph.edges,
-                              edge =>
-                                edge.source === this.props.id ||
-                                edge.destination === this.props.id
-                            );
-                            store.writeFragment({
-                              id: "SurfaceResults",
-                              fragment: surfaceResultsFragment,
-                              fragmentName: "SurfaceResultsFields",
-                              data: {
-                                __typename: "SurfaceResults",
-                                ...surfaceResults
-                              }
-                            });
+                  this.props
+                    .deleteSession({
+                      variables: {
+                        sessionId: this.props.id
+                      },
+                      optimisticResponse: {
+                        deleteSession: true
+                      },
+                      update: store => {
+                        // SessionCollection
+                        let sessionCollection: SessionCollectionFieldsFragment | null = store.readFragment(
+                          {
+                            id: "SessionCollection",
+                            fragment: sessionCollectionFragment,
+                            fragmentName: "SessionCollectionFields"
                           }
+                        );
+                        if (sessionCollection && sessionCollection.items) {
+                          store.writeFragment({
+                            id: "SessionCollection",
+                            fragment: sessionCollectionFragment,
+                            fragmentName: "SessionCollectionFields",
+                            data: {
+                              __typename: "SessionCollection",
+                              items: sessionCollection.items.filter(
+                                capture => capture.id !== this.props.id
+                              ),
+                              pagingInfo: sessionCollection.pagingInfo
+                            }
+                          });
                         }
-                      })
-                      .catch(err => {
-                        console.error(err);
-                      });
-                  }}
-                />
+
+                        // SurfaceResults
+                        const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
+                          {
+                            id: "SurfaceResults",
+                            fragment: surfaceResultsFragment,
+                            fragmentName: "SurfaceResultsFields"
+                          }
+                        );
+                        if (surfaceResults && surfaceResults.graph) {
+                          remove(
+                            surfaceResults.graph.nodes,
+                            node => node.id === this.props.id
+                          );
+                          remove(
+                            surfaceResults.graph.edges,
+                            edge =>
+                              edge.source === this.props.id ||
+                              edge.destination === this.props.id
+                          );
+                          store.writeFragment({
+                            id: "SurfaceResults",
+                            fragment: surfaceResultsFragment,
+                            fragmentName: "SurfaceResultsFields",
+                            data: {
+                              __typename: "SurfaceResults",
+                              ...surfaceResults
+                            }
+                          });
+                        }
+                      }
+                    })
+                    .catch(err => {
+                      console.error(err);
+                    });
+                }}
+              >
+                <ButtonArchive />
               </div>
             </div>
           )}

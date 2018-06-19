@@ -93,108 +93,109 @@ class CardCapture extends React.Component<Props, State> {
             <div
               className={`absolute flex top--1 right-0 h2 ph2 br4 shadow-1 z-7 bg-white gray`}
             >
-              <div className={`w2`}>
-                <div>
-                  <ButtonArchive
-                    onClick={() => {
-                      this.props
-                        .archiveCapture({
-                          variables: { id: this.props.captureId },
-                          optimisticResponse: {
-                            archiveCapture: {
-                              __typename: "Node",
-                              id: this.props.captureId,
-                              type: NodeType.Capture,
-                              text: null,
-                              level: null
-                            }
-                          },
-                          update: store => {
-                            // Capture Collection
-                            let captureCollection: CaptureCollectionFieldsFragment | null = store.readFragment(
-                              {
-                                id: "CaptureCollection",
-                                fragment: captureCollectionFragment,
-                                fragmentName: "CaptureCollectionFields"
-                              }
-                            );
-                            if (captureCollection) {
-                              store.writeFragment({
-                                id: "CaptureCollection",
-                                fragment: captureCollectionFragment,
-                                fragmentName: "CaptureCollectionFields",
-                                data: {
-                                  __typename: "CaptureCollection",
-                                  items: captureCollection.items.filter(
-                                    capture =>
-                                      capture.id !== this.props.captureId
-                                  ),
-                                  pagingInfo: captureCollection.pagingInfo
-                                }
-                              });
-                            }
+              <div
+                className={`w2`}
+                onClick={e => {
+                  e.stopPropagation();
 
-                            // SessionItemsCollection
-                            let sessionItemCollection: SessionItemCollectionFieldsFragment | null = store.readFragment(
-                              {
-                                id: "SessionItemCollection",
-                                fragment: sessionItemCollectionFragment,
-                                fragmentName: "SessionItemCollectionFields"
-                              }
-                            );
-                            if (
-                              sessionItemCollection &&
-                              sessionItemCollection.items
-                            ) {
-                              store.writeFragment({
-                                id: "SessionItemCollection",
-                                fragment: sessionItemCollectionFragment,
-                                fragmentName: "SessionItemCollectionFields",
-                                data: {
-                                  __typename: "SessionItemCollection",
-                                  items: sessionItemCollection.items.filter(
-                                    capture =>
-                                      capture.id !== this.props.captureId
-                                  ),
-                                  pagingInfo: sessionItemCollection.pagingInfo
-                                }
-                              });
-                            }
-
-                            // SurfaceResults
-                            const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
-                              {
-                                id: "SurfaceResults",
-                                fragment: surfaceResultsFragment,
-                                fragmentName: "SurfaceResultsFields"
-                              }
-                            );
-                            if (surfaceResults && surfaceResults.graph) {
-                              remove(
-                                surfaceResults.graph.nodes,
-                                node => node.id === this.props.captureId
-                              );
-                              remove(
-                                surfaceResults.graph.edges,
-                                edge =>
-                                  edge.source === this.props.captureId ||
-                                  edge.destination === this.props.captureId
-                              );
-                              store.writeFragment({
-                                id: "SurfaceResults",
-                                fragment: surfaceResultsFragment,
-                                fragmentName: "SurfaceResultsFields",
-                                data: {
-                                  __typename: "SurfaceResults",
-                                  ...surfaceResults
-                                }
-                              });
-                            }
+                  this.props
+                    .archiveCapture({
+                      variables: { id: this.props.captureId },
+                      optimisticResponse: {
+                        archiveCapture: {
+                          __typename: "Node",
+                          id: this.props.captureId,
+                          type: NodeType.Capture,
+                          text: null,
+                          level: null
+                        }
+                      },
+                      update: store => {
+                        // Capture Collection
+                        let captureCollection: CaptureCollectionFieldsFragment | null = store.readFragment(
+                          {
+                            id: "CaptureCollection",
+                            fragment: captureCollectionFragment,
+                            fragmentName: "CaptureCollectionFields"
                           }
-                        })
-                        .catch(err => console.error(err));
-                    }}
-                  />
+                        );
+                        if (captureCollection) {
+                          store.writeFragment({
+                            id: "CaptureCollection",
+                            fragment: captureCollectionFragment,
+                            fragmentName: "CaptureCollectionFields",
+                            data: {
+                              __typename: "CaptureCollection",
+                              items: captureCollection.items.filter(
+                                capture => capture.id !== this.props.captureId
+                              ),
+                              pagingInfo: captureCollection.pagingInfo
+                            }
+                          });
+                        }
+
+                        // SessionItemsCollection
+                        let sessionItemCollection: SessionItemCollectionFieldsFragment | null = store.readFragment(
+                          {
+                            id: "SessionItemCollection",
+                            fragment: sessionItemCollectionFragment,
+                            fragmentName: "SessionItemCollectionFields"
+                          }
+                        );
+                        if (
+                          sessionItemCollection &&
+                          sessionItemCollection.items
+                        ) {
+                          store.writeFragment({
+                            id: "SessionItemCollection",
+                            fragment: sessionItemCollectionFragment,
+                            fragmentName: "SessionItemCollectionFields",
+                            data: {
+                              __typename: "SessionItemCollection",
+                              items: sessionItemCollection.items.filter(
+                                capture => capture.id !== this.props.captureId
+                              ),
+                              pagingInfo: sessionItemCollection.pagingInfo
+                            }
+                          });
+                        }
+
+                        // SurfaceResults
+                        const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
+                          {
+                            id: "SurfaceResults",
+                            fragment: surfaceResultsFragment,
+                            fragmentName: "SurfaceResultsFields"
+                          }
+                        );
+                        if (surfaceResults && surfaceResults.graph) {
+                          remove(
+                            surfaceResults.graph.nodes,
+                            node => node.id === this.props.captureId
+                          );
+                          remove(
+                            surfaceResults.graph.edges,
+                            edge =>
+                              edge.source === this.props.captureId ||
+                              edge.destination === this.props.captureId
+                          );
+                          store.writeFragment({
+                            id: "SurfaceResults",
+                            fragment: surfaceResultsFragment,
+                            fragmentName: "SurfaceResultsFields",
+                            data: {
+                              __typename: "SurfaceResults",
+                              ...surfaceResults
+                            }
+                          });
+                        }
+                      }
+                    })
+                    .catch(err => console.error(err));
+                }}
+              >
+                <div>
+                  <ButtonArchive />
                 </div>
               </div>
             </div>

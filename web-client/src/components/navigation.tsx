@@ -59,57 +59,56 @@ class Navigation extends React.Component<Props, State> {
         }}
       >
         <div className={`flex-column flex-grow`}>
-          <div className={`pa2 dim bg-accent br-100`}>
-            {isCapturing ? (
-              <ButtonExit
-                onClick={() => {
-                  this.props.history.push(
-                    `${this.props.location.pathname}?${
-                      query ? `query=${query}` : ``
-                    }`
-                  );
-                }}
-              />
-            ) : (
-              <ButtonCapture
-                onClick={() => {
-                  this.props.history.push(
-                    `${this.props.location.pathname}?${
-                      query ? `query=${query}&` : ``
-                    }capture=true`
-                  );
-                }}
-              />
-            )}
+          <div
+            className={`pa2 dim bg-accent br-100 pointer`}
+            onClick={() => {
+              if (isCapturing) {
+                this.props.history.push(
+                  `${this.props.location.pathname}?${
+                    query ? `query=${query}` : ``
+                  }`
+                );
+                return;
+              }
+              this.props.history.push(
+                `${this.props.location.pathname}?${
+                  query ? `query=${query}&` : ``
+                }capture=true`
+              );
+            }}
+          >
+            {isCapturing ? <ButtonExit /> : <ButtonCapture />}
           </div>
-          <div className={`pa2 dim`}>
-            <ButtonZap
-              onClick={() => {
-                this.props
-                  .createSession({})
-                  .then(res => {
-                    this.props.history.push(
-                      `/session/${encodeURIComponent(
-                        res.data.createSession.id
-                      )}/recent`
-                    );
-                  })
-                  .catch(err => {
-                    console.error(err);
-                  });
-              }}
-            />
+          <div
+            className={`pa2 dim pointer`}
+            onClick={() => {
+              this.props
+                .createSession({})
+                .then(res => {
+                  this.props.history.push(
+                    `/session/${encodeURIComponent(
+                      res.data.createSession.id
+                    )}/recent`
+                  );
+                })
+                .catch(err => {
+                  console.error(err);
+                });
+            }}
+          >
+            <ButtonZap />
           </div>
         </div>
-        <div className={`pa2 dim`} data-tip={`Your settings`}>
-          <ButtonSettings
-            onClick={() => {
-              this.setState({
-                isShowingImport: false,
-                isShowingSettings: !this.state.isShowingSettings
-              });
-            }}
-          />
+        <div
+          className={`pa2 dim pointer`}
+          onClick={() => {
+            this.setState({
+              isShowingImport: false,
+              isShowingSettings: !this.state.isShowingSettings
+            });
+          }}
+        >
+          <ButtonSettings />
         </div>
       </div>
     );

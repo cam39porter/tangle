@@ -98,13 +98,14 @@ class Session extends React.Component<Props, State> {
                 />
               </div>
             </div>
-            <div className={`pr1 flex-column justify-around`}>
+            <div
+              className={`pr1 flex-column justify-around`}
+              onClick={() => {
+                this.props.history.push(`/${this.props.location.search}`);
+              }}
+            >
               <div>
-                <ButtonExit
-                  onClick={() => {
-                    this.props.history.push(`/${this.props.location.search}`);
-                  }}
-                />
+                <ButtonExit />
               </div>
             </div>
           </div>

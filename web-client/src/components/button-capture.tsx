@@ -4,16 +4,11 @@ import * as React from "react";
 // Components
 import { Plus } from "react-feather";
 
-interface Props {
-  onClick: () => void;
-}
+interface Props {}
 
 const ButtonCapture = (props: Props) => {
   return (
-    <span
-      className={`flex-column pa2 justify-around pointer`}
-      onClick={props.onClick}
-    >
+    <span className={`flex-column pa2 justify-around pointer`}>
       <Plus size={16} />
     </span>
   );

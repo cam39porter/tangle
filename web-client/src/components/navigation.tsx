@@ -1,7 +1,16 @@
 // React
 import * as React from "react";
 
+// Router
 import { RouteComponentProps } from "react-router";
+
+// GraphQL
+import {
+  createSessionMutation as createSessionResponse,
+  createSessionCaptureMutationVariables
+} from "../__generated__/types";
+import { createSession } from "../queries";
+import { graphql, compose, MutationFunc } from "react-apollo";
 
 // Components
 import ButtonCapture from "./button-capture";
@@ -10,12 +19,16 @@ import ButtonZap from "./button-zap";
 import ButtonSettings from "./button-settings";
 
 // Utils
-import { noop } from "lodash";
 import { NetworkUtils } from "../utils";
 
 interface RouteProps extends RouteComponentProps<{}> {}
 
-interface Props extends RouteProps {}
+interface Props extends RouteProps {
+  createSession: MutationFunc<
+    createSessionResponse,
+    createSessionCaptureMutationVariables
+  >;
+}
 
 interface State {
   isShowingSettings: boolean;
@@ -70,7 +83,22 @@ class Navigation extends React.Component<Props, State> {
             )}
           </div>
           <div className={`pa2 dim`}>
-            <ButtonZap onClick={noop} />
+            <ButtonZap
+              onClick={() => {
+                this.props
+                  .createSession({})
+                  .then(res => {
+                    this.props.history.push(
+                      `/session/${encodeURIComponent(
+                        res.data.createSession.id
+                      )}/recent`
+                    );
+                  })
+                  .catch(err => {
+                    console.error(err);
+                  });
+              }}
+            />
           </div>
         </div>
         <div className={`pa2 dim`} data-tip={`Your settings`}>
@@ -87,4 +115,10 @@ class Navigation extends React.Component<Props, State> {
     );
   }
 }
-export default Navigation;
+
+const withCreateSession = graphql<createSessionResponse, Props>(createSession, {
+  name: "createSession",
+  alias: "withCreateSession"
+});
+
+export default compose(withCreateSession)(Navigation);

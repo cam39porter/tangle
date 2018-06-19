@@ -37,17 +37,14 @@ class SearchGraph extends React.Component<Props, State> {
   }
 
   render() {
-    const surfaceResults = this.props.data.search;
+    const data = this.props.data;
 
-    if (!(surfaceResults && surfaceResults.graph)) {
+    if (!(data && data.search && data.search.graph)) {
       return <div />;
     }
 
     return (
-      <Graph
-        nodes={surfaceResults.graph.nodes}
-        edges={surfaceResults.graph.edges}
-      />
+      <Graph nodes={data.search.graph.nodes} edges={data.search.graph.edges} />
     );
   }
 }
@@ -55,6 +52,7 @@ class SearchGraph extends React.Component<Props, State> {
 const withSearch = graphql<searchQueryResponse, Props>(graphSearch, {
   alias: "withSearch",
   options: (props: Props) => ({
+    skip: props.query === "",
     variables: {
       rawQuery: props.query,
       start: 0,

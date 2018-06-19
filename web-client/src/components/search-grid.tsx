@@ -37,15 +37,22 @@ class SearchGrid extends React.Component<Props, State> {
   }
 
   render() {
-    const results = this.props.data.searchV2;
-    if (!(results && results.captures && results.sessions)) {
+    const data = this.props.data;
+    if (
+      !(
+        data &&
+        data.searchV2 &&
+        data.searchV2.captures &&
+        data.searchV2.sessions
+      )
+    ) {
       return <div />;
     }
 
     return (
       <Grid
-        sessions={results.sessions.items}
-        captures={results.captures.items}
+        sessions={data.searchV2.sessions.items}
+        captures={data.searchV2.captures.items}
         headerHeight={this.props.headerHeight}
       />
     );
@@ -55,6 +62,7 @@ class SearchGrid extends React.Component<Props, State> {
 const withSearch = graphql<searchV2QueryResponse, Props>(search, {
   alias: "withSearch",
   options: (props: Props) => ({
+    skip: props.query === "",
     variables: {
       rawQuery: props.query,
       sessionPageId: null,

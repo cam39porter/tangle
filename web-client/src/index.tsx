@@ -79,6 +79,8 @@ const client = new ApolloClient({
           return "CaptureCollection";
         case "SessionItemCollection":
           return "SessionItemCollection";
+        case "SessionCollection":
+          return "SessionCollection";
         default:
           return defaultDataIdFromObject(object);
       }

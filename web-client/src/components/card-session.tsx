@@ -7,15 +7,22 @@ import { withRouter, RouteComponentProps } from "react-router";
 // GraphQL
 import {
   deleteSessionMutation as deleteSessionResponse,
-  deleteSessionMutationVariables
+  deleteSessionMutationVariables,
+  SessionCollectionFieldsFragment,
+  SurfaceResultsFieldsFragment
 } from "../__generated__/types";
-import { deleteSession } from "../queries";
+import {
+  deleteSession,
+  sessionCollectionFragment,
+  surfaceResultsFragment
+} from "../queries";
 import { graphql, compose, MutationFunc } from "react-apollo";
 
 // Components
 import ButtonArchive from "./button-archive";
 
 // Utils
+import { remove } from "lodash";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -62,13 +69,15 @@ class CardSession extends React.Component<Props, State> {
           className={`relative flex flex-wrap pa3 w-100 br4 ${
             this.state.isShowingButtons ? "ba b--accent shadow-1 z-max" : ""
           } bg-white pointer`}
-          onClick={() => {
-            this.props.history.push(
-              `/session/${encodeURIComponent(this.props.id)}/related`
-            );
-          }}
         >
-          <div className={`flex-grow dt`}>
+          <div
+            className={`flex-grow dt`}
+            onClick={() => {
+              this.props.history.push(
+                `/session/${encodeURIComponent(this.props.id)}/related`
+              );
+            }}
+          >
             <div className={`dtc v-mid f5 dark-gray`}>
               {this.props.title || "Untitled "}
             </div>
@@ -85,6 +94,63 @@ class CardSession extends React.Component<Props, State> {
                       .deleteSession({
                         variables: {
                           sessionId: this.props.id
+                        },
+                        optimisticResponse: {
+                          deleteSession: true
+                        },
+                        update: store => {
+                          // SessionCollection
+                          let sessionCollection: SessionCollectionFieldsFragment | null = store.readFragment(
+                            {
+                              id: "SessionCollection",
+                              fragment: sessionCollectionFragment,
+                              fragmentName: "SessionCollectionFields"
+                            }
+                          );
+                          if (sessionCollection && sessionCollection.items) {
+                            store.writeFragment({
+                              id: "SessionCollection",
+                              fragment: sessionCollectionFragment,
+                              fragmentName: "SessionCollectionFields",
+                              data: {
+                                __typename: "SessionCollection",
+                                items: sessionCollection.items.filter(
+                                  capture => capture.id !== this.props.id
+                                ),
+                                pagingInfo: sessionCollection.pagingInfo
+                              }
+                            });
+                          }
+
+                          // SurfaceResults
+                          const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
+                            {
+                              id: "SurfaceResults",
+                              fragment: surfaceResultsFragment,
+                              fragmentName: "SurfaceResultsFields"
+                            }
+                          );
+                          if (surfaceResults && surfaceResults.graph) {
+                            remove(
+                              surfaceResults.graph.nodes,
+                              node => node.id === this.props.id
+                            );
+                            remove(
+                              surfaceResults.graph.edges,
+                              edge =>
+                                edge.source === this.props.id ||
+                                edge.destination === this.props.id
+                            );
+                            store.writeFragment({
+                              id: "SurfaceResults",
+                              fragment: surfaceResultsFragment,
+                              fragmentName: "SurfaceResultsFields",
+                              data: {
+                                __typename: "SurfaceResults",
+                                ...surfaceResults
+                              }
+                            });
+                          }
                         }
                       })
                       .catch(err => {

@@ -76,7 +76,7 @@ class GridCaptures extends React.Component<Props, State> {
                 Brainstorms
               </div>
               {!!this.props.sessions.length && (
-                <div className={`br4 bg-white`}>
+                <div className={``}>
                   {this.props.sessions.map(session => {
                     // Do not render current session in the list
                     if (

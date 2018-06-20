@@ -86,7 +86,7 @@ class Session extends React.Component<Props, State> {
       <div className={`flex-grow bg-near-white ba b--light-gray`}>
         {/* Header */}
         <div
-          className={`flex bb bw1 b--light-gray`}
+          className={`flex justify-between bb bw1 b--light-gray`}
           style={{
             minHeight: "4em",
             userSelect: "none"
@@ -100,8 +100,11 @@ class Session extends React.Component<Props, State> {
               });
             }}
           />
+          <div className={`flex-column justify-around ph2`}>
+            Current Brainstorm
+          </div>
           <div
-            className={`flex-column justify-around`}
+            className={`flex-column justify-around ph2`}
             onClick={() => {
               this.props.history.push(`/${this.props.location.search}`);
             }}

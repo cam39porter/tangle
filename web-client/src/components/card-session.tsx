@@ -66,102 +66,104 @@ class CardSession extends React.Component<Props, State> {
       >
         <div
           id={`list-session`}
-          className={`relative flex flex-wrap pa3 w-100 br4 ${
-            this.state.isShowingButtons ? "ba b--accent shadow-1 z-max" : ""
-          } bg-white pointer`}
+          className={`flex justify-between pa3 w-100 bb bw1 b--light-gray pointer`}
           onClick={() => {
             this.props.history.push(
               `/session/${encodeURIComponent(this.props.id)}/related`
             );
           }}
         >
-          <div className={`flex-grow dt`}>
-            <div className={`dtc v-mid f5 dark-gray`}>
+          <div className={`flex-grow flex-column justify-around`}>
+            <div className={`f5 dark-gray`}>
               {this.props.title || "Untitled "}
             </div>
-            <div className={`dtc v-mid tr f6 gray`}>{this.props.created}</div>
           </div>
-          {this.state.isShowingButtons && (
-            <div
-              className={`absolute flex top--1 right-0 h2 ph2 br4 shadow-1 z-max bg-white gray`}
-            >
-              <div
-                className={`w2`}
-                onClick={e => {
-                  e.stopPropagation();
-
-                  this.props
-                    .deleteSession({
-                      variables: {
-                        sessionId: this.props.id
-                      },
-                      optimisticResponse: {
-                        deleteSession: true
-                      },
-                      update: store => {
-                        // SessionCollection
-                        let sessionCollection: SessionCollectionFieldsFragment | null = store.readFragment(
-                          {
-                            id: "SessionCollection",
-                            fragment: sessionCollectionFragment,
-                            fragmentName: "SessionCollectionFields"
-                          }
-                        );
-                        if (sessionCollection && sessionCollection.items) {
-                          store.writeFragment({
-                            id: "SessionCollection",
-                            fragment: sessionCollectionFragment,
-                            fragmentName: "SessionCollectionFields",
-                            data: {
-                              __typename: "SessionCollection",
-                              items: sessionCollection.items.filter(
-                                capture => capture.id !== this.props.id
-                              ),
-                              pagingInfo: sessionCollection.pagingInfo
-                            }
-                          });
-                        }
-
-                        // SurfaceResults
-                        const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
-                          {
-                            id: "SurfaceResults",
-                            fragment: surfaceResultsFragment,
-                            fragmentName: "SurfaceResultsFields"
-                          }
-                        );
-                        if (surfaceResults && surfaceResults.graph) {
-                          remove(
-                            surfaceResults.graph.nodes,
-                            node => node.id === this.props.id
-                          );
-                          remove(
-                            surfaceResults.graph.edges,
-                            edge =>
-                              edge.source === this.props.id ||
-                              edge.destination === this.props.id
-                          );
-                          store.writeFragment({
-                            id: "SurfaceResults",
-                            fragment: surfaceResultsFragment,
-                            fragmentName: "SurfaceResultsFields",
-                            data: {
-                              __typename: "SurfaceResults",
-                              ...surfaceResults
-                            }
-                          });
-                        }
-                      }
-                    })
-                    .catch(err => {
-                      console.error(err);
-                    });
-                }}
-              >
-                <ButtonArchive />
-              </div>
+          <div className={`relative flex-column justify-around`}>
+            <div className={`tr f6 gray`}>
+              {new Date(this.props.created).toDateString()}
             </div>
-          )}
+            {this.state.isShowingButtons && (
+              <div
+                className={`absolute flex-column justify-around right--2 z-max bg-near-white gray`}
+              >
+                <div
+                  className={``}
+                  onClick={e => {
+                    e.stopPropagation();
+
+                    this.props
+                      .deleteSession({
+                        variables: {
+                          sessionId: this.props.id
+                        },
+                        optimisticResponse: {
+                          deleteSession: true
+                        },
+                        update: store => {
+                          // SessionCollection
+                          let sessionCollection: SessionCollectionFieldsFragment | null = store.readFragment(
+                            {
+                              id: "SessionCollection",
+                              fragment: sessionCollectionFragment,
+                              fragmentName: "SessionCollectionFields"
+                            }
+                          );
+                          if (sessionCollection && sessionCollection.items) {
+                            store.writeFragment({
+                              id: "SessionCollection",
+                              fragment: sessionCollectionFragment,
+                              fragmentName: "SessionCollectionFields",
+                              data: {
+                                __typename: "SessionCollection",
+                                items: sessionCollection.items.filter(
+                                  capture => capture.id !== this.props.id
+                                ),
+                                pagingInfo: sessionCollection.pagingInfo
+                              }
+                            });
+                          }
+
+                          // SurfaceResults
+                          const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
+                            {
+                              id: "SurfaceResults",
+                              fragment: surfaceResultsFragment,
+                              fragmentName: "SurfaceResultsFields"
+                            }
+                          );
+                          if (surfaceResults && surfaceResults.graph) {
+                            remove(
+                              surfaceResults.graph.nodes,
+                              node => node.id === this.props.id
+                            );
+                            remove(
+                              surfaceResults.graph.edges,
+                              edge =>
+                                edge.source === this.props.id ||
+                                edge.destination === this.props.id
+                            );
+                            store.writeFragment({
+                              id: "SurfaceResults",
+                              fragment: surfaceResultsFragment,
+                              fragmentName: "SurfaceResultsFields",
+                              data: {
+                                __typename: "SurfaceResults",
+                                ...surfaceResults
+                              }
+                            });
+                          }
+                        }
+                      })
+                      .catch(err => {
+                        console.error(err);
+                      });
+                  }}
+                >
+                  <ButtonArchive />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );

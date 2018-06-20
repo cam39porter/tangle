@@ -20,6 +20,7 @@ import ButtonSettings from "./button-settings";
 
 // Utils
 import { NetworkUtils } from "../utils";
+import { FirebaseUtils } from "../utils";
 
 interface RouteProps extends RouteComponentProps<{}> {}
 
@@ -102,6 +103,8 @@ class Navigation extends React.Component<Props, State> {
         <div
           className={`pa2 dim pointer`}
           onClick={() => {
+            localStorage.removeItem("idToken");
+            FirebaseUtils.firebaseAuth().signOut();
             this.setState({
               isShowingImport: false,
               isShowingSettings: !this.state.isShowingSettings

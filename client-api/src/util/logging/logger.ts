@@ -1,16 +1,13 @@
 import * as winston from "winston";
 import { RequestContext } from "../../filters/request-context";
 
-/**
- * Configures the winston logger. There are also file and remote transports available
- */
+const winstonTransport = new winston.transports.Console({
+  level: "info",
+  handleExceptions: false
+});
+
 const winstonLogger = winston.createLogger({
-  transports: [
-    new winston.transports.Console({
-      level: "info",
-      handleExceptions: true
-    })
-  ],
+  transports: [winstonTransport],
   format: winston.format.combine(
     winston.format.timestamp({
       format: "YYYY-MM-DD HH:mm:ss"
@@ -21,13 +18,7 @@ const winstonLogger = winston.createLogger({
   ),
   exitOnError: false
 });
-if (process.env.NODE_ENV !== "production") {
-  winstonLogger.add(
-    new winston.transports.Console({
-      format: winston.format.simple()
-    })
-  );
-}
+
 /**
  * Exports a wrapper for all the loggers we use in this configuration
  */

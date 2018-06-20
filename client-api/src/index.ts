@@ -21,6 +21,7 @@ import { Logger } from "./util/logging/logger";
 import { getRequestContext, RequestContext } from "./filters/request-context";
 import * as morgan from "morgan";
 import * as rfs from "rotating-file-stream";
+import { isProd, bootConfigs } from "./config";
 
 const LOGGER = new Logger("src/index.ts");
 
@@ -38,6 +39,7 @@ const executableSchema: GraphQLSchema = makeExecutableSchema({
   resolvers: [captureResolvers, surfaceResolvers]
 });
 
+bootConfigs();
 initAuth();
 
 morgan.token("reqId", req => {
@@ -52,10 +54,7 @@ morgan.token("userId", req => {
 const PORT = 8080;
 const app = express();
 
-if (
-  process.env.NODE_ENV === "production" ||
-  process.env.NODE_ENV === "development"
-) {
+if (isProd()) {
   app.use(
     cors({
       origin: ["https://web-client-prod-dot-opit-193719.appspot.com"],
@@ -76,7 +75,10 @@ const morganFormat =
   "[:date[iso]] [:reqId] [:userId] :remote-addr :remote-user :method :url HTTP/:http-version " +
   ":status :res[content-length] :response-time ms";
 // ensure log directory exists
-if (process.env.NODE_ENV === "production") {
+if (
+  process.env.NODE_ENV === "production" ||
+  process.env.NODE_ENV === "development"
+) {
   // tslint:disable-next-line:no-unused-expression
   fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
   // create a rotating write stream
@@ -114,7 +116,6 @@ app.post("/uploadHtml", (req, res) => {
       }
     });
 });
-
 app.listen(PORT, () => {
   LOGGER.info(null, "Api listening on port " + PORT);
 });

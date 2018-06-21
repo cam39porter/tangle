@@ -5,9 +5,11 @@ RUN addgroup -S neo4j && adduser -S -H -h /var/lib/neo4j -G neo4j neo4j
 ENV NEO4J_SHA256=d000f1b6afb1cec3cf1cde99c75555d38f579b58e467eebe32e2353fdf9effa3 \
     NEO4J_TARBALL=neo4j-enterprise-3.4.0-unix.tar.gz \
     NEO4J_EDITION=enterprise
-ARG NEO4J_URI=http://dist.neo4j.org/neo4j-enterprise-3.4.0-unix.tar.gz
 
-# COPY ./local-package/* /tmp/
+ARG NEO4J_URI=http://dist.neo4j.org/neo4j-enterprise-3.4.0-unix.tar.gz \
+    APOC_URI=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.4.0.1/apoc-3.4.0.1-all.jar \
+    APOC=apoc-3.4.0.1-all.jar
+
 
 RUN apk add --no-cache --quiet \
     bash \
@@ -20,6 +22,8 @@ RUN apk add --no-cache --quiet \
     && mv /var/lib/neo4j-* /var/lib/neo4j \
     && rm ${NEO4J_TARBALL} \
     && mv /var/lib/neo4j/data /data \
+    && curl --fail --silent --show-error --location --remote-name ${APOC_URI}
+    && mv ${APOC} /data/plugins \
     && chown -R neo4j:neo4j /data \
     && chmod -R 777 /data \
     && chown -R neo4j:neo4j /var/lib/neo4j \

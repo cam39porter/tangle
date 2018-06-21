@@ -7,7 +7,6 @@ import * as express from "express";
 
 import { makeExecutableSchema } from "graphql-tools";
 
-const { graphqlExpress } = require("apollo-server-express");
 import * as formidable from "express-formidable";
 import * as fs from "fs";
 import { GraphQLSchema, GraphQLError } from "graphql";
@@ -22,6 +21,8 @@ import { getRequestContext, RequestContext } from "./filters/request-context";
 import * as morgan from "morgan";
 import * as rfs from "rotating-file-stream";
 import { isProd, bootConfigs } from "./config";
+// tslint:disable-next-line
+const { graphqlExpress } = require("apollo-server-express");
 
 const LOGGER = new Logger("src/index.ts");
 

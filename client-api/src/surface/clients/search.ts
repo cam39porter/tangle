@@ -1,4 +1,7 @@
-import { getAuthenticatedUser } from "../../filters/request-context";
+import {
+  getAuthenticatedUser,
+  getRequestContext
+} from "../../filters/request-context";
 import * as elasticsearch from "elasticsearch";
 import { SearchResponse as ESResponse } from "elasticsearch";
 import { Capture } from "../../db/models/capture";
@@ -9,10 +12,13 @@ import { PagingInfo } from "../models/paging-info";
 import { CaptureUrn } from "../../urn/capture-urn";
 import { Param, executeQuery } from "../../db/db";
 import { SessionUrn } from "../../urn/session-urn";
+import { Logger } from "../../util/logging/logger";
+
+const LOGGER = new Logger("src/surface/clients/search.ts");
 
 const client: elasticsearch.Client = new elasticsearch.Client({
   host:
-    "https://elastic:Zbi0DfXL2ndo5dF62Jpgy4dz@291aaa2721c24901a5bf4f5152ccbe9a.europe-west1.gcp.cloud.es.io:9243/"
+    "https://elastic:a9tKlHYgdjUWsyt71YLjg6rs@288980f6c159489db0257552ec2350f5.us-central1.gcp.cloud.es.io:9243/"
 });
 
 export function search(
@@ -87,17 +93,23 @@ function searchCaptures(
       }
     }
   };
-  return client.search(esquery).then((resp: ESResponse<Capture>) => {
-    const results: CaptureUrn[] = resp.hits.hits.map(record =>
-      CaptureUrn.fromRaw(record._source["id"])
-    );
-    const nextCapturePageId =
-      start + capturePagingContext.count < resp.hits.total
-        ? (start + capturePagingContext.count).toString()
-        : null;
-    return new CollectionResult(
-      results,
-      new PagingInfo(nextCapturePageId, resp.hits.total)
-    );
-  });
+  return client
+    .search(esquery)
+    .then((resp: ESResponse<Capture>) => {
+      const results: CaptureUrn[] = resp.hits.hits.map(record =>
+        CaptureUrn.fromRaw(record._source["id"])
+      );
+      const nextCapturePageId =
+        start + capturePagingContext.count < resp.hits.total
+          ? (start + capturePagingContext.count).toString()
+          : null;
+      return new CollectionResult(
+        results,
+        new PagingInfo(nextCapturePageId, resp.hits.total)
+      );
+    })
+    .catch(err => {
+      LOGGER.error(getRequestContext(), err);
+      throw err;
+    });
 }

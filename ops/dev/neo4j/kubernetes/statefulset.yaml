@@ -21,15 +21,15 @@ spec:
           - name: NEO4J_dbms_mode
             value: CORE
           - name: NUMBER_OF_CORES
-            value: "3"  
-          - name: NEO4J_dbms_security_auth__enabled
-            value: "false"
+            value: "3"
           - name: NEO4J_causal__clustering_discovery__type
             value: DNS
           - name: NEO4J_causal__clustering_initial__discovery__members
             value: "neo4j.default.svc.cluster.local:5000"
           - name: NEO4J_ACCEPT_LICENSE_AGREEMENT
             value: "yes"
+          - name: NEO4J_com_graphaware_module_ES_uri
+            value: elastic:INSERT_PASSWORD@288980f6c159489db0257552ec2350f5.us-central1.gcp.cloud.es.io
         command:
           - "/bin/bash"
           - "-ecx"
@@ -67,3 +67,6 @@ spec:
         resources:
           requests:
             storage: "10Gi"
+
+
+            

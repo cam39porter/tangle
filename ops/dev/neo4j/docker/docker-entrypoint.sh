@@ -131,6 +131,28 @@ unset NEO4J_dbms_txLog_rotation_retentionPolicy NEO4J_UDC_SOURCE \
 : ${NEO4J_causal__clustering_raft__listen__address:=0.0.0.0:7000}
 : ${NEO4J_causal__clustering_raft__advertised__address:=$(hostname):7000}
 
+# Custom settings for tangle
+# Apoc
+: ${NEO4J_dbms_security_procedures_unrestricted:=apoc.index.*}
+: ${NEO4J_apoc_autoIndex_enabled:=true}
+# GraphAware
+: ${NEO4J_dbms_unmanaged__extension__classes:=com.graphaware.server=/graphaware
+: ${NEO4J_com_graphaware_runtime_enabled:=true}
+: ${NEO4J_com_graphaware_module_UIDM_1:=com.graphaware.module.uuid.UuidBootstrapper}
+: ${NEO4J_com_graphaware_module_UIDM_uuidProperty:=uuid}
+: ${NEO4J_com_graphaware_module_UIDM_uuidProperty:=uuid}
+: ${NEO4J_com_graphaware_module_UIDM_initializeUntil:=1528383992364}
+: ${NEO4J_com_graphaware_module_ES_2:=com.graphaware.module.es.ElasticSearchModuleBootstrapper}
+: ${NEO4J_com_graphaware_module_ES_port:=9243}
+: ${NEO4J_com_graphaware_module_ES_protocol:=https}
+: ${NEO4J_com_graphaware_module_ES_index:=neo4j-index}
+: ${NEO4J_com_graphaware_module_ES_keyProperty:=uuid}
+: ${NEO4J_com_graphaware_module_ES_retryOnError:=true}
+: ${NEO4J_com_graphaware_module_ES_queueSize:=100}
+: ${NEO4J_com_graphaware_module_ES_reindexBatchSize:=100}
+: ${NEO4J_com_graphaware_module_ES_bulk:=true}
+: ${NEO4J_com_graphaware_module_ES_initializeUntil:=1529538950524}
+
 if [ -d /conf ]; then
     find /conf -type f -exec cp {} conf \;
 fi

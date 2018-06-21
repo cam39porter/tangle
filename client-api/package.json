@@ -1,5 +1,5 @@
 {
-  "name": "@hex-ventures/server",
+  "name": "client-api",
   "version": "0.0.1",
   "description": "graphql server",
   "main": "index.js",
@@ -69,7 +69,7 @@
     "@types/jest": "22.2.3",
     "@types/morgan": "1.7.35",
     "@types/neo4j": "2.0.2",
-    "@types/node": "9.6.5",
+    "@types/node": "10.3.4",
     "@types/winston": "2.3.9",
     "graphql-request": "1.5.1",
     "jest": "22.4.3",

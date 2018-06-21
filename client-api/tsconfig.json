@@ -7,8 +7,7 @@
     "module": "commonjs",
     "outDir": "./.compiled",
     "lib": ["es6", "dom", "esnext"],
-    "sourceMap": true,
-    "types": ["node"]
+    "sourceMap": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]

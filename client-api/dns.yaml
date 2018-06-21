@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-api
+  labels:
+    app: client-api
+spec:
+  selector:
+    app: client-api
+  type: LoadBalancer
+  ports:
+  - name: https
+    port: 443
+    targetPort: 8080

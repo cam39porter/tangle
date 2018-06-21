@@ -7,7 +7,7 @@ import * as express from "express";
 
 import { makeExecutableSchema } from "graphql-tools";
 
-import { graphqlExpress } from "apollo-server-express";
+const { graphqlExpress } = require("apollo-server-express");
 import * as formidable from "express-formidable";
 import * as fs from "fs";
 import { GraphQLSchema, GraphQLError } from "graphql";

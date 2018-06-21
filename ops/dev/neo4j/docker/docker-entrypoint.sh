@@ -136,7 +136,7 @@ unset NEO4J_dbms_txLog_rotation_retentionPolicy NEO4J_UDC_SOURCE \
 : ${NEO4J_dbms_security_procedures_unrestricted:=apoc.index.*}
 : ${NEO4J_apoc_autoIndex_enabled:=true}
 # GraphAware
-: ${NEO4J_dbms_unmanaged__extension__classes:=com.graphaware.server=/graphaware
+: ${NEO4J_dbms_unmanaged__extension__classes:=com.graphaware.server=/graphaware}
 : ${NEO4J_com_graphaware_runtime_enabled:=true}
 : ${NEO4J_com_graphaware_module_UIDM_1:=com.graphaware.module.uuid.UuidBootstrapper}
 : ${NEO4J_com_graphaware_module_UIDM_uuidProperty:=uuid}

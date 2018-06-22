@@ -55,6 +55,10 @@ morgan.token("userId", req => {
 const PORT = 8080;
 const app = express();
 
+app.get("/", (_, res) => {
+  res.send("client-api running");
+});
+
 if (isProd()) {
   app.use(
     cors({

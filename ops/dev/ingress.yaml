@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "dev-ingress"
+spec:
+  rules:
+  - host: dev.api.tangleapp.co
+    http:
+      paths:
+      - backend:
+          serviceName: client-api
+          servicePort: 8080

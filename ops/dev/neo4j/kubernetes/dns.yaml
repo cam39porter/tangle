@@ -6,7 +6,6 @@ metadata:
     app: neo4j
     component: core
 spec:
-  clusterIP: None
   ports:
     - port: 7474
       targetPort: 7474

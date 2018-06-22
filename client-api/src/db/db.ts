@@ -1,18 +1,18 @@
 import { v1 as neo4j } from "neo4j-driver";
 import { StatementResult } from "neo4j-driver/types/v1";
 import { Logger } from "../util/logging/logger";
-import { getRequestContext } from "../filters/request-context";
+import {
+  getRequestContext,
+  hasAuthenticatedUser
+} from "../filters/request-context";
 // import { getContext, hasAuthenticatedUser } from "../filters/request-context";
 // import { UserUrn } from "../urn/user-urn";
 
 const LOGGER = new Logger("src/db/db.ts");
-
 const driver = neo4j.driver(
-  process.env.NEO4J_ENDPOINT,
-  neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
+  "bolt+routing://10.59.241.156:7687",
+  neo4j.auth.basic(process.env.NEO4J_USER, "mz6bJV6YC9irutUo")
 );
-
-const session = driver.session();
 
 export class Param {
   public key: string;
@@ -27,6 +27,7 @@ function executeQuery(
   cypherQuery: string,
   params: Param[]
 ): Promise<StatementResult> {
+  const session = driver.session();
   return session
     .run(cypherQuery, toObj(params))
     .then(result => {
@@ -38,7 +39,7 @@ function executeQuery(
     })
     .catch(error => {
       session.close();
-      const context = getRequestContext();
+      const context = hasAuthenticatedUser() ? getRequestContext() : null;
       LOGGER.error(context, `Recieved error for query: ${cypherQuery}`);
       LOGGER.error(context, `Error response: ${error}`);
       throw error;

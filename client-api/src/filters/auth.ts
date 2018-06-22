@@ -33,15 +33,16 @@ function authFilter(req, res, next): void {
             next();
           })
           .catch(error => {
-            LOGGER.error(getRequestContext(), error);
+            LOGGER.error(null, error);
             res.send(500, error);
           });
       })
       .catch(error => {
-        LOGGER.error(getRequestContext(), error);
+        LOGGER.error(null, error);
         res.send(401, error);
       });
   } else {
+    LOGGER.error(null, "Authorization header not provided");
     res.send(400, "Authorization header not provided");
   }
 }

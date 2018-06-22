@@ -16,8 +16,6 @@ spec:
         image: "us.gcr.io/opit-193719/dev-neo4j-image"
         imagePullPolicy: "Always"
         env:
-          - name: NEO4J_dbms_active__database
-            value: new.db
           - name: NEO4J_dbms_mode
             value: CORE
           - name: NUMBER_OF_CORES
@@ -48,6 +46,8 @@ spec:
           name: tx
         - containerPort: 7474
           name: browser
+        - containerPort: 7473
+          name: https
         - containerPort: 7687
           name: bolt
         - containerPort: 6362

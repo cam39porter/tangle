@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: client-api
-        image: us.gcr.io/opit-193719/client-api
+        image: us.gcr.io/opit-193719/client-api:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 8000
+        - containerPort: 8080

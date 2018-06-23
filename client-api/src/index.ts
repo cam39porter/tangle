@@ -70,38 +70,42 @@ if (isProd()) {
   app.use(cors());
 }
 app.use(bodyParser.json());
-app.use(authFilter); // REQUEST CONTEXT SET HERE
 
 const logDirectory = path.join(__dirname, "../log");
-app.use(setRequestContext);
 
 const morganFormat =
   "[:date[iso]] [:reqId] [:userId] :remote-addr :remote-user :method :url HTTP/:http-version " +
   ":status :res[content-length] :response-time ms";
 // ensure log directory exists
-if (
-  process.env.NODE_ENV === "production" ||
-  process.env.NODE_ENV === "development"
-) {
-  // tslint:disable-next-line:no-unused-expression
-  fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
-  // create a rotating write stream
-  const accessLogStream = rfs("access.log", {
-    interval: "1d", // rotate daily
-    path: logDirectory
-  });
+function useMorgan(): void {
+  if (
+    process.env.NODE_ENV === "production" ||
+    process.env.NODE_ENV === "development"
+  ) {
+    // tslint:disable-next-line:no-unused-expression
+    fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+    // create a rotating write stream
+    const accessLogStream = rfs("access.log", {
+      interval: "1d", // rotate daily
+      path: logDirectory
+    });
 
-  // setup the logger
-  app.use(morgan(morganFormat, { stream: accessLogStream }));
-} else {
-  app.use(morgan(morganFormat));
+    // setup the logger
+    app.use(morgan(morganFormat, { stream: accessLogStream }));
+  } else {
+    app.use(morgan(morganFormat));
+  }
 }
 
 // bodyParser is needed just for POST.
 app.use(
   "/graphql",
+  authFilter,
+  setRequestContext,
+  useMorgan,
   graphqlExpress({ schema: executableSchema, formatError: maskError })
 );
+
 app.use(formidable());
 app.post("/uploadHtml", (req, res) => {
   if (req["files"].file.type !== "text/html") {

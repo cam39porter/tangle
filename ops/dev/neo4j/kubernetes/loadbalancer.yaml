@@ -11,7 +11,6 @@ spec:
     component: core
   clusterIP: 10.59.245.198
   type: LoadBalancer
-  # loadBalancerIP: 35.241.55.162 # dev-ingress static ip
   ports:
     - port: 7474
       targetPort: 7474

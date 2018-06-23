@@ -2,19 +2,19 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: ingress
-  # annotations:
-  #   kubernetes.io/ingress.global-static-ip-name: "dev-ingress"
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "dev-ingress"
 spec:
   rules:
-  - host: api.dev.tangleapp.co
+  - host: browser.neo4j.dev.tangleapp.co
     http:
       paths:
       - backend:
-          serviceName: client-api
-          servicePort: 8080
-  - host: neo4j.dev.tangleapp.co
+          serviceName: neo4j-node-port
+          servicePort: 7474
+  - host: bolt.neo4j.dev.tangleapp.co
     http:
       paths:
       - backend:
-          serviceName: external-access
-          servicePort: 7473
+          serviceName: neo4j-node-port
+          servicePort: 7687

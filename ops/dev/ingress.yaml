@@ -2,8 +2,8 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: ingress
-  annotations:
-    kubernetes.io/ingress.global-static-ip-name: "dev-ingress"
+  # annotations:
+  #   kubernetes.io/ingress.global-static-ip-name: "dev-ingress"
 spec:
   rules:
   - host: api.dev.tangleapp.co

@@ -14,7 +14,7 @@
     "build": "tsc",
     "prepush": "yarn build && yarn lint && yarn test",
     "start": "node .compiled/index.js",
-    "deploy:api:dev": "yarn build && gcloud -q app deploy ./dev.yaml",
+    "deploy:api:dev": "gcloud container builds submit --config cloudbuild.yaml . && kubectl apply -f ../ops/dev/client-api/deployment.yaml",
     "deploy:api:prod": "yarn build && gcloud -q app deploy ./prod.yaml"
   },
   "author": "",

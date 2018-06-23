@@ -4,14 +4,25 @@ metadata:
   name: client-api
 spec:
   replicas: 1
+  
   template:
     metadata:
       labels:
         app: client-api
     spec:
+      volumes:
+      - name: client-api-default-dev
+        secret:
+          secretName: client-api-default-dev
       containers:
       - name: client-api
         image: us.gcr.io/opit-193719/client-api:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
+        volumeMounts:
+        - name: client-api-default-dev  
+          mountPath: /var/secrets/client-api
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /var/secrets/client-api/key.json

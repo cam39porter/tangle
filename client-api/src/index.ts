@@ -20,7 +20,7 @@ import { Logger } from "./util/logging/logger";
 import { getRequestContext, RequestContext } from "./filters/request-context";
 import * as morgan from "morgan";
 import * as rfs from "rotating-file-stream";
-import { isProd, bootConfigs } from "./config";
+import { isProd } from "./config";
 // tslint:disable-next-line
 const { graphqlExpress } = require("apollo-server-express");
 
@@ -40,7 +40,6 @@ const executableSchema: GraphQLSchema = makeExecutableSchema({
   resolvers: [captureResolvers, surfaceResolvers]
 });
 
-bootConfigs();
 initAuth();
 
 morgan.token("reqId", req => {

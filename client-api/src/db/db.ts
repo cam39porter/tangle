@@ -10,10 +10,9 @@ import {
 
 const LOGGER = new Logger("src/db/db.ts");
 const driver = neo4j.driver(
-  "bolt://35.224.173.67:7687",
+  "bolt+routing://10.59.247.100:7687",
   neo4j.auth.basic(process.env.NEO4J_USER, "mz6bJV6YC9irutUo")
 );
-
 const session = driver.session();
 
 export class Param {

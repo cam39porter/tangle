@@ -5,6 +5,8 @@ metadata:
 spec:
   serviceName: neo4j
   replicas: 3
+  updateStrategy: 
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -26,6 +28,8 @@ spec:
             value: "neo4j.default.svc.cluster.local:5000"
           - name: NEO4J_ACCEPT_LICENSE_AGREEMENT
             value: "yes"
+          - name: NEO4J_dbms_security_causal__clustering__status__auth__enabled
+            value: "false"
           - name: NEO4J_com_graphaware_module_ES_uri
             value: elastic:a9tKlHYgdjUWsyt71YLjg6rs@288980f6c159489db0257552ec2350f5.us-central1.gcp.cloud.es.io
         command:
@@ -52,8 +56,6 @@ spec:
           name: bolt
         - containerPort: 6362
           name: backup
-        securityContext:
-          privileged: true
         volumeMounts:
         - name: datadir
           mountPath: "/data"

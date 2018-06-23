@@ -6,9 +6,15 @@ metadata:
     kubernetes.io/ingress.global-static-ip-name: "dev-ingress"
 spec:
   rules:
-  - host: dev.api.tangleapp.co
+  - host: api.dev.tangleapp.co
     http:
       paths:
       - backend:
           serviceName: client-api
           servicePort: 8080
+  - host: neo4j.dev.tangleapp.co
+    http:
+      paths:
+      - backend:
+          serviceName: external-access
+          servicePort: 7473

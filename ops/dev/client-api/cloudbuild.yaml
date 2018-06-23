@@ -1,0 +1,5 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'us.gcr.io/opit-193719/client-api', '.' ]
+images:
+- 'us.gcr.io/opit-193719/client-api'

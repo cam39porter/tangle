@@ -5,6 +5,8 @@ metadata:
   annotations:
     kubernetes.io/ingress.global-static-ip-name: "dev-ingress"
 spec:
+  tls:
+  - secretName: api-dev-cert
   rules:
   - host: api.dev.tangleapp.co
     http:

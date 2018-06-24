@@ -5,6 +5,7 @@ metadata:
   labels:
     app: client-api
 spec:
+  clusterIP: 10.59.246.131
   selector:
     app: client-api
   ports:

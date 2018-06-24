@@ -1,7 +1,7 @@
 # [START runtime]
 runtime: python27
 threadsafe: true
-service: web-client-dev
+service: dev
 
 manual_scaling:
   instances: 1

@@ -1,7 +1,7 @@
 # [START runtime]
 runtime: python27
 threadsafe: true
-service: web-client-prod
+service: default
 
 basic_scaling:
   max_instances: 5

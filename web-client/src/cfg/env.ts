@@ -1,5 +1,5 @@
-const devApiUrl = "https://client-api-dev-dot-opit-193719.appspot.com";
-const prodApiUrl = "https://client-api-prod-dot-opit-193719.appspot.com";
+const devApiUrl = "https://api.dev.tangleapp.co";
+const prodApiUrl = "https://api.tangleapp.co";
 const localApiUrl = "http://localhost:8080";
 const graphqlEndpoint = "graphql";
 const dev = {

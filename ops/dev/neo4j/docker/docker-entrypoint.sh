@@ -2,6 +2,7 @@
 
 cmd="$1"
 
+
 # If we're running as root, then run as the neo4j user. Otherwise
 # docker is running with --user and we simply use that user.  Note
 # that su-exec, despite its name, does not replicate the functionality
@@ -18,6 +19,14 @@ fi
 readonly userid
 readonly groupid
 readonly exec_cmd
+
+mkdir -p /var/lib/neo4j/certificates/cluster/trusted 
+mkdir -p /var/lib/neo4j/certificates/cluster/revoked
+cp /etc/neo4j/secrets/public.crt /var/lib/neo4j/certificates/cluster/trusted
+cp /etc/neo4j/secrets/public.crt /var/lib/neo4j/certificates/cluster/
+cp /etc/neo4j/secrets/private.key /var/lib/neo4j/certificates/cluster/
+chown -R "${userid}":"${groupid}" /var/lib/neo4j/certificates
+chmod -R 700 /var/lib/neo4j/certificates
 
 # Need to chown the home directory - but a user might have mounted a
 # volume here (notably a conf volume). So take care not to chown
@@ -36,8 +45,6 @@ do
     chmod -R 700 "${dir}"
   fi
 done <   <(find /var/lib/neo4j -type d -mindepth 1 -maxdepth 1 -print0)
-
-# Data dir is chowned later
 
 if [[ "${cmd}" != *"neo4j"* ]]; then
   if [ "${cmd}" == "dump-config" ]; then
@@ -132,6 +139,14 @@ unset NEO4J_dbms_txLog_rotation_retentionPolicy NEO4J_UDC_SOURCE \
 : ${NEO4J_causal__clustering_raft__advertised__address:=$(hostname):7000}
 
 # Custom settings for tangle
+# Security
+: ${NEO4J_dbms_ssl_policy_cluster_base__directory:=certificates/cluster}
+: ${NEO4J_dbms_ssl_policy_cluster_base__directory:=certificates/cluster}
+: ${NEO4J_dbms_ssl_policy_cluster_tls__versions:=TLSv1.2}
+: ${NEO4J_dbms_ssl_policy_cluster_ciphers:=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384}
+: ${NEO4J_dbms_ssl_policy_cluster_client__auth:=REQUIRE}
+: ${NEO4J_causal__clustering_ssl__policy:=cluster}
+
 # Apoc
 : ${NEO4J_dbms_security_procedures_unrestricted:=apoc.index.*}
 : ${NEO4J_apoc_autoIndex_enabled:=true}

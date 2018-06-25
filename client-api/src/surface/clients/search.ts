@@ -18,7 +18,6 @@ const LOGGER = new Logger("src/surface/clients/search.ts");
 
 const ELASTIC_HOST = `https://${process.env.ELASTIC_URI}:9243/`;
 
-LOGGER.info(null, `https://${process.env.ELASTIC_URI}/`);
 const client: elasticsearch.Client = new elasticsearch.Client({
   host: ELASTIC_HOST
 });

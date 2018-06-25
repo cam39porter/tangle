@@ -7,6 +7,8 @@ import * as express from "express";
 
 import { makeExecutableSchema } from "graphql-tools";
 
+import * as http from "http";
+import * as https from "https";
 import * as formidable from "express-formidable";
 import * as fs from "fs";
 import { GraphQLSchema, GraphQLError } from "graphql";
@@ -20,7 +22,7 @@ import { Logger } from "./util/logging/logger";
 import { getRequestContext, RequestContext } from "./filters/request-context";
 import * as morgan from "morgan";
 // import * as rfs from "rotating-file-stream";
-import { isProd } from "./config";
+import { isProd, isLocal } from "./config";
 // tslint:disable-next-line
 const { graphqlExpress } = require("apollo-server-express");
 
@@ -51,7 +53,8 @@ morgan.token("userId", req => {
   return requestContext.user.urn.toRaw();
 });
 
-const PORT = 8080;
+const HTTPS_PORT = 8443;
+const HTTP_PORT = 8080;
 const app = express();
 
 app.get("/", (_, res) => {
@@ -124,9 +127,21 @@ app.post("/uploadHtml", (req, res) => {
       }
     });
 });
-app.listen(PORT, () => {
-  LOGGER.info(null, "Api listening on port " + PORT);
-});
+
+// For local allow insecure connection
+if (isLocal()) {
+  http.createServer(app).listen(HTTP_PORT, () => {
+    LOGGER.info(null, "Api HTTP listening on port " + HTTP_PORT);
+  });
+} else {
+  const httpsOptions = {
+    key: fs.readFileSync(process.env.TLS_KEY),
+    cert: fs.readFileSync(process.env.TLS_CERT)
+  };
+  https.createServer(httpsOptions, app).listen(HTTPS_PORT, () => {
+    LOGGER.info(null, "Api HTTPS server listening on port " + app.get("port"));
+  });
+}
 
 // function setRequestContext(req, _, next): void {
 //   req.requestContext = getRequestContext();

@@ -4,13 +4,15 @@ metadata:
   name: client-api
   labels:
     app: client-api  
+  annotations:
+    service.alpha.kubernetes.io/app-protocols: '{"client-api-tls":"HTTPS"}'
 spec:
   clusterIP: 10.59.246.131
   selector:
     app: client-api
   ports:
-  - name: client-api-port
+  - name: client-api-tls
     protocol: TCP
-    port: 8080
-    targetPort: 8080
+    port: 443
+    targetPort: 8443
   type: NodePort

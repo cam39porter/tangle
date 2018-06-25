@@ -14,4 +14,4 @@ spec:
       paths:
       - backend:
           serviceName: client-api
-          servicePort: 8080
+          servicePort: 443

@@ -13,15 +13,25 @@ spec:
       - name: client-api-default-dev
         secret:
           secretName: client-api-default-dev
+      - name: tls
+        secret:
+          secretName: api-dev-cert
       containers:
       - name: client-api
         image: us.gcr.io/opit-193719/client-api:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 8080
+        - containerPort: 8443
         volumeMounts:
         - name: client-api-default-dev  
           mountPath: /var/secrets/client-api
+        - name: tls
+          mountPath: /etc/tls
+          readOnly: true
         env:
+        - name: TLS_CERT
+          value: /etc/tls/tls.crt
+        - name: TLS_KEY
+          value: /etc/tls/tls.key
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /var/secrets/client-api/key.json

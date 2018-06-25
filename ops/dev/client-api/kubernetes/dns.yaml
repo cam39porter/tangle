@@ -3,13 +3,13 @@ kind: Service
 metadata:
   name: client-api
   labels:
-    app: client-api
+    app: client-api  
 spec:
   clusterIP: 10.59.246.131
   selector:
     app: client-api
   ports:
-  - name: http
+  - name: client-api-port
     protocol: TCP
     port: 8080
     targetPort: 8080

@@ -4,6 +4,7 @@ metadata:
   name: ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: "dev-ingress"
+    kubernetes.io/ingress.allow-http: "false"
 spec:
   tls:
   - secretName: api-dev-cert

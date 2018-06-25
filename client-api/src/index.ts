@@ -64,7 +64,7 @@ app.get("/", (_, res) => {
 if (isProd()) {
   app.use(
     cors({
-      origin: ["https://web-client-prod-dot-opit-193719.appspot.com"],
+      origin: ["https://tangleapp.co"],
       methods: ["GET", "POST"],
       optionsSuccessStatus: 200
     })

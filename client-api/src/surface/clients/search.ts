@@ -16,9 +16,11 @@ import { Logger } from "../../util/logging/logger";
 
 const LOGGER = new Logger("src/surface/clients/search.ts");
 
+const ELASTIC_HOST = `https://${process.env.ELASTIC_URI}:9243/`;
+
+LOGGER.info(null, `https://${process.env.ELASTIC_URI}/`);
 const client: elasticsearch.Client = new elasticsearch.Client({
-  host:
-    "https://elastic:a9tKlHYgdjUWsyt71YLjg6rs@288980f6c159489db0257552ec2350f5.us-central1.gcp.cloud.es.io:9243/"
+  host: ELASTIC_HOST
 });
 
 export function search(

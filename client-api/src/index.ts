@@ -19,7 +19,7 @@ import { ConflictError } from "./util/exceptions/confict-error";
 import { Logger } from "./util/logging/logger";
 import { getRequestContext, RequestContext } from "./filters/request-context";
 import * as morgan from "morgan";
-import * as rfs from "rotating-file-stream";
+// import * as rfs from "rotating-file-stream";
 import { isProd } from "./config";
 // tslint:disable-next-line
 const { graphqlExpress } = require("apollo-server-express");
@@ -71,38 +71,38 @@ if (isProd()) {
 }
 app.use(bodyParser.json());
 
-const logDirectory = path.join(__dirname, "../log");
+// const logDirectory = path.join(__dirname, "../log");
 
-const morganFormat =
-  "[:date[iso]] [:reqId] [:userId] :remote-addr :remote-user :method :url HTTP/:http-version " +
-  ":status :res[content-length] :response-time ms";
-// ensure log directory exists
-function useMorgan(): void {
-  if (
-    process.env.NODE_ENV === "production" ||
-    process.env.NODE_ENV === "development"
-  ) {
-    // tslint:disable-next-line:no-unused-expression
-    fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
-    // create a rotating write stream
-    const accessLogStream = rfs("access.log", {
-      interval: "1d", // rotate daily
-      path: logDirectory
-    });
+// const morganFormat =
+//   "[:date[iso]] [:reqId] [:userId] :remote-addr :remote-user :method :url HTTP/:http-version " +
+//   ":status :res[content-length] :response-time ms";
+// // ensure log directory exists
+// function useMorgan(): void {
+//   if (
+//     process.env.NODE_ENV === "production" ||
+//     process.env.NODE_ENV === "development"
+//   ) {
+//     // tslint:disable-next-line:no-unused-expression
+//     fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+//     // create a rotating write stream
+//     const accessLogStream = rfs("access.log", {
+//       interval: "1d", // rotate daily
+//       path: logDirectory
+//     });
 
-    // setup the logger
-    app.use(morgan(morganFormat, { stream: accessLogStream }));
-  } else {
-    app.use(morgan(morganFormat));
-  }
-}
+//     // setup the logger
+//     app.use(morgan(morganFormat, { stream: accessLogStream }));
+//   } else {
+//     app.use(morgan(morganFormat));
+//   }
+// }
 
+app.use(authFilter);
+// app.use(setRequestContext);
+// app.use(useMorgan);
 // bodyParser is needed just for POST.
 app.use(
   "/graphql",
-  authFilter,
-  setRequestContext,
-  useMorgan,
   graphqlExpress({ schema: executableSchema, formatError: maskError })
 );
 
@@ -128,10 +128,10 @@ app.listen(PORT, () => {
   LOGGER.info(null, "Api listening on port " + PORT);
 });
 
-function setRequestContext(req, _, next): void {
-  req.requestContext = getRequestContext();
-  next();
-}
+// function setRequestContext(req, _, next): void {
+//   req.requestContext = getRequestContext();
+//   next();
+// }
 
 function maskError(error: GraphQLError): GraphQLError {
   LOGGER.error(getRequestContext(), error.message, error.stack);

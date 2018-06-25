@@ -25,13 +25,49 @@ spec:
         volumeMounts:
         - name: client-api-default-dev  
           mountPath: /var/secrets/client-api
+          readOnly: true
         - name: tls
           mountPath: /etc/tls
           readOnly: true
         env:
+        - name: NODE_ENV
+          value: development
+          # Backend TLS
         - name: TLS_CERT
           value: /etc/tls/tls.crt
         - name: TLS_KEY
           value: /etc/tls/tls.key
+          # Google
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /var/secrets/client-api/key.json
+        - name: GCLOUD_PROJECT
+          value: opit-193719
+          # Neo4J
+        - name: NEO4J_ENDPOINT
+          value: bolt+routing://10.59.247.100:7687
+        - name: NEO4J_USER
+          valueFrom:
+            secretKeyRef:
+              name: client-api-neo4j-auth
+              key: user
+        - name: NEO4J_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: client-api-neo4j-auth
+              key: password
+          # Elastic
+        - name: ELASTIC_URI
+          valueFrom:
+            secretKeyRef:
+              name: client-api-elastic-auth
+              key: uri
+        - name: ELASTIC_USER
+          valueFrom:
+            secretKeyRef:
+              name: client-api-elastic-auth
+              key: user
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: client-api-elastic-auth
+              key: password

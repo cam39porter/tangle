@@ -36,7 +36,10 @@ spec:
           - name: NEO4J_dbms_security_causal__clustering__status__auth__enabled
             value: "false"
           - name: NEO4J_com_graphaware_module_ES_uri
-            value: elastic:a9tKlHYgdjUWsyt71YLjg6rs@288980f6c159489db0257552ec2350f5.us-central1.gcp.cloud.es.io
+            valueFrom:
+              secretKeyRef:
+                name: client-api-elastic-auth
+                key: uri
         command:
           - "/bin/bash"
           - "-ecx"

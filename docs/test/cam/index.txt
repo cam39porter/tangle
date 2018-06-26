@@ -1,26 +1,26 @@
-@tangle the social aspect of note taking gets at my core belief that friends are the first filter of the information you care about and should fundamentally inform how you think
+tangle the social aspect of note taking gets at my core belief that friends are the first filter of the information you care about and should fundamentally inform how you think
 
-@tangle when classpass realized they were on to something was when they started receiving letters about how the product had change their lives I want this to do the same by enabling people to have big ideas 
+tangle when classpass realized they were on to something was when they started receiving letters about how the product had change their lives I want this to do the same by enabling people to have big ideas 
 
 Classpass was making every reservation manually that definitely does not scale 
 
-@tangle like classpass who fight to get users in the habit of exercise we have to fight to get users in the habit mental hygiene 
+tangle like classpass who fight to get users in the habit of exercise we have to fight to get users in the habit mental hygiene 
 
-How do we play into one of the seven deadly sins? Reid Hoffman likes to invest in those @tangle
+How do we play into one of the seven deadly sins? Reid Hoffman likes to invest in those tangle
 
-@tangle I want people to find in tangle what I found in my journal 
+tangle I want people to find in tangle what I found in my journal 
 
-@tangle the first question is how do you get users to make their first capture or to surface their first insight 
+tangle the first question is how do you get users to make their first capture or to surface their first insight 
 
-@tangle our hunt is get people to capture their thoughts and all ideas should.be in the table 
+tangle our hunt is get people to capture their thoughts and all ideas should.be in the table 
 
-@tangle you should not feel like you have to take notes but compelled to do it because you get so much delight and value out of doing it 
+tangle you should not feel like you have to take notes but compelled to do it because you get so much delight and value out of doing it 
 
 series a, series b, and such are rounds of preferred stock equity financing 
 
 In debt financing a company gives an investor a promissory note 
 
-@tangle just wanted to screen shot a graph and associate to the other thoughts I have been capturing #feature #problems 
+tangle just wanted to screen shot a graph and associate to the other thoughts I have been capturing #feature #problems 
 
 Warrants and options are contractual rights to purchase stock in the future. These are technically securities. A company is supposed to reserve enough stock to cover options that may be exercised
 
@@ -46,19 +46,19 @@ Issue price is the price at which the share is offered to the investor
 
 Par or face value of a share in the books 
 
-@tangle every time I look at a note in notes app it reorders the notes and this means that they are slightly out of sync and cannot be rated to one another. Need to make sure that time clustering is possible which I think is enabled by have time nodes be a part of the networks architecture #nodes #architecture #features #problems
+tangle every time I look at a note in notes app it reorders the notes and this means that they are slightly out of sync and cannot be rated to one another. Need to make sure that time clustering is possible which I think is enabled by have time nodes be a part of the networks architecture #nodes #architecture #features #problems
 
-@tangle @platt how can you make your external hard drive as valuable as possible
+tangle platt how can you make your external hard drive as valuable as possible
 
-@tangle can we create a lexicon of words or entities used by the user to create context for new captures that are put through NLP api so that they disambiguate to the same thing. This could be done by when a capture is inserted, the data processor searches elastic search for key words and gets captures that are similar on that. It then runs the inserted capture through the NLP api with the other captures fetched from elastic search so that the entities in them disambiguate to the same thing and there is more context
+tangle can we create a lexicon of words or entities used by the user to create context for new captures that are put through NLP api so that they disambiguate to the same thing. This could be done by when a capture is inserted, the data processor searches elastic search for key words and gets captures that are similar on that. It then runs the inserted capture through the NLP api with the other captures fetched from elastic search so that the entities in them disambiguate to the same thing and there is more context
 
 Bonus shares are shares given by the company to its shareholders
 
-@tangle just realizing how long the list of thoughts I have generated so far and how with a traditional linear note taking app this kind of top of mind though capture does not work at all #problems #feature
+tangle just realizing how long the list of thoughts I have generated so far and how with a traditional linear note taking app this kind of top of mind though capture does not work at all #problems #feature
 
 Rights share are issued to existing stakeholders in a company 
 
-@tangle maybe the desktop is the only place you can do the big visualizations #feature #viz 
+tangle maybe the desktop is the only place you can do the big visualizations #feature #viz 
 
 Issued capital, subscribed capital, and paid up capital are usually the same value by the end of equity financing 
 
@@ -72,7 +72,7 @@ Authorized capital is the maximum amount of capital which can be issued by a com
 
 Subscribed capital is part of issued share capital which is accepted and agreed by the investor 
 
-@tangle would be nice when you are doing mental hygiene on a network you are able to select a group of nodes and relate them all without have relate each of them individually 
+tangle would be nice when you are doing mental hygiene on a network you are able to select a group of nodes and relate them all without have relate each of them individually 
 
 Equity shares go in the liability side of the balance sheet
 
@@ -82,73 +82,73 @@ In the world of financial and investment management, ‘equity share’ is a big
 
 The value of equity shares are expressed in terms of face value or par value, issue price, book value, market value etc.
 
-@tangle just clicking the new note button with mouse instead of keyboard shortcut is too much effort and is dissuading me from use the notes app #problems #features
+tangle just clicking the new note button with mouse instead of keyboard shortcut is too much effort and is dissuading me from use the notes app #problems #features
 
-@tangle trying to read an article and just drop in highlighted text but that is too hard right now using notes app #problems #feature.      
+tangle trying to read an article and just drop in highlighted text but that is too hard right now using notes app #problems #feature.      
 
 Equity share is a main source of finance for any company giving investors rights to vote, share profits and claim on assets. #startup #finance
 
-@tangle I would just love at the end of the day be reminded and do some mental hygiene and curate or delete the thoughts I have generated throughout the day. It would be an amazing reflective exercise and would allow to generate value from everything that you produce that may not be well formed or is just a question
+tangle I would just love at the end of the day be reminded and do some mental hygiene and curate or delete the thoughts I have generated throughout the day. It would be an amazing reflective exercise and would allow to generate value from everything that you produce that may not be well formed or is just a question
 
-@tangle I am realizing that I am using this a lot to capture questions I want to try to answer later but don’t have time do look into now but think would be interesting. I guess its really about just capturing interesting things that may or may not warrant a second look and further exploration. 
+tangle I am realizing that I am using this a lot to capture questions I want to try to answer later but don’t have time do look into now but think would be interesting. I guess its really about just capturing interesting things that may or may not warrant a second look and further exploration. 
 
 How did sriracha become ubiquitous 
 
-@tangle how do you make a habit or practice of ideation because that is what humans are naturally good at that machines cannot do #brainstorm #differentiator
+tangle how do you make a habit or practice of ideation because that is what humans are naturally good at that machines cannot do #brainstorm #differentiator
 
-@tangle published content is awesome and you can do the how I got this thesis visualization of insights #school #university #students #thesis #viz
+tangle published content is awesome and you can do the how I got this thesis visualization of insights #school #university #students #thesis #viz
 
-@tangle #Leo #plan told me that just making sure you capture thoughts and ideas that you can return later is important. Him and Darshan have run into the issue that they have had great ideas about certain integration but then never connect them to future thinking and ideas
+tangle #Leo #plan told me that just making sure you capture thoughts and ideas that you can return later is important. Him and Darshan have run into the issue that they have had great ideas about certain integration but then never connect them to future thinking and ideas
 
-@tangle I am spending a lot of time switching to this note taking app to write these thoughts it would be so much better as just hot key that pops up a dialogue box for capture. Also realizing for these thoughts the context is not that important #features #mvp #design
+tangle I am spending a lot of time switching to this note taking app to write these thoughts it would be so much better as just hot key that pops up a dialogue box for capture. Also realizing for these thoughts the context is not that important #features #mvp #design
 
-@tangle go through easy organic advertising by answering questions on Quora #seo #growth #platt
+tangle go through easy organic advertising by answering questions on Quora #seo #growth #platt
 
-@tangle you can test hypothesis on Adwords for certain queries. You can run experiments this way. Is this the right audience for our app. We can test product fit. #seo #platt
+tangle you can test hypothesis on Adwords for certain queries. You can run experiments this way. Is this the right audience for our app. We can test product fit. #seo #platt
 
-@tangle how can make it so that is easy for people to publish their insights or thoughts. This is user generated content #ugc #growth #platt
+tangle how can make it so that is easy for people to publish their insights or thoughts. This is user generated content #ugc #growth #platt
 
-@tangle the key at the start is word of mouth strategies and make it viral #platt #growth
+tangle the key at the start is word of mouth strategies and make it viral #platt #growth
 
-@tangle how to we begin to position ourselves as a thought leader in the space with thought capture and reflection. Who is our audience. Who are the experts in this space. Creating reference material is the key
+tangle how to we begin to position ourselves as a thought leader in the space with thought capture and reflection. Who is our audience. Who are the experts in this space. Creating reference material is the key
 
-@tangle #platt linkedin does a good job of making content crawable so that profiles show up in google search #seo #crawling 
+tangle #platt linkedin does a good job of making content crawable so that profiles show up in google search #seo #crawling 
 
-@tangle the best use of a blog is providing reference material on how the tool or app is being used especially when the content is generated by users or experts 
+tangle the best use of a blog is providing reference material on how the tool or app is being used especially when the content is generated by users or experts 
 
-@tangle the benefit of consistent naming is that people know what they are looking at how to name things without thinking #organization
+tangle the benefit of consistent naming is that people know what they are looking at how to name things without thinking #organization
 
-@tangle top students in a class monetizing their reading or thoughts or just the students thoughts from class that are actually attending class #pricing #subscription
+tangle top students in a class monetizing their reading or thoughts or just the students thoughts from class that are actually attending class #pricing #subscription
 
-@tangle a feature for universities should be read or annotating PDFs
+tangle a feature for universities should be read or annotating PDFs
 
-@tangle by keeping thoughts small you can reorder and reorganize them by time or topic. In this way all the little thoughts can be put together in dynamic ways to create value for you instead of being stuck in a static form #notes #thoughts #differentiator
+tangle by keeping thoughts small you can reorder and reorganize them by time or topic. In this way all the little thoughts can be put together in dynamic ways to create value for you instead of being stuck in a static form #notes #thoughts #differentiator
 
-@tangle The best ideas don't die in the marketplace or in the laboratory; they die in the shower because people don't give themselves permission to write it on a napkin and take it out into the world. #mastersofscale #reidhoffman #endeavor
+tangle The best ideas don't die in the marketplace or in the laboratory; they die in the shower because people don't give themselves permission to write it on a napkin and take it out into the world. #mastersofscale #reidhoffman #endeavor
 
-@tangle create growth council with thatcher, platt, and Rosser #seo #hacking
+tangle create growth council with thatcher, platt, and Rosser #seo #hacking
 
-@tangle the challenge with current note taking is that it takes time to curate a note and when you want to take a note you are in the middle of something. It is much more natural to capture a thought as quickly as possibly with the recognition that later you will be reminded or guided to do some mental hygiene on them
+tangle the challenge with current note taking is that it takes time to curate a note and when you want to take a note you are in the middle of something. It is much more natural to capture a thought as quickly as possibly with the recognition that later you will be reminded or guided to do some mental hygiene on them
 
-@tangle insights should give you a sense of collaborative transformation
+tangle insights should give you a sense of collaborative transformation
 
-@tangle surfacing should give you a sense of delight
+tangle surfacing should give you a sense of delight
 
-@tangle capturing should give you a sense of relief
+tangle capturing should give you a sense of relief
 
-@myles seems like lightning implementation to bring scalability and price rise #ether #btc #ltc
+myles seems like lightning implementation to bring scalability and price rise #ether #btc #ltc
 
-@tangle be aware of going to far with the vision because of black mirror association #platt
+tangle be aware of going to far with the vision because of black mirror association #platt
 
-@tangle @myles instead of permission nd universal use group and global
+tangle myles instead of permission nd universal use group and global
 
-@myles @tangle capturing is primarily about thoughts which can be text audio or visual. Context is the environment around that thought which a thought can annotate 
+myles tangle capturing is primarily about thoughts which can be text audio or visual. Context is the environment around that thought which a thought can annotate 
 
-@tangle we should make it clear that what you capture should be uncharted and natural like a brainstorm 
+tangle we should make it clear that what you capture should be uncharted and natural like a brainstorm 
 
 Wonder if french presses could be easier to clean #coffee 
 
-@tangle I feel fine not cleaning and honing my thoughts because I know I will surface them again and get to curate them #surfacing
+tangle I feel fine not cleaning and honing my thoughts because I know I will surface them again and get to curate them #surfacing
 
 Already with noting via this tangle I feel.a sense of relief capturing things here because I know I will be reminded to go through later #tangle
 
@@ -166,45 +166,45 @@ We could use hyperbolic inventives, paying people immediately, to increase effic
 
 Founder of Sikh said I see no stranger I see no enemy 
 
-@tangle the beauty of pull social instead of push 
+tangle the beauty of pull social instead of push 
 
-@tangle worried about meeting with a google engineer about what we are doing. I just don’t want them to accidentally till someone else in Google what we are doing and things to spread from there 
+tangle worried about meeting with a google engineer about what we are doing. I just don’t want them to accidentally till someone else in Google what we are doing and things to spread from there 
 
-@Julian just had a great conversation about corporations as vehicles for innovation because they allow the individual to take risks without seeing the personal downside below zero. Like my grandpa told me in college, if you have nothing to lose it encourages you to keep on swinging for the fences
+Julian just had a great conversation about corporations as vehicles for innovation because they allow the individual to take risks without seeing the personal downside below zero. Like my grandpa told me in college, if you have nothing to lose it encourages you to keep on swinging for the fences
 
-@tangle it is very compelling you begin to think of capturing things not only in terms of the value it creates for you but the value it creates for anyone you may be tangling with
+tangle it is very compelling you begin to think of capturing things not only in terms of the value it creates for you but the value it creates for anyone you may be tangling with
 
-@tangle since groups and users will likely be in the global namespace, it is likely that group names will end up being long and descriptive. For this reason it is likely quite important that we have good tab auto complete when you type @ for groups you are a part of users you commonly tangle with
+tangle since groups and users will likely be in the global namespace, it is likely that group names will end up being long and descriptive. For this reason it is likely quite important that we have good tab auto complete when you type  for groups you are a part of users you commonly tangle with
 
-@tangle since tangling is permissioned, does it mean that users won’t be able to attack people they don’t know directly.
+tangle since tangling is permissioned, does it mean that users won’t be able to attack people they don’t know directly.
 
 drift happens immediately when communication decreases between individuals. Organizations need to try to mitigate this drift at all levels.
 
 what is the right amount of information to share with people outside of the organization, like Hill from Google, without potentially giving away what we are building
 
-@tangle I think that we are positioning ourselves less as knowledge management system at first and more as a note taking app or productivity app #marketing #positioning
+tangle I think that we are positioning ourselves less as knowledge management system at first and more as a note taking app or productivity app #marketing #positioning
 
-@tangle emphasizing how different we are in terms of how we take notes or do note I actually valuable as we pitch this to VC so that it is clear people with different feelings around still think this is the right solutions #funding #pitch #story
+tangle emphasizing how different we are in terms of how we take notes or do note I actually valuable as we pitch this to VC so that it is clear people with different feelings around still think this is the right solutions #funding #pitch #story
 
-@tangle identifying the types of thoughts we capture will be important and inform the UI and functionality. Types could include questions, learnings, tasks, reminders #types #features
+tangle identifying the types of thoughts we capture will be important and inform the UI and functionality. Types could include questions, learnings, tasks, reminders #types #features
 
-@tangle @Cole realizing that by Cole being aware of how much I am capturing helped him to capture more and then he got into it himself. This is similar to classpass and people getting into working out #habits #growth
+tangle Cole realizing that by Cole being aware of how much I am capturing helped him to capture more and then he got into it himself. This is similar to classpass and people getting into working out #habits #growth
 
-@tangle the name tangle is more in line with the current mission where as tangle is more in line with the vision #vision #mission #name
+tangle the name tangle is more in line with the current mission where as tangle is more in line with the vision #vision #mission #name
 
-@tangle seems like typescript will give us a lot of benefits in the long run especially when refactoring or making changes that might have downstream consequences
+tangle seems like typescript will give us a lot of benefits in the long run especially when refactoring or making changes that might have downstream consequences
 
 I can see us and Basecoin being the next generation of great startups all that came out friend groups at Princeton computer science. That would be really cool
 
-@tangle Silicon Valley VC really do not like NDAs and will in fact be off put if send them one #VC #funding #nda
+tangle Silicon Valley VC really do not like NDAs and will in fact be off put if send them one #VC #funding #nda
 
-@Cole @tangle we have to be wary about how many people we bring onto the team because communication gets harder each time you double the size of the team #communication #team #building
+Cole tangle we have to be wary about how many people we bring onto the team because communication gets harder each time you double the size of the team #communication #team #building
 
 Cole is impressed with Prescott’s ability to frame conversation and articulate ideas 
 
-@tangle the cool part is that everyone is an expert in what we are doing because everyone knows the experience of being conscious and having thoughts. It actually is universal #meta #experts #team 
+tangle the cool part is that everyone is an expert in what we are doing because everyone knows the experience of being conscious and having thoughts. It actually is universal #meta #experts #team 
 
-@tangle four facets capture, surface, insight, tangle. Each of these have a feeling associated with them and feats into the mission and vision of the company. For each of these we can define the a set of prototype and MVP features that accompany them along with the technologies that should be involved 
+tangle four facets capture, surface, insight, tangle. Each of these have a feeling associated with them and feats into the mission and vision of the company. For each of these we can define the a set of prototype and MVP features that accompany them along with the technologies that should be involved 
 
 Eric Forkosh of DribbleUp and Dorm room fund wants to talk. Would be good to get to know about why NYC and how he knows Ryan Shea since we invested in BlockStack 
 
@@ -214,17 +214,17 @@ Eric Forkosh you have to learn to say no a lot. He found everyone that failed in
 
 Eric Forkosh building feedback loop is key
 
-@tangle our product is a lot like meditative noting where by acknowledging and capturing a thought and then letting it go you are allowing yourself to be more productive and focused because your mind is not wandering off anymore #productivity #mindfullness #headspace 
+tangle our product is a lot like meditative noting where by acknowledging and capturing a thought and then letting it go you are allowing yourself to be more productive and focused because your mind is not wandering off anymore #productivity #mindfullness #headspace 
 
-@tangle tangles should be associated with the idea that we are the more the same than we are different and the ways we are different are equally interesting to both parties
+tangle tangles should be associated with the idea that we are the more the same than we are different and the ways we are different are equally interesting to both parties
 
-@tangle the product plan should be guided by the emotions that we want each facet to evoke 
+tangle the product plan should be guided by the emotions that we want each facet to evoke 
 
-@tangle one of the facets is the metal hygiene and we want that facet to give you a sense of clarity and productivity and reflection from the chaos of thoughts generated through out the day
+tangle one of the facets is the metal hygiene and we want that facet to give you a sense of clarity and productivity and reflection from the chaos of thoughts generated through out the day
 
-@tangle for each facet we have an emotion that guides. That facet can be implemented as a set of features. Those features can be broken down into two categories, prototype and MVP. Those features can be implemented with a set of technologies #roadmap #product #guide
+tangle for each facet we have an emotion that guides. That facet can be implemented as a set of features. Those features can be broken down into two categories, prototype and MVP. Those features can be implemented with a set of technologies #roadmap #product #guide
 
-@Julian meditating gives me the room to think clearly #mindfullness 
+Julian meditating gives me the room to think clearly #mindfullness 
 
 If we go into something half hearted, it is not surprise if the result is not quite what we would like it to be #headspace #soccer
 
@@ -236,35 +236,35 @@ Push social is about reputation. Pull social is about connection
 
 Our name should be tangle 
 
-@tangle we need to tell our story from the point of view of the emotions that each component is meant to evoke along with a story that will resonate with people #marketing #pitch 
+tangle we need to tell our story from the point of view of the emotions that each component is meant to evoke along with a story that will resonate with people #marketing #pitch 
 
-@tangle you don’t scroll through the internet, you search it. You don’t scroll through thoughts, because most of them don’t matter to you, you search them 
+tangle you don’t scroll through the internet, you search it. You don’t scroll through thoughts, because most of them don’t matter to you, you search them 
 
-@tangle need to set up cap table and follow GAAP for potential investors #finance
+tangle need to set up cap table and follow GAAP for potential investors #finance
 
-@tangle you should be able to ingest highlights on a physical book like you can ingest highlighting an article in a browser #features
+tangle you should be able to ingest highlights on a physical book like you can ingest highlighting an article in a browser #features
 
-@tangle we are capturing a lot of questions how do you pull in content based on the people you are tangled with that might answer them
+tangle we are capturing a lot of questions how do you pull in content based on the people you are tangled with that might answer them
 
-@tangle @josh just said its crazy how many note taking strategies he has tried but none seem to stick. I think the key here is that note taking is not sticky because it takes a certain type of person to maintain those habits. How do we make note taking sticky #framing #notes 
+tangle josh just said its crazy how many note taking strategies he has tried but none seem to stick. I think the key here is that note taking is not sticky because it takes a certain type of person to maintain those habits. How do we make note taking sticky #framing #notes 
 
-@tangle we need to be really good at daily email digests #email #features
+tangle we need to be really good at daily email digests #email #features
 
-@tangle Like falling in love, moments that announce themselves as your subject are rare, and there’s magic to them. Ignore them at your own peril- Dani Shapiro #quotes
+tangle Like falling in love, moments that announce themselves as your subject are rare, and there’s magic to them. Ignore them at your own peril- Dani Shapiro #quotes
 
-@tangle ideas emerge everywhere 
+tangle ideas emerge everywhere 
 
-@tangle ideas do not show up fully formed, but grow and evolve together to great things
+tangle ideas do not show up fully formed, but grow and evolve together to great things
 
-@tangle is a fertile soil for creative seeds
+tangle is a fertile soil for creative seeds
 
-@tangle produce guides on what you should put in your tangle
+tangle produce guides on what you should put in your tangle
 
 Realized the power of anchoring today. Told team that I wanted to get the 10 person space the whole time when I really wanted the smaller 5 person space. I knew by anchoring and getting push back on the 10, they would be more amenable to taking the 5 without question #psychology #experience #selling
 
 By making firm commitments to something you make it more likely that others will be willing to work with you #psychology #selling #team
 
-@tangle you can think of neo4j or graph databases as an optimization of a relational database for certain type of join queries. Just like you can think of 
+tangle you can think of neo4j or graph databases as an optimization of a relational database for certain type of join queries. Just like you can think of 
 
 Bo thinks that I should not be spending time thinking about how things are implemented as a leader only what things need work functionally. Its not about the how it is about the why. This is form of micromanaging and that is bad #leadership #learning
 
@@ -272,7 +272,7 @@ Hicks law is The time it takes for a person to make a decision is a result of th
 
 There are only two things that are fundamentally scare, time and talent. #quotes #leadership
 
-... the challenge of how to maximise one’s individual earnings as a driver for a ride-hailing platform like Uber or Lyft is a pressing question that millions of entrepreneurs across the world now face. Anecdotally, many drivers spend a great deal of time strategizing about where and when to drive. However, drivers today are self-taught, using heuristics of their own devising or learning from one another, and employ relatively simple dashboards such as SherpaShare. @tangle users are self taught how to organize things in notes and they are bad at it or have bad heuristics for it #notes #problems 
+... the challenge of how to maximise one’s individual earnings as a driver for a ride-hailing platform like Uber or Lyft is a pressing question that millions of entrepreneurs across the world now face. Anecdotally, many drivers spend a great deal of time strategizing about where and when to drive. However, drivers today are self-taught, using heuristics of their own devising or learning from one another, and employ relatively simple dashboards such as SherpaShare. tangle users are self taught how to organize things in notes and they are bad at it or have bad heuristics for it #notes #problems 
 
 The issue with raising money is that immediately people will think it is a good idea and start copying. Like a developing country copying a developed one, the copy cats are not beholden to the infrastructure and price commitments you have made so they can be more flexible. #classpass #mastersofscale #funding #vc
 
@@ -292,9 +292,9 @@ The most important thing is to listen and ask questions when you are unfamiliar 
 
 How does information filter through the team to the leadership to make decisions #mofs #fiat
 
-How do we each get the content that Sparks thinking for us. Model this off of Fred Wilsons blog entry on content consumption @tangle #feature 
+How do we each get the content that Sparks thinking for us. Model this off of Fred Wilsons blog entry on content consumption tangle #feature 
 
-@tangle making ideation second nature #marketing 
+tangle making ideation second nature #marketing 
 
 The greatest danger for most of us is not that our aim is too high and we miss it, but that it is too low and we reach it. #quotes #michelangelo 
 
@@ -308,7 +308,7 @@ Getting drunk is a lot like getting rich. It is so much better to do with people
 
 Main thesis from me would be that you and Myles should figure out what you want your 20s - 50s to look like, and make sure that your professional ambitions and approach to the company stay in line with your approach to life. By linking your personal, professional life and your friendships, any discord by nature of the design threatens all of the most important things in life all at once. Which is more or less the concept that small decisions now have big implications later (business, personal happiness, friendships, relationships all included)... For better or for worse. Making sure that what you do lands in the *better* side of the camp is the most important thing, in my opinion, for founders to focus on. #nick #business #friends #tangle
 
-Fred Wilsons thoughts on content consumption echo the desired of pull social https://mail.google.com/mail/u/1/#inbox/161b3c8804b9843f @tangle #Cole #content
+Fred Wilsons thoughts on content consumption echo the desired of pull social https://mail.google.com/mail/u/1/#inbox/161b3c8804b9843f tangle #Cole #content
 
 We need to info on level competition, plan of attack, and current status to the presentation #deck #vc
 
@@ -320,9 +320,9 @@ Demos allow VCs to capture their emotional interest in a product more than type 
 
 Use the demo to tell a story about the problem that the product addresses #demo #vc #deal 
 
-@tangle I end making a number of captures in the row the same tags. I wonder if we should have a way “lock” tags for a person of tine #features
+tangle I end making a number of captures in the row the same tags. I wonder if we should have a way “lock” tags for a person of tine #features
 
-@tangle is it important to interact with VCs on twitter and social media and provide interesting comments to start developing a relationship #VC #deal
+tangle is it important to interact with VCs on twitter and social media and provide interesting comments to start developing a relationship #VC #deal
 
 A key to relationship development is give more than you get #VC #deal #networking
 
@@ -395,7 +395,7 @@ Competition with other funding sources is a big factor in financing #vc #deals
 
 Never overrepresent yourself to a VC #deals
 
-In order to scale we could have humans write the daily or weekly digests in beginning @tangle #features #scaling
+In order to scale we could have humans write the daily or weekly digests in beginning tangle #features #scaling
 
 Liquidation preference is the next most important economic term after price and impacts how the proceeds are shared in a liquidity event #vc #deals. This is important when the company is sold for less than the amount of capital invested 
 
@@ -579,9 +579,9 @@ Grammarly has a single core mission, helping people communicate better wherever 
 
 Grammarly monetized backwards. It was already a monetized enterprise product before moving to freemium model
 
-@tangle like grammarly we should allow users to vote on the correctness of the correctness of relationships and captures we are recommending #feedback 
+tangle like grammarly we should allow users to vote on the correctness of the correctness of relationships and captures we are recommending #feedback 
 
-@tangle lets rely on user recommendations to improve our product at the start instead of sophisticated algorithms 
+tangle lets rely on user recommendations to improve our product at the start instead of sophisticated algorithms 
 
 Repurchase option allows company to purchase founders shares on termination #vc #deals 
 
@@ -658,7 +658,7 @@ In an IPO of a venture backed company, the investment bankers will almost always
 
 Never let investors to negotiate different automatic conversion terms for different series of preferred stock #vc #deals
 
-@tangle people want to know what they know. If they are writing a resume or applying to a job they want to know what unique things they should emphasize. They want to know the things they know that differentiate them. We could find exactly those clusters of thoughts that are unique to them so that they can emphasize them #features 
+tangle people want to know what they know. If they are writing a resume or applying to a job they want to know what unique things they should emphasize. They want to know the things they know that differentiate them. We could find exactly those clusters of thoughts that are unique to them so that they can emphasize them #features 
 
 Private equity guys lobe dividends whereas VCs do not acre about them #deals #vc
 
@@ -674,7 +674,7 @@ Redemption rights provide downside protection to VCs #deals #vc
 
 Redemption rights exist in the case that a company becomes successful enough to be an ongoing business but not quite successful enough to go public or be acquired  #vc #deals
 
-Can we use @tangle to see if you have a positive or negative affinity based on the thoughts that you capture #vc #deals
+Can we use tangle to see if you have a positive or negative affinity based on the thoughts that you capture #vc #deals
 
 A typical VC fund has  a 10 year lifespan and thus if an investment is made later in the funds lifespan, the fund manager might want two ensure there is path to liquidity before the fund winds down #vc #deals
 
@@ -820,89 +820,89 @@ Financing is only the beginning of a relationship #vc #deals
 
 Ask VCs to list there top three terms from the outset and be prepared to do the same #vc #deals 
 
-VCs have a strong preference for companies are led by a founder CEO who creates a strong clear culture from the beginning #vc #structure #mofs @tangle this individuals have the moral authority to drive hard changes 
+VCs have a strong preference for companies are led by a founder CEO who creates a strong clear culture from the beginning #vc #structure #mofs tangle this individuals have the moral authority to drive hard changes 
 
 Leaders need to be truth tellers to create hard change #ceo #culture 
 
 What do I feel called to create #vision # leading and how do you pass that calling on to others 
 
-@tangle the idea of creating a digital piece of identity and thought body for someone that can be passed down resonates with a lot of people. People wish they had this from their parents and want to give it to their kids. There is a strong sense of kinship #focus #feature #marketing 
+tangle the idea of creating a digital piece of identity and thought body for someone that can be passed down resonates with a lot of people. People wish they had this from their parents and want to give it to their kids. There is a strong sense of kinship #focus #feature #marketing 
 
 The only way to differentiate yourself from the competition in the long run is culture which most essential manifestation comes in the form of a mission statement and vision #culture #leading #differentiator 
 
-You can imagine a day where people could spend an afternoon or a meal #tangling. They would be together and the system could pull out similar captures that both people had made. It could be based on similar entities or people they are related to. The people would then have spontaneous fascinating conversations on what they are both interested or have thought about @tangle #feature #future #vision 
+You can imagine a day where people could spend an afternoon or a meal #tangling. They would be together and the system could pull out similar captures that both people had made. It could be based on similar entities or people they are related to. The people would then have spontaneous fascinating conversations on what they are both interested or have thought about tangle #feature #future #vision 
 
 Long-term sustainability and value generation is all about multidimensionality and a future focus. I agree with this on both a personal and business level #values 
 
-@tangle how do we build something ONE person will pay for? I know what I would pay for #monetization #strategy 
+tangle how do we build something ONE person will pay for? I know what I would pay for #monetization #strategy 
 
 You can cleanse your skin by scratching your face in the steam room every week or so. This helps clean the dead skin #wellness 
 
 Before you begin any negotiations, always know your walkaway point #vc #deals 
 
-@tangle target high schools where students can do active ideation as a group and then visualize their collaboration on ideas as a class #marketing #targets 
+tangle target high schools where students can do active ideation as a group and then visualize their collaboration on ideas as a class #marketing #targets 
 
-The more money you have the more money gravity you have #quotes @myles 
+The more money you have the more money gravity you have #quotes myles 
 
 Culture is everything from the music you listen to, to how you organize your desk #culture #style #leadership
 
-You need the ability to lock tags or mentions for all captures during a period of time because bursts of captures tend to be related @tangle 
+You need the ability to lock tags or mentions for all captures during a period of time because bursts of captures tend to be related tangle 
 
-@tangle once you start capturing you being to feel guilty when you have a potentially valuable thought and you don’t capture it somehow #addiction #growth #marketing
+tangle once you start capturing you being to feel guilty when you have a potentially valuable thought and you don’t capture it somehow #addiction #growth #marketing
 
-@tangle any where you would share something on mobile, you should be able to share that think with your tangle so that you can capture it #features 
+tangle any where you would share something on mobile, you should be able to share that think with your tangle so that you can capture it #features 
 
-@tangle the essence of capturing is about making something truly yours in perpetuity. Taking a note is ephemeral #framing #marketing 
+tangle the essence of capturing is about making something truly yours in perpetuity. Taking a note is ephemeral #framing #marketing 
 
-@tangle moving linearly through a list to explore notes is hard exploring a network a network of thoughts with Tangle is easy 
+tangle moving linearly through a list to explore notes is hard exploring a network a network of thoughts with Tangle is easy 
 
-@tangle like headspace and slack, inspire and reflect should include delightful quotes that are meant to make the application light and enjoyable as well as educational #features #culture 
+tangle like headspace and slack, inspire and reflect should include delightful quotes that are meant to make the application light and enjoyable as well as educational #features #culture 
 
-VCs have a strong preference for companies are led by a founder CEO who creates a strong clear culture from the beginning #vc #structure #mofs @tangle this individuals have the moral authority to drive hard changes 
+VCs have a strong preference for companies are led by a founder CEO who creates a strong clear culture from the beginning #vc #structure #mofs tangle this individuals have the moral authority to drive hard changes 
 
 Leaders need to be truth tellers to create hard change #ceo #culture 
 
 What do I feel called to create #vision # leading and how do you pass that calling on to others 
 
-@tangle the idea of creating a digital piece of identity and thought body for someone that can be passed down resonates with a lot of people. People wish they had this from their parents and want to give it to their kids. There is a strong sense of kinship #focus #feature #marketing 
+tangle the idea of creating a digital piece of identity and thought body for someone that can be passed down resonates with a lot of people. People wish they had this from their parents and want to give it to their kids. There is a strong sense of kinship #focus #feature #marketing 
 
 The only way to differentiate yourself from the competition in the long run is culture which most essential manifestation comes in the form of a mission statement and vision #culture #leading #differentiator 
 
-You can imagine a day where people could spend an afternoon or a meal #tangling. They would be together and the system could pull out similar captures that both people had made. It could be based on similar entities or people they are related to. The people would then have spontaneous fascinating conversations on what they are both interested or have thought about @tangle #feature #future #vision 
+You can imagine a day where people could spend an afternoon or a meal #tangling. They would be together and the system could pull out similar captures that both people had made. It could be based on similar entities or people they are related to. The people would then have spontaneous fascinating conversations on what they are both interested or have thought about tangle #feature #future #vision 
 
 Long-term sustainability and value generation is all about multidimensionality and a future focus. I agree with this on both a personal and business level #values 
 
-@tangle how do we build something ONE person will pay for? I know what I would pay for #monetization #strategy 
+tangle how do we build something ONE person will pay for? I know what I would pay for #monetization #strategy 
 
 You can cleanse your skin by scratching your face in the steam room every week or so. This helps clean the dead skin #wellness 
 
 Before you begin any negotiations, always know your walkaway point #vc #deals 
 
-@tangle target high schools where students can do active ideation as a group and then visualize their collaboration on ideas as a class #marketing #targets 
+tangle target high schools where students can do active ideation as a group and then visualize their collaboration on ideas as a class #marketing #targets 
 
-The more money you have the more money gravity you have #quotes @myles 
+The more money you have the more money gravity you have #quotes myles 
 
 Culture is everything from the music you listen to, to how you organize your desk #culture #style #leadership
 
-You need the ability to lock tags or mentions for all captures during a period of time because bursts of captures tend to be related @tangle 
+You need the ability to lock tags or mentions for all captures during a period of time because bursts of captures tend to be related tangle 
 
-@tangle once you start capturing you being to feel guilty when you have a potentially valuable thought and you don’t capture it somehow #addiction #growth #marketing
+tangle once you start capturing you being to feel guilty when you have a potentially valuable thought and you don’t capture it somehow #addiction #growth #marketing
 
-@tangle any where you would share something on mobile, you should be able to share that think with your tangle so that you can capture it #features 
+tangle any where you would share something on mobile, you should be able to share that think with your tangle so that you can capture it #features 
 
-@tangle the essence of capturing is about making something truly yours in perpetuity. Taking a note is ephemeral #framing #marketing 
+tangle the essence of capturing is about making something truly yours in perpetuity. Taking a note is ephemeral #framing #marketing 
 
-@tangle moving linearly through a list to explore notes is hard exploring a network a network of thoughts with Tangle is easy 
+tangle moving linearly through a list to explore notes is hard exploring a network a network of thoughts with Tangle is easy 
 
-@tangle like headspace and slack, inspire and reflect should include delightful quotes that are meant to make the application light and enjoyable as well as educational #features #culture 
+tangle like headspace and slack, inspire and reflect should include delightful quotes that are meant to make the application light and enjoyable as well as educational #features #culture 
 
-@tangle we can use #tags as the names for the clusters that are created by running clustering algorithms. They are the like the street signs on map in this network 
+tangle we can use #tags as the names for the clusters that are created by running clustering algorithms. They are the like the street signs on map in this network 
 
 If you have all this time and intuition built thinking about something that is an investment and you should use it said Ev Williams #mofs #quotes
 
 You can never know the full reach of.your first idea #mofs 
 
-@tangle we need to connect with EV Williams at some point to build this thing. This mission will resonate with based on the article he read about connecting minds in the third edition of wired magazine 
+tangle we need to connect with EV Williams at some point to build this thing. This mission will resonate with based on the article he read about connecting minds in the third edition of wired magazine 
 
 Sometimes it is better to fail than not fail especially if you are not going to truly succeed #quotes #mofs EV Williams 
 
@@ -910,7 +910,7 @@ Twitter is the first version of the collective brainstorm
 
 The network is always king and Reid Hoffman is the king of them. Networks create emergent properties and that's where the true value is 
 
-Ev Williams is the master of information distribution networks @tangle 
+Ev Williams is the master of information distribution networks tangle 
 
 Ev Williams underinvested in relationships and team building. He focused to much on the product and vision and did not help the team grow with that #team #leading #mofs
 
@@ -922,11 +922,11 @@ In principal component analysis each component explains the maximum amount of va
 
 the rotation measure provides the principal component loading (vector) #statistics
 
-@tangle what type of questions should our product be able to answer? 
+tangle what type of questions should our product be able to answer? 
 
-@tangle one question it should be able to answer is which people that I am connected with are asking similar questions to me #questions #product #features
+tangle one question it should be able to answer is which people that I am connected with are asking similar questions to me #questions #product #features
 
-@tangle should be able to answer the question who is mostly likely to be thinking of answers to the questions I am asking #questions #product #features 
+tangle should be able to answer the question who is mostly likely to be thinking of answers to the questions I am asking #questions #product #features 
 
 The first step to scale is an aversion to scale #mofs
 
@@ -940,7 +940,7 @@ The keys is targeting users who will bring in more users for your product #mofs
 
 Sam Altman says that a lot of times it is easier to start a hard company than an easy company, like building a super sonic jet (Boom), because are compelled and fascinated by what you are doing and just want to work with you to build it or collaborate with you #mofs #yc #scale #leading 
 
-@tangle I think it would be cool if we called the people that you connected with brain buddies #branding #naming #features
+tangle I think it would be cool if we called the people that you connected with brain buddies #branding #naming #features
 
 Always ask for some type of negative feedback when you present something to someone or in general even if they are saying positive things. This is the only way that you can learn and grow #learning #feedback #jessie
 
@@ -964,15 +964,15 @@ Kevin Ryan  says the only successful software companies with founders under the 
 
  Kevin Ryan  thinks I am good at team building and leveraging my network. He said he would talk to his brother who runs Facebook workplace if there is is something they think about. We should define the actually personalities of the people that would use this and name them and act like they are real. We need to take it a level deeper than user stories. Discussed equity structure with him. Mentioned 35 35 15 15 and less than a point for will 
 
- @tangle He thinks that students are not the way to go at all. #tangle #kevinryan
+ tangle He thinks that students are not the way to go at all. #tangle #kevinryan
 
-@tangle He believes we should find five people like Dave, Minshew, and myself that want this thing and would pay for it. #tangle #kevinryan
+tangle He believes we should find five people like Dave, Minshew, and myself that want this thing and would pay for it. #tangle #kevinryan
 
-@tangle He worries that what we are building could just be a feature of slack. He got away from that when I started sharing how we eliminate choice to empower people. We actually should not be organizing our information a system should be. #tangle #kevinryan
+tangle He worries that what we are building could just be a feature of slack. He got away from that when I started sharing how we eliminate choice to empower people. We actually should not be organizing our information a system should be. #tangle #kevinryan
 
 He said we have two out of three things. One we are incredibly passionate about the idea. Two we have an exceptional team of very talented people who even in a pool of highly talented people are considered talented. The only thing we are missing is they are the people that would pay for this and if there are is this a thing where like budgeting even though you know you should do it you don't because the software doesn't make it easy enough. #tangle #kevinryan
 
-@tangle He said he does not take notes but knows he should there is just too much overhead to do it. The lifelong brainstorm resonated with him. #tangle #kevinryan
+tangle He said he does not take notes but knows he should there is just too much overhead to do it. The lifelong brainstorm resonated with him. #tangle #kevinryan
 
 We should reach out to Hannah Swenson because she is looking to do some new. #tangle #kevinryan
 
@@ -988,31 +988,31 @@ I told him that my favorite part of this has been building the team, compelling 
 
 He said he would talk to his brother who runs Facebook workplace if this is something that is on the top of their mind. #tangle #kevinryan
 
-@tangle We should define the actual personalities of the people that would use this and name them and act like they are real. We need to take it a level deeper than user stories. #tangle #kevinryan
+tangle We should define the actual personalities of the people that would use this and name them and act like they are real. We need to take it a level deeper than user stories. #tangle #kevinryan
 
 Discussed equity structure with him. Mentioned 35 35 15 15 and less than a point for will #tangle #kevinryan
 
-@tangle #jessinchauspe in the MVP it seems important to have the feature where your software creates cool insights/connections after the user has been using it for a few days. 
+tangle #jessinchauspe in the MVP it seems important to have the feature where your software creates cool insights/connections after the user has been using it for a few days. 
 
-@tangle #jessinchauspe I’m wondering what “class” of notes you want people to input into Tangle. I personally would always keep my work notes in google docs, because i need to organize them by project and edit them into a document right there. 
+tangle #jessinchauspe I’m wondering what “class” of notes you want people to input into Tangle. I personally would always keep my work notes in google docs, because i need to organize them by project and edit them into a document right there. 
 
-@tangle #jessinchauspe So what is your market - is it people who write journals and want to digitize them? How about people who don’t write journals? How do you show them there is value in starting to take notes in Tangle?
+tangle #jessinchauspe So what is your market - is it people who write journals and want to digitize them? How about people who don’t write journals? How do you show them there is value in starting to take notes in Tangle?
 
-@tangle #jessinchauspe Maybe integration with Evernote or Twitter are interesting to “seed” the user’s Tangle with a bunch of thoughts and instantly get valuable connections back. It might actually be an MVP feature. The quicker you get a user to see the value Tangle provides, the quicker you win them over (vs. saying: “please use Tangle for the next week, every day, and you’ll see in a week that we will return cool insights”. You’ll get massive drop-off there)
+tangle #jessinchauspe Maybe integration with Evernote or Twitter are interesting to “seed” the user’s Tangle with a bunch of thoughts and instantly get valuable connections back. It might actually be an MVP feature. The quicker you get a user to see the value Tangle provides, the quicker you win them over (vs. saying: “please use Tangle for the next week, every day, and you’ll see in a week that we will return cool insights”. You’ll get massive drop-off there)
 
-@tangle a good way to test your UX and design is to ask people to look at one of the wireframes and ask them what they would do next or how would you capture a thought #ux #testing you can even film them while they do this
+tangle a good way to test your UX and design is to ask people to look at one of the wireframes and ask them what they would do next or how would you capture a thought #ux #testing you can even film them while they do this
 
-@tangle in order to train our users to develop the habit of actively creating ideas. We can set a goal for the number of captures each day and then reward them when they make it. Over time we slowly increase the number of captures to keep them pushing their mental capacity. #features #journey #habit
+tangle in order to train our users to develop the habit of actively creating ideas. We can set a goal for the number of captures each day and then reward them when they make it. Over time we slowly increase the number of captures to keep them pushing their mental capacity. #features #journey #habit
 
-@tangle create the ability to select a time frame and play back the captures during that period as visualization 
+tangle create the ability to select a time frame and play back the captures during that period as visualization 
 
-@tangle Many of us, to varying degrees, fetishize certain objects as having magical powers that enable, most often, creative processes. #creativity 
+tangle Many of us, to varying degrees, fetishize certain objects as having magical powers that enable, most often, creative processes. #creativity 
 
-@tangle we are trying to help people build out what Steve Jobs spoke about in his Stanford commencement speech, “You can’t connect the dots going forward. You can only connect them going backwards” #connecting #inspiration #marketing
+tangle we are trying to help people build out what Steve Jobs spoke about in his Stanford commencement speech, “You can’t connect the dots going forward. You can only connect them going backwards” #connecting #inspiration #marketing
 
-@tangle what we are building is very similar to Vannevar Bush’s memex machine that could be used to capture the memories and book of the owner #history #computing
+tangle what we are building is very similar to Vannevar Bush’s memex machine that could be used to capture the memories and book of the owner #history #computing
 
-@tangle it would be interesting if people create accounts whereby they curate a specific type of knowledge. Then anybody who joins that group could then gain access and make that knowledge part of their tangle just like the initial idea of the memex	
+tangle it would be interesting if people create accounts whereby they curate a specific type of knowledge. Then anybody who joins that group could then gain access and make that knowledge part of their tangle just like the initial idea of the memex	
 
 It's all about timing. Its about finding a parade and getting in front of it #mofs 
 
@@ -1024,7 +1024,7 @@ Don't let your most extreme users determine the behavior on your platform #start
 
 What you tolerate is what you are #networks #social #tangle if you tolerate white supremacists on your platform you are a platform for white supremacists
 
-@tangle we need to be proactive community managers 
+tangle we need to be proactive community managers 
 
 Look up yes ventures 
 
@@ -1036,7 +1036,7 @@ Darkness cannot drive out darkness, only light can #networks #culture #communiti
 
 When need to reach out to Catherine Fake at Yes VC for funding #tangle #communities 
 
-@tangle its seems that it may be natural to allow capture to have types (questions, reminders, tasks) but this seems like a longterm feature and outside of our core focus #features
+tangle its seems that it may be natural to allow capture to have types (questions, reminders, tasks) but this seems like a longterm feature and outside of our core focus #features
 
 Zuckerburg was not an expert in starting startups he was an expert in what he wanted to build fo this users. He started as an LLC in Florida #startups 
 
@@ -1090,7 +1090,7 @@ The average revenue per user (ARPU) is simply the average revenue for an accou
 
 The churn is the percent of customers over a given period who do not continue paying for services. For example, if you have 200 customers pay you in January and only 190 of those pay you in February, the churn would be 5%. #saas 
 
-@tangle we need to track three metrics in real time acquisition rate, conversation rate, and churn rate #saas 
+tangle we need to track three metrics in real time acquisition rate, conversation rate, and churn rate #saas 
 
 As a SAAS company you can ignore any cost that does not scale with the number of users. You do not care about cost of goods sold (CAG) by only customer acquisition costs (CAC) #finance #startup #tangle 
 
@@ -1106,7 +1106,7 @@ Accounting turns the data from books into conclusions about the health of the b
 
 The accrual method vs the cash method (when expenses and revenues occur from the customers perspective) is more complicated than the cash method. The tradeoff it makes is to allow the business (and other interested parties) to have a more accurate understanding of the true health of the business at any point in time.
 
-@tangle we need to start with the accrued method of accounting #finances #vc #investments 
+tangle we need to start with the accrued method of accounting #finances #vc #investments 
 
 A business typically exists as soon as the person engaging in the activity says it does. The label business is simply a statement about intent: if you intend an activity to make money by providing goods or services to customers, congratulations, that activity is a business. #startup #conventions 
 
@@ -1118,7 +1118,7 @@ Contractors are operating their own businesses and happen to have the firm as a 
 
 Startups are a curious alchemy of people, knowledge, money, and technology. Access to these building blocks has historically been grossly uneven, but is improving over time.  #quotes #startups #vc 
 
-@tangle underpricing is far more common than overpricing a product #vc #pricing
+tangle underpricing is far more common than overpricing a product #vc #pricing
 
 Bookings is the value of a contract between the company and the customer. It reflects a contractual obligation on the part of the customer to pay the company. #finance
 
@@ -1138,21 +1138,25 @@ Lifetime value is the present value of the future net profit from the customer
 
 ARPU is defined as total revenue divided by the number of users for a specific time period,  typically over a month, quarter, or year (annual revenue per user) #metrics #finance 
 
-@tangle what if limited the number of invites people coil make so that it ensured they would only invite high quality people and they were rewarded by them converting to the premium version of the service
+tangle what if limited the number of invites people coil make so that it ensured they would only invite high quality people and they were rewarded by them converting to the premium version of the service
 
-@tangle memory fades but connections transcend time 
+tangle memory fades but connections transcend time 
 
-@tangle what we would have to build so that you would tell every single one of your friends about it #mofs #airbnb 
+tangle what we would have to build so that you would tell every single one of your friends about it #mofs #airbnb 
 
-@tangle make the perfect experience for one user. Then figure out how it should scale #airbnb #mofs 
+tangle make the perfect experience for one user. Then figure out how it should scale #airbnb #mofs 
 
-@tangle for businesses that follow the premium model it is important that the product have low marginal costs and minimal sales and marketing expenses
+tangle for businesses that follow the premium model it is important that the product have low marginal costs and minimal sales and marketing expenses
 
-@tangle cohort analysis is key to the freemium model #models #pricing 
+tangle cohort analysis is key to the freemium model #models #pricing 
 
 According to Daniel Kahneman we are really bad at planning (the planning fallacy) and we should look at the overrun on budgets of similar projects to estimate how much wiggle room we should give ourselves beyond what we think we should raise, possibly doubling it #funding #startup #planning 
 
 According the Reid Hoffman you should always raise as much money as you can. You will need it all and it will allow you to pursue the the plan b pivots that inevitably occur. It also allows you to out maneuver your competition #funding #mofs 
 
-@tangle what if you had the ability to message our bot to ask for inspiration to help you ideate #features #inspire
+tangle what if you had the ability to message our bot to ask for inspiration to help you ideate #features #inspire
+
+When you are producing content or building a business, what you measure is what you become.
+
+John Doerr brought OKRs, objectives and key results to Google. He learned them from Andy Grove at Intel. OKRs provide a means of creating transparency and alignment throughout an organization. They help to ensure prioritization and measuring what matters. 
 

@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "prod-ingress"
+    kubernetes.io/ingress.allow-http: "false"
+spec:
+  tls:
+  - secretName: api-cert
+  rules:
+  - host: api.tangleapp.co
+    http:
+      paths:
+      - backend:
+          serviceName: client-api
+          servicePort: 443

@@ -7,7 +7,7 @@ metadata:
     kubernetes.io/ingress.allow-http: "false"
 spec:
   tls:
-  - secretName: api-dev-cert
+  - secretName: api-cert
   rules:
   - host: api.dev.tangleapp.co
     http:

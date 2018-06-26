@@ -10,12 +10,12 @@ spec:
         app: client-api
     spec:
       volumes:
-      - name: client-api-default-dev
+      - name: client-api-default
         secret:
-          secretName: client-api-default-dev
+          secretName: client-api-default
       - name: tls
         secret:
-          secretName: api-dev-cert
+          secretName: api-cert
       containers:
       - name: client-api
         image: us.gcr.io/opit-193719/client-api:latest
@@ -23,7 +23,7 @@ spec:
         ports:
         - containerPort: 8443
         volumeMounts:
-        - name: client-api-default-dev  
+        - name: client-api-default  
           mountPath: /var/secrets/client-api
           readOnly: true
         - name: tls

@@ -15,9 +15,9 @@ spec:
         component: core
     spec:
       volumes:
-      - name: neo4j-cluster-dev
+      - name: neo4j-cluster
         secret:
-          secretName: neo4j-cluster-dev
+          secretName: neo4j-cluster
       containers:
       - name: neo4j
         image: "us.gcr.io/opit-193719/dev-neo4j-image"
@@ -67,7 +67,7 @@ spec:
         volumeMounts:
         - name: datadir
           mountPath: "/data"
-        - name: neo4j-cluster-dev
+        - name: neo4j-cluster
           mountPath: "/etc/neo4j/secrets"
           readOnly: false
   volumeClaimTemplates:

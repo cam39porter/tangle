@@ -1,5 +1,5 @@
 import { User } from "../db/models/user";
-import { createNamespace, getNamespace } from "continuation-local-storage";
+import * as contextService from "request-context";
 import { v4 as uuidv4 } from "uuid/v4";
 
 export class RequestContext {
@@ -11,24 +11,16 @@ export class RequestContext {
   }
 }
 
-export function setAuthenticatedUser(user: User, next: any): void {
-  const session = getNamespace("request")
-    ? getNamespace("request")
-    : createNamespace("request");
-  session.run(() => {
-    session.set("user", user);
-    next();
-  });
+export function setAuthenticatedUser(user: User): void {
+  contextService.set("request:user", user);
 }
 
 export function hasAuthenticatedUser(): boolean {
-  const session = getNamespace("request");
-  return session && session.active ? true : false;
+  return contextService.get("request:user");
 }
 
 export function getAuthenticatedUser(): User {
-  const session = getNamespace("request");
-  const userJson = session.get("user");
+  const userJson = contextService.get("request:user");
   if (!userJson) {
     throw new Error("Authenticated user has not yet been set. Cannot proceed");
   }

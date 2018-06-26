@@ -52,6 +52,7 @@
     "moment": "2.22.0",
     "morgan": "1.9.0",
     "neo4j-driver": "1.5.3",
+    "request-context": "2.0.0",
     "rotating-file-stream": "1.3.6",
     "typescript": "2.8.3",
     "uuid": "3.2.1",

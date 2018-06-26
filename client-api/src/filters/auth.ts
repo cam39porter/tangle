@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
 import { User } from "../db/models/user";
 import { createUser, getUser } from "../db/services/user";
-import { setAuthenticatedUser, getRequestContext } from "./request-context";
+import { setAuthenticatedUser } from "./request-context";
 import { UserUrn } from "../urn/user-urn";
 import { Logger } from "../util/logging/logger";
 
@@ -16,12 +16,8 @@ function initAuth(): void {
 
 function authFilter(req, res, next): void {
   if (process.env.NODE_ENV !== "production" && req.get("dev-override-id")) {
-    setDevOverride(UserUrn.fromRaw(req.get("dev-override-id")), next).catch(
-      err => {
-        LOGGER.error(getRequestContext(), err);
-        res.send(500, err);
-      }
-    );
+    setDevOverride(UserUrn.fromRaw(req.get("dev-override-id")));
+    next();
   } else if (req.get("authorization")) {
     const encodedToken = parseAuthorization(req.get("authorization"));
     verify(encodedToken)
@@ -29,7 +25,7 @@ function authFilter(req, res, next): void {
         const user = new User(new UserUrn(token.uid), token.email, token.name);
         createUser(user)
           .then(() => {
-            setAuthenticatedUser(user, next);
+            setAuthenticatedUser(user);
             next();
           })
           .catch(error => {
@@ -47,8 +43,8 @@ function authFilter(req, res, next): void {
   }
 }
 
-function setDevOverride(urn: UserUrn, next: any): Promise<void> {
-  return getUser(urn).then(user => setAuthenticatedUser(user, next));
+function setDevOverride(urn: UserUrn): Promise<void> {
+  return getUser(urn).then(user => setAuthenticatedUser(user));
 }
 
 function verify(encodedToken): Promise<admin.auth.DecodedIdToken> {

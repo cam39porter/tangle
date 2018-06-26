@@ -20,6 +20,7 @@ import { importEvernoteNoteUpload } from "./upload/services/evernote-import";
 import { ConflictError } from "./util/exceptions/confict-error";
 import { Logger } from "./util/logging/logger";
 import { getRequestContext, RequestContext } from "./filters/request-context";
+import * as contextService from "request-context";
 import * as morgan from "morgan";
 // import * as rfs from "rotating-file-stream";
 import { isProd, isLocal } from "./config";
@@ -99,7 +100,7 @@ app.use(bodyParser.json());
 //     app.use(morgan(morganFormat));
 //   }
 // }
-
+app.use(contextService.middleware("request"));
 app.use(authFilter);
 // app.use(setRequestContext);
 // app.use(useMorgan);

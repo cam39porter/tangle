@@ -139,7 +139,7 @@ if (isLocal()) {
     cert: fs.readFileSync(process.env.TLS_CERT)
   };
   https.createServer(httpsOptions, app).listen(HTTPS_PORT, () => {
-    LOGGER.info(null, "Api HTTPS server listening on port " + app.get("port"));
+    LOGGER.info(null, "Api HTTPS server listening on port " + HTTPS_PORT);
   });
 }
 

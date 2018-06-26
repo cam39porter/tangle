@@ -61,13 +61,3 @@ spec:
             secretKeyRef:
               name: client-api-elastic-auth
               key: uri
-        - name: ELASTIC_USER
-          valueFrom:
-            secretKeyRef:
-              name: client-api-elastic-auth
-              key: user
-        - name: ELASTIC_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: client-api-elastic-auth
-              key: password

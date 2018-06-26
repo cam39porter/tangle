@@ -10,9 +10,9 @@ spec:
         app: client-api
     spec:
       volumes:
-      - name: client-api-default
+      - name: client-api-google-app-credentials
         secret:
-          secretName: client-api-default
+          secretName: client-api-google-app-credentials
       - name: tls
         secret:
           secretName: api-cert
@@ -23,7 +23,7 @@ spec:
         ports:
         - containerPort: 8443
         volumeMounts:
-        - name: client-api-default  
+        - name: client-api-google-app-credentials 
           mountPath: /var/secrets/client-api
           readOnly: true
         - name: tls

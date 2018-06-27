@@ -10,7 +10,7 @@ import {
 
 const LOGGER = new Logger("src/db/db.ts");
 const driver = neo4j.driver(
-  process.env.NEO4J_ENDPOINT,
+  `bolt+routing://${process.env.NEO4J_ENDPOINT}:7687`,
   neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 const session = driver.session();

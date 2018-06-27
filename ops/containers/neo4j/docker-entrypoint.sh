@@ -243,6 +243,8 @@ if [ "${cmd}" == "neo4j" ]; then
   ${exec_cmd} neo4j console
 elif [ "${cmd}" == "backup" ]; then
   bin/neo4j-admin backup --backup-dir /tmp --name backup --from 10.59.247.100:6362
+elif [ "${cmd}" == "sleep" ]; then
+  sleep 1000
 else
   ${exec_cmd} "$@"
 fi

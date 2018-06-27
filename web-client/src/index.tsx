@@ -28,10 +28,11 @@ const httpLink = createHttpLink({
 
 const authLink = setContext((_, { headers }) => {
   const idToken = localStorage.getItem("idToken");
+  const authorization = `Bearer ${idToken}`;
   return {
     headers: {
       ...headers,
-      authorization: `Bearer ${idToken}`
+      authorization
     }
   };
 });

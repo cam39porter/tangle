@@ -2,6 +2,9 @@
 # To deploy an update run `gcloud app deploy dispatch.yaml`
 
 dispatch:
+  # Default service serves favicon
+  - url: "*/favicon.ico"
+    service: default
   # Development web client
   - url: "dev.tangleapp.co/*"
     service: dev

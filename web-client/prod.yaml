@@ -15,22 +15,38 @@ resources:
 
 # [START handlers]
 handlers:
- - url: /static
-   static_dir: build/static
+  - url: /service-worker\.js
+    static_files: build/service-worker.js
+    upload: build/service-worker\.js
 
- - url: /
-   static_files: build/index.html
-   upload: build/index.html
+  - url: /asset-manifest\.json
+    static_files: build/asset-manifest.json
+    upload: build/asset-manifest\.json
 
- - url: /(.*)
-   static_files: build/index.html
-   upload: build/index.html
+  - url: /manifest\.json
+    static_files: build/manifest.json
+    upload: build/manifest\.json
+
+  - url: /favicon\.ico
+    static_files: build/favicon.ico
+    upload: build/favicon\.ico
+  
+  - url: /(.*)static/(.*\.(css|js|map))$
+    static_files: build/static/\2
+    upload: build/static/.*\.(css|js|map)$
+
+  - url: /
+    static_files: build/index.html
+    upload: build/index.html
+
+  - url: /(.*)
+    static_files: build/index.html
+    upload: build/index.html
 # [END handlers]
 
 # [START skip files]
 skip_files:
 - src/
-- release-builds/
 - public/
 - node_modules/
 # [END skip files]

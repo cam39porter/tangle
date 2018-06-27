@@ -65,7 +65,7 @@ app.get("/", (_, res) => {
 if (isProd()) {
   app.use(
     cors({
-      origin: ["https://tangleapp.co"],
+      origin: ["https://tangleapp.co", "https://www.tangleapp.co"],
       methods: ["GET", "POST"],
       optionsSuccessStatus: 200
     })

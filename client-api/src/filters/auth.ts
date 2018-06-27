@@ -16,8 +16,9 @@ function initAuth(): void {
 
 function authFilter(req, res, next): void {
   if (process.env.NODE_ENV !== "production" && req.get("dev-override-id")) {
-    setDevOverride(UserUrn.fromRaw(req.get("dev-override-id")));
-    next();
+    setDevOverride(UserUrn.fromRaw(req.get("dev-override-id"))).then(() =>
+      next()
+    );
   } else if (req.get("authorization")) {
     const encodedToken = parseAuthorization(req.get("authorization"));
     verify(encodedToken)

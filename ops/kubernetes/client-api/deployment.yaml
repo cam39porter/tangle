@@ -44,7 +44,10 @@ spec:
           value: opit-193719
           # Neo4J
         - name: NEO4J_ENDPOINT
-          value: bolt+routing://10.59.247.100:7687
+          valueFrom:
+              configMapKeyRef:
+                name: cluster-config
+                key: neo4jServiceIP
         - name: NEO4J_USER
           valueFrom:
             secretKeyRef:

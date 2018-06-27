@@ -7,7 +7,6 @@ metadata:
   annotations:
     service.alpha.kubernetes.io/app-protocols: '{"client-api-tls":"HTTPS"}'
 spec:
-  clusterIP: 10.59.246.131
   selector:
     app: client-api
   ports:

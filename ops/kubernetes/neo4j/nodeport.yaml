@@ -6,7 +6,6 @@ metadata:
     app: neo4j
     component: core
 spec:
-  clusterIP: 10.59.247.100
   selector:
     app: neo4j
     component: core

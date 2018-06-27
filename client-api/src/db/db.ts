@@ -9,8 +9,9 @@ import {
 // import { UserUrn } from "../urn/user-urn";
 
 const LOGGER = new Logger("src/db/db.ts");
+const NEO4J_URL = `bolt+routing://${process.env.NEO4J_ENDPOINT}:7687`;
 const driver = neo4j.driver(
-  `bolt+routing://${process.env.NEO4J_ENDPOINT}:7687`,
+  NEO4J_URL,
   neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 const session = driver.session();

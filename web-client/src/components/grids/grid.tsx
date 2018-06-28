@@ -73,7 +73,7 @@ class GridCaptures extends React.Component<Props, State> {
                   width: WIDTH
                 }}
               >
-                Brainstorms
+                Collections
               </div>
               {!!this.props.sessions.length && (
                 <div className={``}>

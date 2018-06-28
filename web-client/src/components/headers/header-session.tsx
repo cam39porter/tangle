@@ -101,7 +101,7 @@ class HeaderSession extends React.Component<Props, State> {
             handleReturn={() => {
               return "handled";
             }}
-            placeholder={`Brainstorm title`}
+            placeholder={`Collection title`}
           />
         </div>
       </div>

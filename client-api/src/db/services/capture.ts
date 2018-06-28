@@ -143,7 +143,7 @@ export function archiveCaptureNode(
     new Param("captureUrn", captureUrn.toRaw())
   ];
   const query = `MATCH (capture:Capture {id:{captureUrn}})<-[:CREATED]-(u:User {id:{userId}})
-  SET capture.archived = true
+  DETACH DELETE capture
   RETURN capture
   `;
   return executeQuery(query, params).then(formatCaptureResult);

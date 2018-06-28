@@ -140,6 +140,13 @@ unset NEO4J_dbms_txLog_rotation_retentionPolicy NEO4J_UDC_SOURCE \
 : ${NEO4J_causal__clustering_raft__advertised__address:=$(hostname):7000}
 
 # Custom settings for tangle
+# Logging
+: ${NEO4J_dbms_logs_query_enabled:=true}
+: ${NEO4J_dbms.logs.query.parameter__logging__enabled=true}
+: ${NEO4J_dbms.logs.query.time__logging__enabled=true}
+: ${NEO4J_dbms.logs.query.allocation__logging__enabled=true}
+: ${NEO4J_dbms.logs.query.page__logging__enabled=true}
+
 # Security
 : ${NEO4J_dbms_ssl_policy_cluster_base__directory:=certificates/cluster}
 : ${NEO4J_dbms_ssl_policy_cluster_base__directory:=certificates/cluster}

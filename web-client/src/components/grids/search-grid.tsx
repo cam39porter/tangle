@@ -17,6 +17,7 @@ import { graphql, compose, QueryProps } from "react-apollo";
 import Grid from "../../components/grids/grid";
 
 // Utils
+import config from "../../cfg";
 
 // Types
 
@@ -67,9 +68,9 @@ const withSearch = graphql<searchV2QueryResponse, Props>(search, {
     variables: {
       rawQuery: props.query,
       sessionPageId: null,
-      sessionCount: 10,
+      sessionCount: config.resultCount,
       capturePageId: null,
-      captureCount: 10
+      captureCount: config.resultCount
     },
     fetchPolicy: "network-only"
   })

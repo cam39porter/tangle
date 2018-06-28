@@ -83,7 +83,10 @@ class Session extends React.Component<Props, State> {
     let sessionId = decodeURIComponent(this.props.match.params["id"]);
 
     return (
-      <div className={`flex-grow bg-near-white ba b--light-gray`}>
+      <div
+        key={`session-view-${sessionId}`}
+        className={`flex-grow bg-near-white ba b--light-gray`}
+      >
         {/* Header */}
         <div
           className={`flex justify-between bb bw1 b--light-gray`}
@@ -130,6 +133,7 @@ class Session extends React.Component<Props, State> {
               style={{
                 width: WIDTH
               }}
+              key={`session-view-list-${sessionId}`}
             >
               <div className={`pa3 br4 bg-white ba bw1 b--light-gray`}>
                 <ListSessionTitle

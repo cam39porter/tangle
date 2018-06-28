@@ -19,6 +19,7 @@ import { graphql, compose, QueryProps } from "react-apollo";
 import Grid from "../../components/grids/grid";
 
 // Utils
+import config from "../../cfg";
 
 // Types
 
@@ -67,7 +68,7 @@ const withGetRecentSessions = graphql<getRecentSessionsResponse, Props>(
     alias: "withGetRecentSessions",
     options: (props: Props) => ({
       variables: {
-        count: 10,
+        count: config.resultCount,
         pageId: null
       },
       fetchPolicy: "network-only"
@@ -82,7 +83,7 @@ const withGetRecentCaptures = graphql<getRecentCapturesResponse, Props>(
     alias: "withGetRecentCaptures",
     options: (props: Props) => ({
       variables: {
-        count: 10,
+        count: config.resultCount,
         pageId: null
       },
       fetchPolicy: "network-only"

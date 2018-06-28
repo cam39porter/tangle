@@ -23,6 +23,8 @@ import {
   CaptureFieldsFragment
 } from "../../__generated__/types";
 import {
+  graphGetRecent,
+  graphSearch,
   graphGetDetailed,
   getRelatedCapturesBySession,
   createSessionCapture,
@@ -43,6 +45,8 @@ import { convertToHTML, convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 import EditorUtils from "../../utils/editor";
 import { debounce, Cancelable } from "lodash";
+import { NetworkUtils } from "../../utils/index";
+import config from "../../cfg";
 
 const TIME_TO_SAVE = 500; // ms till change is automatically captured
 
@@ -175,6 +179,56 @@ class InputCapture extends React.Component<Props, State> {
                   if (!this.props.captureId && content.getPlainText()) {
                     let body = convertToHTML(content);
                     if (this.props.sessionData) {
+                      let refetchQueries;
+                      const location = this.props.location.pathname.replace(
+                        this.props.match.url,
+                        ""
+                      );
+                      switch (location) {
+                        case "/search":
+                          refetchQueries = [
+                            {
+                              query: graphSearch,
+                              variables: {
+                                rawQuery: NetworkUtils.getQuery(
+                                  this.props.location.search
+                                ),
+                                start: 0,
+                                count: config.resultCount
+                              }
+                            }
+                          ];
+                          break;
+                        case "/recent":
+                          refetchQueries = [
+                            {
+                              query: graphGetRecent,
+                              variables: {
+                                start: 0,
+                                count: config.resultCount
+                              }
+                            }
+                          ];
+                          break;
+                        default:
+                          refetchQueries = [
+                            {
+                              query: getRelatedCapturesBySession,
+                              variables: {
+                                sessionId: this.props.sessionData.sessionId,
+                                pagingInfo: null,
+                                count: config.resultCount
+                              }
+                            },
+                            {
+                              query: graphGetDetailed,
+                              variables: {
+                                id: this.props.sessionData.sessionId
+                              }
+                            }
+                          ];
+                      }
+
                       this.props
                         .createSessionCapture({
                           variables: {
@@ -194,22 +248,7 @@ class InputCapture extends React.Component<Props, State> {
                               level: 0
                             } as NodeFieldsFragment
                           },
-                          refetchQueries: [
-                            {
-                              query: getRelatedCapturesBySession,
-                              variables: {
-                                sessionId: this.props.sessionData.sessionId,
-                                pagingInfo: null,
-                                count: 10
-                              }
-                            },
-                            {
-                              query: graphGetDetailed,
-                              variables: {
-                                id: this.props.sessionData.sessionId
-                              }
-                            }
-                          ],
+                          refetchQueries: refetchQueries,
                           update: (store, { data }) => {
                             let captureNode =
                               data &&

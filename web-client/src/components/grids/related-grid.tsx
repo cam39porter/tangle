@@ -17,6 +17,7 @@ import { graphql, compose, QueryProps } from "react-apollo";
 import Grid from "../../components/grids/grid";
 
 // Utils
+import config from "../../cfg";
 
 // Types
 
@@ -62,7 +63,7 @@ const withGetRelatedCapturesBySession = graphql<
   options: (props: Props) => ({
     variables: {
       sessionId: decodeURIComponent(props.match.params["id"]),
-      count: 5
+      count: config.resultCount
     },
     fetchPolicy: "network-only"
   })

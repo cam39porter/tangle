@@ -17,6 +17,7 @@ import { graphql, compose, QueryProps } from "react-apollo";
 import Graph from "../../components/graphs/graph";
 
 // Utils
+import config from "../../cfg";
 
 // Types
 
@@ -60,7 +61,7 @@ const withRecent = graphql<getMostRecentResponse, Props>(graphGetRecent, {
     variables: {
       rawQuery: props.query,
       start: 0,
-      count: 10
+      count: config.resultCount
     },
     fetchPolicy: "network-only"
   })

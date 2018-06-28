@@ -45,6 +45,7 @@ class RelatedGrid extends React.Component<Props, State> {
 
     return (
       <Grid
+        key={`related-grid`}
         sessions={[]}
         captures={captures.items}
         headerHeight={this.props.headerHeight}

@@ -45,6 +45,7 @@ class RelatedGraph extends React.Component<Props, State> {
 
     return (
       <Graph
+        key={`related-graph`}
         nodes={surfaceResults.graph.nodes}
         edges={surfaceResults.graph.edges}
       />

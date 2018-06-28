@@ -44,7 +44,11 @@ class SearchGraph extends React.Component<Props, State> {
     }
 
     return (
-      <Graph nodes={data.search.graph.nodes} edges={data.search.graph.edges} />
+      <Graph
+        key={`search-graph`}
+        nodes={data.search.graph.nodes}
+        edges={data.search.graph.edges}
+      />
     );
   }
 }

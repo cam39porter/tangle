@@ -60,6 +60,7 @@ class CardCapture extends React.Component<Props, State> {
   render() {
     return (
       <div
+        key={this.props.captureId}
         onMouseEnter={() => {
           this.setState({
             isShowingButtons: true

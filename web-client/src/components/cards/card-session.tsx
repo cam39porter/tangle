@@ -53,6 +53,7 @@ class CardSession extends React.Component<Props, State> {
   render() {
     return (
       <div
+        key={this.props.id}
         onMouseEnter={() => {
           this.setState({
             isShowingButtons: true

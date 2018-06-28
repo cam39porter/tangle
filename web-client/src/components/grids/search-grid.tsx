@@ -51,6 +51,7 @@ class SearchGrid extends React.Component<Props, State> {
 
     return (
       <Grid
+        key={`search-grid`}
         sessions={data.searchV2.sessions.items}
         captures={data.searchV2.captures.items}
         headerHeight={this.props.headerHeight}

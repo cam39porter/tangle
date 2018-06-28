@@ -1,9 +1,10 @@
 import * as admin from "firebase-admin";
 import { User } from "../db/models/user";
-import { createUser, getUser } from "../db/services/user";
+import { mergeUser, getUser } from "../db/services/user";
 import { setAuthenticatedUser } from "./request-context";
 import { UserUrn } from "../urn/user-urn";
 import { Logger } from "../util/logging/logger";
+import { NotWhitelistedError } from "../util/exceptions/not-whitelisted-error";
 
 const LOGGER = new Logger("src/filters/auth.ts");
 
@@ -24,14 +25,18 @@ function authFilter(req, res, next): void {
     verify(encodedToken)
       .then((token: admin.auth.DecodedIdToken) => {
         const user = new User(new UserUrn(token.uid), token.email, token.name);
-        createUser(user)
+        mergeUser(user)
           .then(() => {
             setAuthenticatedUser(user);
             next();
           })
           .catch(error => {
             LOGGER.error(null, error);
-            res.send(500, error);
+            if (error instanceof NotWhitelistedError) {
+              res.status(400).send(error);
+            } else {
+              res.status(500).send(error);
+            }
           });
       })
       .catch(error => {

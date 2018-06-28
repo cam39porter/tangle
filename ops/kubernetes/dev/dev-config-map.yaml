@@ -2,6 +2,7 @@ apiVersion: v1
 data:
   neo4jServiceIP: 10.59.247.100
   clientApiServiceIP: 10.59.246.131
+  client-api-env: "development"
 kind: ConfigMap
 metadata:
   name: cluster-config

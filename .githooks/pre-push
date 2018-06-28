@@ -15,7 +15,6 @@ current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 
 if [[ $current_branch = $protected_branch ]]; then
     diffedFiles=$(git diff --name-only origin/master..master)
-    echo "$diffedFiles"
     # Check if there are diffs in client-api
     if [[ $diffedFiles == *"client-api"* ]];
     then

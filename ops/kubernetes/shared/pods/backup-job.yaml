@@ -21,6 +21,11 @@ spec:
             env:
             - name: NEO4J_ACCEPT_LICENSE_AGREEMENT
               value: "yes"
+            - name: NEO4J_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: cluster-config
+                  key: neo4jServiceIP
             volumeMounts:
             - name: backupdir-neo4j
               mountPath: /tmp
@@ -36,5 +41,5 @@ spec:
               export NEO4J_causal__clustering_discovery__advertised__address=$(hostname -f):5000
               export NEO4J_causal__clustering_transaction__advertised__address=$(hostname -f):6000
               export NEO4J_causal__clustering_raft__advertised__address=$(hostname -f):7000
-              exec /docker-entrypoint.sh "backup"           
+              exec /docker-entrypoint.sh "backup"     
           restartPolicy: OnFailure

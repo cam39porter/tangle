@@ -43,6 +43,11 @@ spec:
         - name: GCLOUD_PROJECT
           value: opit-193719
           # Neo4J
+        - name: NODE_ENV
+          valueFrom:
+              configMapKeyRef:
+                name: cluster-config
+                key: client-api-env
         - name: NEO4J_ENDPOINT
           valueFrom:
               configMapKeyRef:

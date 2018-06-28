@@ -19,17 +19,17 @@ import {
   NodeType,
   // CaptureCollectionFieldsFragment,
   SessionItemCollectionFieldsFragment,
-  SurfaceResultsFieldsFragment,
   NodeFieldsFragment,
   CaptureFieldsFragment
 } from "../../__generated__/types";
 import {
+  graphGetDetailed,
+  getRelatedCapturesBySession,
   createSessionCapture,
   createCapture,
   editCapture,
   // captureCollectionFragment,
-  sessionItemCollectionFragment,
-  surfaceResultsFragment
+  sessionItemCollectionFragment
 } from "../../queries";
 import { graphql, compose, MutationFunc, withApollo } from "react-apollo";
 
@@ -194,6 +194,22 @@ class InputCapture extends React.Component<Props, State> {
                               level: 0
                             } as NodeFieldsFragment
                           },
+                          refetchQueries: [
+                            {
+                              query: getRelatedCapturesBySession,
+                              variables: {
+                                sessionId: this.props.sessionData.sessionId,
+                                pagingInfo: null,
+                                count: 10
+                              }
+                            },
+                            {
+                              query: graphGetDetailed,
+                              variables: {
+                                id: this.props.sessionData.sessionId
+                              }
+                            }
+                          ],
                           update: (store, { data }) => {
                             let captureNode =
                               data &&
@@ -209,31 +225,6 @@ class InputCapture extends React.Component<Props, State> {
                               created: 0,
                               body: captureNode.text || ""
                             } as CaptureFieldsFragment;
-
-                            // Capture Collection
-                            // let captureCollection: CaptureCollectionFieldsFragment | null = store.readFragment(
-                            //   {
-                            //     id: "CaptureCollection",
-                            //     fragment: captureCollectionFragment,
-                            //     fragmentName: "CaptureCollectionFields"
-                            //   }
-                            // );
-                            // if (captureCollection) {
-                            //   const reversedItems = reverse(
-                            //     captureCollection.items
-                            //   );
-                            //   reversedItems.push(captureItem);
-                            //   store.writeFragment({
-                            //     id: "CaptureCollection",
-                            //     fragment: captureCollectionFragment,
-                            //     fragmentName: "CaptureCollectionFields",
-                            //     data: {
-                            //       __typename: "CaptureCollection",
-                            //       items: reverse(reversedItems),
-                            //       pagingInfo: captureCollection.pagingInfo
-                            //     }
-                            //   });
-                            // }
 
                             // SessionItemsCollection
                             let sessionItemCollection: SessionItemCollectionFieldsFragment | null = store.readFragment(
@@ -257,27 +248,6 @@ class InputCapture extends React.Component<Props, State> {
                                   __typename: "SessionItemCollection",
                                   items: sessionItemCollection.items,
                                   pagingInfo: sessionItemCollection.pagingInfo
-                                }
-                              });
-                            }
-
-                            // SurfaceResults
-                            const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
-                              {
-                                id: "SurfaceResults",
-                                fragment: surfaceResultsFragment,
-                                fragmentName: "SurfaceResultsFields"
-                              }
-                            );
-                            if (surfaceResults && surfaceResults.graph) {
-                              surfaceResults.graph.nodes.push(captureNode);
-                              store.writeFragment({
-                                id: "SurfaceResults",
-                                fragment: surfaceResultsFragment,
-                                fragmentName: "SurfaceResultsFields",
-                                data: {
-                                  __typename: "SurfaceResults",
-                                  ...surfaceResults
                                 }
                               });
                             }

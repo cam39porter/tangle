@@ -5,14 +5,14 @@ import * as React from "react";
 import { withRouter, RouteComponentProps } from "react-router";
 
 // Components
-import CardCapture from "./card-capture";
-import CardSession from "./card-session";
-import ScrollContainer from "./scroll-container";
-import ScrollContainerElement from "./scroll-container-element";
+import CardCapture from "./../cards/card-capture";
+import CardSession from "./../cards/card-session";
+import ScrollContainer from "../scroll/scroll-container";
+import ScrollContainerElement from "../scroll/scroll-container-element";
 import {
   CaptureFieldsFragment,
   SessionFieldsFragment
-} from "../__generated__/types";
+} from "../../__generated__/types";
 import { compose } from "react-apollo";
 
 // Utils

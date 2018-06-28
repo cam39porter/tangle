@@ -5,13 +5,13 @@ import * as React from "react";
 import { RouteComponentProps, Switch, Route, Redirect } from "react-router";
 
 // Components
-import RecentGrid from "../components/recent-grid";
-import RelatedGrid from "../components/related-grid";
-import SearchGrid from "../components/search-grid";
-import RecentGraph from "../components/recent-graph";
-import RelatedGraph from "../components/related-graph";
-import SearchGraph from "../components/search-graph";
-import HeaderSurface from "../components/header-surface";
+import RecentGrid from "../components/grids/recent-grid";
+import RelatedGrid from "../components/grids/related-grid";
+import SearchGrid from "../components/grids/search-grid";
+import RecentGraph from "../components/graphs/recent-graph";
+import RelatedGraph from "../components/graphs/related-graph";
+import SearchGraph from "../components/graphs/search-graph";
+import HeaderSurface from "../components/headers/header-surface";
 import ReactResizeDetector from "react-resize-detector";
 
 // Utils

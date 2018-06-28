@@ -8,19 +8,19 @@ import { RouteComponentProps } from "react-router";
 import {
   createSessionMutation as createSessionResponse,
   createSessionCaptureMutationVariables
-} from "../__generated__/types";
-import { createSession } from "../queries";
+} from "../../__generated__/types";
+import { createSession } from "../../queries";
 import { graphql, compose, MutationFunc } from "react-apollo";
 
 // Components
-import ButtonCapture from "./button-capture";
-import ButtonExit from "./button-exit";
-import ButtonZap from "./button-zap";
-import ButtonSettings from "./button-settings";
+import ButtonCapture from "./../buttons/button-capture";
+import ButtonExit from "./../buttons/button-exit";
+import ButtonZap from "./../buttons/button-zap";
+import ButtonSettings from "./../buttons/button-settings";
 
 // Utils
-import { NetworkUtils } from "../utils";
-import { FirebaseUtils } from "../utils";
+import { NetworkUtils } from "../../utils";
+import { FirebaseUtils } from "../../utils";
 
 interface RouteProps extends RouteComponentProps<{}> {}
 

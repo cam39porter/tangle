@@ -5,7 +5,7 @@ import * as React from "react";
 import ReactECharts from "echarts-for-react";
 
 // Config / Utils
-import config from "../cfg";
+import config from "../../cfg";
 import { isEqual } from "lodash";
 import windowSize from "react-window-size";
 
@@ -15,7 +15,7 @@ import {
   NodeFieldsFragment,
   EdgeFieldsFragment,
   NodeType
-} from "../__generated__/types";
+} from "../../__generated__/types";
 
 const NOT_FOCUS_COLOR = "#CCCCCC";
 const TAG_COLOR = "#333333";

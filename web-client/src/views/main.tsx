@@ -6,7 +6,7 @@ import { RouteComponentProps, Switch, Route } from "react-router";
 
 // Components
 import Session from "../views/session";
-import Navigation from "../components/navigation";
+import Navigation from "../components/navigation/navigation";
 import Surface from "./surface";
 import Capture from "./capture";
 

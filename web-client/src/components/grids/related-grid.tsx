@@ -8,13 +8,13 @@ import { RouteComponentProps } from "react-router";
 import {
   getRelatedCapturesBySessionQuery as getRelatedCapturesBySessionResponse,
   getRelatedCapturesBySessionQueryVariables
-} from "../__generated__/types";
+} from "../../__generated__/types";
 
-import { getRelatedCapturesBySession } from "../queries";
+import { getRelatedCapturesBySession } from "../../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
-import Grid from "../components/grid";
+import Grid from "../../components/grids/grid";
 
 // Utils
 

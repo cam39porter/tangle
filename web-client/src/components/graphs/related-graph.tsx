@@ -8,13 +8,13 @@ import { RouteComponentProps } from "react-router";
 import {
   getDetailedQuery as getDetailedQueryResponse,
   getDetailedQueryVariables
-} from "../__generated__/types";
+} from "../../__generated__/types";
 
-import { graphGetDetailed } from "../queries";
+import { graphGetDetailed } from "../../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
-import Graph from "../components/graph";
+import Graph from "../../components/graphs/graph";
 
 // Utils
 

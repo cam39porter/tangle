@@ -2,7 +2,7 @@
 import * as React from "react";
 
 // Components
-import InputCapture from "../components/input-capture";
+import InputCapture from "../components/inputs/input-capture";
 
 // Types
 interface Props {}

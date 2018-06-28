@@ -10,16 +10,16 @@ import {
   deleteSessionMutationVariables,
   SessionCollectionFieldsFragment,
   SurfaceResultsFieldsFragment
-} from "../__generated__/types";
+} from "../../__generated__/types";
 import {
   deleteSession,
   sessionCollectionFragment,
   surfaceResultsFragment
-} from "../queries";
+} from "../../queries";
 import { graphql, compose, MutationFunc } from "react-apollo";
 
 // Components
-import ButtonArchive from "./button-archive";
+import ButtonArchive from "./../buttons/button-archive";
 
 // Utils
 import { remove } from "lodash";

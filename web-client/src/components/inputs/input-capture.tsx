@@ -22,7 +22,7 @@ import {
   SurfaceResultsFieldsFragment,
   NodeFieldsFragment,
   CaptureFieldsFragment
-} from "../__generated__/types";
+} from "../../__generated__/types";
 import {
   createSessionCapture,
   createCapture,
@@ -30,7 +30,7 @@ import {
   // captureCollectionFragment,
   sessionItemCollectionFragment,
   surfaceResultsFragment
-} from "../queries";
+} from "../../queries";
 import { graphql, compose, MutationFunc, withApollo } from "react-apollo";
 
 // Components
@@ -41,7 +41,7 @@ import ReactResizeDetector from "react-resize-detector";
 // Utils
 import { convertToHTML, convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
-import EditorUtils from "../utils/editor";
+import EditorUtils from "../../utils/editor";
 import { debounce, Cancelable } from "lodash";
 
 const TIME_TO_SAVE = 500; // ms till change is automatically captured

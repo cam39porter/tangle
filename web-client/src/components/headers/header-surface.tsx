@@ -5,8 +5,8 @@ import * as React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 
 // Components
-import InputSurface from "./input-surface";
-import ButtonMore from "./button-more";
+import InputSurface from "../inputs/input-surface";
+import ButtonMore from "./../buttons/button-more";
 
 // Utils
 const HeaderItem = (props: { name: string; onClick?: () => void }) => (

@@ -5,8 +5,8 @@ import * as React from "react";
 import {
   editSessionMutation as editSessionResponse,
   editSessionMutationVariables
-} from "../__generated__/types";
-import { editSession } from "../queries";
+} from "../../__generated__/types";
+import { editSession } from "../../queries";
 import { graphql, compose, MutationFunc } from "react-apollo";
 
 // Components

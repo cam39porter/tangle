@@ -14,12 +14,12 @@ import { getSession } from "../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
-import ListSessionTitle from "../components/header-session";
-import ButtonExit from "../components/button-exit";
-import CardCapture from "../components/card-capture";
-import InputCapture from "../components/input-capture";
-import ScrollContainer from "../components/scroll-container";
-import ScrollContainerElement from "../components/scroll-container-element";
+import ListSessionTitle from "../components/headers/header-session";
+import ButtonExit from "../components/buttons/button-exit";
+import CardCapture from "../components/cards/card-capture";
+import InputCapture from "../components/inputs/input-capture";
+import ScrollContainer from "../components/scroll/scroll-container";
+import ScrollContainerElement from "../components/scroll/scroll-container-element";
 import ReactResizeDetector from "react-resize-detector";
 
 // Utils

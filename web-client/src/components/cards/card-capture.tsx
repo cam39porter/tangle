@@ -14,7 +14,7 @@ import {
   CaptureCollectionFieldsFragment,
   SessionItemCollectionFieldsFragment,
   SurfaceResultsFieldsFragment
-} from "../__generated__/types";
+} from "../../__generated__/types";
 
 import { graphql, compose, MutationFunc } from "react-apollo";
 
@@ -24,11 +24,11 @@ import {
   captureCollectionFragment,
   sessionItemCollectionFragment,
   surfaceResultsFragment
-} from "../queries";
+} from "../../queries";
 
 // Components
-import ButtonArchive from "./button-archive";
-import InputCapture from "./input-capture";
+import ButtonArchive from "./../buttons/button-archive";
+import InputCapture from "../inputs/input-capture";
 
 // Utils
 import { remove } from "lodash";

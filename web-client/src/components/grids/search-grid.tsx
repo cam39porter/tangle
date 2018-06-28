@@ -8,13 +8,13 @@ import { RouteComponentProps } from "react-router";
 import {
   searchV2Query as searchV2QueryResponse,
   searchV2QueryVariables
-} from "../__generated__/types";
+} from "../../__generated__/types";
 
-import { search } from "../queries";
+import { search } from "../../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
-import Grid from "../components/grid";
+import Grid from "../../components/grids/grid";
 
 // Utils
 

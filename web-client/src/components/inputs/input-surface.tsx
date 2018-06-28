@@ -6,14 +6,14 @@ import { withRouter, RouteComponentProps } from "react-router";
 
 // Components
 import * as Draft from "draft-js";
-import ButtonSurface from "./button-surface";
+import ButtonSurface from "./../buttons/button-surface";
 import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 import { convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 import { trim } from "lodash";
-import { NetworkUtils } from "../utils";
+import { NetworkUtils } from "../../utils";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}

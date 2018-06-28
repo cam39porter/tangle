@@ -10,13 +10,13 @@ import {
   getRecentCapturesQueryVariables,
   getRecentSessionsQuery as getRecentSessionsResponse,
   getRecentSessionsQueryVariables
-} from "../__generated__/types";
+} from "../../__generated__/types";
 
-import { getRecentCaptures, getRecentSessions } from "../queries";
+import { getRecentCaptures, getRecentSessions } from "../../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
-import Grid from "../components/grid";
+import Grid from "../../components/grids/grid";
 
 // Utils
 

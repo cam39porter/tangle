@@ -4,24 +4,36 @@ import * as React from "react";
 // Router
 import { withRouter, RouteComponentProps } from "react-router";
 
+// GraphQL
+import {
+  createSessionMutation as createSessionResponse,
+  createSessionCaptureMutationVariables
+} from "../../__generated__/types";
+import { createSession } from "../../queries";
+import { graphql, compose, MutationFunc } from "react-apollo";
+
 // Components
 import CardCapture from "./../cards/card-capture";
 import CardSession from "./../cards/card-session";
 import ScrollContainer from "../scroll/scroll-container";
 import ScrollContainerElement from "../scroll/scroll-container-element";
+
+// Utils
+import windowSize from "react-window-size";
+import { NetworkUtils } from "../../utils";
+
+// Types
 import {
   CaptureFieldsFragment,
   SessionFieldsFragment
 } from "../../__generated__/types";
-import { compose } from "react-apollo";
-
-// Utils
-import windowSize from "react-window-size";
-
-// Types
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
+  createSession: MutationFunc<
+    createSessionResponse,
+    createSessionCaptureMutationVariables
+  >;
   sessions: Array<SessionFieldsFragment>;
   captures: Array<CaptureFieldsFragment>;
   scrollToId?: string;
@@ -66,14 +78,33 @@ class GridCaptures extends React.Component<Props, State> {
             }}
           >
             {/* Sessions */}
-            <div>
+            <div className={`pv4`}>
               <div
-                className={`pb4 w-100 tl ttu gray`}
+                className={`flex justify-between pb4 w-100 gray`}
                 style={{
                   width: WIDTH
                 }}
               >
-                Collections
+                <div className={`flex-column justify-around`}>Collections</div>
+                <div
+                  className={`flex-column justify-around f6 bb b--accent pointer`}
+                  onClick={() => {
+                    this.props
+                      .createSession({})
+                      .then(res => {
+                        this.props.history.push(
+                          `/session/${encodeURIComponent(
+                            res.data.createSession.id
+                          )}/recent`
+                        );
+                      })
+                      .catch(err => {
+                        console.error(err);
+                      });
+                  }}
+                >
+                  Create a new collection
+                </div>
               </div>
               {!!this.props.sessions.length && (
                 <div className={``}>
@@ -108,14 +139,29 @@ class GridCaptures extends React.Component<Props, State> {
               )}
             </div>
             {/* Captures */}
-            <div>
+            <div className={`pv4`}>
               <div
-                className={`pt4 w-100 tl ttu gray`}
+                className={`flex justify-between pt4 w-100 gray`}
                 style={{
                   width: WIDTH
                 }}
               >
-                Captures
+                <div className={`flex-column justify-around`}>Captures</div>
+                <div
+                  className={`flex-column justify-around f6 bb b--accent pointer`}
+                  onClick={() => {
+                    const query = NetworkUtils.getQuery(
+                      this.props.location.search
+                    );
+                    this.props.history.push(
+                      `${this.props.location.pathname}?${
+                        query ? `query=${query}&` : ``
+                      }capture=true`
+                    );
+                  }}
+                >
+                  Create a new capture
+                </div>
               </div>
               {this.props.captures.map(capture => (
                 <div
@@ -141,7 +187,13 @@ class GridCaptures extends React.Component<Props, State> {
   }
 }
 
+const withCreateSession = graphql<createSessionResponse, Props>(createSession, {
+  name: "createSession",
+  alias: "withCreateSession"
+});
+
 export default compose(
   windowSize,
-  withRouter
+  withRouter,
+  withCreateSession
 )(GridCaptures);

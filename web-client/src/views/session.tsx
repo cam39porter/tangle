@@ -104,7 +104,7 @@ class Session extends React.Component<Props, State> {
             }}
           />
           <div className={`flex-column justify-around ph2`}>
-            Current Brainstorm
+            Current Collection
           </div>
           <div
             className={`flex-column justify-around ph2`}

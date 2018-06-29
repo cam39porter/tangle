@@ -4,18 +4,9 @@ import * as React from "react";
 // Router
 import { RouteComponentProps } from "react-router";
 
-// GraphQL
-import {
-  createSessionMutation as createSessionResponse,
-  createSessionCaptureMutationVariables
-} from "../../__generated__/types";
-import { createSession } from "../../queries";
-import { graphql, compose, MutationFunc } from "react-apollo";
-
 // Components
 import ButtonCapture from "./../buttons/button-capture";
 import ButtonExit from "./../buttons/button-exit";
-import ButtonZap from "./../buttons/button-zap";
 import ButtonSettings from "./../buttons/button-settings";
 
 // Utils
@@ -24,26 +15,13 @@ import { FirebaseUtils } from "../../utils";
 
 interface RouteProps extends RouteComponentProps<{}> {}
 
-interface Props extends RouteProps {
-  createSession: MutationFunc<
-    createSessionResponse,
-    createSessionCaptureMutationVariables
-  >;
-}
+interface Props extends RouteProps {}
 
-interface State {
-  isShowingSettings: boolean;
-  isShowingImport: boolean;
-}
+interface State {}
 
 class Navigation extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-
-    this.state = {
-      isShowingSettings: false,
-      isShowingImport: false
-    };
   }
 
   render() {
@@ -80,35 +58,12 @@ class Navigation extends React.Component<Props, State> {
           >
             {isCapturing ? <ButtonExit /> : <ButtonCapture />}
           </div>
-          <div
-            className={`pa2 dim pointer`}
-            onClick={() => {
-              this.props
-                .createSession({})
-                .then(res => {
-                  this.props.history.push(
-                    `/session/${encodeURIComponent(
-                      res.data.createSession.id
-                    )}/recent`
-                  );
-                })
-                .catch(err => {
-                  console.error(err);
-                });
-            }}
-          >
-            <ButtonZap />
-          </div>
         </div>
         <div
           className={`pa2 dim pointer`}
           onClick={() => {
             localStorage.removeItem("idToken");
             FirebaseUtils.firebaseAuth().signOut();
-            this.setState({
-              isShowingImport: false,
-              isShowingSettings: !this.state.isShowingSettings
-            });
           }}
         >
           <ButtonSettings />
@@ -118,9 +73,4 @@ class Navigation extends React.Component<Props, State> {
   }
 }
 
-const withCreateSession = graphql<createSessionResponse, Props>(createSession, {
-  name: "createSession",
-  alias: "withCreateSession"
-});
-
-export default compose(withCreateSession)(Navigation);
+export default Navigation;

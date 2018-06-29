@@ -137,8 +137,6 @@ const editSessionUpdate: (
         })
       );
     }
-
-    console.log(currentSession);
   };
 };
 

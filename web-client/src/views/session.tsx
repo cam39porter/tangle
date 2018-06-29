@@ -16,8 +16,8 @@ import { getSession, deleteSession } from "../queries";
 import { graphql, compose, QueryProps, MutationFunc } from "react-apollo";
 
 // Components
-import ListSessionTitle from "../components/headers/header-session";
-import ButtonExit from "../components/buttons/button-exit";
+import HeaderSession from "../components/headers/header-session";
+import CardSessionTitle from "../components/cards/card-session-title";
 import CardCapture from "../components/cards/card-capture";
 import InputCapture from "../components/inputs/input-capture";
 import ScrollContainer from "../components/scroll/scroll-container";
@@ -125,13 +125,7 @@ class Session extends React.Component<Props, State> {
         className={`flex-grow bg-near-white ba b--light-gray`}
       >
         {/* Header */}
-        <div
-          className={`flex justify-between bb bw1 b--light-gray`}
-          style={{
-            minHeight: "4em",
-            userSelect: "none"
-          }}
-        >
+        <div>
           <ReactResizeDetector
             handleHeight={true}
             onResize={(_, height) => {
@@ -140,19 +134,7 @@ class Session extends React.Component<Props, State> {
               });
             }}
           />
-          <div className={`flex-column justify-around ph2`}>
-            Current Collection
-          </div>
-          <div
-            className={`flex-column justify-around ph2`}
-            onClick={() => {
-              this.props.history.push(`/${this.props.location.search}`);
-            }}
-          >
-            <div>
-              <ButtonExit />
-            </div>
-          </div>
+          <HeaderSession />
         </div>
         <ScrollContainer
           ref={scrollContainer => (this._scrollContainer = scrollContainer)}
@@ -173,7 +155,7 @@ class Session extends React.Component<Props, State> {
               key={`session-view-list-${sessionId}`}
             >
               <div className={`pa3 br4 bg-white ba bw1 b--light-gray`}>
-                <ListSessionTitle
+                <CardSessionTitle
                   key={sessionCaptures.id}
                   sessionId={sessionCaptures.id}
                   startingTitle={sessionCaptures.title}

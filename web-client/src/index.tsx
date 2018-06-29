@@ -24,6 +24,7 @@ import config from "./cfg/env";
 
 const httpLink = createHttpLink({
   uri: config.REACT_APP_GRAPHQL_URI
+  // useGETForQueries: true
 });
 
 const authLink = setContext((_, { headers }) => {

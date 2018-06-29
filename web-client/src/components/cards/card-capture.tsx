@@ -12,7 +12,7 @@ import {
 
 import { graphql, compose, MutationFunc } from "react-apollo";
 
-import { archiveCapture, editCapture } from "../../queries";
+import { archiveCapture } from "../../queries";
 
 // Components
 import ButtonArchive from "./../buttons/button-archive";

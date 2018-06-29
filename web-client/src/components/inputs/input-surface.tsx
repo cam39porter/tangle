@@ -7,13 +7,14 @@ import { withRouter, RouteComponentProps } from "react-router";
 // Components
 import * as Draft from "draft-js";
 import ButtonSurface from "./../buttons/button-surface";
+import ButtonExit from "./../buttons/button-exit";
 import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 import { convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 import { trim } from "lodash";
-import { NetworkUtils } from "../../utils";
+import { NetworkUtils, EditorUtils } from "../../utils";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -50,17 +51,24 @@ class InputSurface extends React.Component<Props, State> {
     });
   };
 
-  handleSearch = (editorState: Draft.EditorState) => {
-    const query = trim(editorState.getCurrentContent().getPlainText());
-    const url = this.props.match.url;
+  handleExit = url => {
+    if (url === "/") {
+      this.props.history.push(`${url}recent`);
+    } else {
+      this.props.history.push(`${url}/related`);
+    }
 
+    const nextEditorState = EditorUtils.cleanEditorState(
+      this.state.editorState
+    );
+    this.setState({
+      editorState: nextEditorState
+    });
+  };
+
+  handleSearch = (query, url) => {
     if (!query) {
-      if (url === "/") {
-        this.props.history.push(`${url}recent`);
-      } else {
-        this.props.history.push(`${url}/related`);
-      }
-      return;
+      this.handleExit(url);
     }
 
     if (url === "/") {
@@ -71,14 +79,20 @@ class InputSurface extends React.Component<Props, State> {
   };
 
   render() {
+    const query = trim(
+      this.state.editorState.getCurrentContent().getPlainText()
+    );
+    const url = this.props.match.url;
+
     return (
       <div className={`flex ph2 bg-white br4`}>
-        <div className={`flex-column justify-around gray`}>
-          <ButtonSurface
-            onClick={() => {
-              this.handleSearch(this.state.editorState);
-            }}
-          />
+        <div
+          className={`flex-column justify-around gray`}
+          onClick={() => {
+            this.handleSearch(query, url);
+          }}
+        >
+          <ButtonSurface />
         </div>
         <div className={`flex-grow pv2`}>
           <ReactResizeDetector
@@ -100,12 +114,22 @@ class InputSurface extends React.Component<Props, State> {
               onChange={this.handleOnChange}
               placeholder={`Search your tangle...`}
               handleReturn={(_, editorState) => {
-                this.handleSearch(editorState);
+                this.handleSearch(query, url);
                 return "handled";
               }}
             />
           </div>
         </div>
+        {(this.props.location.pathname.includes("/search") || query) && (
+          <div
+            className={`flex-column justify-around gray`}
+            onClick={() => {
+              this.handleExit(url);
+            }}
+          >
+            <ButtonExit />
+          </div>
+        )}
       </div>
     );
   }

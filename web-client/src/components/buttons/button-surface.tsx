@@ -4,16 +4,11 @@ import * as React from "react";
 // Components
 import { Search } from "react-feather";
 
-interface Props {
-  onClick: () => void;
-}
+interface Props {}
 
 const ButtonSurface = (props: Props) => {
   return (
-    <span
-      className={`flex-column justify-around pa2 pointer`}
-      onClick={props.onClick}
-    >
+    <span className={`flex-column justify-around pa2 pointer`}>
       <Search size={16} />
     </span>
   );

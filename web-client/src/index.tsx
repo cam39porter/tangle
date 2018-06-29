@@ -37,7 +37,7 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const logoutLink = onError(({ networkError, graphQLErrors }) => {
+const errorLink = onError(({ networkError, graphQLErrors }) => {
   if (networkError) {
     if (networkError["statusCode"] === 401) {
       const user = FirebaseUtils.firebaseAuth().currentUser;
@@ -89,7 +89,7 @@ const client = new ApolloClient({
       }
     }
   }),
-  link: retryLink.concat(logoutLink.concat(authLink.concat(httpLink)))
+  link: retryLink.concat(errorLink.concat(authLink.concat(httpLink)))
 });
 
 class ApolloWrappedApp extends React.Component<object, object> {

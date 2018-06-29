@@ -17,6 +17,7 @@ import { convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 import { debounce, Cancelable } from "lodash";
 import ReactResizeDetector from "react-resize-detector";
+import { ApolloUtils } from "../../utils/index";
 
 const TIME_TO_SAVE = 500; // ms
 
@@ -51,7 +52,8 @@ class HeaderSession extends React.Component<Props, State> {
           variables: {
             sessionId: props.sessionId,
             title: text
-          }
+          },
+          update: ApolloUtils.editSessionUpdate(props.sessionId, text)
         })
         .catch(err => {
           console.error(err);

@@ -10,28 +10,19 @@ import {
   editCaptureMutation as editCaptureResponse,
   editCaptureMutationVariables,
   // Types
-  NodeType,
-  CaptureCollectionFieldsFragment,
-  SessionItemCollectionFieldsFragment,
-  SurfaceResultsFieldsFragment
+  NodeType
 } from "../../__generated__/types";
 
 import { graphql, compose, MutationFunc } from "react-apollo";
 
-import {
-  archiveCapture,
-  editCapture,
-  captureCollectionFragment,
-  sessionItemCollectionFragment,
-  surfaceResultsFragment
-} from "../../queries";
+import { archiveCapture, editCapture } from "../../queries";
 
 // Components
 import ButtonArchive from "./../buttons/button-archive";
 import InputCapture from "../inputs/input-capture";
 
 // Utils
-import { remove } from "lodash";
+import { ApolloUtils } from "../../utils/index";
 
 // Types
 interface Props {
@@ -111,86 +102,9 @@ class CardCapture extends React.Component<Props, State> {
                           level: null
                         }
                       },
-                      update: store => {
-                        // Capture Collection
-                        let captureCollection: CaptureCollectionFieldsFragment | null = store.readFragment(
-                          {
-                            id: "CaptureCollection",
-                            fragment: captureCollectionFragment,
-                            fragmentName: "CaptureCollectionFields"
-                          }
-                        );
-                        if (captureCollection) {
-                          store.writeFragment({
-                            id: "CaptureCollection",
-                            fragment: captureCollectionFragment,
-                            fragmentName: "CaptureCollectionFields",
-                            data: {
-                              __typename: "CaptureCollection",
-                              items: captureCollection.items.filter(
-                                capture => capture.id !== this.props.captureId
-                              ),
-                              pagingInfo: captureCollection.pagingInfo
-                            }
-                          });
-                        }
-
-                        // SessionItemsCollection
-                        let sessionItemCollection: SessionItemCollectionFieldsFragment | null = store.readFragment(
-                          {
-                            id: "SessionItemCollection",
-                            fragment: sessionItemCollectionFragment,
-                            fragmentName: "SessionItemCollectionFields"
-                          }
-                        );
-                        if (
-                          sessionItemCollection &&
-                          sessionItemCollection.items
-                        ) {
-                          store.writeFragment({
-                            id: "SessionItemCollection",
-                            fragment: sessionItemCollectionFragment,
-                            fragmentName: "SessionItemCollectionFields",
-                            data: {
-                              __typename: "SessionItemCollection",
-                              items: sessionItemCollection.items.filter(
-                                capture => capture.id !== this.props.captureId
-                              ),
-                              pagingInfo: sessionItemCollection.pagingInfo
-                            }
-                          });
-                        }
-
-                        // SurfaceResults
-                        const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
-                          {
-                            id: "SurfaceResults",
-                            fragment: surfaceResultsFragment,
-                            fragmentName: "SurfaceResultsFields"
-                          }
-                        );
-                        if (surfaceResults && surfaceResults.graph) {
-                          remove(
-                            surfaceResults.graph.nodes,
-                            node => node.id === this.props.captureId
-                          );
-                          remove(
-                            surfaceResults.graph.edges,
-                            edge =>
-                              edge.source === this.props.captureId ||
-                              edge.destination === this.props.captureId
-                          );
-                          store.writeFragment({
-                            id: "SurfaceResults",
-                            fragment: surfaceResultsFragment,
-                            fragmentName: "SurfaceResultsFields",
-                            data: {
-                              __typename: "SurfaceResults",
-                              ...surfaceResults
-                            }
-                          });
-                        }
-                      }
+                      update: ApolloUtils.deleteCaptureUpdate(
+                        this.props.captureId
+                      )
                     })
                     .catch(err => console.error(err));
                 }}

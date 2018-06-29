@@ -7,22 +7,16 @@ import { withRouter, RouteComponentProps } from "react-router";
 // GraphQL
 import {
   deleteSessionMutation as deleteSessionResponse,
-  deleteSessionMutationVariables,
-  SessionCollectionFieldsFragment,
-  SurfaceResultsFieldsFragment
+  deleteSessionMutationVariables
 } from "../../__generated__/types";
-import {
-  deleteSession,
-  sessionCollectionFragment,
-  surfaceResultsFragment
-} from "../../queries";
+import { deleteSession } from "../../queries";
 import { graphql, compose, MutationFunc } from "react-apollo";
 
 // Components
 import ButtonArchive from "./../buttons/button-archive";
 
 // Utils
-import { remove } from "lodash";
+import { ApolloUtils } from "../../utils";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -100,60 +94,7 @@ class CardSession extends React.Component<Props, State> {
                         optimisticResponse: {
                           deleteSession: true
                         },
-                        update: store => {
-                          // SessionCollection
-                          let sessionCollection: SessionCollectionFieldsFragment | null = store.readFragment(
-                            {
-                              id: "SessionCollection",
-                              fragment: sessionCollectionFragment,
-                              fragmentName: "SessionCollectionFields"
-                            }
-                          );
-                          if (sessionCollection && sessionCollection.items) {
-                            store.writeFragment({
-                              id: "SessionCollection",
-                              fragment: sessionCollectionFragment,
-                              fragmentName: "SessionCollectionFields",
-                              data: {
-                                __typename: "SessionCollection",
-                                items: sessionCollection.items.filter(
-                                  capture => capture.id !== this.props.id
-                                ),
-                                pagingInfo: sessionCollection.pagingInfo
-                              }
-                            });
-                          }
-
-                          // SurfaceResults
-                          const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
-                            {
-                              id: "SurfaceResults",
-                              fragment: surfaceResultsFragment,
-                              fragmentName: "SurfaceResultsFields"
-                            }
-                          );
-                          if (surfaceResults && surfaceResults.graph) {
-                            remove(
-                              surfaceResults.graph.nodes,
-                              node => node.id === this.props.id
-                            );
-                            remove(
-                              surfaceResults.graph.edges,
-                              edge =>
-                                edge.source === this.props.id ||
-                                edge.destination === this.props.id
-                            );
-                            store.writeFragment({
-                              id: "SurfaceResults",
-                              fragment: surfaceResultsFragment,
-                              fragmentName: "SurfaceResultsFields",
-                              data: {
-                                __typename: "SurfaceResults",
-                                ...surfaceResults
-                              }
-                            });
-                          }
-                        }
+                        update: ApolloUtils.deleteSessionUpdate(this.props.id)
                       })
                       .catch(err => {
                         console.error(err);

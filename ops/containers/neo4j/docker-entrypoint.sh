@@ -155,6 +155,7 @@ unset NEO4J_dbms_txLog_rotation_retentionPolicy NEO4J_UDC_SOURCE \
 : ${NEO4J_dbms_ssl_policy_cluster_client__auth:=REQUIRE}
 : ${NEO4J_causal__clustering_ssl__policy:=cluster}
 : ${NEO4J_dbms_backup_ssl__policy:=cluster}
+: ${NEO4J_dbms_security_causal__clustering__status__auth__enabled:=false}
 
 # Apoc
 : ${NEO4J_dbms_security_procedures_unrestricted:=apoc.index.*}

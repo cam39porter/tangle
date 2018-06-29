@@ -6,9 +6,6 @@ import {
   // Archive Capture
   archiveCaptureMutation as archiveCaptureResponse,
   archiveCaptureMutationVariables,
-  // Edit Capture
-  editCaptureMutation as editCaptureResponse,
-  editCaptureMutationVariables,
   // Types
   NodeType
 } from "../../__generated__/types";
@@ -30,7 +27,6 @@ interface Props {
     archiveCaptureResponse,
     archiveCaptureMutationVariables
   >;
-  editCapture: MutationFunc<editCaptureResponse, editCaptureMutationVariables>;
   captureId: string;
   startingText: string;
 }
@@ -129,14 +125,6 @@ const withArchiveCapture = graphql<archiveCaptureResponse, Props>(
   }
 );
 
-const withEditCapture = graphql<editCaptureResponse, Props>(editCapture, {
-  name: "editCapture",
-  alias: "withEditCapture"
-});
-
-const CardCaptureWithData = compose(
-  withEditCapture,
-  withArchiveCapture
-)(CardCapture);
+const CardCaptureWithData = compose(withArchiveCapture)(CardCapture);
 
 export default CardCaptureWithData;

@@ -70,13 +70,13 @@ app.get("/", (_, res) => {
 // app.use(csurf());
 
 if (isProd()) {
-  // app.use(
-  //   cors({
-  //     origin: ["https://tangleapp.co", "https://www.tangleapp.co"],
-  //     methods: ["GET", "POST"],
-  //     optionsSuccessStatus: 200
-  //   })
-  // );
+  app.use(
+    cors({
+      origin: ["https://tangleapp.co"],
+      methods: ["GET", "POST"],
+      optionsSuccessStatus: 200
+    })
+  );
 } else {
   app.use(cors());
 }

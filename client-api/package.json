@@ -39,7 +39,6 @@
     "cheerio": "1.0.0-rc.2",
     "continuation-local-storage": "3.2.1",
     "cors": "2.8.4",
-    "csurf": "1.9.0",
     "dedupe": "2.1.0",
     "dotenv": "5.0.1",
     "elasticsearch": "15.0.0",

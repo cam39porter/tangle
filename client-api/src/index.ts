@@ -16,8 +16,8 @@ import * as path from "path";
 import captureResolvers from "./capture/resolver";
 import { authFilter, initAuth } from "./filters/auth";
 import surfaceResolvers from "./surface/resolver";
-import { importEvernoteNoteUpload } from "./upload/services/evernote-import";
-import { ConflictError } from "./util/exceptions/confict-error";
+// import { importEvernoteNoteUpload } from "./upload/services/evernote-import";
+// import { ConflictError } from "./util/exceptions/confict-error";
 import { Logger } from "./util/logging/logger";
 import { getRequestContext, RequestContext } from "./filters/request-context";
 import * as contextService from "request-context";
@@ -25,7 +25,6 @@ import * as morgan from "morgan";
 // import * as rfs from "rotating-file-stream";
 import { isProd, isLocal } from "./config";
 import * as helmet from "helmet";
-// import * as csurf from "csurf";
 
 // tslint:disable-next-line
 const { graphqlExpress } = require("apollo-server-express");
@@ -62,12 +61,9 @@ const HTTP_PORT = 8080;
 const app = express();
 
 app.use(helmet());
-
 app.get("/", (_, res) => {
   res.send("running");
 });
-
-// app.use(csurf());
 
 if (isProd()) {
   app.use(
@@ -112,29 +108,30 @@ app.use(authFilter);
 // app.use(setRequestContext);
 // app.use(useMorgan);
 // bodyParser is needed just for POST.
+
 app.use(
   "/graphql",
   graphqlExpress({ schema: executableSchema, formatError: maskError })
 );
 
 app.use(formidable());
-app.post("/uploadHtml", (req, res) => {
-  if (req["files"].file.type !== "text/html") {
-    res.status(400).send("Unsupported content type");
-  }
-  importEvernoteNoteUpload(req["files"].file)
-    .then(() => {
-      res.sendStatus(200);
-    })
-    .catch(error => {
-      if (error instanceof ConflictError) {
-        res.status(409).end("Object already exists, please delete it first");
-      } else {
-        LOGGER.error(getRequestContext(), error);
-        res.sendStatus(500);
-      }
-    });
-});
+// app.post("/uploadHtml", (req, res) => {
+//   if (req["files"].file.type !== "text/html") {
+//     res.status(400).send("Unsupported content type");
+//   }
+//   importEvernoteNoteUpload(req["files"].file)
+//     .then(() => {
+//       res.sendStatus(200);
+//     })
+//     .catch(error => {
+//       if (error instanceof ConflictError) {
+//         res.status(409).end("Object already exists, please delete it first");
+//       } else {
+//         LOGGER.error(getRequestContext(), error);
+//         res.sendStatus(500);
+//       }
+//     });
+// });
 
 // For local allow insecure connection
 if (isLocal()) {

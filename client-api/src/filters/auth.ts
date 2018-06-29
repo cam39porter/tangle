@@ -16,6 +16,7 @@ function initAuth(): void {
 }
 
 function authFilter(req, res, next): void {
+  LOGGER.info(null, req.originalUrl);
   if (process.env.NODE_ENV !== "production" && req.get("dev-override-id")) {
     setDevOverride(UserUrn.fromRaw(req.get("dev-override-id"))).then(() =>
       next()

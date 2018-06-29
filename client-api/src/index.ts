@@ -24,6 +24,9 @@ import * as contextService from "request-context";
 import * as morgan from "morgan";
 // import * as rfs from "rotating-file-stream";
 import { isProd, isLocal } from "./config";
+import * as helmet from "helmet";
+// import * as csurf from "csurf";
+
 // tslint:disable-next-line
 const { graphqlExpress } = require("apollo-server-express");
 
@@ -58,18 +61,22 @@ const HTTPS_PORT = 8443;
 const HTTP_PORT = 8080;
 const app = express();
 
+app.use(helmet());
+
 app.get("/", (_, res) => {
-  res.send("client-api running");
+  res.send("running");
 });
 
+// app.use(csurf());
+
 if (isProd()) {
-  app.use(
-    cors({
-      origin: ["https://tangleapp.co", "https://www.tangleapp.co"],
-      methods: ["GET", "POST"],
-      optionsSuccessStatus: 200
-    })
-  );
+  // app.use(
+  //   cors({
+  //     origin: ["https://tangleapp.co", "https://www.tangleapp.co"],
+  //     methods: ["GET", "POST"],
+  //     optionsSuccessStatus: 200
+  //   })
+  // );
 } else {
   app.use(cors());
 }

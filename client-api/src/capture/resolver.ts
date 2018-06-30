@@ -12,7 +12,10 @@ import {
 } from "./services/capture";
 import { CaptureUrn } from "../urn/capture-urn";
 import { SessionUrn } from "../urn/session-urn";
+import * as xss from "xss";
 
+const xssOptions = { whiteList: xss.whiteList };
+const captureXSS = new xss.FilterXSS(xssOptions);
 export default {
   Mutation: {
     // @ts-ignore
@@ -21,7 +24,7 @@ export default {
     },
     // @ts-ignore
     editCapture(parent, { id, body }, context, info): Promise<GraphNode> {
-      return editCapture(CaptureUrn.fromRaw(id), body);
+      return editCapture(CaptureUrn.fromRaw(id), captureXSS.process(body));
     },
     // @ts-ignore
     createCapture(
@@ -35,7 +38,7 @@ export default {
       info
     ): Promise<GraphNode> {
       return createCapture(
-        body,
+        captureXSS.process(body),
         (sessionId && SessionUrn.fromRaw(sessionId)) || null,
         "HTML",
         captureRelation
@@ -52,7 +55,7 @@ export default {
       info
     ): Promise<GraphNode> {
       return createSession(
-        title,
+        captureXSS.process(title),
         firstCaptureId ? CaptureUrn.fromRaw(firstCaptureId) : null,
         tags
       );

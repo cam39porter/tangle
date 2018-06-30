@@ -122,7 +122,7 @@ class Session extends React.Component<Props, State> {
     return (
       <div
         key={`session-view-${sessionId}`}
-        className={`flex-grow bg-near-white ba b--light-gray`}
+        className={`bg-near-white ba b--light-gray`}
       >
         {/* Header */}
         <div>

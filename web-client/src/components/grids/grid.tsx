@@ -128,7 +128,7 @@ class GridCaptures extends React.Component<Props, State> {
               <div className={`flex flex-wrap justify-around`}>
                 {this.props.captures.map(capture => (
                   <div
-                    className={`pv2`}
+                    className={`pv4`}
                     style={{
                       width: WIDTH
                     }}

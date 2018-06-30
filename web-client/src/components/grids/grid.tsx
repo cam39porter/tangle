@@ -107,7 +107,7 @@ class GridCaptures extends React.Component<Props, State> {
           {/* Captures */}
           {this.props.captures.length !== 0 && (
             <div className={`pv4`}>
-              <div className={`pb4 flex justify-between w-100 gray`}>
+              <div className={`pb2 flex justify-between w-100 gray`}>
                 <div className={`flex-column justify-around`}>Captures</div>
                 <div
                   className={`flex-column justify-around f6 bb b--accent pointer`}
@@ -125,7 +125,7 @@ class GridCaptures extends React.Component<Props, State> {
                   Create a new capture
                 </div>
               </div>
-              <div className={`flex flex-wrap justify-around`}>
+              <div className={``}>
                 {this.props.captures.map(capture => (
                   <div
                     className={`pv4`}

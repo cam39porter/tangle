@@ -1,3 +1,5 @@
+import { NodeType } from "../__generated__/types";
+
 // Generic
 export type id = string;
 
@@ -15,7 +17,7 @@ export interface GraphEdge {
 
 export interface GraphEvent {
   dataType: string;
-  data: { id: string; category: string; name: string };
+  data: { id: string; category: NodeType; name: string };
 }
 
 // Location

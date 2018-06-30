@@ -45,6 +45,23 @@ class InputSurface extends React.Component<Props, State> {
     };
   }
 
+  componentWillReceiveProps(nextProps: Props) {
+    const startingHTML = NetworkUtils.getQuery(this.props.location.search);
+    const nextStartingHTML = NetworkUtils.getQuery(nextProps.location.search);
+    if (startingHTML === nextStartingHTML) {
+      return;
+    }
+    let nextEditorState = EditorUtils.cleanEditorState(this.state.editorState);
+    nextEditorState = Draft.EditorState.createWithContent(
+      convertFromHTML(nextStartingHTML)
+    );
+    nextEditorState = EditorUtils.moveSelectionToEnd(nextEditorState);
+
+    this.setState({
+      editorState: nextEditorState
+    });
+  }
+
   handleOnChange = (editorState: Draft.EditorState) => {
     this.setState({
       editorState

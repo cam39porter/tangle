@@ -1,6 +1,9 @@
 // React
 import * as React from "react";
 
+// Router
+import { withRouter, RouteComponentProps } from "react-router";
+
 // Components
 import ReactECharts from "echarts-for-react";
 
@@ -10,7 +13,7 @@ import { isEqual } from "lodash";
 import windowSize from "react-window-size";
 
 // Types
-// import { GraphEvent } from "../types";
+import { GraphEvent } from "../../types";
 import {
   NodeFieldsFragment,
   EdgeFieldsFragment,
@@ -28,7 +31,7 @@ const TEXT_COLOR = "#777777";
 const FOCUS_TYPE = "focus";
 const NOT_FOCUS_TYPE = "not_focus";
 
-interface Props {
+interface Props extends RouteComponentProps<{}> {
   refEChart?: (eChart: ReactECharts) => void;
   nodes: Array<NodeFieldsFragment>;
   edges: Array<EdgeFieldsFragment>;
@@ -204,7 +207,21 @@ class GraphVisualization extends React.Component<Props, State> {
 
   getEvents() {
     return {
-      // click: this.props.onClick,
+      click: (e: GraphEvent) => {
+        switch (e.data.category) {
+          case NodeType.Entity || NodeType.Tag:
+            const url = this.props.match.url;
+            const query = e.data.name;
+            if (url === "/") {
+              this.props.history.push(`${url}search?query=${query}`);
+            } else {
+              this.props.history.push(`${url}/search?query=${query}`);
+            }
+            return;
+          default:
+            return;
+        }
+      }
       // mouseover: this.props.onMouseOver,
       // mouseout: this.props.onMouseOut
     };
@@ -345,6 +362,6 @@ class GraphVisualization extends React.Component<Props, State> {
   }
 }
 
-const GraphWithData = windowSize(GraphVisualization);
+const GraphWithData = windowSize(withRouter(GraphVisualization));
 
 export default GraphWithData;

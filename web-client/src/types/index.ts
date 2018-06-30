@@ -17,7 +17,7 @@ export interface GraphEdge {
 
 export interface GraphEvent {
   dataType: string;
-  data: { id: string; category: NodeType; name: string };
+  data: { id: string; category: NodeType; name: string; level: number };
 }
 
 // Location

@@ -6,6 +6,7 @@ import { withRouter, RouteComponentProps } from "react-router";
 
 // Components
 import ReactECharts from "echarts-for-react";
+import CardCapture from "../cards/card-capture";
 
 // Config / Utils
 import config from "../../cfg";
@@ -31,6 +32,8 @@ const TEXT_COLOR = "#777777";
 const FOCUS_TYPE = "focus";
 const NOT_FOCUS_TYPE = "not_focus";
 
+const WIDTH = "30em";
+
 interface Props extends RouteComponentProps<{}> {
   refEChart?: (eChart: ReactECharts) => void;
   nodes: Array<NodeFieldsFragment>;
@@ -41,13 +44,53 @@ interface Props extends RouteComponentProps<{}> {
   windowHeight: number;
 }
 
-interface State {}
+interface State {
+  graphFocus: GraphEvent | null;
+}
 
 class GraphVisualization extends React.Component<Props, State> {
   eChart: ReactECharts | null = null;
 
-  shouldComponentUpdate(nextProps: Props) {
-    return !isEqual(nextProps.nodes, this.props.nodes);
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      graphFocus: null
+    };
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (
+      this.props.location.pathname !== nextProps.location.pathname ||
+      this.props.location.search !== nextProps.location.search
+    ) {
+      this.setState({
+        graphFocus: null
+      });
+    }
+  }
+
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    if (
+      !isEqual(nextProps.nodes, this.props.nodes) ||
+      !isEqual(nextProps.edges, this.props.edges)
+    ) {
+      return true;
+    }
+
+    if (this.state.graphFocus === null && nextState.graphFocus !== null) {
+      return true;
+    }
+    if (this.state.graphFocus !== null && nextState.graphFocus === null) {
+      return true;
+    }
+    if (this.state.graphFocus !== null && nextState.graphFocus !== null) {
+      if (this.state.graphFocus.data.id !== nextState.graphFocus.data.id) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   getNodes() {
@@ -124,7 +167,7 @@ class GraphVisualization extends React.Component<Props, State> {
           return {
             id: node.id,
             name: node.text,
-            category: node.level === 0 ? FOCUS_TYPE : NOT_FOCUS_TYPE,
+            category: NodeType.Capture, // node.level === 0 ? FOCUS_TYPE : NOT_FOCUS_TYPE,
             symbolSize: 24,
             label: {
               show: false,
@@ -154,6 +197,14 @@ class GraphVisualization extends React.Component<Props, State> {
 
   getCategories() {
     return [
+      {
+        name: NodeType.Capture,
+        itemStyle: {
+          normal: {
+            color: config.accentColor
+          }
+        }
+      },
       {
         name: FOCUS_TYPE,
         itemStyle: {
@@ -210,14 +261,30 @@ class GraphVisualization extends React.Component<Props, State> {
       click: (e: GraphEvent) => {
         switch (e.data.category) {
           case NodeType.Entity || NodeType.Tag:
-            const url = this.props.match.url;
             const query = e.data.name;
-            if (url === "/") {
-              this.props.history.push(`${url}search?query=${query}`);
-            } else {
-              this.props.history.push(`${url}/search?query=${query}`);
+            const path = this.props.location.pathname;
+            const splitPath = path.split("/");
+            const lastPath = splitPath.pop();
+            if (
+              lastPath &&
+              (lastPath !== "related" &&
+                lastPath !== "recent" &&
+                lastPath !== "search")
+            ) {
+              splitPath.push(lastPath);
             }
+            splitPath.push(`search?query=${query}`);
+
+            this.props.history.push(`${splitPath.join("/")}`);
+
             return;
+          case NodeType.Capture:
+            // TODO: get sessions this is a part of and if it is a part of the current session notify the user
+            this.setState({ graphFocus: e });
+            return;
+          case NodeType.Session:
+            this.props.history.push(`/session/${e.data.id}/related`);
+            break;
           default:
             return;
         }
@@ -239,48 +306,38 @@ class GraphVisualization extends React.Component<Props, State> {
         show: false
       },
       tooltip: {
-        show: false,
+        show: true,
         trigger: "item",
         showContent: true,
         confine: true,
         position: "top",
-        // formatter: (params: {
-        //   dataType: string;
-        //   name: string;
-        //   data: { category: string };
-        // }) => {
-        //   switch (params.dataType) {
-        //     case "node":
-        //       if (
-        //         params.data.category === "entity" ||
-        //         params.data.category === "tag" ||
-        //         params.data.category === "link"
-        //       ) {
-        //         return "";
-        //       }
+        formatter: (e: GraphEvent) => {
+          switch (e.data.category) {
+            case NodeType.Session:
+              return `
+              <div class="pa1 ph3 shadow-1 br4 bg-white f5 dark-gray">
+                <p>
+                  ${e.data.name}
+                </p>
+              </div>`;
 
-        //       let lines = params.name.match(/.{1,40}/g);
-
-        //       if (!lines) {
-        //         lines = [params.name];
-        //       }
-
-        //       let label = lines.reduce((currentLabel, line) => {
-        //         return `
-        //           ${currentLabel}
-        //           <div class="f6 avenir br1 measure" id="node-label">
-        //             ${line}
-        //           </div>`;
-        //       }, "");
-
-        //       return `
-        //       <div class="pa2 shadow-1 br1">
-        //         ${label}
-        //       </div>`;
-        //     default:
-        //       return "";
-        //   }
-        // },
+            case NodeType.Capture:
+              let lines = e.data.name.match(/.{1,67}/g);
+              if (!lines) {
+                lines = [e.data.name];
+              }
+              let preview = lines[0];
+              if (lines.length > 1) {
+                preview = preview + "...";
+              }
+              return `
+              <div class="pa1 ph3 shadow-1 br4 bg-white f6 dark-gray">
+                ${preview}
+              </div>`;
+            default:
+              return "";
+          }
+        },
         backgroundColor: OTHER_COLOR,
         textStyle: {
           color: TEXT_COLOR
@@ -345,18 +402,18 @@ class GraphVisualization extends React.Component<Props, State> {
           opts={{ renderer: "canvas" }}
           onEvents={this.getEvents()}
         />
-        {/* {this.state.graphFocus ? (
-          <div
-            className={`absolute bottom-1 right-1`}
-            style={{ minWidth: "25em" }}
-            id={this.state.graphFocus.id}
-          >
-            <CardCapture
-              captureId={this.state.graphFocus.id}
-              startingText={this.state.graphFocus.text}
-            />
-          </div>
-        ) : null} */}
+        {this.state.graphFocus &&
+          this.state.graphFocus.data.id && (
+            <div
+              className={`absolute bottom-1 right-1 z-max`}
+              style={{ width: WIDTH }}
+            >
+              <CardCapture
+                captureId={this.state.graphFocus.data.id}
+                startingText={this.state.graphFocus.data.name}
+              />
+            </div>
+          )}
       </div>
     );
   }

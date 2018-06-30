@@ -95,7 +95,7 @@ class GridCaptures extends React.Component<Props, State> {
                         this.props.history.push(
                           `/session/${encodeURIComponent(
                             res.data.createSession.id
-                          )}/recent`
+                          )}/related`
                         );
                       })
                       .catch(err => {

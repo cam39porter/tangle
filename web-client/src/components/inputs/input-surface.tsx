@@ -69,6 +69,7 @@ class InputSurface extends React.Component<Props, State> {
   handleSearch = (query, url) => {
     if (!query) {
       this.handleExit(url);
+      return;
     }
 
     if (url === "/") {

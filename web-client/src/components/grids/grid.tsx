@@ -78,66 +78,71 @@ class GridCaptures extends React.Component<Props, State> {
             }}
           >
             {/* Sessions */}
-            <div className={`pv4`}>
-              <div
-                className={`flex justify-between pb4 w-100 gray`}
-                style={{
-                  width: WIDTH
-                }}
-              >
-                <div className={`flex-column justify-around`}>Collections</div>
-                <div
-                  className={`flex-column justify-around f6 bb b--accent pointer`}
-                  onClick={() => {
-                    this.props
-                      .createSession({})
-                      .then(res => {
-                        this.props.history.push(
-                          `/session/${encodeURIComponent(
-                            res.data.createSession.id
-                          )}/related`
-                        );
-                      })
-                      .catch(err => {
-                        console.error(err);
-                      });
-                  }}
-                >
-                  Create a new collection
+            {!!this.props.sessions.length && (
+              <div>
+                <div className={`pv4`}>
+                  <div
+                    className={`flex justify-between pb4 w-100 gray`}
+                    style={{
+                      width: WIDTH
+                    }}
+                  >
+                    <div className={`flex-column justify-around`}>
+                      Collections
+                    </div>
+                    <div
+                      className={`flex-column justify-around f6 bb b--accent pointer`}
+                      onClick={() => {
+                        this.props
+                          .createSession({})
+                          .then(res => {
+                            this.props.history.push(
+                              `/session/${encodeURIComponent(
+                                res.data.createSession.id
+                              )}/related`
+                            );
+                          })
+                          .catch(err => {
+                            console.error(err);
+                          });
+                      }}
+                    >
+                      Create a new collection
+                    </div>
+                  </div>
+                  <div className={``}>
+                    {this.props.sessions.map(session => {
+                      // Do not render current session in the list
+                      if (
+                        session.id ===
+                        decodeURIComponent(this.props.match.params["id"])
+                      ) {
+                        return null;
+                      }
+
+                      return (
+                        <div
+                          className={``}
+                          style={{
+                            width: WIDTH
+                          }}
+                          key={session.id}
+                        >
+                          <ScrollContainerElement name={session.id}>
+                            <CardSession
+                              id={session.id}
+                              title={session.title}
+                              created={session.created}
+                            />
+                          </ScrollContainerElement>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
-              {!!this.props.sessions.length && (
-                <div className={``}>
-                  {this.props.sessions.map(session => {
-                    // Do not render current session in the list
-                    if (
-                      session.id ===
-                      decodeURIComponent(this.props.match.params["id"])
-                    ) {
-                      return null;
-                    }
+            )}
 
-                    return (
-                      <div
-                        className={``}
-                        style={{
-                          width: WIDTH
-                        }}
-                        key={session.id}
-                      >
-                        <ScrollContainerElement name={session.id}>
-                          <CardSession
-                            id={session.id}
-                            title={session.title}
-                            created={session.created}
-                          />
-                        </ScrollContainerElement>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
             {/* Captures */}
             <div className={`pv4`}>
               <div

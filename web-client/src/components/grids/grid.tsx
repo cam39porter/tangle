@@ -66,6 +66,12 @@ class GridCaptures extends React.Component<Props, State> {
   };
 
   render() {
+    // Do not render the current session in the list
+    const sessionId = decodeURIComponent(this.props.match.params["id"]);
+    const sessions = this.props.sessions.filter(
+      session => session.id !== sessionId
+    );
+
     return (
       <div className={``}>
         <ScrollContainer
@@ -78,113 +84,103 @@ class GridCaptures extends React.Component<Props, State> {
             }}
           >
             {/* Sessions */}
-            {!!this.props.sessions.length && (
-              <div>
-                <div className={`pv4`}>
+            {!!sessions.length && (
+              <div className={`pb4`}>
+                <div
+                  className={`flex justify-between pb4 w-100 gray`}
+                  style={{
+                    width: WIDTH
+                  }}
+                >
+                  <div className={`flex-column justify-around`}>
+                    Collections
+                  </div>
                   <div
-                    className={`flex justify-between pb4 w-100 gray`}
-                    style={{
-                      width: WIDTH
+                    className={`flex-column justify-around f6 bb b--accent pointer`}
+                    onClick={() => {
+                      this.props
+                        .createSession({})
+                        .then(res => {
+                          this.props.history.push(
+                            `/session/${encodeURIComponent(
+                              res.data.createSession.id
+                            )}/related`
+                          );
+                        })
+                        .catch(err => {
+                          console.error(err);
+                        });
                     }}
                   >
-                    <div className={`flex-column justify-around`}>
-                      Collections
-                    </div>
+                    Create a new collection
+                  </div>
+                </div>
+                <div className={``}>
+                  {this.props.sessions.map(session => (
                     <div
-                      className={`flex-column justify-around f6 bb b--accent pointer`}
-                      onClick={() => {
-                        this.props
-                          .createSession({})
-                          .then(res => {
-                            this.props.history.push(
-                              `/session/${encodeURIComponent(
-                                res.data.createSession.id
-                              )}/related`
-                            );
-                          })
-                          .catch(err => {
-                            console.error(err);
-                          });
+                      className={``}
+                      style={{
+                        width: WIDTH
                       }}
+                      key={session.id}
                     >
-                      Create a new collection
+                      <ScrollContainerElement name={session.id}>
+                        <CardSession
+                          id={session.id}
+                          title={session.title}
+                          created={session.created}
+                        />
+                      </ScrollContainerElement>
                     </div>
-                  </div>
-                  <div className={``}>
-                    {this.props.sessions.map(session => {
-                      // Do not render current session in the list
-                      if (
-                        session.id ===
-                        decodeURIComponent(this.props.match.params["id"])
-                      ) {
-                        return null;
-                      }
-
-                      return (
-                        <div
-                          className={``}
-                          style={{
-                            width: WIDTH
-                          }}
-                          key={session.id}
-                        >
-                          <ScrollContainerElement name={session.id}>
-                            <CardSession
-                              id={session.id}
-                              title={session.title}
-                              created={session.created}
-                            />
-                          </ScrollContainerElement>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  ))}
                 </div>
               </div>
             )}
 
             {/* Captures */}
-            <div className={`pv4`}>
-              <div
-                className={`flex justify-between pt4 w-100 gray`}
-                style={{
-                  width: WIDTH
-                }}
-              >
-                <div className={`flex-column justify-around`}>Captures</div>
+            {this.props.captures.length !== 0 && (
+              <div className={``}>
                 <div
-                  className={`flex-column justify-around f6 bb b--accent pointer`}
-                  onClick={() => {
-                    const query = NetworkUtils.getQuery(
-                      this.props.location.search
-                    );
-                    this.props.history.push(
-                      `${this.props.location.pathname}?${
-                        query ? `query=${query}&` : ``
-                      }capture=true`
-                    );
-                  }}
-                >
-                  Create a new capture
-                </div>
-              </div>
-              {this.props.captures.map(capture => (
-                <div
-                  className={`pt4`}
+                  className={`flex justify-between w-100 gray`}
                   style={{
                     width: WIDTH
                   }}
-                  key={capture.id}
                 >
-                  <ScrollContainerElement name={capture.id}>
-                    <CardCapture
-                      captureId={capture.id}
-                      startingText={capture.body}
-                    />
-                  </ScrollContainerElement>
+                  <div className={`flex-column justify-around`}>Captures</div>
+                  <div
+                    className={`flex-column justify-around f6 bb b--accent pointer`}
+                    onClick={() => {
+                      const query = NetworkUtils.getQuery(
+                        this.props.location.search
+                      );
+                      this.props.history.push(
+                        `${this.props.location.pathname}?${
+                          query ? `query=${query}&` : ``
+                        }capture=true`
+                      );
+                    }}
+                  >
+                    Create a new capture
+                  </div>
                 </div>
-              ))}
-            </div>
+                {this.props.captures.map(capture => (
+                  <div
+                    className={`pt4`}
+                    style={{
+                      width: WIDTH
+                    }}
+                    key={capture.id}
+                  >
+                    <ScrollContainerElement name={capture.id}>
+                      <CardCapture
+                        captureId={capture.id}
+                        startingText={capture.body}
+                      />
+                    </ScrollContainerElement>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </ScrollContainer>
       </div>

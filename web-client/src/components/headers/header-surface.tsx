@@ -31,21 +31,13 @@ class HeaderSurface extends React.Component<Props, State> {
           <div className={`flex`}>
             <div className={`flex-column justify-around`}>
               <div
-                className={`pa2 pointer bb b--accent ${
+                className={`pa2 pointer ${
                   this.props.isGraphView ? "br4 bg-accent light-gray" : ""
                 }`}
                 onClick={this.props.handleIsGraphView}
               >
-                Visualize
+                <div className={`bb b--accent`}>Visualize</div>
               </div>
-            </div>
-            <div className={`pa2 flex-column justify-around gray`}>
-              {this.props.location.pathname.includes("/recent") &&
-                "your recent content"}
-              {this.props.location.pathname.includes("/related") &&
-                "your related content"}
-              {this.props.location.pathname.includes("/search") &&
-                "your search results"}
             </div>
           </div>
           /* tslint:disable-next-line */

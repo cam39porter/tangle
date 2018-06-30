@@ -82,7 +82,7 @@ class CardCapture extends React.Component<Props, State> {
               className={`absolute flex top--1 right-0 h2 ph2 br4 shadow-1 z-7 bg-white gray`}
             >
               <div
-                className={`w2`}
+                className={`flex-column justify-around`}
                 onClick={e => {
                   e.stopPropagation();
 

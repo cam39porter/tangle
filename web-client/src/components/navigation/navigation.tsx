@@ -32,11 +32,12 @@ class Navigation extends React.Component<Props, State> {
 
     return (
       <div
-        className={`flex-column pa2 pt4 bg-dark-gray light-gray`}
+        className={`flex-column pa2 bg-dark-gray light-gray`}
         style={{
           userSelect: "none"
         }}
       >
+        <div style={{ minHeight: "4em" }} />
         <div className={`flex-column flex-grow`}>
           <div
             className={`pa2 dim bg-accent br-100 pointer`}

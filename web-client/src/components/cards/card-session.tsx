@@ -74,35 +74,32 @@ class CardSession extends React.Component<Props, State> {
             </div>
           </div>
           <div className={`relative flex-column justify-around`}>
-            <div className={`tr f6 gray`}>
-              {new Date(this.props.created).toDateString()}
-            </div>
-            {this.state.isShowingButtons && (
+            {this.state.isShowingButtons ? (
               <div
-                className={`absolute flex-column justify-around right--2 z-max bg-near-white gray`}
-              >
-                <div
-                  className={``}
-                  onClick={e => {
-                    e.stopPropagation();
+                className={`glow`}
+                onClick={e => {
+                  e.stopPropagation();
 
-                    this.props
-                      .deleteSession({
-                        variables: {
-                          sessionId: this.props.id
-                        },
-                        optimisticResponse: {
-                          deleteSession: true
-                        },
-                        update: ApolloUtils.deleteSessionUpdate(this.props.id)
-                      })
-                      .catch(err => {
-                        console.error(err);
-                      });
-                  }}
-                >
-                  <ButtonArchive />
-                </div>
+                  this.props
+                    .deleteSession({
+                      variables: {
+                        sessionId: this.props.id
+                      },
+                      optimisticResponse: {
+                        deleteSession: true
+                      },
+                      update: ApolloUtils.deleteSessionUpdate(this.props.id)
+                    })
+                    .catch(err => {
+                      console.error(err);
+                    });
+                }}
+              >
+                <ButtonArchive />
+              </div>
+            ) : (
+              <div className={`tr f6 gray`}>
+                {new Date(this.props.created).toDateString()}
               </div>
             )}
           </div>

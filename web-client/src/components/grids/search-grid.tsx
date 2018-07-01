@@ -7,7 +7,9 @@ import { RouteComponentProps } from "react-router";
 // GraphQL
 import {
   searchV2Query as searchV2QueryResponse,
-  searchV2QueryVariables
+  searchV2QueryVariables,
+  CaptureFieldsFragment,
+  SessionWithoutItemCollectionFieldsFragment
 } from "../../__generated__/types";
 
 import { search } from "../../queries";
@@ -15,6 +17,7 @@ import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
 import Grid from "../../components/grids/grid";
+import Help from "../help/help";
 
 // Utils
 import config from "../../cfg";
@@ -38,23 +41,35 @@ class SearchGrid extends React.Component<Props, State> {
   }
 
   render() {
-    const data = this.props.data;
+    const searchV2 = this.props.data.searchV2;
+    let sessions: Array<SessionWithoutItemCollectionFieldsFragment> = [];
+    let captures: Array<CaptureFieldsFragment> = [];
     if (
-      !(
-        data &&
-        data.searchV2 &&
-        data.searchV2.captures &&
-        data.searchV2.sessions
-      )
+      searchV2 &&
+      searchV2.captures &&
+      searchV2.captures.items &&
+      searchV2.sessions &&
+      searchV2.sessions.items
     ) {
-      return <div />;
+      sessions = searchV2.sessions.items;
+      captures = searchV2.captures.items;
+    }
+
+    if (this.props.data.loading) {
+      return (
+        <Help>
+          <div />
+        </Help>
+      );
     }
 
     return (
       <Grid
         key={`search-grid`}
-        sessions={data.searchV2.sessions.items}
-        captures={data.searchV2.captures.items}
+        sessions={sessions}
+        emptySessionsMessage={`No collections matched your search`}
+        captures={captures}
+        emptyCapturesMessage={`No captures matched your search`}
         headerHeight={this.props.headerHeight}
       />
     );

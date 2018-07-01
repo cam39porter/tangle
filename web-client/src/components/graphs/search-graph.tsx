@@ -7,7 +7,9 @@ import { RouteComponentProps } from "react-router";
 // GraphQL
 import {
   searchQuery as searchQueryResponse,
-  searchQueryVariables
+  searchQueryVariables,
+  NodeFieldsFragment,
+  EdgeFieldsFragment
 } from "../../__generated__/types";
 
 import { graphSearch } from "../../queries";
@@ -39,18 +41,15 @@ class SearchGraph extends React.Component<Props, State> {
 
   render() {
     const data = this.props.data;
+    let nodes: Array<NodeFieldsFragment> = [];
+    let edges: Array<EdgeFieldsFragment> = [];
 
-    if (!(data && data.search && data.search.graph)) {
-      return <div />;
+    if (data && data.search && data.search.graph) {
+      nodes = data.search.graph.nodes;
+      edges = data.search.graph.edges;
     }
 
-    return (
-      <Graph
-        key={`search-graph`}
-        nodes={data.search.graph.nodes}
-        edges={data.search.graph.edges}
-      />
-    );
+    return <Graph nodes={nodes} edges={edges} />;
   }
 }
 

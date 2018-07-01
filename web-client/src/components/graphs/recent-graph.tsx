@@ -7,7 +7,9 @@ import { RouteComponentProps } from "react-router";
 // GraphQL
 import {
   getMostRecentQuery as getMostRecentResponse,
-  getMostRecentQueryVariables
+  getMostRecentQueryVariables,
+  NodeFieldsFragment,
+  EdgeFieldsFragment
 } from "../../__generated__/types";
 
 import { graphGetRecent } from "../../queries";
@@ -39,19 +41,17 @@ class RecentGraph extends React.Component<Props, State> {
   }
 
   render() {
-    const recentResults = this.props.data.getMostRecent;
+    const data = this.props.data;
 
-    if (!(recentResults && recentResults.graph)) {
-      return <div />;
+    let nodes: Array<NodeFieldsFragment> = [];
+    let edges: Array<EdgeFieldsFragment> = [];
+
+    if (data && data.getMostRecent && data.getMostRecent.graph) {
+      nodes = data.getMostRecent.graph.nodes;
+      edges = data.getMostRecent.graph.edges;
     }
 
-    return (
-      <Graph
-        key={`recent-graph`}
-        nodes={recentResults.graph.nodes}
-        edges={recentResults.graph.edges}
-      />
-    );
+    return <Graph key={`recent-graph`} nodes={nodes} edges={edges} />;
   }
 }
 

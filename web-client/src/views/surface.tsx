@@ -39,7 +39,7 @@ class Surface extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className={`flex-grow bg-near-white ba b--light-gray`}>
+      <div className={`flex-grow bg-near-white bt bl br b--light-gray`}>
         <div className={`flex-column`}>
           <div>
             <ReactResizeDetector

@@ -124,6 +124,14 @@ export const sessionItemCollectionFragment = gql`
   ${pagingInfoFragment}
 `;
 
+export const sessionWithoutItemCollectionFragment = gql`
+  fragment SessionWithoutItemCollectionFields on Session {
+    id
+    title
+    created
+  }
+`;
+
 export const sessionFragment = gql`
   fragment SessionFields on Session {
     id

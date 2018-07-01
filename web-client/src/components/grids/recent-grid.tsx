@@ -9,14 +9,17 @@ import {
   getRecentCapturesQuery as getRecentCapturesResponse,
   getRecentCapturesQueryVariables,
   getRecentSessionsQuery as getRecentSessionsResponse,
-  getRecentSessionsQueryVariables
+  getRecentSessionsQueryVariables,
+  CaptureFieldsFragment,
+  SessionWithoutItemCollectionFieldsFragment
 } from "../../__generated__/types";
 
 import { getRecentCaptures, getRecentSessions } from "../../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
-import Grid from "../../components/grids/grid";
+import Grid from "../grids/grid";
+import Help from "../help/help";
 
 // Utils
 import config from "../../cfg";
@@ -37,24 +40,37 @@ interface Props extends RouteProps {
 interface State {}
 
 // Class
-class SearchGrid extends React.Component<Props, State> {
+class RecentGrid extends React.Component<Props, State> {
   constructor(nextProps: Props) {
     super(nextProps);
   }
 
   render() {
-    const captures = this.props.captureData.getRecentCaptures;
-    const sessions = this.props.sessionData.getRecentSessions;
+    const captureCollection = this.props.captureData.getRecentCaptures;
+    const sessionCollection = this.props.sessionData.getRecentSessions;
+    let sessions: Array<SessionWithoutItemCollectionFieldsFragment> = [];
+    let captures: Array<CaptureFieldsFragment> = [];
 
-    if (!(captures && sessions)) {
-      return <div />;
+    if (captureCollection && sessionCollection && sessionCollection.items) {
+      sessions = sessionCollection.items;
+      captures = captureCollection.items;
+    }
+
+    if (this.props.captureData.loading || this.props.sessionData.loading) {
+      return (
+        <Help>
+          <div />
+        </Help>
+      );
     }
 
     return (
       <Grid
         key={`recent-grid`}
-        sessions={sessions.items}
-        captures={captures.items}
+        sessions={sessions}
+        emptySessionsMessage={`Try collecting your thoughts by creating your first collection`}
+        captures={captures}
+        emptyCapturesMessage={`Click the big orange button to capture your first thought`}
         headerHeight={this.props.headerHeight}
       />
     );
@@ -95,4 +111,4 @@ const withGetRecentCaptures = graphql<getRecentCapturesResponse, Props>(
 export default compose(
   withGetRecentSessions,
   withGetRecentCaptures
-)(SearchGrid);
+)(RecentGrid);

@@ -7,7 +7,9 @@ import { RouteComponentProps } from "react-router";
 // GraphQL
 import {
   getDetailedQuery as getDetailedQueryResponse,
-  getDetailedQueryVariables
+  getDetailedQueryVariables,
+  NodeFieldsFragment,
+  EdgeFieldsFragment
 } from "../../__generated__/types";
 
 import { graphGetDetailed } from "../../queries";
@@ -37,19 +39,17 @@ class RelatedGraph extends React.Component<Props, State> {
   }
 
   render() {
-    const surfaceResults = this.props.data.getDetailed;
+    const data = this.props.data;
 
-    if (!(surfaceResults && surfaceResults.graph)) {
-      return <div />;
+    let nodes: Array<NodeFieldsFragment> = [];
+    let edges: Array<EdgeFieldsFragment> = [];
+
+    if (data && data.getDetailed && data.getDetailed.graph) {
+      nodes = data.getDetailed.graph.nodes;
+      edges = data.getDetailed.graph.edges;
     }
 
-    return (
-      <Graph
-        key={`related-graph`}
-        nodes={surfaceResults.graph.nodes}
-        edges={surfaceResults.graph.edges}
-      />
-    );
+    return <Graph key={`related-graph`} nodes={nodes} edges={edges} />;
   }
 }
 

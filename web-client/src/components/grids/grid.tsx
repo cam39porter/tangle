@@ -15,6 +15,7 @@ import { graphql, compose, MutationFunc } from "react-apollo";
 // Components
 import CardCapture from "./../cards/card-capture";
 import CardSession from "./../cards/card-session";
+
 // Utils
 import windowSize from "react-window-size";
 import { NetworkUtils } from "../../utils";
@@ -22,7 +23,7 @@ import { NetworkUtils } from "../../utils";
 // Types
 import {
   CaptureFieldsFragment,
-  SessionFieldsFragment
+  SessionWithoutItemCollectionFieldsFragment
 } from "../../__generated__/types";
 interface RouteProps extends RouteComponentProps<{}> {}
 
@@ -31,9 +32,10 @@ interface Props extends RouteProps {
     createSessionResponse,
     createSessionCaptureMutationVariables
   >;
-  sessions: Array<SessionFieldsFragment>;
+  sessions: Array<SessionWithoutItemCollectionFieldsFragment>;
   captures: Array<CaptureFieldsFragment>;
-  scrollToId?: string;
+  emptySessionsMessage?: string;
+  emptyCapturesMessage?: string;
   sessionId?: string;
   headerHeight: number;
   // Window Size
@@ -57,6 +59,8 @@ class GridCaptures extends React.Component<Props, State> {
       session => session.id !== sessionId
     );
 
+    const captures = this.props.captures;
+
     return (
       <div className={``}>
         <div
@@ -66,7 +70,7 @@ class GridCaptures extends React.Component<Props, State> {
           }}
         >
           {/* Sessions */}
-          {!!sessions.length && (
+          {(sessions.length !== 0 || this.props.emptySessionsMessage) && (
             <div className={`pv4`}>
               <div className={`flex justify-between pb4 w-100 gray`}>
                 <div className={`flex-column justify-around`}>Collections</div>
@@ -90,22 +94,28 @@ class GridCaptures extends React.Component<Props, State> {
                   Create a new collection
                 </div>
               </div>
-              <div className={``}>
-                {this.props.sessions.map(session => (
-                  <div className={``} key={session.id}>
-                    <CardSession
-                      id={session.id}
-                      title={session.title}
-                      created={session.created}
-                    />
-                  </div>
-                ))}
-              </div>
+              {sessions.length === 0 ? (
+                <div className={`pv4 lh-copy gray tc`}>
+                  {this.props.emptySessionsMessage}
+                </div>
+              ) : (
+                <div className={``}>
+                  {this.props.sessions.map(session => (
+                    <div className={``} key={session.id}>
+                      <CardSession
+                        id={session.id}
+                        title={session.title}
+                        created={session.created}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
           {/* Captures */}
-          {this.props.captures.length !== 0 && (
+          {(captures.length !== 0 || this.props.emptyCapturesMessage) && (
             <div className={`pv4`}>
               <div className={`pb2 flex justify-between w-100 gray`}>
                 <div className={`flex-column justify-around`}>Captures</div>
@@ -125,22 +135,28 @@ class GridCaptures extends React.Component<Props, State> {
                   Create a new capture
                 </div>
               </div>
-              <div className={`flex flex-wrap`}>
-                {this.props.captures.map(capture => (
-                  <div
-                    className={`pv4 center`}
-                    style={{
-                      width: WIDTH
-                    }}
-                    key={capture.id}
-                  >
-                    <CardCapture
-                      captureId={capture.id}
-                      startingText={capture.body}
-                    />
-                  </div>
-                ))}
-              </div>
+              {captures.length === 0 ? (
+                <div className={`pv4 lh-copy gray tc`}>
+                  {this.props.emptyCapturesMessage}
+                </div>
+              ) : (
+                <div className={`flex flex-wrap`}>
+                  {captures.map(capture => (
+                    <div
+                      className={`pv4 center`}
+                      style={{
+                        width: WIDTH
+                      }}
+                      key={capture.id}
+                    >
+                      <CardCapture
+                        captureId={capture.id}
+                        startingText={capture.body}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>

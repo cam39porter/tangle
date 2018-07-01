@@ -17,6 +17,7 @@ import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
 import Graph from "../../components/graphs/graph";
+import Help from "../help/help";
 
 // Utils
 import config from "../../cfg";
@@ -47,6 +48,25 @@ class SearchGraph extends React.Component<Props, State> {
     if (data && data.search && data.search.graph) {
       nodes = data.search.graph.nodes;
       edges = data.search.graph.edges;
+    }
+
+    if (data.loading) {
+      return (
+        <Help>
+          <div />
+        </Help>
+      );
+    }
+
+    if (nodes.length === 0) {
+      return (
+        <Help>
+          <div>
+            We could not find any captures or collections that matched your
+            search.
+          </div>
+        </Help>
+      );
     }
 
     return <Graph nodes={nodes} edges={edges} />;

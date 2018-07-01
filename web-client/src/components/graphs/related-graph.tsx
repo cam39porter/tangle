@@ -17,6 +17,7 @@ import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
 import Graph from "../../components/graphs/graph";
+import Help from "../help/help";
 
 // Utils
 
@@ -47,6 +48,24 @@ class RelatedGraph extends React.Component<Props, State> {
     if (data && data.getDetailed && data.getDetailed.graph) {
       nodes = data.getDetailed.graph.nodes;
       edges = data.getDetailed.graph.edges;
+    }
+
+    if (data.loading) {
+      return (
+        <Help>
+          <div />
+        </Help>
+      );
+    }
+
+    if (nodes.length === 0) {
+      return (
+        <Help>
+          <div>
+            Capture a thought in the collection to see it visualized here.
+          </div>
+        </Help>
+      );
     }
 
     return <Graph key={`related-graph`} nodes={nodes} edges={edges} />;

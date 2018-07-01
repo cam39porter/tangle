@@ -16,7 +16,8 @@ import { graphGetRecent } from "../../queries";
 import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
-import Graph from "../../components/graphs/graph";
+import Graph from "./graph";
+import Help from "../help/help";
 
 // Utils
 import config from "../../cfg";
@@ -49,6 +50,25 @@ class RecentGraph extends React.Component<Props, State> {
     if (data && data.getMostRecent && data.getMostRecent.graph) {
       nodes = data.getMostRecent.graph.nodes;
       edges = data.getMostRecent.graph.edges;
+    }
+
+    if (data.loading) {
+      return (
+        <Help>
+          <div />
+        </Help>
+      );
+    }
+
+    if (nodes.length === 0) {
+      return (
+        <Help>
+          <div>
+            Try capturing a thought with the big orange button to see it
+            visualized here.
+          </div>
+        </Help>
+      );
     }
 
     return <Graph key={`recent-graph`} nodes={nodes} edges={edges} />;

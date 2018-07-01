@@ -3,7 +3,7 @@ import { promisify } from "util";
 import { createCapture } from "../../capture/services/capture";
 import { User } from "../../db/models/user";
 import {
-  archiveCaptureNode,
+  deleteCaptureNode,
   getCapturesByRelatedNode
 } from "../../db/services/capture";
 import { create, deleteNote } from "../../db/services/evernote-note";
@@ -53,14 +53,14 @@ export function importEvernoteNoteUpload(file): Promise<void> {
 
 export function deleteEvernoteNote(noteUrn: EvernoteNoteUrn): Promise<void> {
   const userId = getAuthenticatedUser().urn;
-  const archiveCaptures = getCapturesByRelatedNode(userId, noteUrn).then(
+  const deleteCaptures = getCapturesByRelatedNode(userId, noteUrn).then(
     captures => {
       return Promise.all(
-        captures.map(capture => archiveCaptureNode(userId, capture.urn))
+        captures.map(capture => deleteCaptureNode(userId, capture.urn))
       );
     }
   );
-  return archiveCaptures.then(() => {
+  return deleteCaptures.then(() => {
     deleteNote(userId, noteUrn);
   });
 }

@@ -134,19 +134,18 @@ export function getRandomCapture(userId: UserUrn): Promise<Capture> {
   return executeQuery(query, params).then(formatCaptureResult);
 }
 
-export function archiveCaptureNode(
+export function deleteCaptureNode(
   userId: UserUrn,
   captureUrn: CaptureUrn
-): Promise<Capture> {
+): Promise<boolean> {
   const params = [
     new Param("userId", userId.toRaw()),
     new Param("captureUrn", captureUrn.toRaw())
   ];
   const query = `MATCH (capture:Capture {id:{captureUrn}})<-[:CREATED]-(u:User {id:{userId}})
   DETACH DELETE capture
-  RETURN capture
   `;
-  return executeQuery(query, params).then(formatCaptureResult);
+  return executeQuery(query, params).then(() => true);
 }
 
 export function editCaptureNodeAndDeleteRelationships(

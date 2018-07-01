@@ -181,6 +181,7 @@ type Mutation {
   createSession(title: String, firstCaptureId: String, tags: [String!]): Node!
   editSession(id: String!, title: String, tags: [String!]): Node!
   archiveCapture(id: String!): Node!
+  deleteCapture(id: String!): Boolean!
   deleteSession(id: String!): Boolean!
   editCapture(id: String!, body: String!): Node!
   dismissCaptureRelation(fromId: String!, toId: String!): Boolean

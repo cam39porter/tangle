@@ -6,7 +6,7 @@ import { upsert as upsertTag } from "../../db/services/tag";
 import {
   createCaptureNode,
   editCaptureNodeAndDeleteRelationships,
-  archiveCaptureNode
+  deleteCaptureNode
 } from "../../db/services/capture";
 import { getNLPResponse } from "../../nlp/services/nlp";
 import * as cheerio from "cheerio";
@@ -42,11 +42,9 @@ export function dismissCaptureRelation(
   ).then(() => true);
 }
 
-export function archiveCapture(urn: CaptureUrn): Promise<GraphNode> {
+export function deleteCapture(urn: CaptureUrn): Promise<boolean> {
   const userId = getAuthenticatedUser().urn;
-  return archiveCaptureNode(userId, urn).then(capture =>
-    formatCapture(capture, false)
-  );
+  return deleteCaptureNode(userId, urn);
 }
 
 export function editCapture(urn: CaptureUrn, body: string): Promise<GraphNode> {

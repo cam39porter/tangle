@@ -276,7 +276,6 @@ class GraphVisualization extends React.Component<Props, State> {
   getEvents() {
     return {
       click: (e: GraphEvent) => {
-        console.log(e);
         switch (e.data.category) {
           case NodeType.Tag:
             this.search(e);

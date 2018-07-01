@@ -48,49 +48,16 @@ export const graphFragment = gql`
   ${edgeFragment}
 `;
 
-export const listFragment = gql`
-  fragment ListFields on ListItem {
-    id
-    text {
-      text
-      annotations {
-        ...AnnotationFields
-      }
-    }
-    reasons {
-      ...ReasonFields
-    }
-    relatedItems {
-      id
-      text {
-        text
-        annotations {
-          ...AnnotationFields
-        }
-      }
-      reasons {
-        ...ReasonFields
-      }
-    }
-  }
-  ${annotationFragment}
-  ${reasonFragment}
-`;
-
 export const surfaceResultsFragment = gql`
   fragment SurfaceResultsFields on SurfaceResults {
     pivot {
       ...NodeFields
-    }
-    list {
-      ...ListFields
     }
     graph {
       ...GraphFields
     }
   }
   ${nodeFragment}
-  ${listFragment}
   ${graphFragment}
 `;
 

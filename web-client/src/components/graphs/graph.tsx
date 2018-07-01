@@ -118,7 +118,7 @@ class GraphVisualization extends React.Component<Props, State> {
             id: node.id,
             name: `#${node.text}`,
             category: node.type,
-            symbolSize: 24,
+            symbolSize: 36,
             label: {
               show: true,
               color: TAG_COLOR,
@@ -136,7 +136,7 @@ class GraphVisualization extends React.Component<Props, State> {
             id: node.id,
             name: `${node.text}`,
             category: node.type,
-            symbolSize: 24,
+            symbolSize: 36,
             label: {
               show: true,
               color: TAG_COLOR,

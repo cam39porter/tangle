@@ -16,7 +16,7 @@ import Main from "./views/main";
 
 // Config / Utils
 import { FirebaseUtils } from "./utils";
-
+import * as ReactGA from "react-ga";
 interface Props extends RouteProps {}
 
 interface State {
@@ -34,7 +34,17 @@ class App extends React.Component<Props, State> {
     };
   }
 
+  componentWillMount() {
+    ReactGA.pageview("test");
+  }
+
+  componentDidUpdate(prevProps: object) {
+    // TODO pass in valuable data here
+    ReactGA.pageview("page view");
+  }
+
   componentDidMount() {
+    ReactGA.initialize("UA-121634830-1");
     FirebaseUtils.firebaseAuth()
       .setPersistence(FirebaseUtils.firebaseAuth.Auth.Persistence.LOCAL)
       .then(() => {

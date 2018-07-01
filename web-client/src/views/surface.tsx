@@ -16,7 +16,6 @@ import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 import { NetworkUtils } from "../utils";
-
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
 

@@ -7,7 +7,6 @@ import { withRouter, RouteComponentProps } from "react-router";
 // Components
 import * as Draft from "draft-js";
 import ButtonSurface from "./../buttons/button-surface";
-import ButtonExit from "./../buttons/button-exit";
 import ReactResizeDetector from "react-resize-detector";
 
 // Utils
@@ -97,13 +96,19 @@ class InputSurface extends React.Component<Props, State> {
   };
 
   render() {
+    let isSearching = this.props.location.pathname.includes("/search");
+
     const query = trim(
       this.state.editorState.getCurrentContent().getPlainText()
     );
     const url = this.props.match.url;
 
     return (
-      <div className={`flex ph2 bg-white br4`}>
+      <div
+        className={`flex ph2 bg-white br4 ba ${
+          isSearching ? "b--accent" : "b--white"
+        }`}
+      >
         <div
           className={`flex-column justify-around gray`}
           onClick={() => {
@@ -138,16 +143,16 @@ class InputSurface extends React.Component<Props, State> {
             />
           </div>
         </div>
-        {(this.props.location.pathname.includes("/search") || query) && (
-          <div
-            className={`flex-column justify-around gray`}
-            onClick={() => {
-              this.handleExit(url);
-            }}
-          >
-            <ButtonExit />
-          </div>
-        )}
+        <div
+          className={`flex-column justify-around f7 ${
+            isSearching || query ? "gray" : "white"
+          } pointer`}
+          onClick={() => {
+            this.handleExit(url);
+          }}
+        >
+          <div className={`ph2`}>Clear</div>
+        </div>
       </div>
     );
   }

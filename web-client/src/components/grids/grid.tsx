@@ -71,7 +71,7 @@ class GridCaptures extends React.Component<Props, State> {
               <div className={`flex justify-between pb4 w-100 gray`}>
                 <div className={`flex-column justify-around`}>Collections</div>
                 <div
-                  className={`flex-column justify-around f6 bb b--accent pointer`}
+                  className={`flex-column justify-around f6 bb b--accent pointer dark-gray`}
                   onClick={() => {
                     this.props
                       .createSession({})
@@ -92,7 +92,7 @@ class GridCaptures extends React.Component<Props, State> {
               </div>
               <div className={``}>
                 {this.props.sessions.map(session => (
-                  <div className={`dim`} key={session.id}>
+                  <div className={``} key={session.id}>
                     <CardSession
                       id={session.id}
                       title={session.title}
@@ -106,16 +106,11 @@ class GridCaptures extends React.Component<Props, State> {
 
           {/* Captures */}
           {this.props.captures.length !== 0 && (
-            <div className={`pv4 center`}>
-              <div
-                className={`pb2 flex justify-between w-100 gray`}
-                style={{
-                  width: WIDTH
-                }}
-              >
+            <div className={`pv4`}>
+              <div className={`pb2 flex justify-between w-100 gray`}>
                 <div className={`flex-column justify-around`}>Captures</div>
                 <div
-                  className={`flex-column justify-around f6 bb b--accent pointer`}
+                  className={`flex-column justify-around f6 bb b--accent pointer dark-gray`}
                   onClick={() => {
                     const query = NetworkUtils.getQuery(
                       this.props.location.search
@@ -130,10 +125,10 @@ class GridCaptures extends React.Component<Props, State> {
                   Create a new capture
                 </div>
               </div>
-              <div className={``}>
+              <div className={`flex flex-wrap`}>
                 {this.props.captures.map(capture => (
                   <div
-                    className={`pv4`}
+                    className={`pv4 center`}
                     style={{
                       width: WIDTH
                     }}

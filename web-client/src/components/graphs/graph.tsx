@@ -326,7 +326,7 @@ class GraphVisualization extends React.Component<Props, State> {
               if (!lines) {
                 lines = [e.data.name];
               }
-              let preview = lines[0];
+              let preview = lines[0].replace(/\r?\n|\r/g, "");
               if (lines.length > 1) {
                 preview = preview + "...";
               }
@@ -368,7 +368,7 @@ class GraphVisualization extends React.Component<Props, State> {
           },
           roam: "move",
           draggable: false,
-          focusNodeAdjacency: true,
+          focusNodeAdjacency: false,
           cursor: "pointer",
           lineStyle: {
             curveness: 0.3,
@@ -405,7 +405,7 @@ class GraphVisualization extends React.Component<Props, State> {
         {this.state.graphFocus &&
           this.state.graphFocus.data.id && (
             <div
-              className={`absolute bottom-1 right-1 z-max`}
+              className={`absolute bottom-1 right-1 z-max br4`}
               style={{ width: WIDTH }}
             >
               <CardCapture

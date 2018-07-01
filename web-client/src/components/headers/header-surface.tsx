@@ -27,30 +27,30 @@ class HeaderSurface extends React.Component<Props, State> {
   render() {
     return (
       <Header
-        left={
-          <div className={`flex`}>
-            <div className={`flex-column justify-around`}>
-              <div
-                className={`pa2 pointer ${
-                  this.props.isGraphView ? "br4 bg-accent light-gray" : ""
-                }`}
-                onClick={this.props.handleIsGraphView}
-              >
-                <div className={`bb b--accent`}>Visualize</div>
+        left={null}
+        right={
+          <React.Fragment>
+            <div className={`flex`}>
+              <div className={`flex-column justify-around`}>
+                <div
+                  className={`pa2 pointer ${
+                    this.props.isGraphView ? "br4 bg-accent light-gray" : ""
+                  }`}
+                  onClick={this.props.handleIsGraphView}
+                >
+                  <div className={`bb b--accent`}>Visualize</div>
+                </div>
               </div>
             </div>
-          </div>
-          /* tslint:disable-next-line */
-        }
-        right={
-          <div
-            className={`pl2 flex-column justify-around`}
-            style={{
-              minWidth: "20em"
-            }}
-          >
-            <InputSurface />
-          </div>
+            <div
+              className={`pl2 flex-column justify-around`}
+              style={{
+                minWidth: "20em"
+              }}
+            >
+              <InputSurface />
+            </div>
+          </React.Fragment>
           /* tslint:disable-next-line */
         }
       />

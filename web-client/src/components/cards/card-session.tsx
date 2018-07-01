@@ -61,7 +61,7 @@ class CardSession extends React.Component<Props, State> {
       >
         <div
           id={`list-session`}
-          className={`flex justify-between pa3 w-100 bb bw1 b--light-gray pointer`}
+          className={`flex justify-between pa3 w-100 bb bw1 b--light-gray bg-animate hover-bg-white pointer`}
           onClick={() => {
             this.props.history.push(
               `/session/${encodeURIComponent(this.props.id)}/related`
@@ -76,7 +76,7 @@ class CardSession extends React.Component<Props, State> {
           <div className={`relative flex-column justify-around`}>
             {this.state.isShowingButtons ? (
               <div
-                className={`glow`}
+                className={``}
                 onClick={e => {
                   e.stopPropagation();
 

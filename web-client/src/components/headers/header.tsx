@@ -15,8 +15,8 @@ const Header = (props: Props) => (
       userSelect: "none"
     }}
   >
-    {props.left}
-    {props.right}
+    <div className={`flex`}>{props.left}</div>
+    <div className={`flex`}>{props.right}</div>
   </div>
 );
 

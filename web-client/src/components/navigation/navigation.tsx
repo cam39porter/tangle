@@ -37,7 +37,6 @@ class Navigation extends React.Component<Props, State> {
           userSelect: "none"
         }}
       >
-        <div style={{ minHeight: "4em" }} />
         <div className={`flex-column flex-grow`}>
           <div
             className={`pa2 dim bg-accent br-100 pointer`}

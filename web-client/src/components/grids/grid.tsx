@@ -95,7 +95,7 @@ class GridCaptures extends React.Component<Props, State> {
                 </div>
               </div>
               {sessions.length === 0 ? (
-                <div className={`pv4 lh-copy gray tc`}>
+                <div className={`pv4 measure lh-copy gray tc center`}>
                   {this.props.emptySessionsMessage}
                 </div>
               ) : (
@@ -136,7 +136,7 @@ class GridCaptures extends React.Component<Props, State> {
                 </div>
               </div>
               {captures.length === 0 ? (
-                <div className={`pv4 lh-copy gray tc`}>
+                <div className={`pv4 measure lh-copy gray tc center`}>
                   {this.props.emptyCapturesMessage}
                 </div>
               ) : (

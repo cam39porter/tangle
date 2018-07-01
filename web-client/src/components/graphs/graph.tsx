@@ -256,27 +256,33 @@ class GraphVisualization extends React.Component<Props, State> {
     ];
   }
 
+  search = (e: GraphEvent) => {
+    const query = e.data.name;
+
+    const path = this.props.location.pathname;
+    const splitPath = path.split("/");
+    const lastPath = splitPath.pop();
+    if (
+      lastPath &&
+      (lastPath !== "related" && lastPath !== "recent" && lastPath !== "search")
+    ) {
+      splitPath.push(lastPath);
+    }
+    splitPath.push(`search?query=${encodeURIComponent(query)}`);
+
+    this.props.history.push(`${splitPath.join("/")}`);
+  };
+
   getEvents() {
     return {
       click: (e: GraphEvent) => {
+        console.log(e);
         switch (e.data.category) {
-          case NodeType.Entity || NodeType.Tag:
-            const query = e.data.name;
-            const path = this.props.location.pathname;
-            const splitPath = path.split("/");
-            const lastPath = splitPath.pop();
-            if (
-              lastPath &&
-              (lastPath !== "related" &&
-                lastPath !== "recent" &&
-                lastPath !== "search")
-            ) {
-              splitPath.push(lastPath);
-            }
-            splitPath.push(`search?query=${query}`);
-
-            this.props.history.push(`${splitPath.join("/")}`);
-
+          case NodeType.Tag:
+            this.search(e);
+            return;
+          case NodeType.Entity:
+            this.search(e);
             return;
           case NodeType.Capture:
             // TODO: get sessions this is a part of and if it is a part of the current session notify the user

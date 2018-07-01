@@ -18,7 +18,7 @@ class Capture extends React.Component<Props, State> {
   render() {
     return (
       <div
-        className={`vh-100 flex-column items-center justify-around bg-light-gray`}
+        className={`vh-100 flex-column items-center justify-around bg-light-gray overflow-auto`}
       >
         <div className={`pa3 br4 bg-white`} style={{ minWidth: "35em" }}>
           <InputCapture />

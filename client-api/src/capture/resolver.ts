@@ -44,7 +44,6 @@ export default {
       return createCapture(
         captureXSS.process(body),
         (sessionId && SessionUrn.fromRaw(sessionId)) || null,
-        "HTML",
         captureRelation
       );
     },

@@ -11,13 +11,10 @@ const client = process.env.GCLOUD_APPLICATION_CREDENTIALS
     })
   : new language.LanguageServiceClient();
 
-function getNLPResponse(
-  body: string,
-  contentType: string
-): Promise<NLPEntityResponse> {
+function getNLPResponse(body: string): Promise<NLPEntityResponse> {
   const document = {
     content: body,
-    type: contentType
+    type: "PLAIN_TEXT"
   };
   return client
     .analyzeEntitySentiment({ document })

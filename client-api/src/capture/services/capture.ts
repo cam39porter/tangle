@@ -56,14 +56,13 @@ export function editCapture(urn: CaptureUrn, body: string): Promise<GraphNode> {
     plainText,
     body
   ).then(capture =>
-    createRelations(urn, body, "HTML").then(() => formatCapture(capture, false))
+    createRelations(urn, plainText).then(() => formatCapture(capture, false))
   );
 }
 
 export function createCapture(
   body: string,
   parentUrn: EvernoteNoteUrn | SessionUrn | null,
-  contentType: string,
   captureRelation: CaptureRelation
 ): Promise<GraphNode> {
   const user: User = getAuthenticatedUser();
@@ -93,7 +92,7 @@ export function createCapture(
       }
     })
     .then((capture: Capture) => {
-      return createRelations(capture.urn, body, contentType).then(() =>
+      return createRelations(capture.urn, plainText).then(() =>
         formatCapture(capture, false)
       );
     });
@@ -106,13 +105,12 @@ function parseHtml(html: string): string {
 
 function createRelations(
   captureUrn: CaptureUrn,
-  body: string,
-  contentType: string
+  body: string
 ): Promise<boolean> {
   const promises = [
     createTags(captureUrn, body),
     createLinks(captureUrn, body),
-    createEntities(captureUrn, body, contentType)
+    createEntities(captureUrn, body)
   ];
   return Promise.all(promises)
     .then(() => true)
@@ -139,10 +137,9 @@ function createLinks(captureUrn: CaptureUrn, body: string): Promise<boolean> {
 
 function createEntities(
   captureUrn: CaptureUrn,
-  body: string,
-  contentType: string
+  body: string
 ): Promise<boolean> {
-  return getNLPResponse(stripTags(body), contentType).then(nlp => {
+  return getNLPResponse(stripTags(body)).then(nlp => {
     const user: User = getAuthenticatedUser();
     return Promise.all(
       nlp.entities.map(entity =>

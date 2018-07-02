@@ -15,8 +15,10 @@ import Login from "./views/login";
 import Main from "./views/main";
 
 // Config / Utils
-import { FirebaseUtils } from "./utils";
-import * as ReactGA from "react-ga";
+import { FirebaseUtils, GoogleAnalyticsUtils } from "./utils";
+const withTracker = GoogleAnalyticsUtils.withTracker;
+
+// Types
 interface Props extends RouteProps {}
 
 interface State {
@@ -34,17 +36,7 @@ class App extends React.Component<Props, State> {
     };
   }
 
-  componentWillMount() {
-    ReactGA.pageview("test");
-  }
-
-  componentDidUpdate(prevProps: object) {
-    // TODO pass in valuable data here
-    ReactGA.pageview("page view");
-  }
-
   componentDidMount() {
-    ReactGA.initialize("UA-121634830-1");
     FirebaseUtils.firebaseAuth()
       .setPersistence(FirebaseUtils.firebaseAuth.Auth.Persistence.LOCAL)
       .then(() => {
@@ -81,7 +73,7 @@ class App extends React.Component<Props, State> {
           <div>
             {this.state.isAuthenticated ? (
               <Switch>
-                <Route path="/" component={Main} />
+                <Route path="/" component={withTracker(Main)} />
               </Switch>
             ) : (
               <Switch>

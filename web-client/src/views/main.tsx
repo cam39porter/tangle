@@ -46,7 +46,7 @@ class Main extends React.Component<Props, State> {
           {/* Capture */}
           {NetworkUtils.getCapture(this.props.location.search) ? (
             <div className={`absolute top-0 left-0 z-max vh-100 w-100`}>
-              <Capture />
+              <Route component={Capture} />
             </div>
           ) : (
             <div className={`flex`}>

@@ -16,6 +16,7 @@ import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 import { NetworkUtils } from "../utils";
+
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
 
@@ -36,6 +37,55 @@ class Surface extends React.Component<Props, State> {
       isGraphView: false
     };
   }
+
+  renderRecent = props => {
+    const query = NetworkUtils.getQuery(this.props.location.search);
+
+    if (this.state.isGraphView) {
+      return (
+        <RecentGraph
+          headerHeight={this.state.headerHeight}
+          query={query}
+          {...props}
+        />
+      );
+    }
+    return (
+      <RecentGrid
+        headerHeight={this.state.headerHeight}
+        query={query}
+        {...props}
+      />
+    );
+  };
+
+  renderSearch = props => {
+    const query = NetworkUtils.getQuery(this.props.location.search);
+
+    if (this.state.isGraphView) {
+      return (
+        <SearchGraph
+          headerHeight={this.state.headerHeight}
+          query={query}
+          {...props}
+        />
+      );
+    }
+    return (
+      <SearchGrid
+        headerHeight={this.state.headerHeight}
+        query={query}
+        {...props}
+      />
+    );
+  };
+
+  renderRelated = props => {
+    if (this.state.isGraphView) {
+      return <RelatedGraph headerHeight={this.state.headerHeight} {...props} />;
+    }
+    return <RelatedGrid headerHeight={this.state.headerHeight} {...props} />;
+  };
 
   render() {
     return (
@@ -63,127 +113,15 @@ class Surface extends React.Component<Props, State> {
           <div className={`flex-grow`}>
             <Switch>
               {/* Recent */}
-              <Route
-                path={`/session/:id/recent`}
-                render={props => {
-                  const query = NetworkUtils.getQuery(
-                    this.props.location.search
-                  );
-
-                  if (this.state.isGraphView) {
-                    return (
-                      <RecentGraph
-                        headerHeight={this.state.headerHeight}
-                        query={query}
-                        {...props}
-                      />
-                    );
-                  }
-                  return (
-                    <RecentGrid
-                      headerHeight={this.state.headerHeight}
-                      query={query}
-                      {...props}
-                    />
-                  );
-                }}
-              />
-              <Route
-                path={`/recent`}
-                render={props => {
-                  const query = NetworkUtils.getQuery(
-                    this.props.location.search
-                  );
-
-                  if (this.state.isGraphView) {
-                    return (
-                      <RecentGraph
-                        headerHeight={this.state.headerHeight}
-                        query={query}
-                        {...props}
-                      />
-                    );
-                  }
-
-                  return (
-                    <RecentGrid
-                      headerHeight={this.state.headerHeight}
-                      query={query}
-                      {...props}
-                    />
-                  );
-                }}
-              />
+              <Route path={`/session/:id/recent`} render={this.renderRecent} />
+              <Route path={`/recent`} render={this.renderRecent} />
               {/* Search  */}
-              <Route
-                path={`/session/:id/search`}
-                render={props => {
-                  const query = NetworkUtils.getQuery(
-                    this.props.location.search
-                  );
-
-                  if (this.state.isGraphView) {
-                    return (
-                      <SearchGraph
-                        headerHeight={this.state.headerHeight}
-                        query={query}
-                        {...props}
-                      />
-                    );
-                  }
-                  return (
-                    <SearchGrid
-                      headerHeight={this.state.headerHeight}
-                      query={query}
-                      {...props}
-                    />
-                  );
-                }}
-              />
-              <Route
-                path={`/search`}
-                render={props => {
-                  const query = NetworkUtils.getQuery(
-                    this.props.location.search
-                  );
-
-                  if (this.state.isGraphView) {
-                    return (
-                      <SearchGraph
-                        headerHeight={this.state.headerHeight}
-                        query={query}
-                        {...props}
-                      />
-                    );
-                  }
-                  return (
-                    <SearchGrid
-                      headerHeight={this.state.headerHeight}
-                      query={query}
-                      {...props}
-                    />
-                  );
-                }}
-              />
+              <Route path={`/session/:id/search`} render={this.renderSearch} />
+              <Route path={`/search`} render={this.renderSearch} />
               {/* Related */}
               <Route
                 path={`/session/:id/related`}
-                render={props => {
-                  if (this.state.isGraphView) {
-                    return (
-                      <RelatedGraph
-                        headerHeight={this.state.headerHeight}
-                        {...props}
-                      />
-                    );
-                  }
-                  return (
-                    <RelatedGrid
-                      headerHeight={this.state.headerHeight}
-                      {...props}
-                    />
-                  );
-                }}
+                render={this.renderRelated}
               />
               <Redirect
                 exact={true}

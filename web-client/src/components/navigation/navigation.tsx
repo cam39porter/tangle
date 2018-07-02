@@ -11,7 +11,7 @@ import ButtonSettings from "./../buttons/button-settings";
 
 // Utils
 import { NetworkUtils } from "../../utils";
-import { FirebaseUtils } from "../../utils";
+import { FirebaseUtils, GoogleAnalyticsUtils } from "../../utils";
 
 interface RouteProps extends RouteComponentProps<{}> {}
 
@@ -64,6 +64,7 @@ class Navigation extends React.Component<Props, State> {
           onClick={() => {
             localStorage.removeItem("idToken");
             FirebaseUtils.firebaseAuth().signOut();
+            GoogleAnalyticsUtils.GoogleAnalytics.set({ userId: undefined });
           }}
         >
           <ButtonSettings />

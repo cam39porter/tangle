@@ -19,12 +19,16 @@ import { ApolloProvider } from "react-apollo";
 import { BrowserRouter as Router } from "react-router-dom";
 
 // Config / Utils
-import { FirebaseUtils } from "./utils";
+import { FirebaseUtils, GoogleAnalyticsUtils } from "./utils";
 import config from "./cfg/env";
 
+const GoogleAnalytics = GoogleAnalyticsUtils.GoogleAnalytics;
+const firebaseAuth = FirebaseUtils.firebaseAuth;
+
+// Apollo Linking
 const httpLink = createHttpLink({
-  uri: config.REACT_APP_GRAPHQL_URI
-  // useGETForQueries: true
+  uri: config.REACT_APP_GRAPHQL_URI,
+  useGETForQueries: true
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -41,14 +45,16 @@ const authLink = setContext((_, { headers }) => {
 const errorLink = onError(({ networkError, graphQLErrors }) => {
   if (networkError) {
     if (networkError["statusCode"] === 401) {
-      const user = FirebaseUtils.firebaseAuth().currentUser;
+      const user = firebaseAuth().currentUser;
       if (user !== null) {
         user.getIdToken(true).then(idToken => {
           localStorage.setItem("idToken", idToken);
+          GoogleAnalytics.set({ userId: user.uid });
         });
       } else {
         localStorage.removeItem("idToken");
-        FirebaseUtils.firebaseAuth().signOut();
+        firebaseAuth().signOut();
+        GoogleAnalytics.set({ userId: undefined });
       }
     }
   } else if (graphQLErrors) {

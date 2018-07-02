@@ -3,6 +3,7 @@ data:
   neo4jServiceIP: 10.43.249.26
   clientApiServiceIP: 10.43.250.52
   client-api-env: "production"
+  neo4j-backup-location: "tangle-prod-neo4j-backup"
 kind: ConfigMap
 metadata:
   name: cluster-config

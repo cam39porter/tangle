@@ -8,6 +8,7 @@ spec:
     spec:
       template:
         spec:
+          restartPolicy: "Never"        
           volumes:
           - name: backupdir-neo4j
             persistentVolumeClaim:
@@ -41,5 +42,4 @@ spec:
               export NEO4J_causal__clustering_discovery__advertised__address=$(hostname -f):5000
               export NEO4J_causal__clustering_transaction__advertised__address=$(hostname -f):6000
               export NEO4J_causal__clustering_raft__advertised__address=$(hostname -f):7000
-              exec /docker-entrypoint.sh "backup"     
-          restartPolicy: Never
+              exec /docker-entrypoint.sh "backup"

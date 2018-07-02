@@ -39,7 +39,7 @@ class Navigation extends React.Component<Props, State> {
       >
         <div className={`flex-column flex-grow`}>
           <div
-            className={`pa2 dim bg-accent br-100 pointer`}
+            className={`pa3 dim bg-accent br-100 pointer`}
             onClick={() => {
               if (isCapturing) {
                 this.props.history.push(

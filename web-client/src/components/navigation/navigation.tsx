@@ -11,7 +11,7 @@ import ButtonSettings from "./../buttons/button-settings";
 
 // Utils
 import { NetworkUtils } from "../../utils";
-import { FirebaseUtils, GoogleAnalyticsUtils } from "../../utils";
+import { FirebaseUtils, Analytics } from "../../utils";
 
 interface RouteProps extends RouteComponentProps<{}> {}
 
@@ -49,6 +49,10 @@ class Navigation extends React.Component<Props, State> {
                 );
                 return;
               }
+              Analytics.GoogleAnalytics.event({
+                category: "test",
+                action: "clicked_on-navigation_capture"
+              });
               this.props.history.push(
                 `${this.props.location.pathname}?${
                   query ? `query=${query}&` : ``
@@ -64,7 +68,7 @@ class Navigation extends React.Component<Props, State> {
           onClick={() => {
             localStorage.removeItem("idToken");
             FirebaseUtils.firebaseAuth().signOut();
-            GoogleAnalyticsUtils.GoogleAnalytics.set({ userId: undefined });
+            Analytics.GoogleAnalytics.set({ userId: undefined });
           }}
         >
           <ButtonSettings />

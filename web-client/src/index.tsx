@@ -19,10 +19,10 @@ import { ApolloProvider } from "react-apollo";
 import { BrowserRouter as Router } from "react-router-dom";
 
 // Config / Utils
-import { FirebaseUtils, GoogleAnalyticsUtils } from "./utils";
+import { FirebaseUtils, Analytics } from "./utils";
 import config from "./cfg/env";
 
-const GoogleAnalytics = GoogleAnalyticsUtils.GoogleAnalytics;
+const GoogleAnalytics = Analytics.GoogleAnalytics;
 const firebaseAuth = FirebaseUtils.firebaseAuth;
 
 // Apollo Linking

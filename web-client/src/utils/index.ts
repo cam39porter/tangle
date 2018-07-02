@@ -4,7 +4,7 @@ import NetworkUtils from "./network";
 import WindowUtils from "./window";
 import ApolloUtils from "./apollo";
 import EditorUtils from "./editor";
-import GoogleAnalyticsUtils from "./google-analytics";
+import Analytics from "./analytics";
 
 export {
   ErrorsUtils,
@@ -13,5 +13,5 @@ export {
   WindowUtils,
   ApolloUtils,
   EditorUtils,
-  GoogleAnalyticsUtils
+  Analytics
 };

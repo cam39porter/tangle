@@ -15,8 +15,8 @@ import Login from "./views/login";
 import Main from "./views/main";
 
 // Config / Utils
-import { FirebaseUtils, GoogleAnalyticsUtils } from "./utils";
-const withTracker = GoogleAnalyticsUtils.withTracker;
+import { FirebaseUtils, Analytics } from "./utils";
+const withTracker = Analytics.withTracker;
 
 // Types
 interface Props extends RouteProps {}

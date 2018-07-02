@@ -8,16 +8,18 @@ import * as GoogleAnalytics from "react-ga";
 import { RouteComponentProps } from "react-router";
 
 const gaOptions = {
-  name: process.env.REACT_APP_ENV,
-  siteSpeedSampleRate: 10, // % of users of the app
+  siteSpeedSampleRate: 100, // % of users of the app
   alwaysSendReferrer: true,
   allowAdFeatures: false,
-  dataSource: "web-client",
-  forceSSL: true
+  forceSSL: true,
+  titleCase: false
 };
 
 // Google Analytics Tracking
-GoogleAnalytics.initialize("UA-121634830-1", { gaOptions });
+GoogleAnalytics.initialize("UA-121634830-1", {
+  debug: process.env.REACT_APP_ENV !== "production",
+  gaOptions
+});
 
 // Page Tracking HOC
 const withTracker = <P extends object>(Component: React.ComponentType<P>) => {

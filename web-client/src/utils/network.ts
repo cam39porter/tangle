@@ -17,7 +17,16 @@ const getCapture = (queryString: string): string => {
   );
 };
 
+const getFormat = (queryString: string): string => {
+  return (
+    qs.parse(queryString, {
+      ignoreQueryPrefix: true
+    }).format || ""
+  );
+};
+
 export default {
   getQuery,
-  getCapture
+  getCapture,
+  getFormat
 };

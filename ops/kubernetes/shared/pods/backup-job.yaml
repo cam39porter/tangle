@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: neo4j-backup
 spec:
-  schedule: "0 0 * * *"
+  schedule: "0 * * * *"
   jobTemplate:
     spec:
       template:
@@ -42,4 +42,4 @@ spec:
               export NEO4J_causal__clustering_transaction__advertised__address=$(hostname -f):6000
               export NEO4J_causal__clustering_raft__advertised__address=$(hostname -f):7000
               exec /docker-entrypoint.sh "backup"     
-          restartPolicy: OnFailure
+          restartPolicy: Never

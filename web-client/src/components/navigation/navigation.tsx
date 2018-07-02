@@ -60,7 +60,7 @@ class Navigation extends React.Component<Props, State> {
           </div>
         </div>
         <div
-          className={`pa2 dim pointer`}
+          className={`flex-column center justify-around pa2 dim pointer`}
           onClick={() => {
             localStorage.removeItem("idToken");
             FirebaseUtils.firebaseAuth().signOut();

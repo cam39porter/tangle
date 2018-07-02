@@ -110,7 +110,7 @@ class InputSurface extends React.Component<Props, State> {
         }`}
       >
         <div
-          className={`flex-column justify-around gray`}
+          className={`flex-column pa2 justify-around gray`}
           onClick={() => {
             this.handleSearch(query, url);
           }}

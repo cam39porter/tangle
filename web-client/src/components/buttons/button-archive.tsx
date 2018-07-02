@@ -8,7 +8,7 @@ interface Props {}
 
 const ButtonArchive = (props: Props) => {
   return (
-    <span className={`flex-column justify-around pointer`}>
+    <span className={`flex-column justify-around`}>
       <Trash size={16} />
     </span>
   );

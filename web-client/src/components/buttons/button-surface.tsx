@@ -8,7 +8,7 @@ interface Props {}
 
 const ButtonSurface = (props: Props) => {
   return (
-    <span className={`flex-column justify-around pa2 pointer`}>
+    <span className={`flex-column justify-around pointer`}>
       <Search size={16} />
     </span>
   );

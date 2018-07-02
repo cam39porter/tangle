@@ -8,7 +8,7 @@ interface Props {}
 
 const ButtonSettings = (props: Props) => {
   return (
-    <span className={`flex-column pa2 justify-around pointer`}>
+    <span className={`flex-column justify-around pointer`}>
       <Settings size={16} />
     </span>
   );

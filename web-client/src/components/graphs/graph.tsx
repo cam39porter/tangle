@@ -24,6 +24,7 @@ import {
   EdgeFieldsFragment,
   NodeType
 } from "../../__generated__/types";
+import { AnalyticsUtils } from "../../utils/index";
 
 const NOT_FOCUS_COLOR = "#CCCCCC";
 const TAG_COLOR = "#333333";
@@ -57,8 +58,6 @@ class GraphVisualization extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-
-    console.log(props.nodes);
 
     this.state = {
       graphFocus: null
@@ -271,6 +270,13 @@ class GraphVisualization extends React.Component<Props, State> {
     splitPath.push(`search?query=${encodeURIComponent(query)}`);
 
     this.props.history.push(`${splitPath.join("/")}`);
+
+    AnalyticsUtils.trackEvent({
+      category: AnalyticsUtils.Categories.Test,
+      action: AnalyticsUtils.Actions.NavigateToSearch,
+      nonInteraction: true
+      // TODO: search=query
+    });
   };
 
   getEvents() {
@@ -279,17 +285,40 @@ class GraphVisualization extends React.Component<Props, State> {
         switch (e.data.category) {
           case NodeType.Tag:
             this.search(e);
+            AnalyticsUtils.trackEvent({
+              category: AnalyticsUtils.Categories.Test,
+              action: AnalyticsUtils.Actions.NavigateToTag,
+              label: e.data.id
+            });
             return;
           case NodeType.Entity:
             this.search(e);
+            AnalyticsUtils.trackEvent({
+              category: AnalyticsUtils.Categories.Test,
+              action: AnalyticsUtils.Actions.NavigateToEntity,
+              label: e.data.id
+            });
             return;
           case NodeType.Capture:
             // TODO: get sessions this is a part of and if it is a part of the current session notify the user
-            this.setState({ graphFocus: e });
+            this.setState({ graphFocus: e }, () => {
+              AnalyticsUtils.trackEvent({
+                category: AnalyticsUtils.Categories.Test,
+                action: AnalyticsUtils.Actions.NavigateToCapture,
+                label: e.data.id
+              });
+            });
             return;
           case NodeType.Session:
-            this.props.history.push(`/collection/${e.data.id}/related`);
-            break;
+            this.props.history.push(
+              `/collection/${e.data.id}/format/graph/related`
+            );
+            AnalyticsUtils.trackEvent({
+              category: AnalyticsUtils.Categories.Test,
+              action: AnalyticsUtils.Actions.NavigateToSession,
+              label: e.data.id
+            });
+            return;
           default:
             return;
         }

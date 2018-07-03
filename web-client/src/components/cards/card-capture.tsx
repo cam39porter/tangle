@@ -19,7 +19,7 @@ import ButtonArchive from "./../buttons/button-archive";
 import InputCapture from "../inputs/input-capture";
 
 // Utils
-import { ApolloUtils } from "../../utils/index";
+import { ApolloUtils, AnalyticsUtils } from "../../utils/index";
 
 // Types
 interface Props {
@@ -27,6 +27,7 @@ interface Props {
     archiveCaptureResponse,
     archiveCaptureMutationVariables
   >;
+  sessionId?: string;
   captureId: string;
   startingText: string;
 }
@@ -101,6 +102,15 @@ class CardCapture extends React.Component<Props, State> {
                       update: ApolloUtils.deleteCaptureUpdate(
                         this.props.captureId
                       )
+                    })
+                    .then(() => {
+                      AnalyticsUtils.trackEvent({
+                        category: AnalyticsUtils.Categories.Test,
+                        action: this.props.sessionId
+                          ? AnalyticsUtils.Actions.DeleteSessionCapture
+                          : AnalyticsUtils.Actions.DeleteCapture,
+                        label: this.props.captureId
+                      });
                     })
                     .catch(err => console.error(err));
                 }}

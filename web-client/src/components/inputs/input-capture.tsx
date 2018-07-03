@@ -45,7 +45,7 @@ import { convertToHTML, convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 import EditorUtils from "../../utils/editor";
 import { debounce, Cancelable } from "lodash";
-import { NetworkUtils } from "../../utils/index";
+import { NetworkUtils, AnalyticsUtils } from "../../utils/index";
 import config from "../../cfg";
 
 const TIME_TO_SAVE = 500; // ms till change is automatically captured
@@ -63,7 +63,7 @@ interface Props extends RouteProps {
     createCaptureMutationVariables
   >;
   editCapture: MutationFunc<editCaptureResponse, editCaptureMutationVariables>;
-  sessionData: {
+  sessionData?: {
     sessionId: string;
     previousId: string;
   };
@@ -101,6 +101,15 @@ class InputCapture extends React.Component<Props, State> {
                   id: this.props.captureId,
                   body: text
                 }
+              })
+              .then(() => {
+                AnalyticsUtils.trackEvent({
+                  category: AnalyticsUtils.Categories.Test,
+                  action: this.props.sessionData
+                    ? AnalyticsUtils.Actions.EditSessionCapture
+                    : AnalyticsUtils.Actions.EditCapture,
+                  label: this.props.captureId
+                });
               })
               .catch(err => {
                 console.error(err);
@@ -292,6 +301,14 @@ class InputCapture extends React.Component<Props, State> {
                             }
                           }
                         })
+                        .then(res => {
+                          const id = res.data.createCapture.id;
+                          AnalyticsUtils.trackEvent({
+                            category: AnalyticsUtils.Categories.Test,
+                            action: AnalyticsUtils.Actions.CreateSessionCapture,
+                            label: id
+                          });
+                        })
                         .catch(err => {
                           console.error(err);
                         });
@@ -301,6 +318,14 @@ class InputCapture extends React.Component<Props, State> {
                           variables: {
                             body
                           }
+                        })
+                        .then(res => {
+                          const id = res.data.createCapture.id;
+                          AnalyticsUtils.trackEvent({
+                            category: AnalyticsUtils.Categories.Test,
+                            action: AnalyticsUtils.Actions.CreateCapture,
+                            label: id
+                          });
                         })
                         .catch(err => {
                           console.error(err);

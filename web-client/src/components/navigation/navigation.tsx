@@ -11,7 +11,7 @@ import ButtonSettings from "./../buttons/button-settings";
 
 // Utils
 import { NetworkUtils } from "../../utils";
-import { FirebaseUtils, Analytics } from "../../utils";
+import { FirebaseUtils, AnalyticsUtils } from "../../utils";
 
 interface RouteProps extends RouteComponentProps<{}> {}
 
@@ -47,17 +47,21 @@ class Navigation extends React.Component<Props, State> {
                     query ? `query=${query}` : ``
                   }`
                 );
+                AnalyticsUtils.trackEvent({
+                  category: AnalyticsUtils.Categories.Test,
+                  action: AnalyticsUtils.Actions.NavigateFromCreateCapture
+                });
                 return;
               }
-              Analytics.GoogleAnalytics.event({
-                category: "test",
-                action: "clicked_on-navigation_capture"
-              });
               this.props.history.push(
                 `${this.props.location.pathname}?${
                   query ? `query=${query}&` : ``
                 }capture=true`
               );
+              AnalyticsUtils.trackEvent({
+                category: AnalyticsUtils.Categories.Test,
+                action: AnalyticsUtils.Actions.NavigateToCreateCapture
+              });
             }}
           >
             {isCapturing ? <ButtonExit /> : <ButtonCapture />}
@@ -66,9 +70,17 @@ class Navigation extends React.Component<Props, State> {
         <div
           className={`flex-column center justify-around pa2 dim pointer`}
           onClick={() => {
+            const auth = FirebaseUtils.firebaseAuth();
+            const user = auth.currentUser ? auth.currentUser.uid : "";
+
+            AnalyticsUtils.trackEvent({
+              category: AnalyticsUtils.Categories.Test,
+              action: AnalyticsUtils.Actions.SignOut,
+              label: user
+            });
             localStorage.removeItem("idToken");
-            FirebaseUtils.firebaseAuth().signOut();
-            Analytics.GoogleAnalytics.set({ userId: undefined });
+            auth.signOut();
+            AnalyticsUtils.setUserId(undefined);
           }}
         >
           <ButtonSettings />

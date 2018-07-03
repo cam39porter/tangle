@@ -7,6 +7,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 // Components
 import InputSurface from "../inputs/input-surface";
 import Header from "./header";
+import { AnalyticsUtils } from "../../utils/index";
 // Utils
 
 // Types
@@ -36,7 +37,16 @@ class HeaderSurface extends React.Component<Props, State> {
                   className={`pa2 pointer ${
                     this.props.isGraphView ? "br4 bg-accent light-gray" : ""
                   }`}
-                  onClick={this.props.handleIsGraphView}
+                  onClick={() => {
+                    this.props.handleIsGraphView();
+                    AnalyticsUtils.trackEvent({
+                      category: AnalyticsUtils.Categories.Test,
+                      action: this.props.isGraphView
+                        ? AnalyticsUtils.Actions.NavigateFromGraph
+                        : AnalyticsUtils.Actions.NavigateToGraph
+                      // TODO: label: search=query related=id recent
+                    });
+                  }}
                 >
                   <div className={`bb b--accent`}>Visualize</div>
                 </div>

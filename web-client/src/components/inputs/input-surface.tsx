@@ -13,7 +13,7 @@ import ReactResizeDetector from "react-resize-detector";
 import { convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 import { trim } from "lodash";
-import { NetworkUtils, EditorUtils } from "../../utils";
+import { NetworkUtils, EditorUtils, AnalyticsUtils } from "../../utils";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -80,6 +80,12 @@ class InputSurface extends React.Component<Props, State> {
     this.setState({
       editorState: nextEditorState
     });
+
+    AnalyticsUtils.trackEvent({
+      category: AnalyticsUtils.Categories.Test,
+      action: AnalyticsUtils.Actions.NavigateFromSearch
+      // TODO: label: query
+    });
   };
 
   handleSearch = (query, url) => {
@@ -89,6 +95,11 @@ class InputSurface extends React.Component<Props, State> {
     }
 
     this.props.history.push(`${url}/search?query=${query}`);
+    AnalyticsUtils.trackEvent({
+      category: AnalyticsUtils.Categories.Test,
+      action: AnalyticsUtils.Actions.NavigateToSearch
+      // TODO: label: query
+    });
   };
 
   render() {

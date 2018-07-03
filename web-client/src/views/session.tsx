@@ -26,7 +26,7 @@ import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 import windowSize from "react-window-size";
-import { ApolloUtils } from "../utils/index";
+import { ApolloUtils, AnalyticsUtils } from "../utils/index";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -91,12 +91,24 @@ class Session extends React.Component<Props, State> {
       return;
     }
 
-    this.props.deleteSession({
-      variables: {
-        sessionId: sessionCaptures.id
-      },
-      update: ApolloUtils.deleteSessionUpdate(sessionCaptures.id)
-    });
+    this.props
+      .deleteSession({
+        variables: {
+          sessionId: sessionCaptures.id
+        },
+        update: ApolloUtils.deleteSessionUpdate(sessionCaptures.id)
+      })
+      .then(() => {
+        AnalyticsUtils.trackEvent({
+          category: AnalyticsUtils.Categories.Test,
+          action: AnalyticsUtils.Actions.DeleteSession,
+          label: sessionCaptures.id,
+          nonInteraction: true
+        });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 
   scrollTo = (id: string) => {
@@ -172,6 +184,7 @@ class Session extends React.Component<Props, State> {
               >
                 <ScrollContainerElement name={capture.id}>
                   <CardCapture
+                    sessionId={sessionCaptures.id}
                     captureId={capture.id}
                     startingText={capture.body}
                   />

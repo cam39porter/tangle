@@ -16,13 +16,13 @@ import { graphql, compose, MutationFunc } from "react-apollo";
 import ButtonArchive from "./../buttons/button-archive";
 
 // Utils
-import { ApolloUtils } from "../../utils";
+import { ApolloUtils, AnalyticsUtils } from "../../utils";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
-  id: string;
+  sessionId: string;
   title: string;
   created: string;
   deleteSession: MutationFunc<
@@ -47,7 +47,7 @@ class CardSession extends React.Component<Props, State> {
   render() {
     return (
       <div
-        key={this.props.id}
+        key={this.props.sessionId}
         onMouseEnter={() => {
           this.setState({
             isShowingButtons: true
@@ -65,9 +65,14 @@ class CardSession extends React.Component<Props, State> {
           onClick={() => {
             this.props.history.push(
               `/collection/${encodeURIComponent(
-                this.props.id
+                this.props.sessionId
               )}/format/list/related/`
             );
+            AnalyticsUtils.trackEvent({
+              category: AnalyticsUtils.Categories.Test,
+              action: AnalyticsUtils.Actions.NavigateToSession,
+              label: this.props.sessionId
+            });
           }}
         >
           <div className={`flex-grow flex-column justify-around`}>
@@ -85,12 +90,21 @@ class CardSession extends React.Component<Props, State> {
                   this.props
                     .deleteSession({
                       variables: {
-                        sessionId: this.props.id
+                        sessionId: this.props.sessionId
                       },
                       optimisticResponse: {
                         deleteSession: true
                       },
-                      update: ApolloUtils.deleteSessionUpdate(this.props.id)
+                      update: ApolloUtils.deleteSessionUpdate(
+                        this.props.sessionId
+                      )
+                    })
+                    .then(() => {
+                      AnalyticsUtils.trackEvent({
+                        category: AnalyticsUtils.Categories.Test,
+                        action: AnalyticsUtils.Actions.DeleteSession,
+                        label: this.props.sessionId
+                      });
                     })
                     .catch(err => {
                       console.error(err);

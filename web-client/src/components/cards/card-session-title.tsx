@@ -17,7 +17,7 @@ import { convertFromHTML } from "draft-convert";
 import "draft-js/dist/Draft.css";
 import { debounce, Cancelable } from "lodash";
 import ReactResizeDetector from "react-resize-detector";
-import { ApolloUtils } from "../../utils/index";
+import { ApolloUtils, AnalyticsUtils } from "../../utils/index";
 
 const TIME_TO_SAVE = 500; // ms
 
@@ -54,6 +54,13 @@ class HeaderSession extends React.Component<Props, State> {
             title: text
           },
           update: ApolloUtils.editSessionUpdate(props.sessionId, text)
+        })
+        .then(() => {
+          AnalyticsUtils.trackEvent({
+            category: AnalyticsUtils.Categories.Test,
+            action: AnalyticsUtils.Actions.EditSessionTitle,
+            label: this.props.sessionId
+          });
         })
         .catch(err => {
           console.error(err);

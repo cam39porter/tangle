@@ -7,6 +7,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 // Components
 import ButtonExit from "../buttons/button-exit";
 import Header from "./header";
+import { AnalyticsUtils } from "../../utils/index";
 // Utils
 
 // Types
@@ -34,7 +35,19 @@ class HeaderSurface extends React.Component<Props, State> {
           <div
             className={`flex-column justify-around ph2`}
             onClick={() => {
-              this.props.history.push(`/${this.props.location.search}`);
+              if (this.props.location.pathname.includes("/related")) {
+                this.props.history.push(`/`);
+              } else {
+                let url =
+                  this.props.location.pathname + this.props.location.search;
+                url = url.replace(this.props.match.url, "");
+                this.props.history.push(url);
+              }
+              AnalyticsUtils.trackEvent({
+                category: AnalyticsUtils.Categories.Test,
+                action: AnalyticsUtils.Actions.NavigateFromSession,
+                label: this.props.match.params["id"]
+              });
             }}
           >
             <div>

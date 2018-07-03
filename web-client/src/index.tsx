@@ -19,10 +19,8 @@ import { ApolloProvider } from "react-apollo";
 import { BrowserRouter as Router } from "react-router-dom";
 
 // Config / Utils
-import { FirebaseUtils, Analytics } from "./utils";
+import { FirebaseUtils, AnalyticsUtils } from "./utils";
 import config from "./cfg/env";
-
-const GoogleAnalytics = Analytics.GoogleAnalytics;
 const firebaseAuth = FirebaseUtils.firebaseAuth;
 
 // Apollo Linking
@@ -49,12 +47,12 @@ const errorLink = onError(({ networkError, graphQLErrors }) => {
       if (user !== null) {
         user.getIdToken(true).then(idToken => {
           localStorage.setItem("idToken", idToken);
-          GoogleAnalytics.set({ userId: user.uid });
+          AnalyticsUtils.setUserId(user.uid);
         });
       } else {
         localStorage.removeItem("idToken");
         firebaseAuth().signOut();
-        GoogleAnalytics.set({ userId: undefined });
+        AnalyticsUtils.setUserId(undefined);
       }
     }
   } else if (graphQLErrors) {

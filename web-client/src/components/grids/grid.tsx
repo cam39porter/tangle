@@ -18,7 +18,7 @@ import CardSession from "./../cards/card-session";
 
 // Utils
 import windowSize from "react-window-size";
-import { NetworkUtils } from "../../utils";
+import { NetworkUtils, AnalyticsUtils } from "../../utils";
 
 // Types
 import {
@@ -80,11 +80,20 @@ class GridCaptures extends React.Component<Props, State> {
                     this.props
                       .createSession({})
                       .then(res => {
+                        let id = res.data.createSession.id;
                         this.props.history.push(
                           `/collection/${encodeURIComponent(
                             res.data.createSession.id
                           )}/related`
                         );
+                        return id;
+                      })
+                      .then(id => {
+                        AnalyticsUtils.trackEvent({
+                          category: AnalyticsUtils.Categories.Test,
+                          action: AnalyticsUtils.Actions.CreateSession,
+                          label: id
+                        });
                       })
                       .catch(err => {
                         console.error(err);
@@ -103,7 +112,7 @@ class GridCaptures extends React.Component<Props, State> {
                   {this.props.sessions.map(session => (
                     <div className={``} key={session.id}>
                       <CardSession
-                        id={session.id}
+                        sessionId={session.id}
                         title={session.title}
                         created={session.created}
                       />
@@ -130,6 +139,10 @@ class GridCaptures extends React.Component<Props, State> {
                         query ? `query=${query}&` : ``
                       }capture=true`
                     );
+                    AnalyticsUtils.trackEvent({
+                      category: AnalyticsUtils.Categories.Test,
+                      action: AnalyticsUtils.Actions.NavigateToCreateCapture
+                    });
                   }}
                 >
                   Create a new capture

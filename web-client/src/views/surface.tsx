@@ -2,7 +2,7 @@
 import * as React from "react";
 
 // Router
-import { RouteComponentProps, Switch, Route, Redirect } from "react-router";
+import { RouteComponentProps, Switch, Route } from "react-router";
 
 // Components
 import RecentGrid from "../components/grids/recent-grid";
@@ -24,7 +24,6 @@ interface Props extends RouteProps {}
 
 interface State {
   headerHeight: number;
-  isGraphView: boolean;
 }
 
 // Class
@@ -33,15 +32,14 @@ class Surface extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      headerHeight: 0,
-      isGraphView: false
+      headerHeight: 0
     };
   }
 
   renderRecent = props => {
     const query = NetworkUtils.getQuery(this.props.location.search);
 
-    if (this.state.isGraphView) {
+    if (this.props.match.params["type"] === "graph") {
       return (
         <RecentGraph
           headerHeight={this.state.headerHeight}
@@ -62,7 +60,7 @@ class Surface extends React.Component<Props, State> {
   renderSearch = props => {
     const query = NetworkUtils.getQuery(this.props.location.search);
 
-    if (this.state.isGraphView) {
+    if (this.props.match.params["type"] === "graph") {
       return (
         <SearchGraph
           headerHeight={this.state.headerHeight}
@@ -81,7 +79,7 @@ class Surface extends React.Component<Props, State> {
   };
 
   renderRelated = props => {
-    if (this.state.isGraphView) {
+    if (this.props.match.params["type"] === "graph") {
       return <RelatedGraph headerHeight={this.state.headerHeight} {...props} />;
     }
     return <RelatedGrid headerHeight={this.state.headerHeight} {...props} />;
@@ -102,31 +100,46 @@ class Surface extends React.Component<Props, State> {
             />
 
             <HeaderSurface
-              isGraphView={this.state.isGraphView}
+              isGraphView={this.props.match.params["type"] === "graph"}
               handleIsGraphView={() => {
-                this.setState({
-                  isGraphView: !this.state.isGraphView
-                });
+                const match = this.props.match.url;
+                const matchSplit = match.split("/");
+                const pathAfterMatch = this.props.location.pathname.replace(
+                  match,
+                  ""
+                );
+                matchSplit.pop();
+                if (this.props.match.params["type"] === "graph") {
+                  matchSplit.push("list");
+                } else {
+                  matchSplit.push("graph");
+                }
+                this.props.history.push(
+                  `${matchSplit.join("/")}${pathAfterMatch}${
+                    this.props.location.search
+                  }`
+                );
               }}
             />
           </div>
           <div className={`flex-grow`}>
             <Switch>
               {/* Recent */}
-              <Route path={`/session/:id/recent`} render={this.renderRecent} />
-              <Route path={`/recent`} render={this.renderRecent} />
+              <Route path={`/format/:type/recent`} render={this.renderRecent} />
+              <Route
+                path={`/collection/:id/format/:type/recent`}
+                render={this.renderRecent}
+              />
               {/* Search  */}
-              <Route path={`/session/:id/search`} render={this.renderSearch} />
-              <Route path={`/search`} render={this.renderSearch} />
+              <Route path={`/format/:type/search`} render={this.renderSearch} />
+              <Route
+                path={`/collection/:id/format/:type/search`}
+                render={this.renderSearch}
+              />
               {/* Related */}
               <Route
-                path={`/session/:id/related`}
+                path={`/collection/:id/format/:type/related`}
                 render={this.renderRelated}
-              />
-              <Redirect
-                exact={true}
-                from={"/"}
-                to={`/recent${this.props.location.search}`}
               />
             </Switch>
           </div>

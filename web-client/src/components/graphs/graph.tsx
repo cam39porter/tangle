@@ -261,13 +261,7 @@ class GraphVisualization extends React.Component<Props, State> {
 
     const path = this.props.location.pathname;
     const splitPath = path.split("/");
-    const lastPath = splitPath.pop();
-    if (
-      lastPath &&
-      (lastPath !== "related" && lastPath !== "recent" && lastPath !== "search")
-    ) {
-      splitPath.push(lastPath);
-    }
+    splitPath.pop();
     splitPath.push(`search?query=${encodeURIComponent(query)}`);
 
     this.props.history.push(`${splitPath.join("/")}`);
@@ -288,7 +282,7 @@ class GraphVisualization extends React.Component<Props, State> {
             this.setState({ graphFocus: e });
             return;
           case NodeType.Session:
-            this.props.history.push(`/session/${e.data.id}/related`);
+            this.props.history.push(`/collection/${e.data.id}/related`);
             break;
           default:
             return;

@@ -2,7 +2,7 @@
 import * as React from "react";
 
 // Router
-import { RouteComponentProps, Switch, Route } from "react-router";
+import { RouteComponentProps, Switch, Route, Redirect } from "react-router";
 
 // Components
 import Session from "../views/session";
@@ -52,12 +52,20 @@ class Main extends React.Component<Props, State> {
             <div className={`flex`}>
               {/* Session */}
               <Switch>
-                <Route path={`/session/:id`} component={Session} />
+                <Route path={`/collection/:id`} component={Session} />
               </Switch>
               {/* Surface */}
               <Switch>
-                <Route path={`/session/:id`} component={Surface} />
-                <Route path={`/`} component={Surface} />
+                <Route
+                  path={`/collection/:id/format/:type/`}
+                  component={Surface}
+                />
+                <Route path={`/format/:type`} component={Surface} />
+                <Redirect
+                  exact={true}
+                  from={"/"}
+                  to={`/format/list/recent${this.props.location.search}`}
+                />
               </Switch>
             </div>
           )}

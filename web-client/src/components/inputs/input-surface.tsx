@@ -68,10 +68,10 @@ class InputSurface extends React.Component<Props, State> {
   };
 
   handleExit = url => {
-    if (url === "/") {
-      this.props.history.push(`${url}recent`);
-    } else {
+    if (this.props.match.params["id"]) {
       this.props.history.push(`${url}/related`);
+    } else {
+      this.props.history.push(`${url}/recent`);
     }
 
     const nextEditorState = EditorUtils.cleanEditorState(
@@ -88,11 +88,7 @@ class InputSurface extends React.Component<Props, State> {
       return;
     }
 
-    if (url === "/") {
-      this.props.history.push(`${url}search?query=${query}`);
-    } else {
-      this.props.history.push(`${url}/search?query=${query}`);
-    }
+    this.props.history.push(`${url}/search?query=${query}`);
   };
 
   render() {

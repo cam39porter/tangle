@@ -64,7 +64,9 @@ class CardSession extends React.Component<Props, State> {
           className={`flex justify-between pa3 w-100 bb bw1 b--light-gray bg-animate hover-bg-white pointer`}
           onClick={() => {
             this.props.history.push(
-              `/session/${encodeURIComponent(this.props.id)}/related`
+              `/collection/${encodeURIComponent(
+                this.props.id
+              )}/format/list/related/`
             );
           }}
         >

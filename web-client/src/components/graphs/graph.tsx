@@ -270,13 +270,6 @@ class GraphVisualization extends React.Component<Props, State> {
     splitPath.push(`search?query=${encodeURIComponent(query)}`);
 
     this.props.history.push(`${splitPath.join("/")}`);
-
-    AnalyticsUtils.trackEvent({
-      category: AnalyticsUtils.Categories.Test,
-      action: AnalyticsUtils.Actions.NavigateToSearch,
-      nonInteraction: true
-      // TODO: search=query
-    });
   };
 
   getEvents() {
@@ -287,7 +280,7 @@ class GraphVisualization extends React.Component<Props, State> {
             this.search(e);
             AnalyticsUtils.trackEvent({
               category: AnalyticsUtils.Categories.Test,
-              action: AnalyticsUtils.Actions.NavigateToTag,
+              action: AnalyticsUtils.Actions.FocusOnCapture,
               label: e.data.id
             });
             return;
@@ -295,7 +288,7 @@ class GraphVisualization extends React.Component<Props, State> {
             this.search(e);
             AnalyticsUtils.trackEvent({
               category: AnalyticsUtils.Categories.Test,
-              action: AnalyticsUtils.Actions.NavigateToEntity,
+              action: AnalyticsUtils.Actions.FocusOnEntity,
               label: e.data.id
             });
             return;
@@ -304,7 +297,7 @@ class GraphVisualization extends React.Component<Props, State> {
             this.setState({ graphFocus: e }, () => {
               AnalyticsUtils.trackEvent({
                 category: AnalyticsUtils.Categories.Test,
-                action: AnalyticsUtils.Actions.NavigateToCapture,
+                action: AnalyticsUtils.Actions.FocusOnCapture,
                 label: e.data.id
               });
             });
@@ -315,7 +308,7 @@ class GraphVisualization extends React.Component<Props, State> {
             );
             AnalyticsUtils.trackEvent({
               category: AnalyticsUtils.Categories.Test,
-              action: AnalyticsUtils.Actions.NavigateToSession,
+              action: AnalyticsUtils.Actions.FocusOnSession,
               label: e.data.id
             });
             return;

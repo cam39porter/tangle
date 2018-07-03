@@ -55,13 +55,6 @@ class HeaderSession extends React.Component<Props, State> {
           },
           update: ApolloUtils.editSessionUpdate(props.sessionId, text)
         })
-        .then(() => {
-          AnalyticsUtils.trackEvent({
-            category: AnalyticsUtils.Categories.Test,
-            action: AnalyticsUtils.Actions.EditSessionTitle,
-            label: this.props.sessionId
-          });
-        })
         .catch(err => {
           console.error(err);
         });
@@ -109,6 +102,18 @@ class HeaderSession extends React.Component<Props, State> {
             onChange={this.handleOnChange}
             handleReturn={() => {
               return "handled";
+            }}
+            onBlur={() => {
+              const endingTitle = this.state.editorState
+                .getCurrentContent()
+                .getPlainText();
+              if (this.props.startingTitle !== endingTitle) {
+                AnalyticsUtils.trackEvent({
+                  category: AnalyticsUtils.Categories.Test,
+                  action: AnalyticsUtils.Actions.EditSessionTitle,
+                  label: this.props.sessionId
+                });
+              }
             }}
             placeholder={`Collection title`}
           />

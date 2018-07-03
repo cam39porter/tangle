@@ -26,7 +26,7 @@ import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 import windowSize from "react-window-size";
-import { ApolloUtils, AnalyticsUtils } from "../utils/index";
+import { ApolloUtils } from "../utils/index";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -97,14 +97,6 @@ class Session extends React.Component<Props, State> {
           sessionId: sessionCaptures.id
         },
         update: ApolloUtils.deleteSessionUpdate(sessionCaptures.id)
-      })
-      .then(() => {
-        AnalyticsUtils.trackEvent({
-          category: AnalyticsUtils.Categories.Test,
-          action: AnalyticsUtils.Actions.DeleteSession,
-          label: sessionCaptures.id,
-          nonInteraction: true
-        });
       })
       .catch(err => {
         console.error(err);

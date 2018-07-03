@@ -73,6 +73,11 @@ class CardCapture extends React.Component<Props, State> {
               }}
             >
               <InputCapture
+                sessionData={
+                  this.props.sessionId
+                    ? { sessionId: this.props.sessionId }
+                    : undefined
+                }
                 captureId={this.props.captureId}
                 startingHTML={this.props.startingText}
               />

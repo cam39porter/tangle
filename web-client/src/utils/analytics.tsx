@@ -12,8 +12,9 @@ enum Categories {
 }
 
 enum Actions {
-  CreateSession = "create-session",
+  ClickToCreateNewSession = "click_to_create-new_session",
   CreateCapture = "create-capture",
+  ClickToCreateNewCapture = "click_to_create-new_capture",
   CreateSessionCapture = "create-session_capture",
   DeleteCapture = "delete-capture",
   DeleteSession = "delete-session",
@@ -21,19 +22,20 @@ enum Actions {
   EditCapture = "edit-capture",
   EditSessionCapture = "edit-session_capture",
   EditSessionTitle = "edit-session_title",
-  NavigateToSession = "navigate_to-session",
-  NavigateFromSession = "navigate_from-session",
-  NavigateToCreateCapture = "navigate_to-create-capture",
-  NavigateToCreateSession = "navigate_to-create-session",
-  NavigateFromCreateCapture = "navigate_from-create-capture",
+  OpenSession = "open-session",
+  CloseSession = "close-session",
+  OpenQuickCreate = "open-quick_create",
+  CloseQuickCreate = "close-quick_create",
   NavigateToGraph = "navigate_to-graph",
   NavigateFromGraph = "navigate_from-graph",
-  NavigateToSearch = "navigate_from-search",
-  NavigateFromSearch = "navigate_from-search",
-  NavigateToTag = "navigate_to-tag",
-  NavigateToEntity = "navigate_to-entity",
-  NavigateToCapture = "navigate_to-capture",
-  SignOut = "sign_out"
+  EnterToExecuteSearch = "enter_to_execute-search",
+  ClickToExecuteSearch = "click_to_execute-search",
+  ClickToClearSearch = "click_to_clear-search",
+  EnterToClearSearch = "enter_to_clear-search",
+  FocusOnSession = "focus_on-session",
+  FocusOnEntity = "focus_on-entity",
+  FocusOnCapture = "focus_on-capture",
+  ClickToSignOut = "click_to-sign_out"
 }
 
 const gaOptions = {
@@ -67,7 +69,11 @@ const withTracker = <P extends object>(Component: React.ComponentType<P>) => {
   };
 
   const getPage = location => {
-    return location.pathname + location.search;
+    let splitPath: string[] = location.pathname.split("/");
+    let noIdsSplitPath = splitPath.map(part => {
+      return part.includes("urn") ? ":urn" : part;
+    });
+    return noIdsSplitPath.join("/");
   };
 
   interface WithTrackerProps extends RouteComponentProps<{}> {}

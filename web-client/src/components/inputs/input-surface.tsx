@@ -67,7 +67,7 @@ class InputSurface extends React.Component<Props, State> {
     });
   };
 
-  handleExit = url => {
+  handleExit = (url, query) => {
     if (this.props.match.params["id"]) {
       this.props.history.push(`${url}/related`);
     } else {
@@ -80,26 +80,20 @@ class InputSurface extends React.Component<Props, State> {
     this.setState({
       editorState: nextEditorState
     });
-
-    AnalyticsUtils.trackEvent({
-      category: AnalyticsUtils.Categories.Test,
-      action: AnalyticsUtils.Actions.NavigateFromSearch
-      // TODO: label: query
-    });
   };
 
   handleSearch = (query, url) => {
     if (!query) {
-      this.handleExit(url);
+      this.handleExit(url, query);
+      AnalyticsUtils.trackEvent({
+        category: AnalyticsUtils.Categories.Test,
+        action: AnalyticsUtils.Actions.EnterToClearSearch,
+        label: query
+      });
       return;
     }
 
     this.props.history.push(`${url}/search?query=${query}`);
-    AnalyticsUtils.trackEvent({
-      category: AnalyticsUtils.Categories.Test,
-      action: AnalyticsUtils.Actions.NavigateToSearch
-      // TODO: label: query
-    });
   };
 
   render() {
@@ -120,6 +114,11 @@ class InputSurface extends React.Component<Props, State> {
           className={`flex-column pa2 justify-around gray`}
           onClick={() => {
             this.handleSearch(query, url);
+            AnalyticsUtils.trackEvent({
+              category: AnalyticsUtils.Categories.Test,
+              action: AnalyticsUtils.Actions.ClickToExecuteSearch,
+              label: query
+            });
           }}
         >
           <ButtonSurface />
@@ -145,6 +144,11 @@ class InputSurface extends React.Component<Props, State> {
               placeholder={`Search your tangle...`}
               handleReturn={(_, editorState) => {
                 this.handleSearch(query, url);
+                AnalyticsUtils.trackEvent({
+                  category: AnalyticsUtils.Categories.Test,
+                  action: AnalyticsUtils.Actions.EnterToExecuteSearch,
+                  label: query
+                });
                 return "handled";
               }}
             />
@@ -155,7 +159,12 @@ class InputSurface extends React.Component<Props, State> {
             isSearching || query ? "gray" : "white"
           } pointer`}
           onClick={() => {
-            this.handleExit(url);
+            this.handleExit(url, query);
+            AnalyticsUtils.trackEvent({
+              category: AnalyticsUtils.Categories.Test,
+              action: AnalyticsUtils.Actions.ClickToClearSearch,
+              label: query
+            });
           }}
         >
           <div className={`ph2`}>Clear</div>

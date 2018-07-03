@@ -70,7 +70,7 @@ class CardSession extends React.Component<Props, State> {
             );
             AnalyticsUtils.trackEvent({
               category: AnalyticsUtils.Categories.Test,
-              action: AnalyticsUtils.Actions.NavigateToSession,
+              action: AnalyticsUtils.Actions.OpenSession,
               label: this.props.sessionId
             });
           }}

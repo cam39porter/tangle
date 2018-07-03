@@ -84,14 +84,15 @@ class GridCaptures extends React.Component<Props, State> {
                         this.props.history.push(
                           `/collection/${encodeURIComponent(
                             res.data.createSession.id
-                          )}/related`
+                          )}/format/list/related`
                         );
                         return id;
                       })
                       .then(id => {
                         AnalyticsUtils.trackEvent({
                           category: AnalyticsUtils.Categories.Test,
-                          action: AnalyticsUtils.Actions.CreateSession,
+                          action:
+                            AnalyticsUtils.Actions.ClickToCreateNewSession,
                           label: id
                         });
                       })
@@ -141,7 +142,7 @@ class GridCaptures extends React.Component<Props, State> {
                     );
                     AnalyticsUtils.trackEvent({
                       category: AnalyticsUtils.Categories.Test,
-                      action: AnalyticsUtils.Actions.NavigateToCreateCapture
+                      action: AnalyticsUtils.Actions.ClickToCreateNewCapture
                     });
                   }}
                 >

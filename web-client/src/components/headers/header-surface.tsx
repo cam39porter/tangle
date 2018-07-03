@@ -44,7 +44,7 @@ class HeaderSurface extends React.Component<Props, State> {
                       action: this.props.isGraphView
                         ? AnalyticsUtils.Actions.NavigateFromGraph
                         : AnalyticsUtils.Actions.NavigateToGraph
-                      // TODO: label: search=query related=id recent
+                      //  TODO: label: search=query pivot=id recent
                     });
                   }}
                 >

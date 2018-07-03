@@ -65,7 +65,7 @@ interface Props extends RouteProps {
   editCapture: MutationFunc<editCaptureResponse, editCaptureMutationVariables>;
   sessionData?: {
     sessionId: string;
-    previousId: string;
+    previousId?: string;
   };
   captureId?: string;
   startingHTML?: string;
@@ -101,15 +101,6 @@ class InputCapture extends React.Component<Props, State> {
                   id: this.props.captureId,
                   body: text
                 }
-              })
-              .then(() => {
-                AnalyticsUtils.trackEvent({
-                  category: AnalyticsUtils.Categories.Test,
-                  action: this.props.sessionData
-                    ? AnalyticsUtils.Actions.EditSessionCapture
-                    : AnalyticsUtils.Actions.EditCapture,
-                  label: this.props.captureId
-                });
               })
               .catch(err => {
                 console.error(err);
@@ -187,7 +178,10 @@ class InputCapture extends React.Component<Props, State> {
                   let content = editorState.getCurrentContent();
                   if (!this.props.captureId && content.getPlainText()) {
                     let body = convertToHTML(content);
-                    if (this.props.sessionData) {
+                    if (
+                      this.props.sessionData &&
+                      this.props.sessionData.previousId
+                    ) {
                       let refetchQueries;
                       const location = this.props.location.pathname.replace(
                         this.props.match.url,
@@ -357,6 +351,19 @@ class InputCapture extends React.Component<Props, State> {
               }}
               keyBindingFn={this.handleKeyBindings}
               placeholder={`Capture a thought...`}
+              onBlur={() => {
+                const content = this.state.editorState.getCurrentContent();
+                const endingHtml = convertToHTML(content);
+                if (this.props.startingHTML !== endingHtml) {
+                  AnalyticsUtils.trackEvent({
+                    category: AnalyticsUtils.Categories.Test,
+                    action: this.props.sessionData
+                      ? AnalyticsUtils.Actions.EditSessionCapture
+                      : AnalyticsUtils.Actions.EditCapture,
+                    label: this.props.captureId
+                  });
+                }
+              }}
               spellCheck={true}
             />
           </div>

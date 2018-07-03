@@ -49,7 +49,7 @@ class Navigation extends React.Component<Props, State> {
                 );
                 AnalyticsUtils.trackEvent({
                   category: AnalyticsUtils.Categories.Test,
-                  action: AnalyticsUtils.Actions.NavigateFromCreateCapture
+                  action: AnalyticsUtils.Actions.CloseQuickCreate
                 });
                 return;
               }
@@ -60,7 +60,7 @@ class Navigation extends React.Component<Props, State> {
               );
               AnalyticsUtils.trackEvent({
                 category: AnalyticsUtils.Categories.Test,
-                action: AnalyticsUtils.Actions.NavigateToCreateCapture
+                action: AnalyticsUtils.Actions.OpenQuickCreate
               });
             }}
           >
@@ -75,7 +75,7 @@ class Navigation extends React.Component<Props, State> {
 
             AnalyticsUtils.trackEvent({
               category: AnalyticsUtils.Categories.Test,
-              action: AnalyticsUtils.Actions.SignOut,
+              action: AnalyticsUtils.Actions.ClickToSignOut,
               label: user
             });
             localStorage.removeItem("idToken");

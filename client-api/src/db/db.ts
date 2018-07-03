@@ -1,10 +1,6 @@
 import { v1 as neo4j } from "neo4j-driver";
 import { StatementResult } from "neo4j-driver/types/v1";
 import { Logger } from "../util/logging/logger";
-import {
-  getRequestContext,
-  hasAuthenticatedUser
-} from "../filters/request-context";
 import { isLocal } from "../config";
 // import { getContext, hasAuthenticatedUser } from "../filters/request-context";
 // import { UserUrn } from "../urn/user-urn";
@@ -42,9 +38,8 @@ function executeQuery(
     })
     .catch(error => {
       session.close();
-      const context = hasAuthenticatedUser() ? getRequestContext() : null;
-      LOGGER.error(context, `Recieved error for query: ${cypherQuery}`);
-      LOGGER.error(context, `Error response: ${error}`);
+      LOGGER.error(`Recieved error for query: ${cypherQuery}`);
+      LOGGER.error(`Error response: ${error}`);
       throw error;
     });
 }

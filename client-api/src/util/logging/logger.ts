@@ -1,5 +1,8 @@
 import * as winston from "winston";
-import { RequestContext } from "../../filters/request-context";
+import {
+  hasAuthenticatedUser,
+  getRequestContext
+} from "../../filters/request-context";
 
 const winstonTransport = new winston.transports.Console({
   level: "info",
@@ -9,12 +12,12 @@ const winstonTransport = new winston.transports.Console({
 const winstonLogger = winston.createLogger({
   transports: [winstonTransport],
   format: winston.format.combine(
-    winston.format.timestamp({
-      format: "YYYY-MM-DD HH:mm:ss"
-    }),
-    winston.format.printf(
-      info => `${info.timestamp} ${info.level}: ${info.message}`
-    )
+    winston.format.timestamp(),
+    winston.format.printf(log => {
+      const req = hasAuthenticatedUser() ? getRequestContext() : null;
+      return `${log.level}: ${log.timestamp} ${(req && req.reqId) ||
+        "-"} ${(req && req.user.urn.toRaw()) || "-"} -- ${log.message}`;
+    })
   ),
   exitOnError: false
 });
@@ -22,15 +25,8 @@ const winstonLogger = winston.createLogger({
 /**
  * Exports a wrapper for all the loggers we use in this configuration
  */
-const formatStr = (
-  requestContext: RequestContext,
-  scope: string,
-  message: string
-): string => {
-  return `[${scope}] [${requestContext &&
-    requestContext.reqId}] [${requestContext &&
-    requestContext.user &&
-    requestContext.user.urn}] ${message}`;
+const formatStr = (scope: string, message: string): string => {
+  return `${scope} ${message}`;
 };
 
 const parse = (args: any[]) => (args.length > 0 ? args : "");
@@ -41,34 +37,13 @@ export class Logger {
     this.scope = scope;
   }
 
-  public info(
-    requestContext: RequestContext,
-    message: string,
-    ...args: any[]
-  ): void {
-    winstonLogger.info(
-      formatStr(requestContext, this.scope, message),
-      parse(args)
-    );
+  public info(message: string, ...args: any[]): void {
+    winstonLogger.info(formatStr(this.scope, message), parse(args));
   }
-  public warn(
-    requestContext: RequestContext,
-    message: string,
-    ...args: any[]
-  ): void {
-    winstonLogger.warn(
-      formatStr(requestContext, this.scope, message),
-      parse(args)
-    );
+  public warn(message: string, ...args: any[]): void {
+    winstonLogger.warn(formatStr(this.scope, message), parse(args));
   }
-  public error(
-    requestContext: RequestContext,
-    message: string,
-    ...args: any[]
-  ): void {
-    winstonLogger.error(
-      formatStr(requestContext, this.scope, message),
-      parse(args)
-    );
+  public error(message: string, ...args: any[]): void {
+    winstonLogger.error(formatStr(this.scope, message), parse(args));
   }
 }

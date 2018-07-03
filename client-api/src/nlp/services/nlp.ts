@@ -1,7 +1,6 @@
 import language from "@google-cloud/language";
 import { NLPEntity, NLPEntityResponse } from "../models/nlp";
 import { Logger } from "../../util/logging/logger";
-import { getRequestContext } from "../../filters/request-context";
 
 const LOGGER = new Logger("src/nlp/services/nlp.ts");
 
@@ -27,11 +26,7 @@ function getNLPResponse(body: string): Promise<NLPEntityResponse> {
       return resp;
     })
     .catch(err => {
-      LOGGER.error(
-        getRequestContext(),
-        "Failed to get NLP response, error: ",
-        err
-      );
+      LOGGER.error("Failed to get NLP response, error: ", err);
     });
 }
 

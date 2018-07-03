@@ -16,8 +16,6 @@ import * as path from "path";
 import captureResolvers from "./capture/resolver";
 import { authFilter, initAuth } from "./filters/auth";
 import surfaceResolvers from "./surface/resolver";
-// import { importEvernoteNoteUpload } from "./upload/services/evernote-import";
-// import { ConflictError } from "./util/exceptions/confict-error";
 import { Logger } from "./util/logging/logger";
 import { getRequestContext, RequestContext } from "./filters/request-context";
 import * as contextService from "request-context";
@@ -47,19 +45,28 @@ const executableSchema: GraphQLSchema = makeExecutableSchema({
 
 initAuth();
 
+const baseMorganFormat =
+  `:date[iso] :reqId :userId :remote-addr :remote-user :referrer :user-agent ` +
+  `:method :url HTTP/:http-version ` +
+  `:status :res[content-length] :response-time`;
+
+const reqMorganFormat = `req:  ${baseMorganFormat}`;
+const respMorganFormat = `resp: ${baseMorganFormat}`;
+
 morgan.token("reqId", req => {
-  const requestContext = req["requestContext"] as RequestContext;
-  return requestContext.reqId;
+  const requestContext = (req["requestContext"] as RequestContext) || null;
+  return requestContext ? requestContext.reqId : "-";
 });
 morgan.token("userId", req => {
-  const requestContext = req["requestContext"] as RequestContext;
-  return requestContext.user.urn.toRaw();
+  const requestContext = (req["requestContext"] as RequestContext) || null;
+  return requestContext ? requestContext.user.urn.toRaw() : "-";
 });
 
 const HTTPS_PORT = 8443;
 const HTTP_PORT = 8080;
 const app = express();
 
+app.use(morgan(reqMorganFormat, { immediate: true }));
 app.use(helmet());
 app.get("/", (_, res) => {
   res.send("running");
@@ -80,10 +87,7 @@ app.use(bodyParser.json());
 
 // const logDirectory = path.join(__dirname, "../log");
 
-// const morganFormat =
-//   "[:date[iso]] [:reqId] [:userId] :remote-addr :remote-user :method :url HTTP/:http-version " +
-//   ":status :res[content-length] :response-time ms";
-// // ensure log directory exists
+// ensure log directory exists
 // function useMorgan(): void {
 //   if (
 //     process.env.NODE_ENV === "production" ||
@@ -100,14 +104,12 @@ app.use(bodyParser.json());
 //     // setup the logger
 //     app.use(morgan(morganFormat, { stream: accessLogStream }));
 //   } else {
-//     app.use(morgan(morganFormat));
-//   }
+app.use(morgan(respMorganFormat));
+// }
 // }
 app.use(contextService.middleware("request"));
 app.use(authFilter);
-// app.use(setRequestContext);
-// app.use(useMorgan);
-// bodyParser is needed just for POST.
+app.use(setRequestContext);
 
 app.use(
   "/graphql",
@@ -115,28 +117,11 @@ app.use(
 );
 
 app.use(formidable());
-// app.post("/uploadHtml", (req, res) => {
-//   if (req["files"].file.type !== "text/html") {
-//     res.status(400).send("Unsupported content type");
-//   }
-//   importEvernoteNoteUpload(req["files"].file)
-//     .then(() => {
-//       res.sendStatus(200);
-//     })
-//     .catch(error => {
-//       if (error instanceof ConflictError) {
-//         res.status(409).end("Object already exists, please delete it first");
-//       } else {
-//         LOGGER.error(getRequestContext(), error);
-//         res.sendStatus(500);
-//       }
-//     });
-// });
 
 // For local allow insecure connection
 if (isLocal()) {
   http.createServer(app).listen(HTTP_PORT, () => {
-    LOGGER.info(null, "Api HTTP listening on port " + HTTP_PORT);
+    LOGGER.info("Api HTTP listening on port " + HTTP_PORT);
   });
 } else {
   const httpsOptions = {
@@ -144,17 +129,17 @@ if (isLocal()) {
     cert: fs.readFileSync(process.env.TLS_CERT)
   };
   https.createServer(httpsOptions, app).listen(HTTPS_PORT, () => {
-    LOGGER.info(null, "Api HTTPS server listening on port " + HTTPS_PORT);
+    LOGGER.info("Api HTTPS server listening on port " + HTTPS_PORT);
   });
 }
 
-// function setRequestContext(req, _, next): void {
-//   req.requestContext = getRequestContext();
-//   next();
-// }
+function setRequestContext(req, _, next): void {
+  req.requestContext = getRequestContext();
+  next();
+}
 
 function maskError(error: GraphQLError): GraphQLError {
-  LOGGER.error(getRequestContext(), error.message, error.stack);
+  LOGGER.error(error.message, error.stack);
   if (process.env.NODE_ENV === "production") {
     return new GraphQLError("Error");
   } else {

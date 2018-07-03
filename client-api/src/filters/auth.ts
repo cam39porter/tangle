@@ -16,7 +16,6 @@ function initAuth(): void {
 }
 
 function authFilter(req, res, next): void {
-  LOGGER.info(null, req.originalUrl);
   if (process.env.NODE_ENV !== "production" && req.get("dev-override-id")) {
     setDevOverride(UserUrn.fromRaw(req.get("dev-override-id"))).then(() =>
       next()
@@ -32,7 +31,7 @@ function authFilter(req, res, next): void {
             next();
           })
           .catch(error => {
-            LOGGER.error(null, error);
+            LOGGER.error(error);
             if (error instanceof NotWhitelistedError) {
               res.status(400).send(error);
             } else {
@@ -41,11 +40,11 @@ function authFilter(req, res, next): void {
           });
       })
       .catch(error => {
-        LOGGER.error(null, error);
+        LOGGER.error(error);
         res.send(401, error);
       });
   } else {
-    LOGGER.error(null, "Authorization header not provided");
+    LOGGER.error("Authorization header not provided");
     res.send(400, "Authorization header not provided");
   }
 }

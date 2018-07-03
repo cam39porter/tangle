@@ -1,7 +1,4 @@
-import {
-  getAuthenticatedUser,
-  getRequestContext
-} from "../../filters/request-context";
+import { getAuthenticatedUser } from "../../filters/request-context";
 import * as elasticsearch from "elasticsearch";
 import { SearchResponse as ESResponse } from "elasticsearch";
 import { Capture } from "../../db/models/capture";
@@ -110,7 +107,7 @@ function searchCaptures(
       );
     })
     .catch(err => {
-      LOGGER.error(getRequestContext(), err);
+      LOGGER.error(err);
       throw err;
     });
 }

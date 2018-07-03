@@ -63,7 +63,7 @@ class RelatedGraph extends React.Component<Props, State> {
     AnalyticsUtils.trackEvent({
       category: AnalyticsUtils.Categories.Session,
       action: AnalyticsUtils.Actions.ViewedRelatedGraph,
-      label: this.props.match.params["id"],
+      label: decodeURIComponent(this.props.match.params["id"]),
       value: nodes.filter(
         node => node.type === NodeType.Session || node.type === NodeType.Capture
       ).length

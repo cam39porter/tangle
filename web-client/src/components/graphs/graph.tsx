@@ -5,7 +5,11 @@ import * as React from "react";
 import { withRouter, RouteComponentProps } from "react-router";
 
 // Components
-import ReactECharts from "echarts-for-react";
+import ReactEchartsCore from "echarts-for-react/lib/core";
+import * as echarts from "echarts/lib/echarts";
+import "echarts/lib/component/tooltip";
+import "echarts/lib/chart/graph";
+
 import CardCapture from "../cards/card-capture";
 
 // Config / Utils
@@ -35,7 +39,7 @@ const NOT_FOCUS_TYPE = "not_focus";
 const WIDTH = "30em";
 
 interface Props extends RouteComponentProps<{}> {
-  refEChart?: (eChart: ReactECharts) => void;
+  refEChart?: (eChart: ReactEchartsCore) => void;
   nodes: Array<NodeFieldsFragment>;
   edges: Array<EdgeFieldsFragment>;
   headerHeight: number;
@@ -49,10 +53,12 @@ interface State {
 }
 
 class GraphVisualization extends React.Component<Props, State> {
-  eChart: ReactECharts | null = null;
+  eChart: ReactEchartsCore | null = null;
 
   constructor(props: Props) {
     super(props);
+
+    console.log(props.nodes);
 
     this.state = {
       graphFocus: null
@@ -394,7 +400,8 @@ class GraphVisualization extends React.Component<Props, State> {
           }
         }
       >
-        <ReactECharts
+        <ReactEchartsCore
+          echarts={echarts}
           ref={this.props.refEChart}
           style={{ height: "100%", width: "100%" }}
           option={this.getOption()}

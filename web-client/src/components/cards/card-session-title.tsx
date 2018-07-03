@@ -109,7 +109,7 @@ class HeaderSession extends React.Component<Props, State> {
                 .getPlainText();
               if (this.props.startingTitle !== endingTitle) {
                 AnalyticsUtils.trackEvent({
-                  category: AnalyticsUtils.Categories.Test,
+                  category: AnalyticsUtils.Categories.Session,
                   action: AnalyticsUtils.Actions.EditSessionTitle,
                   label: this.props.sessionId
                 });

@@ -8,7 +8,8 @@ import * as GoogleAnalytics from "react-ga";
 import { RouteComponentProps } from "react-router";
 
 enum Categories {
-  Test = "test"
+  Session = "session",
+  Home = "home"
 }
 
 enum Actions {

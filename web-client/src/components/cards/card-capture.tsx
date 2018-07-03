@@ -110,7 +110,9 @@ class CardCapture extends React.Component<Props, State> {
                     })
                     .then(() => {
                       AnalyticsUtils.trackEvent({
-                        category: AnalyticsUtils.Categories.Test,
+                        category: this.props.sessionId
+                          ? AnalyticsUtils.Categories.Session
+                          : AnalyticsUtils.Categories.Home,
                         action: this.props.sessionId
                           ? AnalyticsUtils.Actions.DeleteSessionCapture
                           : AnalyticsUtils.Actions.DeleteCapture,

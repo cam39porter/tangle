@@ -40,7 +40,9 @@ class HeaderSurface extends React.Component<Props, State> {
                   onClick={() => {
                     this.props.handleIsGraphView();
                     AnalyticsUtils.trackEvent({
-                      category: AnalyticsUtils.Categories.Test,
+                      category: this.props.match.params["id"]
+                        ? AnalyticsUtils.Categories.Session
+                        : AnalyticsUtils.Categories.Home,
                       action: this.props.isGraphView
                         ? AnalyticsUtils.Actions.NavigateFromGraph
                         : AnalyticsUtils.Actions.NavigateToGraph

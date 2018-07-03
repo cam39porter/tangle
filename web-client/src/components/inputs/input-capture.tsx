@@ -298,7 +298,7 @@ class InputCapture extends React.Component<Props, State> {
                         .then(res => {
                           const id = res.data.createCapture.id;
                           AnalyticsUtils.trackEvent({
-                            category: AnalyticsUtils.Categories.Test,
+                            category: AnalyticsUtils.Categories.Session,
                             action: AnalyticsUtils.Actions.CreateSessionCapture,
                             label: id
                           });
@@ -316,7 +316,9 @@ class InputCapture extends React.Component<Props, State> {
                         .then(res => {
                           const id = res.data.createCapture.id;
                           AnalyticsUtils.trackEvent({
-                            category: AnalyticsUtils.Categories.Test,
+                            category: this.props.match.params["id"]
+                              ? AnalyticsUtils.Categories.Session
+                              : AnalyticsUtils.Categories.Home,
                             action: AnalyticsUtils.Actions.CreateCapture,
                             label: id
                           });
@@ -356,7 +358,9 @@ class InputCapture extends React.Component<Props, State> {
                 const endingHtml = convertToHTML(content);
                 if (this.props.startingHTML !== endingHtml) {
                   AnalyticsUtils.trackEvent({
-                    category: AnalyticsUtils.Categories.Test,
+                    category: this.props.match.params["id"]
+                      ? AnalyticsUtils.Categories.Session
+                      : AnalyticsUtils.Categories.Home,
                     action: this.props.sessionData
                       ? AnalyticsUtils.Actions.EditSessionCapture
                       : AnalyticsUtils.Actions.EditCapture,

@@ -69,7 +69,9 @@ class CardSession extends React.Component<Props, State> {
               )}/format/list/related/`
             );
             AnalyticsUtils.trackEvent({
-              category: AnalyticsUtils.Categories.Test,
+              category: this.props.match.params["id"]
+                ? AnalyticsUtils.Categories.Session
+                : AnalyticsUtils.Categories.Home,
               action: AnalyticsUtils.Actions.OpenSession,
               label: this.props.sessionId
             });
@@ -101,7 +103,9 @@ class CardSession extends React.Component<Props, State> {
                     })
                     .then(() => {
                       AnalyticsUtils.trackEvent({
-                        category: AnalyticsUtils.Categories.Test,
+                        category: this.props.match.params["id"]
+                          ? AnalyticsUtils.Categories.Session
+                          : AnalyticsUtils.Categories.Home,
                         action: AnalyticsUtils.Actions.DeleteSession,
                         label: this.props.sessionId
                       });

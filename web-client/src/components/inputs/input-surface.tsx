@@ -86,7 +86,9 @@ class InputSurface extends React.Component<Props, State> {
     if (!query) {
       this.handleExit(url, query);
       AnalyticsUtils.trackEvent({
-        category: AnalyticsUtils.Categories.Test,
+        category: this.props.match.params["id"]
+          ? AnalyticsUtils.Categories.Session
+          : AnalyticsUtils.Categories.Home,
         action: AnalyticsUtils.Actions.EnterToClearSearch,
         label: query
       });
@@ -115,7 +117,9 @@ class InputSurface extends React.Component<Props, State> {
           onClick={() => {
             this.handleSearch(query, url);
             AnalyticsUtils.trackEvent({
-              category: AnalyticsUtils.Categories.Test,
+              category: this.props.match.params["id"]
+                ? AnalyticsUtils.Categories.Session
+                : AnalyticsUtils.Categories.Home,
               action: AnalyticsUtils.Actions.ClickToExecuteSearch,
               label: query
             });
@@ -145,7 +149,9 @@ class InputSurface extends React.Component<Props, State> {
               handleReturn={(_, editorState) => {
                 this.handleSearch(query, url);
                 AnalyticsUtils.trackEvent({
-                  category: AnalyticsUtils.Categories.Test,
+                  category: this.props.match.params["id"]
+                    ? AnalyticsUtils.Categories.Session
+                    : AnalyticsUtils.Categories.Home,
                   action: AnalyticsUtils.Actions.EnterToExecuteSearch,
                   label: query
                 });
@@ -161,7 +167,9 @@ class InputSurface extends React.Component<Props, State> {
           onClick={() => {
             this.handleExit(url, query);
             AnalyticsUtils.trackEvent({
-              category: AnalyticsUtils.Categories.Test,
+              category: this.props.match.params["id"]
+                ? AnalyticsUtils.Categories.Session
+                : AnalyticsUtils.Categories.Home,
               action: AnalyticsUtils.Actions.ClickToClearSearch,
               label: query
             });

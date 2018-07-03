@@ -279,7 +279,9 @@ class GraphVisualization extends React.Component<Props, State> {
           case NodeType.Tag:
             this.search(e);
             AnalyticsUtils.trackEvent({
-              category: AnalyticsUtils.Categories.Test,
+              category: this.props.match.params["id"]
+                ? AnalyticsUtils.Categories.Session
+                : AnalyticsUtils.Categories.Home,
               action: AnalyticsUtils.Actions.FocusOnCapture,
               label: e.data.id
             });
@@ -287,7 +289,9 @@ class GraphVisualization extends React.Component<Props, State> {
           case NodeType.Entity:
             this.search(e);
             AnalyticsUtils.trackEvent({
-              category: AnalyticsUtils.Categories.Test,
+              category: this.props.match.params["id"]
+                ? AnalyticsUtils.Categories.Session
+                : AnalyticsUtils.Categories.Home,
               action: AnalyticsUtils.Actions.FocusOnEntity,
               label: e.data.id
             });
@@ -296,7 +300,9 @@ class GraphVisualization extends React.Component<Props, State> {
             // TODO: get sessions this is a part of and if it is a part of the current session notify the user
             this.setState({ graphFocus: e }, () => {
               AnalyticsUtils.trackEvent({
-                category: AnalyticsUtils.Categories.Test,
+                category: this.props.match.params["id"]
+                  ? AnalyticsUtils.Categories.Session
+                  : AnalyticsUtils.Categories.Home,
                 action: AnalyticsUtils.Actions.FocusOnCapture,
                 label: e.data.id
               });
@@ -307,7 +313,9 @@ class GraphVisualization extends React.Component<Props, State> {
               `/collection/${e.data.id}/format/graph/related`
             );
             AnalyticsUtils.trackEvent({
-              category: AnalyticsUtils.Categories.Test,
+              category: this.props.match.params["id"]
+                ? AnalyticsUtils.Categories.Session
+                : AnalyticsUtils.Categories.Home,
               action: AnalyticsUtils.Actions.FocusOnSession,
               label: e.data.id
             });

@@ -44,7 +44,7 @@ class HeaderSurface extends React.Component<Props, State> {
                 this.props.history.push(url);
               }
               AnalyticsUtils.trackEvent({
-                category: AnalyticsUtils.Categories.Test,
+                category: AnalyticsUtils.Categories.Session,
                 action: AnalyticsUtils.Actions.CloseSession,
                 label: this.props.match.params["id"]
               });

@@ -90,7 +90,9 @@ class GridCaptures extends React.Component<Props, State> {
                       })
                       .then(id => {
                         AnalyticsUtils.trackEvent({
-                          category: AnalyticsUtils.Categories.Test,
+                          category: this.props.match.params["id"]
+                            ? AnalyticsUtils.Categories.Session
+                            : AnalyticsUtils.Categories.Home,
                           action:
                             AnalyticsUtils.Actions.ClickToCreateNewSession,
                           label: id
@@ -141,7 +143,9 @@ class GridCaptures extends React.Component<Props, State> {
                       }capture=true`
                     );
                     AnalyticsUtils.trackEvent({
-                      category: AnalyticsUtils.Categories.Test,
+                      category: this.props.match.params["id"]
+                        ? AnalyticsUtils.Categories.Session
+                        : AnalyticsUtils.Categories.Home,
                       action: AnalyticsUtils.Actions.ClickToCreateNewCapture
                     });
                   }}

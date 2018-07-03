@@ -48,7 +48,9 @@ class Navigation extends React.Component<Props, State> {
                   }`
                 );
                 AnalyticsUtils.trackEvent({
-                  category: AnalyticsUtils.Categories.Test,
+                  category: this.props.location.pathname.includes("collection")
+                    ? AnalyticsUtils.Categories.Session
+                    : AnalyticsUtils.Categories.Home,
                   action: AnalyticsUtils.Actions.CloseQuickCreate
                 });
                 return;
@@ -59,7 +61,9 @@ class Navigation extends React.Component<Props, State> {
                 }capture=true`
               );
               AnalyticsUtils.trackEvent({
-                category: AnalyticsUtils.Categories.Test,
+                category: this.props.location.pathname.includes("collection")
+                  ? AnalyticsUtils.Categories.Session
+                  : AnalyticsUtils.Categories.Home,
                 action: AnalyticsUtils.Actions.OpenQuickCreate
               });
             }}
@@ -74,7 +78,9 @@ class Navigation extends React.Component<Props, State> {
             const user = auth.currentUser ? auth.currentUser.uid : "";
 
             AnalyticsUtils.trackEvent({
-              category: AnalyticsUtils.Categories.Test,
+              category: this.props.location.pathname.includes("collection")
+                ? AnalyticsUtils.Categories.Session
+                : AnalyticsUtils.Categories.Home,
               action: AnalyticsUtils.Actions.ClickToSignOut,
               label: user
             });

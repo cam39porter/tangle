@@ -46,7 +46,7 @@ class HeaderSurface extends React.Component<Props, State> {
               AnalyticsUtils.trackEvent({
                 category: AnalyticsUtils.Categories.Session,
                 action: AnalyticsUtils.Actions.CloseSession,
-                label: this.props.match.params["id"]
+                label: decodeURIComponent(this.props.match.params["id"])
               });
             }}
           >

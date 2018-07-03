@@ -66,11 +66,12 @@ const HTTPS_PORT = 8443;
 const HTTP_PORT = 8080;
 const app = express();
 
-app.use(morgan(reqMorganFormat, { immediate: true }));
-app.use(helmet());
 app.get("/", (_, res) => {
   res.send("running");
 });
+
+app.use(morgan(reqMorganFormat, { immediate: true }));
+app.use(helmet());
 
 if (isProd()) {
   app.use(

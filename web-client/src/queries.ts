@@ -263,13 +263,10 @@ export const editCapture = gql`
   ${nodeFragment}
 `;
 
-export const archiveCapture = gql`
-  mutation archiveCapture($id: String!) {
-    archiveCapture(id: $id) {
-      ...NodeFields
-    }
+export const deleteCapture = gql`
+  mutation deleteCapture($id: String!) {
+    deleteCapture(id: $id)
   }
-  ${nodeFragment}
 `;
 
 export const createSession = gql`

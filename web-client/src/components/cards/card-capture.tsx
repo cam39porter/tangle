@@ -4,15 +4,15 @@ import * as React from "react";
 // GraphQL
 import {
   // Archive Capture
-  archiveCaptureMutation as archiveCaptureResponse,
-  archiveCaptureMutationVariables,
+  deleteCaptureMutation as deleteCaptureResponse,
+  deleteCaptureMutationVariables,
   // Types
   NodeType
 } from "../../__generated__/types";
 
 import { graphql, compose, MutationFunc } from "react-apollo";
 
-import { archiveCapture } from "../../queries";
+import { deleteCapture } from "../../queries";
 
 // Components
 import ButtonArchive from "./../buttons/button-archive";
@@ -23,9 +23,9 @@ import { ApolloUtils, AnalyticsUtils } from "../../utils/index";
 
 // Types
 interface Props {
-  archiveCapture: MutationFunc<
-    archiveCaptureResponse,
-    archiveCaptureMutationVariables
+  deleteCapture: MutationFunc<
+    deleteCaptureResponse,
+    deleteCaptureMutationVariables
   >;
   sessionId?: string;
   captureId: string;
@@ -93,10 +93,10 @@ class CardCapture extends React.Component<Props, State> {
                   e.stopPropagation();
 
                   this.props
-                    .archiveCapture({
+                    .deleteCapture({
                       variables: { id: this.props.captureId },
                       optimisticResponse: {
-                        archiveCapture: {
+                        deleteCapture: {
                           __typename: "Node",
                           id: this.props.captureId,
                           type: NodeType.Capture,
@@ -134,10 +134,10 @@ class CardCapture extends React.Component<Props, State> {
   }
 }
 
-const withArchiveCapture = graphql<archiveCaptureResponse, Props>(
-  archiveCapture,
+const withArchiveCapture = graphql<deleteCaptureResponse, Props>(
+  deleteCapture,
   {
-    name: "archiveCapture",
+    name: "deleteCapture",
     alias: "withArchiveCapture"
   }
 );

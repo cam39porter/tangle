@@ -53,12 +53,6 @@ class GridCaptures extends React.Component<Props, State> {
   }
 
   render() {
-    // Do not render the current session in the list
-    const sessionId = decodeURIComponent(this.props.match.params["id"]);
-    const sessions = this.props.sessions.filter(
-      session => session.id !== sessionId
-    );
-
     const captures = this.props.captures;
 
     return (
@@ -70,7 +64,8 @@ class GridCaptures extends React.Component<Props, State> {
           }}
         >
           {/* Sessions */}
-          {(sessions.length !== 0 || this.props.emptySessionsMessage) && (
+          {(this.props.sessions.length !== 0 ||
+            this.props.emptySessionsMessage) && (
             <div className={`pv4`}>
               <div className={`flex justify-between pb4 w-100 gray`}>
                 <div className={`flex-column justify-around`}>Collections</div>
@@ -106,7 +101,7 @@ class GridCaptures extends React.Component<Props, State> {
                   Create a new collection
                 </div>
               </div>
-              {sessions.length === 0 ? (
+              {this.props.sessions.length === 0 ? (
                 <div className={`pv4 measure lh-copy gray tc center`}>
                   {this.props.emptySessionsMessage}
                 </div>

@@ -66,7 +66,6 @@ class RecentGrid extends React.Component<Props, State> {
 
     return (
       <Grid
-        key={`recent-grid`}
         sessions={sessions}
         emptySessionsMessage={`Try collecting your thoughts by creating your first collection`}
         captures={captures}

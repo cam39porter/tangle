@@ -21,6 +21,7 @@ import Help from "../help/help";
 
 // Utils
 import config from "../../cfg";
+import { AnalyticsUtils } from "../../utils/index";
 
 // Types
 
@@ -63,9 +64,17 @@ class SearchGrid extends React.Component<Props, State> {
       );
     }
 
+    AnalyticsUtils.trackEvent({
+      category: this.props.match.params["id"]
+        ? AnalyticsUtils.Categories.Session
+        : AnalyticsUtils.Categories.Home,
+      action: AnalyticsUtils.Actions.ViewedSearchGrid,
+      label: this.props.query,
+      value: sessions.length + captures.length
+    });
+
     return (
       <Grid
-        key={`search-grid`}
         sessions={sessions}
         emptySessionsMessage={`No collections matched your search`}
         captures={captures}

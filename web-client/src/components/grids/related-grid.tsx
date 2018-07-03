@@ -20,6 +20,7 @@ import Help from "../help/help";
 
 // Utils
 import config from "../../cfg";
+import { AnalyticsUtils } from "../../utils/index";
 
 // Types
 
@@ -35,8 +36,8 @@ interface State {}
 
 // Class
 class RelatedGrid extends React.Component<Props, State> {
-  constructor(nextProps: Props) {
-    super(nextProps);
+  constructor(props: Props) {
+    super(props);
   }
 
   render() {
@@ -55,9 +56,15 @@ class RelatedGrid extends React.Component<Props, State> {
       );
     }
 
+    AnalyticsUtils.trackEvent({
+      category: AnalyticsUtils.Categories.Session,
+      action: AnalyticsUtils.Actions.ViewedRelatedGrid,
+      label: this.props.match.params["id"],
+      value: captures.length
+    });
+
     return (
       <Grid
-        key={`related-grid`}
         sessions={[]}
         captures={captures}
         emptyCapturesMessage={`We could not find any captures related to your collection. Try hitting the visualize button to watch your tangle grow.`}

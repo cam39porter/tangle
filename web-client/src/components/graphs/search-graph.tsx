@@ -9,7 +9,8 @@ import {
   searchQuery as searchQueryResponse,
   searchQueryVariables,
   NodeFieldsFragment,
-  EdgeFieldsFragment
+  EdgeFieldsFragment,
+  NodeType
 } from "../../__generated__/types";
 
 import { graphSearch } from "../../queries";
@@ -21,6 +22,7 @@ import Help from "../help/help";
 
 // Utils
 import config from "../../cfg";
+import { AnalyticsUtils } from "../../utils/index";
 
 // Types
 
@@ -57,6 +59,17 @@ class SearchGraph extends React.Component<Props, State> {
         </Help>
       );
     }
+
+    AnalyticsUtils.trackEvent({
+      category: this.props.match.params["id"]
+        ? AnalyticsUtils.Categories.Session
+        : AnalyticsUtils.Categories.Home,
+      action: AnalyticsUtils.Actions.ViewedSearchGraph,
+      label: this.props.query,
+      value: nodes.filter(
+        node => node.type === NodeType.Session || node.type === NodeType.Capture
+      ).length
+    });
 
     if (nodes.length === 0) {
       return (

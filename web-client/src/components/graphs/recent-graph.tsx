@@ -71,7 +71,7 @@ class RecentGraph extends React.Component<Props, State> {
       );
     }
 
-    return <Graph key={`recent-graph`} nodes={nodes} edges={edges} />;
+    return <Graph nodes={nodes} edges={edges} />;
   }
 }
 

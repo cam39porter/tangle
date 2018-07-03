@@ -9,7 +9,8 @@ import {
   getDetailedQuery as getDetailedQueryResponse,
   getDetailedQueryVariables,
   NodeFieldsFragment,
-  EdgeFieldsFragment
+  EdgeFieldsFragment,
+  NodeType
 } from "../../__generated__/types";
 
 import { graphGetDetailed } from "../../queries";
@@ -18,6 +19,7 @@ import { graphql, compose, QueryProps } from "react-apollo";
 // Components
 import Graph from "../../components/graphs/graph";
 import Help from "../help/help";
+import { AnalyticsUtils } from "../../utils/index";
 
 // Utils
 
@@ -58,6 +60,15 @@ class RelatedGraph extends React.Component<Props, State> {
       );
     }
 
+    AnalyticsUtils.trackEvent({
+      category: AnalyticsUtils.Categories.Session,
+      action: AnalyticsUtils.Actions.ViewedRelatedGraph,
+      label: this.props.match.params["id"],
+      value: nodes.filter(
+        node => node.type === NodeType.Session || node.type === NodeType.Capture
+      ).length
+    });
+
     if (nodes.length === 0) {
       return (
         <Help>
@@ -68,7 +79,7 @@ class RelatedGraph extends React.Component<Props, State> {
       );
     }
 
-    return <Graph key={`related-graph`} nodes={nodes} edges={edges} />;
+    return <Graph nodes={nodes} edges={edges} />;
   }
 }
 

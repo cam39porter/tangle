@@ -13,6 +13,7 @@ enum Categories {
 }
 
 enum Actions {
+  // Interaction
   ClickToCreateNewSession = "click_to_create-new_session",
   CreateCapture = "create-capture",
   ClickToCreateNewCapture = "click_to_create-new_capture",
@@ -36,7 +37,12 @@ enum Actions {
   FocusOnSession = "focus_on-session",
   FocusOnEntity = "focus_on-entity",
   FocusOnCapture = "focus_on-capture",
-  ClickToSignOut = "click_to-sign_out"
+  ClickToSignOut = "click_to-sign_out",
+  // Non Interaction
+  ViewedRelatedGrid = "viewed-related_grid",
+  ViewedSearchGrid = "viewed-search_grid",
+  ViewedRelatedGraph = "viewed-related_graph",
+  ViewedSearchGraph = "viewed-search_graph"
 }
 
 const gaOptions = {

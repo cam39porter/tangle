@@ -95,7 +95,7 @@ class InputSurface extends React.Component<Props, State> {
       return;
     }
 
-    this.props.history.push(`${url}/search?query=${query}`);
+    this.props.history.push(`${url}/search?query=${encodeURIComponent(query)}`);
   };
 
   render() {

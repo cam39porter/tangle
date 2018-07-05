@@ -64,7 +64,6 @@ export function get(
   MATCH (session:Session {id:{sessionId}, owner:{userId}})
   WITH session
   OPTIONAL MATCH (session)-[:INCLUDES]->(capture:Capture {owner:{userId}})
-  WHERE (NOT EXISTS(capture.archived) or capture.archived = false)
   WITH session, capture ORDER BY capture.created
   RETURN session, collect(capture)[{start}..{start}+{count}] as captures, COUNT(capture) AS totalCaptures
   `;

@@ -85,8 +85,7 @@ function searchCaptures(
       query: {
         bool: {
           must: { match: { plainText: rawQuery } },
-          filter: { match: { owner: userId.toRaw() } },
-          must_not: { match: { archived: "true" } }
+          filter: { match: { owner: userId.toRaw() } }
         }
       }
     }

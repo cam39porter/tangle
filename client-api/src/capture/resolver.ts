@@ -21,10 +21,6 @@ const captureXSS = new xss.FilterXSS(xssOptions);
 export default {
   Mutation: {
     // @ts-ignore
-    archiveCapture(parent, { id }, context, info): Promise<GraphNode> {
-      return deleteCapture(CaptureUrn.fromRaw(id)).then(() => null);
-    },
-    // @ts-ignore
     deleteCapture(parent, { id }, context, info): Promise<boolean> {
       return deleteCapture(CaptureUrn.fromRaw(id));
     },

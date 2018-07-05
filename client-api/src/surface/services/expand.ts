@@ -66,7 +66,6 @@ export function getRelatedCapturesBySession(
   (firstDegree)<-[r2:TAGGED_WITH|REFERENCES]-
   (secondDegree:Capture {owner:{userUrn}})
   WHERE (firstDegree:Tag OR firstDegree:Entity)
-  AND (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)
   WITH r1, r2, secondDegree as capture
   OPTIONAL MATCH (capture)<-[:INCLUDES]-(session:Session {owner:{userUrn}})
   WITH r1, r2, capture, collect(session) as sessions
@@ -148,7 +147,6 @@ function getExpansionQuery(startUrn: string, listMode: boolean): string {
   WHERE (firstDegree:Tag
     OR firstDegree:Entity
     OR firstDegree:Session OR firstDegree:Link OR firstDegree:Capture)
-  AND (NOT EXISTS(firstDegree.archived) or firstDegree.archived = false)
   ${startUrn ? "AND (firstDegree.id <> startUrn)" : ""}
   RETURN r1, firstDegree
   ORDER BY r1.salience DESC LIMIT 5',
@@ -158,7 +156,6 @@ function getExpansionQuery(startUrn: string, listMode: boolean): string {
   CALL apoc.cypher.run('
   OPTIONAL MATCH (firstDegree)-[r2:TAGGED_WITH|REFERENCES|LINKS_TO]-
   (secondDegree:Capture)<-[:CREATED]-(u:User {id:{userUrn}})
-  WHERE (NOT EXISTS(secondDegree.archived) or secondDegree.archived = false)
   RETURN firstDegree, r2, secondDegree
   ORDER BY r2.salience DESC LIMIT 5',
   {firstDegree:firstDegree, userUrn:{userUrn}}) YIELD value

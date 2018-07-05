@@ -27,7 +27,6 @@ export function getMostRecent(
     new Param("count", count)
   ];
   const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
-  WHERE NOT EXISTS (capture.archived)
   OPTIONAL MATCH (capture)<-[:INCLUDES]-(session:Session {owner:{userId}})
   RETURN capture, collect(session) as sessions
   ORDER BY capture.created DESC
@@ -68,7 +67,7 @@ export function getAllSince(
     new Param("since", since)
   ];
   const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
-  WHERE capture.created > {since} AND NOT EXISTS (capture.archived)
+  WHERE capture.created > {since}
   RETURN capture
   ORDER BY capture.created DESC
   LIMIT 50`;
@@ -85,7 +84,6 @@ export function getCapture(
   ];
   const query = `
     MATCH (capture:Capture {id:{captureUrn}})<-[created:CREATED]-(user:User {id:{userId}})
-    WHERE NOT EXISTS(capture.archived) OR capture.archived = false
     RETURN capture
   `;
   return executeQuery(query, params).then(formatCaptureResult);
@@ -98,7 +96,6 @@ export function getUntypedNode(userId: UserUrn, nodeUrn: Urn): Promise<Node> {
     new Param("nodeId", nodeUrn.toRaw())
   ];
   const query = `MATCH (n:${label} {id:{nodeId}, owner:{userId}})
-  WHERE NOT EXISTS(n.archived) OR n.archived = false
   RETURN n
   `;
   return executeQuery(query, params).then(result => {
@@ -116,7 +113,6 @@ export function getCapturesByRelatedNode(
     new Param("nodeId", nodeId.toRaw())
   ];
   const query = `MATCH (other:${label} {id:{nodeId}})-[r]-(capture:Capture)<-[:CREATED]-(u:User {id:{userId}})
-  WHERE NOT EXISTS(capture.archived) OR capture.archived = false
   RETURN capture
   `;
   return executeQuery(query, params).then(result => {
@@ -127,7 +123,6 @@ export function getCapturesByRelatedNode(
 export function getRandomCapture(userId: UserUrn): Promise<Capture> {
   const params = [new Param("userId", userId.toRaw())];
   const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
-  WHERE NOT EXISTS (capture.archived) OR capture.archived = false
   RETURN capture, rand() as number
   ORDER BY number
   LIMIT 1`;

@@ -71,6 +71,7 @@ app.get("/", (_, res) => {
 });
 
 app.use(morgan(reqMorganFormat, { immediate: true }));
+app.use(contextService.middleware("request"));
 app.use(helmet());
 
 if (isProd()) {
@@ -88,7 +89,6 @@ app.use(bodyParser.json());
 
 app.use(morgan(respMorganFormat));
 
-app.use(contextService.middleware("request"));
 app.use(authFilter);
 app.use(setRequestContext);
 

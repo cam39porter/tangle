@@ -4,6 +4,7 @@ import {
   getRequestContext
 } from "../../filters/request-context";
 import { ErrorReporting } from "@google-cloud/error-reporting";
+import { isProd } from "../../config";
 
 const errorReporting = new ErrorReporting();
 
@@ -46,6 +47,8 @@ export class Logger {
   public error(message: string, ...args: any[]): void {
     const formatted = formatStr(this.scope, message);
     winstonLogger.error(formatted, parse(args));
-    errorReporting.report(formatted);
+    if (isProd()) {
+      errorReporting.report(formatted);
+    }
   }
 }

@@ -35,7 +35,7 @@ import createHashtagPlugin from "draft-js-hashtag-plugin";
 import "draft-js-linkify-plugin/lib/plugin.css";
 import createLinkifyPlugin from "draft-js-linkify-plugin";
 import "draft-js-static-toolbar-plugin/lib/plugin.css";
-import * as toolbarStyles from "../../css/draft-toolbar.css";
+const toolbarStyles = require("../../css/draft-toolbar.css");
 import createToolbarPlugin from "draft-js-static-toolbar-plugin";
 
 import ReactResizeDetector from "react-resize-detector";
@@ -47,8 +47,6 @@ import { debounce, Cancelable } from "lodash";
 import { AnalyticsUtils, ApolloUtils } from "../../utils";
 
 const TIME_TO_SAVE = 500; // ms till change is automatically captured
-
-console.log(toolbarStyles);
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -156,8 +154,10 @@ class InputCapture extends React.Component<Props, State> {
         }}
       >
         {this.state.isFocus && (
-          <div className={`flex absolute top--2 left--1 bg-white`}>
-            <this.Toolbar />
+          <div className={`absolute relative top--2 left--1 w-100`}>
+            <div className={`flex absolute top--1 left-0`}>
+              <this.Toolbar />
+            </div>
           </div>
         )}
         <div className={`flex-grow`}>

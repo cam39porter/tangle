@@ -13,6 +13,8 @@ import {
 import { CaptureUrn } from "../urn/capture-urn";
 import { SessionUrn } from "../urn/session-urn";
 import * as xss from "xss";
+import { CaptureRelation } from "./models/capture-relation";
+import { Relationship } from "../db/neo4j/relationship";
 
 const xssOptions = { whiteList: xss.whiteList };
 const captureXSS = new xss.FilterXSS(xssOptions);
@@ -41,10 +43,14 @@ export default {
       // @ts-ignore
       info
     ): Promise<GraphNode> {
+      const relation = new CaptureRelation(
+        captureRelation.captureId,
+        new Relationship(captureRelation.relationshipType)
+      );
       return createCapture(
         captureXSS.process(body),
         (sessionId && SessionUrn.fromRaw(sessionId)) || null,
-        captureRelation
+        relation
       );
     },
     createSession(

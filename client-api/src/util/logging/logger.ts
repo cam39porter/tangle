@@ -3,6 +3,9 @@ import {
   hasAuthenticatedUser,
   getRequestContext
 } from "../../filters/request-context";
+import { ErrorReporting } from "@google-cloud/error-reporting";
+
+const errorReporting = new ErrorReporting();
 
 const winstonTransport = new winston.transports.Console({
   level: "info",
@@ -12,14 +15,6 @@ const winstonTransport = new winston.transports.Console({
 
 const winstonLogger = winston.createLogger({
   transports: [winstonTransport],
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.printf(log => {
-      const req = hasAuthenticatedUser() ? getRequestContext() : null;
-      return `${log.level}: ${log.timestamp} ${(req && req.reqId) ||
-        "-"} ${(req && req.user.urn.toRaw()) || "-"} -- ${log.message}`;
-    })
-  ),
   exitOnError: false
 });
 
@@ -27,7 +22,11 @@ const winstonLogger = winston.createLogger({
  * Exports a wrapper for all the loggers we use in this configuration
  */
 const formatStr = (scope: string, message: string): string => {
-  return `${scope} ${message}`;
+  const req = hasAuthenticatedUser() ? getRequestContext() : null;
+  const formatted = `${Date.now()} ${(req && req.reqId) || "-"} ${(req &&
+    req.user.urn.toRaw()) ||
+    "-"} ${scope} -- ${message}`;
+  return formatted;
 };
 
 const parse = (args: any[]) => (args.length > 0 ? args : "");
@@ -45,6 +44,8 @@ export class Logger {
     winstonLogger.warn(formatStr(this.scope, message), parse(args));
   }
   public error(message: string, ...args: any[]): void {
-    winstonLogger.error(formatStr(this.scope, message), parse(args));
+    const formatted = formatStr(this.scope, message);
+    winstonLogger.error(formatted, parse(args));
+    errorReporting.report(formatted);
   }
 }

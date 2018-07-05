@@ -120,7 +120,7 @@ function setRequestContext(req, _, next): void {
 }
 
 function maskError(error: GraphQLError): GraphQLError {
-  LOGGER.error(error.message, error.stack);
+  LOGGER.error(error.stack);
   if (process.env.NODE_ENV === "production") {
     return new GraphQLError("Error");
   } else {

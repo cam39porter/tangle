@@ -66,7 +66,7 @@ class CardSession extends React.Component<Props, State> {
             this.props.history.push(
               `/collection/${encodeURIComponent(
                 this.props.sessionId
-              )}/format/list/related/`
+              )}/format/list/related`
             );
             AnalyticsUtils.trackEvent({
               category: this.props.match.params["id"]

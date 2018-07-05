@@ -268,7 +268,6 @@ class GraphVisualization extends React.Component<Props, State> {
     const splitPath = path.split("/");
     splitPath.pop();
     splitPath.push(`search?query=${encodeURIComponent(query)}`);
-
     this.props.history.push(`${splitPath.join("/")}`);
   };
 

@@ -14,8 +14,9 @@ import CardCapture from "../cards/card-capture";
 
 // Config / Utils
 import config from "../../cfg";
-import { isEqual } from "lodash";
+import { isEqual, uniqBy } from "lodash";
 import windowSize from "react-window-size";
+import { AnalyticsUtils } from "../../utils/index";
 
 // Types
 import { GraphEvent } from "../../types";
@@ -24,7 +25,6 @@ import {
   EdgeFieldsFragment,
   NodeType
 } from "../../__generated__/types";
-import { AnalyticsUtils } from "../../utils/index";
 
 const NOT_FOCUS_COLOR = "#CCCCCC";
 const TAG_COLOR = "#333333";
@@ -51,7 +51,12 @@ interface Props extends RouteComponentProps<{}> {
 
 interface State {
   graphFocus: GraphEvent | null;
+  nodes: Array<NodeFieldsFragment>;
+  edges: Array<EdgeFieldsFragment>;
 }
+
+const filterDuplicateNodes = (nodes: Array<NodeFieldsFragment>) =>
+  uniqBy(nodes, "id");
 
 class GraphVisualization extends React.Component<Props, State> {
   eChart: ReactEchartsCore | null = null;
@@ -60,7 +65,9 @@ class GraphVisualization extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      graphFocus: null
+      graphFocus: null,
+      nodes: filterDuplicateNodes(props.nodes),
+      edges: props.edges
     };
   }
 
@@ -70,7 +77,9 @@ class GraphVisualization extends React.Component<Props, State> {
       this.props.location.search !== nextProps.location.search
     ) {
       this.setState({
-        graphFocus: null
+        graphFocus: null,
+        nodes: filterDuplicateNodes(nextProps.nodes),
+        edges: nextProps.edges
       });
     }
   }
@@ -99,7 +108,7 @@ class GraphVisualization extends React.Component<Props, State> {
   }
 
   getNodes() {
-    return this.props.nodes.map((node, index) => {
+    return this.state.nodes.map(node => {
       switch (node.type) {
         // Entities
         case NodeType.Entity:
@@ -186,7 +195,7 @@ class GraphVisualization extends React.Component<Props, State> {
   }
 
   getEdges() {
-    return this.props.edges.map(edge => {
+    return this.state.edges.map(edge => {
       return {
         source: edge.source,
         target: edge.destination,

@@ -4,15 +4,23 @@ import {
   surfaceResultsFragment,
   sessionItemCollectionFragment,
   captureCollectionFragment,
-  sessionFragment
+  sessionFragment,
+  graphGetRecent,
+  graphSearch,
+  graphGetDetailed,
+  getRelatedCapturesBySession
 } from "../queries";
 
 // Utils
 import { remove, assign } from "lodash";
+import { NetworkUtils } from "../utils";
+import config from "../cfg";
 
 // Types
 import { MutationUpdaterFn } from "apollo-client";
 import {
+  CaptureFieldsFragment,
+  NodeFieldsFragment,
   SessionFieldsFragment,
   SessionCollectionFieldsFragment,
   SessionItemCollectionFieldsFragment,
@@ -49,6 +57,93 @@ const SESSION_ITEM_COLLECTION_READ_FRAGMENT = {
 const SESSION_READ_FRAGMENT_NO_ID = {
   fragment: sessionFragment,
   fragmentName: "SessionFields"
+};
+
+// Create Capture Queries to Refetch
+const getCreateSessionCaptureRefetchQueries = (
+  path: string,
+  search: string,
+  sessionId: string
+) => {
+  switch (path) {
+    case "/search":
+      return [
+        {
+          query: graphSearch,
+          variables: {
+            rawQuery: NetworkUtils.getQuery(search),
+            start: 0,
+            count: config.resultCount
+          }
+        }
+      ];
+    case "/recent":
+      return [
+        {
+          query: graphGetRecent,
+          variables: {
+            start: 0,
+            count: config.resultCount
+          }
+        }
+      ];
+    default:
+      return [
+        {
+          query: getRelatedCapturesBySession,
+          variables: {
+            sessionId: sessionId,
+            pagingInfo: null,
+            count: config.resultCount
+          }
+        },
+        {
+          query: graphGetDetailed,
+          variables: {
+            id: sessionId
+          }
+        }
+      ];
+  }
+};
+
+// Create Session Capture Update
+const createSessionCaptureUpdate = (store, { data }) => {
+  let captureNode = data && (data["createCapture"] as NodeFieldsFragment);
+
+  if (!captureNode) {
+    return;
+  }
+
+  const captureItem = {
+    __typename: "Capture",
+    id: captureNode.id,
+    created: 0,
+    body: captureNode.text || ""
+  } as CaptureFieldsFragment;
+
+  // SessionItemsCollection
+  let sessionItemCollection: SessionItemCollectionFieldsFragment | null = store.readFragment(
+    {
+      id: "SessionItemCollection",
+      fragment: sessionItemCollectionFragment,
+      fragmentName: "SessionItemCollectionFields"
+    }
+  );
+
+  if (sessionItemCollection && sessionItemCollection.items) {
+    sessionItemCollection.items.push(captureItem);
+    store.writeFragment({
+      id: "SessionItemCollection",
+      fragment: sessionItemCollectionFragment,
+      fragmentName: "SessionItemCollectionFields",
+      data: {
+        __typename: "SessionItemCollection",
+        items: sessionItemCollection.items,
+        pagingInfo: sessionItemCollection.pagingInfo
+      }
+    });
+  }
 };
 
 // Update Delete Session
@@ -204,6 +299,8 @@ const deleteCaptureUpdate: (
 };
 
 export default {
+  getCreateSessionCaptureRefetchQueries,
+  createSessionCaptureUpdate,
   deleteSessionUpdate,
   editSessionUpdate,
   deleteCaptureUpdate

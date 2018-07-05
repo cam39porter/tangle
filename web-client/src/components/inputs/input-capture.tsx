@@ -17,42 +17,35 @@ import {
   editCaptureMutationVariables,
   // Types
   NodeType,
-  // CaptureCollectionFieldsFragment,
-  SessionItemCollectionFieldsFragment,
-  NodeFieldsFragment,
-  CaptureFieldsFragment
+  NodeFieldsFragment
 } from "../../__generated__/types";
 import {
-  graphGetRecent,
-  graphSearch,
-  graphGetDetailed,
-  getRelatedCapturesBySession,
   createSessionCapture,
   createCapture,
-  editCapture,
-  // captureCollectionFragment,
-  sessionItemCollectionFragment
+  editCapture
 } from "../../queries";
 import { graphql, compose, MutationFunc, withApollo } from "react-apollo";
 
 // Components
 import * as Draft from "draft-js";
+import "draft-js/dist/Draft.css";
+import Editor from "draft-js-plugins-editor";
+import createHashtagPlugin from "draft-js-hashtag-plugin";
+import "draft-js-hashtag-plugin/lib/plugin.css";
+import createLinkifyPlugin from "draft-js-linkify-plugin";
+import "draft-js-linkify-plugin/lib/plugin.css";
 import ReactResizeDetector from "react-resize-detector";
-// import ButtonCapture from "./button-capture";
 
 // Utils
 import { convertToHTML, convertFromHTML } from "draft-convert";
-import "draft-js/dist/Draft.css";
 import EditorUtils from "../../utils/editor";
 import { debounce, Cancelable } from "lodash";
-import { NetworkUtils, AnalyticsUtils } from "../../utils/index";
-import config from "../../cfg";
+import { AnalyticsUtils, ApolloUtils } from "../../utils";
 
 const TIME_TO_SAVE = 500; // ms till change is automatically captured
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
-
 interface Props extends RouteProps {
   createSessionCapture: MutationFunc<
     createSessionCaptureResponse,
@@ -76,6 +69,11 @@ interface State {
   editorWidth: number;
   isShowingCaptureButton: boolean;
 }
+
+const hashtagPlugin = createHashtagPlugin();
+const linkifyPlugin = createLinkifyPlugin();
+
+const plugins = [hashtagPlugin, linkifyPlugin];
 
 class InputCapture extends React.Component<Props, State> {
   saveEdit: ((text: string) => void) & Cancelable | undefined;
@@ -126,12 +124,9 @@ class InputCapture extends React.Component<Props, State> {
   handleOnChange = (editorState: Draft.EditorState) => {
     const currentContent = this.state.editorState.getCurrentContent();
     const newContent = editorState.getCurrentContent();
-
-    // Content has changed
     if (currentContent !== newContent) {
       this.saveEdit && this.saveEdit(convertToHTML(newContent));
     }
-
     this.setState({
       editorState
     });
@@ -167,7 +162,8 @@ class InputCapture extends React.Component<Props, State> {
               width: `${this.state.editorWidth}px`
             }}
           >
-            <Draft.Editor
+            <Editor
+              plugins={plugins}
               editorState={this.state.editorState}
               onChange={this.handleOnChange}
               handleKeyCommand={(
@@ -182,56 +178,6 @@ class InputCapture extends React.Component<Props, State> {
                       this.props.sessionData &&
                       this.props.sessionData.previousId
                     ) {
-                      let refetchQueries;
-                      const location = this.props.location.pathname.replace(
-                        this.props.match.url,
-                        ""
-                      );
-                      switch (location) {
-                        case "/search":
-                          refetchQueries = [
-                            {
-                              query: graphSearch,
-                              variables: {
-                                rawQuery: NetworkUtils.getQuery(
-                                  this.props.location.search
-                                ),
-                                start: 0,
-                                count: config.resultCount
-                              }
-                            }
-                          ];
-                          break;
-                        case "/recent":
-                          refetchQueries = [
-                            {
-                              query: graphGetRecent,
-                              variables: {
-                                start: 0,
-                                count: config.resultCount
-                              }
-                            }
-                          ];
-                          break;
-                        default:
-                          refetchQueries = [
-                            {
-                              query: getRelatedCapturesBySession,
-                              variables: {
-                                sessionId: this.props.sessionData.sessionId,
-                                pagingInfo: null,
-                                count: config.resultCount
-                              }
-                            },
-                            {
-                              query: graphGetDetailed,
-                              variables: {
-                                id: this.props.sessionData.sessionId
-                              }
-                            }
-                          ];
-                      }
-
                       this.props
                         .createSessionCapture({
                           variables: {
@@ -251,49 +197,12 @@ class InputCapture extends React.Component<Props, State> {
                               level: 0
                             } as NodeFieldsFragment
                           },
-                          refetchQueries: refetchQueries,
-                          update: (store, { data }) => {
-                            let captureNode =
-                              data &&
-                              (data["createCapture"] as NodeFieldsFragment);
-
-                            if (!captureNode) {
-                              return;
-                            }
-
-                            const captureItem = {
-                              __typename: "Capture",
-                              id: captureNode.id,
-                              created: 0,
-                              body: captureNode.text || ""
-                            } as CaptureFieldsFragment;
-
-                            // SessionItemsCollection
-                            let sessionItemCollection: SessionItemCollectionFieldsFragment | null = store.readFragment(
-                              {
-                                id: "SessionItemCollection",
-                                fragment: sessionItemCollectionFragment,
-                                fragmentName: "SessionItemCollectionFields"
-                              }
-                            );
-
-                            if (
-                              sessionItemCollection &&
-                              sessionItemCollection.items
-                            ) {
-                              sessionItemCollection.items.push(captureItem);
-                              store.writeFragment({
-                                id: "SessionItemCollection",
-                                fragment: sessionItemCollectionFragment,
-                                fragmentName: "SessionItemCollectionFields",
-                                data: {
-                                  __typename: "SessionItemCollection",
-                                  items: sessionItemCollection.items,
-                                  pagingInfo: sessionItemCollection.pagingInfo
-                                }
-                              });
-                            }
-                          }
+                          refetchQueries: ApolloUtils.getCreateSessionCaptureRefetchQueries(
+                            this.props.location.pathname,
+                            this.props.location.search,
+                            this.props.sessionData.sessionId
+                          ),
+                          update: ApolloUtils.createSessionCaptureUpdate
                         })
                         .then(res => {
                           const id = res.data.createCapture.id;

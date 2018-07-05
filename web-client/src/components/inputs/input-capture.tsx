@@ -27,13 +27,17 @@ import {
 import { graphql, compose, MutationFunc, withApollo } from "react-apollo";
 
 // Components
-import * as Draft from "draft-js";
 import "draft-js/dist/Draft.css";
+import * as Draft from "draft-js";
 import Editor from "draft-js-plugins-editor";
-import createHashtagPlugin from "draft-js-hashtag-plugin";
 import "draft-js-hashtag-plugin/lib/plugin.css";
-import createLinkifyPlugin from "draft-js-linkify-plugin";
+import createHashtagPlugin from "draft-js-hashtag-plugin";
 import "draft-js-linkify-plugin/lib/plugin.css";
+import createLinkifyPlugin from "draft-js-linkify-plugin";
+import "draft-js-static-toolbar-plugin/lib/plugin.css";
+import * as toolbarStyles from "../../css/draft-toolbar.css";
+import createToolbarPlugin from "draft-js-static-toolbar-plugin";
+
 import ReactResizeDetector from "react-resize-detector";
 
 // Utils
@@ -43,6 +47,8 @@ import { debounce, Cancelable } from "lodash";
 import { AnalyticsUtils, ApolloUtils } from "../../utils";
 
 const TIME_TO_SAVE = 500; // ms till change is automatically captured
+
+console.log(toolbarStyles);
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -67,17 +73,18 @@ interface Props extends RouteProps {
 interface State {
   editorState: Draft.EditorState;
   editorWidth: number;
-  isShowingCaptureButton: boolean;
+  isHovering: boolean;
+  isFocus: boolean;
 }
-
-const hashtagPlugin = createHashtagPlugin();
-const linkifyPlugin = createLinkifyPlugin();
-
-const plugins = [hashtagPlugin, linkifyPlugin];
 
 class InputCapture extends React.Component<Props, State> {
   saveEdit: ((text: string) => void) & Cancelable | undefined;
   numberOfOptimisticCaptures: number = 0;
+  hashtagPlugin = createHashtagPlugin();
+  linkifyPlugin = createLinkifyPlugin();
+  toolbarPlugin = createToolbarPlugin();
+  plugins = [this.linkifyPlugin, this.hashtagPlugin, this.toolbarPlugin];
+  Toolbar = this.toolbarPlugin.Toolbar;
 
   constructor(props: Props) {
     super(props);
@@ -109,7 +116,8 @@ class InputCapture extends React.Component<Props, State> {
     this.state = {
       editorState,
       editorWidth: 0,
-      isShowingCaptureButton: false
+      isHovering: false,
+      isFocus: false
     };
   }
 
@@ -138,15 +146,20 @@ class InputCapture extends React.Component<Props, State> {
         className={`relative flex w-100`}
         onMouseEnter={() => {
           this.setState({
-            isShowingCaptureButton: true
+            isHovering: true
           });
         }}
         onMouseLeave={() => {
           this.setState({
-            isShowingCaptureButton: false
+            isHovering: false
           });
         }}
       >
+        {this.state.isFocus && (
+          <div className={`flex absolute top--2 left--1 bg-white`}>
+            <this.Toolbar />
+          </div>
+        )}
         <div className={`flex-grow`}>
           <ReactResizeDetector
             handleHeight={true}
@@ -163,7 +176,7 @@ class InputCapture extends React.Component<Props, State> {
             }}
           >
             <Editor
-              plugins={plugins}
+              plugins={this.plugins}
               editorState={this.state.editorState}
               onChange={this.handleOnChange}
               handleKeyCommand={(
@@ -262,7 +275,15 @@ class InputCapture extends React.Component<Props, State> {
               }}
               keyBindingFn={this.handleKeyBindings}
               placeholder={`Capture a thought...`}
+              onFocus={() => {
+                this.setState({
+                  isFocus: true
+                });
+              }}
               onBlur={() => {
+                this.setState({
+                  isFocus: false
+                });
                 const content = this.state.editorState.getCurrentContent();
                 const endingHtml = convertToHTML(content);
                 if (this.props.startingHTML !== endingHtml) {

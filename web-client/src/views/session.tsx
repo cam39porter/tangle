@@ -144,7 +144,7 @@ class Session extends React.Component<Props, State> {
           ref={scrollContainer => (this._scrollContainer = scrollContainer)}
         >
           <div
-            className={`flex-column items-center ph2 pv4 overflow-auto`}
+            className={`flex-column items-center ph4 pv4 overflow-auto`}
             style={{
               height: `${this.props.windowHeight -
                 this.state.headerHeight -

@@ -85,10 +85,10 @@ class CardCapture extends React.Component<Props, State> {
           </div>
           {this.state.isShowingButtons && (
             <div
-              className={`absolute flex top--1 right-0 h2 ph2 br4 shadow-1 z-7 bg-white gray`}
+              className={`absolute flex top--1 right-0 br4 ba b--light-gray bg-white`}
             >
               <div
-                className={`flex-column justify-around`}
+                className={`flex-column justify-around pa2 pointer`}
                 onClick={e => {
                   e.stopPropagation();
 

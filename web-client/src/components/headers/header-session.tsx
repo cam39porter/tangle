@@ -7,8 +7,9 @@ import { RouteComponentProps, withRouter } from "react-router";
 // Components
 import ButtonExit from "../buttons/button-exit";
 import Header from "./header";
-import { AnalyticsUtils } from "../../utils/index";
+
 // Utils
+import { AnalyticsUtils } from "../../utils/index";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}

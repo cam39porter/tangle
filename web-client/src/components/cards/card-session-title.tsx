@@ -92,7 +92,7 @@ class HeaderSession extends React.Component<Props, State> {
           }}
         />
         <div
-          className={`f3 fw5`}
+          className={`f3 fw2 accent`}
           style={{
             width: `${this.state.editorWidth}px`
           }}

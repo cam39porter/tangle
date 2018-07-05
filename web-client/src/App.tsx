@@ -2,7 +2,7 @@
 import * as React from "react";
 
 // Style
-import "./custom.css";
+import "./css/custom.css";
 import "./tachyons.css";
 import "draft-js/dist/Draft.css";
 

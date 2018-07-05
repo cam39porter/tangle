@@ -6,7 +6,8 @@ import {
 
 const winstonTransport = new winston.transports.Console({
   level: "info",
-  handleExceptions: false
+  handleExceptions: false,
+  stderrLevels: ["error"]
 });
 
 const winstonLogger = winston.createLogger({

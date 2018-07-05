@@ -86,28 +86,8 @@ if (isProd()) {
 }
 app.use(bodyParser.json());
 
-// const logDirectory = path.join(__dirname, "../log");
-
-// ensure log directory exists
-// function useMorgan(): void {
-//   if (
-//     process.env.NODE_ENV === "production" ||
-//     process.env.NODE_ENV === "development"
-//   ) {
-//     // tslint:disable-next-line:no-unused-expression
-//     fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
-//     // create a rotating write stream
-//     const accessLogStream = rfs("access.log", {
-//       interval: "1d", // rotate daily
-//       path: logDirectory
-//     });
-
-//     // setup the logger
-//     app.use(morgan(morganFormat, { stream: accessLogStream }));
-//   } else {
 app.use(morgan(respMorganFormat));
-// }
-// }
+
 app.use(contextService.middleware("request"));
 app.use(authFilter);
 app.use(setRequestContext);

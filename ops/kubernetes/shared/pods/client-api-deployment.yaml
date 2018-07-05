@@ -18,7 +18,7 @@ spec:
           secretName: api-cert
       containers:
       - name: client-api
-        image: gcr.io/opit-193719/client-api:7cc6eef3d10141eb1bb276f0c6a8a99accea9544
+        image: gcr.io/opit-193719/client-api:a56a97395bc0a4be87aa8151aa9616b7ae5af322
         imagePullPolicy: Always
         ports:
         - containerPort: 8443
@@ -30,8 +30,6 @@ spec:
           mountPath: /etc/tls
           readOnly: true
         env:
-        - name: NODE_ENV
-          value: development
           # Backend TLS
         - name: TLS_CERT
           value: /etc/tls/tls.crt

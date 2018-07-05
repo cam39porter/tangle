@@ -1,0 +1,1 @@
+gcloud container node-pools create default-pool --cluster=tangle-dev --disk-size=10 --enable-autorepair --num-nodes=5 --zone=us-central1-a --scopes=https://www.googleapis.com/auth/cloud-platform --service-account=9191308198-compute@developer.gserviceaccount.com

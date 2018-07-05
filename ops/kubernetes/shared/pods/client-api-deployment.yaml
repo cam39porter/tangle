@@ -18,7 +18,7 @@ spec:
           secretName: api-cert
       containers:
       - name: client-api
-        image: gcr.io/opit-193719/client-api:b5f5553cb0fffef757c385b6bff7bf0384b64c74
+        image: gcr.io/opit-193719/client-api:7cc6eef3d10141eb1bb276f0c6a8a99accea9544
         imagePullPolicy: Always
         ports:
         - containerPort: 8443

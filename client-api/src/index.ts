@@ -113,6 +113,7 @@ if (isLocal()) {
     LOGGER.info("Api HTTPS server listening on port " + HTTPS_PORT);
   });
 }
+LOGGER.info(`env is ${process.env.NODE_ENV}`);
 
 function setRequestContext(req, _, next): void {
   req.requestContext = getRequestContext();

@@ -11,8 +11,9 @@ export class RequestContext {
   }
 }
 
-export function setAuthenticatedUser(user: User): void {
-  contextService.set("request:user", user);
+export function setReqeustContext(user: User): void {
+  const req = new RequestContext(user);
+  contextService.set("request", req);
 }
 
 export function hasAuthenticatedUser(): boolean {
@@ -28,5 +29,5 @@ export function getAuthenticatedUser(): User {
 }
 
 export function getRequestContext(): RequestContext {
-  return new RequestContext(getAuthenticatedUser());
+  return contextService.get("request") as RequestContext;
 }

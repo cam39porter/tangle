@@ -39,10 +39,12 @@ export default {
       // @ts-ignore
       info
     ): Promise<GraphNode> {
-      const relation = new CaptureRelation(
-        captureRelation.captureId,
-        new Relationship(captureRelation.relationshipType)
-      );
+      const relation = captureRelation
+        ? new CaptureRelation(
+            captureRelation.captureId,
+            new Relationship(captureRelation.relationshipType)
+          )
+        : null;
       return createCapture(
         captureXSS.process(body),
         (sessionId && SessionUrn.fromRaw(sessionId)) || null,

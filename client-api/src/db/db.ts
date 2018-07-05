@@ -12,7 +12,6 @@ const driver = neo4j.driver(
   NEO4J_URL,
   neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
-const session = driver.session();
 
 export class Param {
   public key: string;
@@ -27,8 +26,9 @@ function executeQuery(
   cypherQuery: string,
   params: Param[]
 ): Promise<StatementResult> {
+  const session = driver.session();
   return session
-    .run(cypherQuery, toObj(params))
+    .writeTransaction(tx => tx.run(cypherQuery, toObj(params)))
     .then(result => {
       session.close();
       // if (hasAuthenticatedUser()) {

@@ -7,7 +7,7 @@ import { RouteComponentProps } from "react-router";
 // Components
 import ButtonCapture from "./../buttons/button-capture";
 import ButtonExit from "./../buttons/button-exit";
-import ButtonSettings from "./../buttons/button-settings";
+import ButtonLogOut from "../buttons/button-logout";
 
 // Utils
 import { NetworkUtils } from "../../utils";
@@ -89,7 +89,7 @@ class Navigation extends React.Component<Props, State> {
             AnalyticsUtils.setUserId(undefined);
           }}
         >
-          <ButtonSettings />
+          <ButtonLogOut />
         </div>
       </div>
     );

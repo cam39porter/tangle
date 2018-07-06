@@ -18,6 +18,6 @@ export function uploadFile(data: FormData) {
       console.log("success");
     })
     .catch(error => {
-      ErrorsUtils.errorHandler.report(error);
+      ErrorsUtils.errorHandler.report(error.message, error.stack);
     });
 }

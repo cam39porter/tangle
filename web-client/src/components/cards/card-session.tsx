@@ -111,7 +111,7 @@ class CardSession extends React.Component<Props, State> {
                       });
                     })
                     .catch(err => {
-                      ErrorsUtils.errorHandler.report(err);
+                      ErrorsUtils.errorHandler.report(err.message, err.stack);
                     });
                 }}
               >

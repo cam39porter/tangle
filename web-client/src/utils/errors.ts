@@ -1,17 +1,22 @@
 import { ApolloClient } from "apollo-client";
-import { deleteCaptureMutationVariables } from "../__generated__/types";
-import { deleteCapture } from "../queries";
+import { reportErrorMutationVariables } from "../__generated__/types";
+import { reportError } from "../queries";
 
-let errorHandler = { report: console.error };
+let errorHandler = {
+  report: (message: String, stacktrace: Object) => {
+    console.error(message, JSON.stringify(stacktrace));
+  }
+};
 
-const initialize = (client: ApolloClient<any>) => {
+const initialize = (client: ApolloClient<Object>) => {
   if (process.env.REACT_APP_ENV === "production") {
-    errorHandler.report = (error: Error, errorInfo: object) => {
+    errorHandler.report = (message: String, stacktrace: Object) => {
       client
-        .mutate<deleteCaptureMutationVariables>({
-          mutation: deleteCapture,
+        .mutate<reportErrorMutationVariables>({
+          mutation: reportError,
           variables: {
-            id: "test"
+            message: message,
+            stacktrace: JSON.stringify(stacktrace)
           }
         })
         .catch(err => {

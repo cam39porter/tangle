@@ -318,3 +318,9 @@ export const deleteSession = gql`
     deleteSession(id: $sessionId)
   }
 `;
+
+export const reportError = gql`
+  mutation reportError($message: String, $stacktrace: String) {
+    reportError(message: $message, stacktrace: $stacktrace)
+  }
+`;

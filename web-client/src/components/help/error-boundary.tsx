@@ -31,20 +31,21 @@ class ErrorBoundary extends React.Component<Props, State> {
       errorInfo: errorInfo
     });
 
-    ErrorsUtils.errorHandler.report(error);
+    ErrorsUtils.errorHandler.report(
+      error ? error.message : "Render error",
+      errorInfo
+    );
   }
 
   render() {
     if (this.state.errorInfo) {
       return (
         <Help>
-          <div className={`flex flex-wrap`}>
+          <div>
             <div className={`pa2`}>Oh no. We messed up.</div>
-            <details className={`pa2`} style={{ whiteSpace: "pre-wrap" }}>
-              {this.state.error && this.state.error.toString()}
-              <br />
-              {this.state.errorInfo["componentStack"]}
-            </details>
+            <div className={`pa2`}>
+              We have logged the error and will do our best to fix it ASAP.
+            </div>
           </div>
         </Help>
       );

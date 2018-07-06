@@ -15,7 +15,7 @@ import Login from "./views/login";
 import Main from "./views/main";
 
 // Config / Utils
-import { FirebaseUtils, AnalyticsUtils } from "./utils";
+import { FirebaseUtils, AnalyticsUtils, ErrorsUtils } from "./utils";
 const withTracker = AnalyticsUtils.withTracker;
 
 // Types
@@ -59,7 +59,7 @@ class App extends React.Component<Props, State> {
         );
       })
       .catch(err => {
-        alert(err);
+        ErrorsUtils.errorHandler.report(err.message, err.stack);
       });
   }
   componentWillUnmount() {

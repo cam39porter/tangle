@@ -99,7 +99,7 @@ class Session extends React.Component<Props, State> {
         update: ApolloUtils.deleteSessionUpdate(sessionCaptures.id)
       })
       .catch(err => {
-        ErrorsUtils.errorHandler.report(err);
+        ErrorsUtils.errorHandler.report(err.message, err.stack);
       });
   };
 

@@ -126,7 +126,7 @@ class InputCapture extends React.Component<Props, State> {
                 }
               })
               .catch(err => {
-                ErrorsUtils.errorHandler.report(err);
+                ErrorsUtils.errorHandler.report(err.message, err.stack);
               });
         }, TIME_TO_SAVE)
       : undefined;
@@ -246,7 +246,10 @@ class InputCapture extends React.Component<Props, State> {
                           });
                         })
                         .catch(err => {
-                          ErrorsUtils.errorHandler.report(err);
+                          ErrorsUtils.errorHandler.report(
+                            err.message,
+                            err.stack
+                          );
                         });
                     } else {
                       this.props
@@ -266,7 +269,10 @@ class InputCapture extends React.Component<Props, State> {
                           });
                         })
                         .catch(err => {
-                          ErrorsUtils.errorHandler.report(err);
+                          ErrorsUtils.errorHandler.report(
+                            err.message,
+                            err.stack
+                          );
                         });
                     }
 

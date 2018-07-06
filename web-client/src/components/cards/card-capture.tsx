@@ -119,7 +119,9 @@ class CardCapture extends React.Component<Props, State> {
                         label: this.props.captureId
                       });
                     })
-                    .catch(err => ErrorsUtils.errorHandler.report(err));
+                    .catch(err =>
+                      ErrorsUtils.errorHandler.report(err.message, err.stack)
+                    );
                 }}
               >
                 <div>

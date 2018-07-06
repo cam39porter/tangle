@@ -56,7 +56,7 @@ class HeaderSession extends React.Component<Props, State> {
           update: ApolloUtils.editSessionUpdate(props.sessionId, text)
         })
         .catch(err => {
-          ErrorsUtils.errorHandler.report(err);
+          ErrorsUtils.errorHandler.report(err.message, err.stack);
         });
     }, TIME_TO_SAVE);
 

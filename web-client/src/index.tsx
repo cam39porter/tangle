@@ -55,9 +55,16 @@ const errorLink = onError(({ networkError, graphQLErrors }) => {
         AnalyticsUtils.setUserId(undefined);
       }
     }
-    ErrorsUtils.errorHandler.report(networkError);
+    ErrorsUtils.errorHandler.report(
+      networkError.message,
+      networkError.stack ? networkError.stack : ""
+    );
   } else if (graphQLErrors) {
-    ErrorsUtils.errorHandler.report(graphQLErrors[0].message);
+    let error = graphQLErrors[0];
+    ErrorsUtils.errorHandler.report(
+      error.message,
+      error.stack ? error.stack : ""
+    );
   }
 });
 

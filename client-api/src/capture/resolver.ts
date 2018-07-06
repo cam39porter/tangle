@@ -16,6 +16,7 @@ import * as xss from "xss";
 import { CaptureRelation } from "./models/capture-relation";
 import { Relationship } from "../db/neo4j/relationship";
 import { create as createFeedback } from "../db/services/feedback";
+import { reportClientError } from "../util/logging/logger";
 
 const xssOptions = { whiteList: xss.whiteList };
 const captureXSS = new xss.FilterXSS(xssOptions);
@@ -101,6 +102,18 @@ export default {
     // @ts-ignore
     sendFeedback(parent, { body }, context, info): Promise<boolean> {
       return createFeedback(body);
+    },
+    // @ts-ignore
+    reportError(
+      // @ts-ignore
+      parent,
+      { message, stacktrace },
+      // @ts-ignore
+      context,
+      // @ts-ignore
+      info
+    ): Promise<boolean> {
+      return reportClientError(message, stacktrace);
     }
   }
 };

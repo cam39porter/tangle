@@ -186,4 +186,5 @@ type Mutation {
   editCapture(id: String!, body: String!): Node!
   dismissCaptureRelation(fromId: String!, toId: String!): Boolean
   sendFeedback(body: String!): Boolean
+  reportError(message: String, stacktrace: String): Boolean
 }

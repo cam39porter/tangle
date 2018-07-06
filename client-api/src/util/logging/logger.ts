@@ -22,13 +22,30 @@ const winstonLogger = winston.createLogger({
 /**
  * Exports a wrapper for all the loggers we use in this configuration
  */
-const formatStr = (scope: string, message: string): string => {
+function formatStr(
+  scope: string,
+  message: string,
+  stacktrace?: string
+): string {
   const req = hasAuthenticatedUser() ? getRequestContext() : null;
-  const formatted = `${Date.now()} ${(req && req.reqId) || "-"} ${(req &&
-    req.user.urn.toRaw()) ||
-    "-"} ${scope} -- ${message}`;
+  const formatted = `${new Date().toISOString()} ${(req && req.reqId) ||
+    "-"} ${(req && req.user.urn.toRaw()) || "-"} ${scope} -- ${message ||
+    ""} -- ${stacktrace || ""}`;
   return formatted;
-};
+}
+
+export function reportClientError(
+  message: string,
+  stacktrace?: string
+): Promise<boolean> {
+  if (isProd()) {
+    return Promise.resolve(
+      errorReporting.report(formatStr("web-client", message, stacktrace))
+    ).then(() => true);
+  } else {
+    return Promise.resolve(false);
+  }
+}
 
 const parse = (args: any[]) => (args.length > 0 ? args : "");
 
@@ -44,8 +61,8 @@ export class Logger {
   public warn(message: string, ...args: any[]): void {
     winstonLogger.warn(formatStr(this.scope, message), parse(args));
   }
-  public error(message: string, ...args: any[]): void {
-    const formatted = formatStr(this.scope, message);
+  public error(message: string, stacktrace?: any, ...args: any[]): void {
+    const formatted = formatStr(this.scope, message, stacktrace);
     winstonLogger.error(formatted, parse(args));
     if (isProd()) {
       errorReporting.report(formatted);

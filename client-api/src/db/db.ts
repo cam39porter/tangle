@@ -10,9 +10,14 @@ const protocol = `bolt${!isLocal() ? "+routing" : ""}`;
 const NEO4J_URL = `${protocol}://${process.env.NEO4J_ENDPOINT}:7687`;
 const driver = neo4j.driver(
   NEO4J_URL,
-  neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
+  neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD),
+  {
+    maxTransactionRetryTime: 1
+  }
 );
-
+driver.onError = error => {
+  LOGGER.error("Could not connect to neo4j", error);
+};
 export class Param {
   public key: string;
   public value: string | number | string[];

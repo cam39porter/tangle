@@ -23,6 +23,7 @@ import * as morgan from "morgan";
 // import * as rfs from "rotating-file-stream";
 import { isProd, isLocal } from "./config";
 import * as helmet from "helmet";
+import * as compression from "compression";
 
 // tslint:disable-next-line
 const { graphqlExpress } = require("apollo-server-express");
@@ -91,7 +92,7 @@ app.use(morgan(respMorganFormat));
 
 app.use(authFilter);
 app.use(setRequestContext);
-
+app.use(compression());
 app.use(
   "/graphql",
   graphqlExpress({ schema: executableSchema, formatError: maskError })

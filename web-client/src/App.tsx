@@ -36,7 +36,7 @@ class App extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     FirebaseUtils.firebaseAuth()
       .setPersistence(FirebaseUtils.firebaseAuth.Auth.Persistence.LOCAL)
       .then(() => {
@@ -45,10 +45,9 @@ class App extends React.Component<Props, State> {
             if (user) {
               user.getIdToken(true).then(idToken => {
                 localStorage.setItem("idToken", idToken);
-              });
-
-              this.setState({
-                isAuthenticated: true
+                this.setState({
+                  isAuthenticated: true
+                });
               });
             } else {
               this.setState({

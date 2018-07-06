@@ -35,8 +35,17 @@ import createHashtagPlugin from "draft-js-hashtag-plugin";
 import "draft-js-linkify-plugin/lib/plugin.css";
 import createLinkifyPlugin from "draft-js-linkify-plugin";
 import "draft-js-static-toolbar-plugin/lib/plugin.css";
-const toolbarStyles = require("../../css/draft-toolbar.css");
 import createToolbarPlugin from "draft-js-static-toolbar-plugin";
+import {
+  ItalicButton,
+  BoldButton,
+  UnderlineButton,
+  HeadlineThreeButton,
+  UnorderedListButton,
+  OrderedListButton,
+  BlockquoteButton,
+  CodeBlockButton
+} from "draft-js-buttons";
 
 import ReactResizeDetector from "react-resize-detector";
 
@@ -80,7 +89,18 @@ class InputCapture extends React.Component<Props, State> {
   numberOfOptimisticCaptures: number = 0;
   hashtagPlugin = createHashtagPlugin();
   linkifyPlugin = createLinkifyPlugin();
-  toolbarPlugin = createToolbarPlugin();
+  toolbarPlugin = createToolbarPlugin({
+    structure: [
+      ItalicButton,
+      BoldButton,
+      UnderlineButton,
+      HeadlineThreeButton,
+      UnorderedListButton,
+      OrderedListButton,
+      BlockquoteButton,
+      CodeBlockButton
+    ]
+  });
   plugins = [this.linkifyPlugin, this.hashtagPlugin, this.toolbarPlugin];
   Toolbar = this.toolbarPlugin.Toolbar;
 

@@ -60,6 +60,10 @@ class SearchGraph extends React.Component<Props, State> {
       );
     }
 
+    if (this.props.query === "error") {
+      throw new Error("I crashed");
+    }
+
     AnalyticsUtils.trackEvent({
       category: this.props.match.params["id"]
         ? AnalyticsUtils.Categories.Session

@@ -18,7 +18,7 @@ import CardSession from "./../cards/card-session";
 
 // Utils
 import windowSize from "react-window-size";
-import { NetworkUtils, AnalyticsUtils } from "../../utils";
+import { NetworkUtils, AnalyticsUtils, ErrorsUtils } from "../../utils";
 
 // Types
 import {
@@ -94,7 +94,7 @@ class GridCaptures extends React.Component<Props, State> {
                         });
                       })
                       .catch(err => {
-                        console.error(err);
+                        ErrorsUtils.errorHandler.report(err);
                       });
                   }}
                 >

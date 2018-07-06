@@ -19,7 +19,7 @@ import ButtonArchive from "./../buttons/button-archive";
 import InputCapture from "../inputs/input-capture";
 
 // Utils
-import { ApolloUtils, AnalyticsUtils } from "../../utils/index";
+import { ApolloUtils, AnalyticsUtils, ErrorsUtils } from "../../utils/index";
 
 // Types
 interface Props {
@@ -119,7 +119,7 @@ class CardCapture extends React.Component<Props, State> {
                         label: this.props.captureId
                       });
                     })
-                    .catch(err => console.error(err));
+                    .catch(err => ErrorsUtils.errorHandler.report(err));
                 }}
               >
                 <div>

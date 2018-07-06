@@ -19,7 +19,7 @@ class Help extends React.Component<Props, State> {
   render() {
     return (
       <div
-        className={`vh-75 flex-column items-center justify-around bg-near-white`}
+        className={`vh-75 w-100 flex-column items-center justify-around bg-near-white`}
       >
         {this.props.children}
       </div>

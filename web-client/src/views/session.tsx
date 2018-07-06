@@ -26,7 +26,7 @@ import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 import windowSize from "react-window-size";
-import { ApolloUtils } from "../utils/index";
+import { ApolloUtils, ErrorsUtils } from "../utils/index";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -99,7 +99,7 @@ class Session extends React.Component<Props, State> {
         update: ApolloUtils.deleteSessionUpdate(sessionCaptures.id)
       })
       .catch(err => {
-        console.error(err);
+        ErrorsUtils.errorHandler.report(err);
       });
   };
 

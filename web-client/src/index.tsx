@@ -19,7 +19,7 @@ import { ApolloProvider } from "react-apollo";
 import { BrowserRouter as Router } from "react-router-dom";
 
 // Config / Utils
-import { FirebaseUtils, AnalyticsUtils } from "./utils";
+import { FirebaseUtils, AnalyticsUtils, ErrorsUtils } from "./utils";
 import config from "./cfg/env";
 const firebaseAuth = FirebaseUtils.firebaseAuth;
 
@@ -55,11 +55,9 @@ const errorLink = onError(({ networkError, graphQLErrors }) => {
         AnalyticsUtils.setUserId(undefined);
       }
     }
+    ErrorsUtils.errorHandler.report(networkError);
   } else if (graphQLErrors) {
-    console.error(graphQLErrors[0].message);
-    alert(
-      "Sorry, you seemed to have found a dark corner of our application. Please email cole@usetangle.com and tell us about your problem so that we can fix it!"
-    );
+    ErrorsUtils.errorHandler.report(graphQLErrors[0].message);
   }
 });
 
@@ -96,6 +94,9 @@ const client = new ApolloClient({
   }),
   link: retryLink.concat(errorLink.concat(authLink.concat(httpLink)))
 });
+
+// Initialize error handler
+ErrorsUtils.initialize(client);
 
 class ApolloWrappedApp extends React.Component<object, object> {
   render() {

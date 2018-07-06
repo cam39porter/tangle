@@ -16,7 +16,7 @@ import { graphql, compose, MutationFunc } from "react-apollo";
 import ButtonArchive from "./../buttons/button-archive";
 
 // Utils
-import { ApolloUtils, AnalyticsUtils } from "../../utils";
+import { ApolloUtils, AnalyticsUtils, ErrorsUtils } from "../../utils";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -111,7 +111,7 @@ class CardSession extends React.Component<Props, State> {
                       });
                     })
                     .catch(err => {
-                      console.error(err);
+                      ErrorsUtils.errorHandler.report(err);
                     });
                 }}
               >

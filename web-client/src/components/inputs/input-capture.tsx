@@ -53,7 +53,7 @@ import ReactResizeDetector from "react-resize-detector";
 import { convertToHTML, convertFromHTML } from "draft-convert";
 import EditorUtils from "../../utils/editor";
 import { debounce, Cancelable } from "lodash";
-import { AnalyticsUtils, ApolloUtils } from "../../utils";
+import { AnalyticsUtils, ApolloUtils, ErrorsUtils } from "../../utils";
 
 const TIME_TO_SAVE = 500; // ms till change is automatically captured
 
@@ -126,7 +126,7 @@ class InputCapture extends React.Component<Props, State> {
                 }
               })
               .catch(err => {
-                console.error(err);
+                ErrorsUtils.errorHandler.report(err);
               });
         }, TIME_TO_SAVE)
       : undefined;
@@ -246,7 +246,7 @@ class InputCapture extends React.Component<Props, State> {
                           });
                         })
                         .catch(err => {
-                          console.error(err);
+                          ErrorsUtils.errorHandler.report(err);
                         });
                     } else {
                       this.props
@@ -266,7 +266,7 @@ class InputCapture extends React.Component<Props, State> {
                           });
                         })
                         .catch(err => {
-                          console.error(err);
+                          ErrorsUtils.errorHandler.report(err);
                         });
                     }
 

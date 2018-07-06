@@ -1,5 +1,6 @@
 import axios from "axios";
 import config from "../cfg/env";
+import { ErrorsUtils } from "../utils";
 
 const axiosInstance = axios.create({
   baseURL: config.REACT_APP_API_BASE_URL,
@@ -17,6 +18,6 @@ export function uploadFile(data: FormData) {
       console.log("success");
     })
     .catch(error => {
-      console.error(error);
+      ErrorsUtils.errorHandler.report(error);
     });
 }

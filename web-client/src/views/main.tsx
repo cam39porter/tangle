@@ -9,6 +9,7 @@ import Session from "../views/session";
 import Navigation from "../components/navigation/navigation";
 import Surface from "./surface";
 import Capture from "./capture";
+import ErrorBoundary from "../components/help/error-boundary";
 
 // Utils
 import { NetworkUtils } from "../utils";
@@ -39,37 +40,45 @@ class Main extends React.Component<Props, State> {
     return (
       <div className={`flex w-100 vh-100 bg-near-white`}>
         {/* Navigation */}
-        <div className={`flex`}>
-          <Route component={Navigation} />
-        </div>
-        <div className={`relative flex-grow`}>
-          {/* Capture */}
-          {NetworkUtils.getCapture(this.props.location.search) ? (
-            <div className={`absolute top-0 left-0 z-max vh-100 w-100`}>
-              <Route component={Capture} />
-            </div>
-          ) : (
-            <div className={`flex`}>
-              {/* Session */}
-              <Switch>
-                <Route path={`/collection/:id`} component={Session} />
-              </Switch>
-              {/* Surface */}
-              <Switch>
-                <Route
-                  path={`/collection/:id/format/:type/`}
-                  component={Surface}
-                />
-                <Route path={`/format/:type`} component={Surface} />
-                <Redirect
-                  exact={true}
-                  from={"/"}
-                  to={`/format/list/recent${this.props.location.search}`}
-                />
-              </Switch>
-            </div>
-          )}
-        </div>
+        <ErrorBoundary>
+          <div className={`flex`}>
+            <Route component={Navigation} />
+          </div>
+          <div className={`relative flex-grow`}>
+            {/* Capture */}
+            {NetworkUtils.getCapture(this.props.location.search) ? (
+              <div className={`absolute top-0 left-0 z-max vh-100 w-100`}>
+                <ErrorBoundary>
+                  <Route component={Capture} />
+                </ErrorBoundary>
+              </div>
+            ) : (
+              <div className={`flex`}>
+                {/* Session */}
+                <ErrorBoundary>
+                  <Switch>
+                    <Route path={`/collection/:id`} component={Session} />
+                  </Switch>
+                </ErrorBoundary>
+                {/* Surface */}
+                <ErrorBoundary>
+                  <Switch>
+                    <Route
+                      path={`/collection/:id/format/:type/`}
+                      component={Surface}
+                    />
+                    <Route path={`/format/:type`} component={Surface} />
+                    <Redirect
+                      exact={true}
+                      from={"/"}
+                      to={`/format/list/recent${this.props.location.search}`}
+                    />
+                  </Switch>
+                </ErrorBoundary>
+              </div>
+            )}
+          </div>
+        </ErrorBoundary>
       </div>
     );
   }

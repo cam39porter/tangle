@@ -4,35 +4,48 @@ import { GraphNode } from "../models/graph-node";
 import { Capture } from "../../db/models/capture";
 import { Node, Relationship } from "neo4j-driver/types/v1";
 import { formatNode, formatCapture } from "./graph-node";
+import { Session } from "../../db/models/session";
 
 export function buildGraph(
-  paths: Array<[Capture, Relationship, Node, Relationship, Capture]>
+  paths: Array<
+    [Capture, Session[], Relationship, Node, Relationship, Capture, Session[]]
+  >
 ): Graph {
   const nodes = new Map<string, GraphNode>();
   const edges = new Map<string, Edge>();
   paths.forEach(path => {
-    nodes.set(path[0].urn.getId(), formatCapture(path[0], true));
-    if (path[2]) {
-      if (!nodes.has(path[2].properties["id"])) {
-        nodes.set(path[2].properties["id"], formatNode(path[2], false));
+    const root = path[0];
+    const rootParents = path[1];
+    const r1 = path[2];
+    const firstDegree = path[3];
+    const r2 = path[4];
+    const secondDegree = path[5];
+    const secondDegreeParents = path[6];
+    nodes.set(root.urn.getId(), formatCapture(root, rootParents));
+    if (firstDegree) {
+      if (!nodes.has(firstDegree.properties["id"])) {
+        nodes.set(firstDegree.properties["id"], formatNode(firstDegree));
       }
       const edge = formatEdge(
-        path[1],
-        path[0].urn.toRaw(),
-        path[2].properties["id"]
+        r1,
+        root.urn.toRaw(),
+        firstDegree.properties["id"]
       );
       if (!hasEdge(edges, edge)) {
         edges.set(formatEdgeId(edge.source, edge.destination), edge);
       }
     }
-    if (path[4]) {
-      if (!nodes.has(path[4].urn.getId())) {
-        nodes.set(path[4].urn.getId(), formatCapture(path[4], false));
+    if (secondDegree) {
+      if (!nodes.has(secondDegree.urn.getId())) {
+        nodes.set(
+          secondDegree.urn.getId(),
+          formatCapture(secondDegree, secondDegreeParents)
+        );
       }
       const edge = formatEdge(
-        path[3],
-        path[2].properties["id"],
-        path[4].urn.toRaw()
+        r2,
+        firstDegree.properties["id"],
+        secondDegree.urn.toRaw()
       );
       if (!hasEdge(edges, edge)) {
         edges.set(formatEdgeId(edge.source, edge.destination), edge);

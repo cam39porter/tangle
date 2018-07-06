@@ -47,7 +47,7 @@ export function create(
     }
     const tagUpserts = createTags(userId, session.urn, tags);
     return Promise.all([relationshipPromise, tagUpserts]).then(() => {
-      return formatSession(session, true);
+      return formatSession(session);
     });
   });
 }
@@ -60,9 +60,7 @@ export function edit(
   const userId = getAuthenticatedUser().urn;
   return editSession(userId, urn, title).then((session: Session) => {
     return deleteTags(userId, session.urn).then(() =>
-      createTags(userId, session.urn, tags).then(() =>
-        formatSession(session, true)
-      )
+      createTags(userId, session.urn, tags).then(() => formatSession(session))
     );
   });
 }

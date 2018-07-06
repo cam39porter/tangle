@@ -45,7 +45,7 @@ export function getAllByUseCase(
 function getAllRandom(): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().urn;
   return getRandomCapture(userId).then(capture => {
-    return expandCaptures(userId, [capture.urn], formatCapture(capture, true));
+    return expandCaptures(userId, [capture.urn], formatCapture(capture, []));
   });
 }
 
@@ -95,7 +95,7 @@ function getOthers(urn: Urn): Promise<SurfaceResults> {
       return expandCaptures(
         userUrn,
         captures.map(c => c.urn),
-        formatNode(node, true)
+        formatNode(node)
       );
     });
   });
@@ -104,7 +104,7 @@ function getOthers(urn: Urn): Promise<SurfaceResults> {
 function getCapture(urn: CaptureUrn): Promise<SurfaceResults> {
   const userUrn = getAuthenticatedUser().urn;
   return getCaptureClient(userUrn, urn).then(capture =>
-    expandCaptures(userUrn, [capture.urn], formatCapture(capture, true))
+    expandCaptures(userUrn, [capture.urn], formatCapture(capture, []))
   );
 }
 

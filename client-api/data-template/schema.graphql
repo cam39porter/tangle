@@ -1,7 +1,6 @@
 type SurfaceResults {
   pivot: Node # for detailed view, the node being asked for
   graph: Graph! # for generating the graph visualization,
-  list: [ListItem]! # for generating list results
   pageInfo: PageInfo!
 }
 
@@ -97,7 +96,7 @@ type Node {
   type: NodeType!
   text: String
   level: Int
-  parent: Session!
+  parents: [Session!]!
 }
 
 enum NodeType {

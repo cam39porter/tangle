@@ -8,9 +8,10 @@ let errorHandler = {
   }
 };
 
-const initialize = (client: ApolloClient<Object>) => {
-  if (process.env.REACT_APP_ENV === "production") {
-    errorHandler.report = (message: String, stacktrace: Object) => {
+const initializeCloudReporting = (client: ApolloClient<Object>) => {
+  errorHandler.report = (message: String, stacktrace: Object) => {
+    // Do report errors that are caused by reportError (infinite loop)
+    if (!message.includes("reportError")) {
       client
         .mutate<reportErrorMutationVariables>({
           mutation: reportError,
@@ -22,11 +23,11 @@ const initialize = (client: ApolloClient<Object>) => {
         .catch(err => {
           console.error(err);
         });
-    };
-  }
+    }
+  };
 };
 
 export default {
-  initialize,
+  initializeCloudReporting,
   errorHandler
 };

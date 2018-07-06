@@ -57,13 +57,13 @@ const errorLink = onError(({ networkError, graphQLErrors }) => {
     }
     ErrorsUtils.errorHandler.report(
       networkError.message,
-      networkError.stack ? networkError.stack : ""
+      networkError.stack ? networkError.stack : {}
     );
   } else if (graphQLErrors) {
     let error = graphQLErrors[0];
     ErrorsUtils.errorHandler.report(
       error.message,
-      error.stack ? error.stack : ""
+      error.stack ? error.stack : {}
     );
   }
 });
@@ -102,8 +102,10 @@ const client = new ApolloClient({
   link: retryLink.concat(errorLink.concat(authLink.concat(httpLink)))
 });
 
-// Initialize error handler
-ErrorsUtils.initialize(client);
+// Initialize Cloud Error Reporting
+if (process.env.REACT_APP_ENV === "production") {
+  ErrorsUtils.initializeCloudReporting(client);
+}
 
 class ApolloWrappedApp extends React.Component<object, object> {
   render() {

@@ -22,7 +22,11 @@ export const nodeFragment = gql`
     id
     type
     text
-    level
+    parents {
+      id
+      title
+      created
+    }
   }
 `;
 
@@ -73,6 +77,11 @@ export const captureFragment = gql`
     id
     body
     created
+    parents {
+      id
+      title
+      created
+    }
   }
 `;
 

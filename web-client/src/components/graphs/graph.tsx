@@ -431,7 +431,7 @@ class GraphVisualization extends React.Component<Props, State> {
   render() {
     return (
       <div
-        className={`vh-100`}
+        className={`relative vh-100`}
         style={
           {
             // minHeight: `${this.props.windowHeight - this.props.headerHeight}px`
@@ -449,7 +449,7 @@ class GraphVisualization extends React.Component<Props, State> {
         {this.state.graphFocus &&
           this.state.graphFocus.data.id && (
             <div
-              className={`absolute bottom-1 left-1 z-5 br4`}
+              className={`absolute top-2 left-2 z-5 br4`}
               style={{ width: WIDTH }}
             >
               <CardCapture

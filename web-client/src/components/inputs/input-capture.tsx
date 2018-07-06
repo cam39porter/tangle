@@ -226,8 +226,7 @@ class InputCapture extends React.Component<Props, State> {
                                 this.numberOfOptimisticCaptures +
                                 1)}:optimistic`,
                               type: NodeType.Capture,
-                              text: body,
-                              level: 0
+                              text: body
                             } as NodeFieldsFragment
                           },
                           refetchQueries: ApolloUtils.getCreateSessionCaptureRefetchQueries(

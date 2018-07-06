@@ -17,6 +17,8 @@ import { getAuthenticatedUser } from "../../filters/request-context";
 import { formatCaptureWithSessions } from "../../db/formatters/capture";
 import { CollectionResult } from "../models/collection-result";
 import { transformFromCountPlusOne } from "../../helpers/page";
+import { formatBasicSession } from "../../db/formatters/session";
+import { Session } from "../../db/models/session";
 
 export function expandCaptures(
   userUrn: UserUrn,
@@ -81,16 +83,27 @@ export function getRelatedCapturesBySession(
     new Param("count", pagingContext.count + 1)
   ];
   return executeQuery(query, params).then(result => {
-    const captures: Capture[] = result.records.map(record => {
-      return formatCaptureWithSessions(
-        record.get("capture"),
-        record.get("sessions")
-      );
-    });
+    const captures: Capture[] = result.records
+      .filter(record => {
+        const sessions: Session[] = record
+          .get("sessions")
+          .map(formatBasicSession);
+        const sessionUrns: string[] = sessions.map(session =>
+          session.urn.toRaw()
+        );
+        return !sessionUrns.includes(sessionUrn.toRaw());
+      })
+      .map(record => {
+        return formatCaptureWithSessions(
+          record.get("capture"),
+          record.get("sessions")
+        );
+      });
     const end = parseFloat(pagingContext.pageId) + pagingContext.count;
     return transformFromCountPlusOne(captures, pagingContext, end.toString());
   });
 }
+
 function expandList(
   userUrn: UserUrn,
   captureUrns: CaptureUrn[],

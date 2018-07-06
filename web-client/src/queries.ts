@@ -324,3 +324,9 @@ export const reportError = gql`
     reportError(message: $message, stacktrace: $stacktrace)
   }
 `;
+
+export const sendFeedback = gql`
+  mutation sendFeedback($body: String!) {
+    sendFeedback(body: $body)
+  }
+`;

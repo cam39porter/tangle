@@ -449,7 +449,7 @@ class GraphVisualization extends React.Component<Props, State> {
         {this.state.graphFocus &&
           this.state.graphFocus.data.id && (
             <div
-              className={`absolute bottom-1 right-1 z-max br4`}
+              className={`absolute bottom-1 left-1 z-5 br4`}
               style={{ width: WIDTH }}
             >
               <CardCapture

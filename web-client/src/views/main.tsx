@@ -10,6 +10,7 @@ import Navigation from "../components/navigation/navigation";
 import Surface from "./surface";
 import Capture from "./capture";
 import ErrorBoundary from "../components/help/error-boundary";
+import Feedback from "../components/help/feedback";
 
 // Utils
 import { NetworkUtils } from "../utils";
@@ -77,6 +78,9 @@ class Main extends React.Component<Props, State> {
                 </ErrorBoundary>
               </div>
             )}
+          </div>
+          <div className={`fixed right-1 bottom-0 z-max`}>
+            <Feedback />
           </div>
         </ErrorBoundary>
       </div>

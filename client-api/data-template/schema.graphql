@@ -97,6 +97,7 @@ type Node {
   type: NodeType!
   text: String
   level: Int
+  parent: Session!
 }
 
 enum NodeType {
@@ -184,4 +185,5 @@ type Mutation {
   deleteSession(id: String!): Boolean!
   editCapture(id: String!, body: String!): Node!
   dismissCaptureRelation(fromId: String!, toId: String!): Boolean
+  sendFeedback(body: String!): Boolean
 }

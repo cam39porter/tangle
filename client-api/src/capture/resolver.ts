@@ -15,6 +15,7 @@ import { SessionUrn } from "../urn/session-urn";
 import * as xss from "xss";
 import { CaptureRelation } from "./models/capture-relation";
 import { Relationship } from "../db/neo4j/relationship";
+import { create as createFeedback } from "../db/services/feedback";
 
 const xssOptions = { whiteList: xss.whiteList };
 const captureXSS = new xss.FilterXSS(xssOptions);
@@ -92,10 +93,14 @@ export default {
       { fromId, toId },
       // @ts-ignore
       context,
-      // @ts-ignore
+      // @ts-ignores
       info
     ): Promise<boolean> {
       return dismissCaptureRelation(fromId, toId);
+    },
+    // @ts-ignore
+    sendFeedback(parent, { body }, context, info): Promise<boolean> {
+      return createFeedback(body);
     }
   }
 };

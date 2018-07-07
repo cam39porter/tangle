@@ -12,20 +12,21 @@ export function formatNode(node: Node): GraphNode {
       node.properties["name"] ||
       node.properties["title"] ||
       node.properties["url"],
-    0,
+    null,
     []
   );
 }
 
 export function formatCapture(
   capture: Capture,
+  isRoot: boolean,
   parents?: Session[]
 ): GraphNode {
   return new GraphNode(
     capture.urn.toRaw(),
     CAPTURE_LABEL.name,
     capture.body,
-    0,
+    isRoot ? "DIRECT_RESULT" : "RELATED",
     parents || []
   );
 }
@@ -35,7 +36,7 @@ export function formatSession(session: Session): GraphNode {
     session.urn.toRaw(),
     SESSION_LABEL.name,
     session.title,
-    0,
+    null,
     []
   );
 }

@@ -57,7 +57,7 @@ export function editCapture(urn: CaptureUrn, body: string): Promise<GraphNode> {
     plainText,
     body
   ).then(capture =>
-    createRelations(urn, plainText).then(() => formatCapture(capture))
+    createRelations(urn, plainText).then(() => formatCapture(capture, true))
   );
 }
 
@@ -74,7 +74,7 @@ export function createCapture(
         updateParentModified(user.urn, parentUrn),
         createPreviousRelationship(user.urn, capture.urn, previousUrn),
         createRelations(capture.urn, plainText)
-      ]).then(() => formatCapture(capture));
+      ]).then(() => formatCapture(capture, true));
     }
   );
 }

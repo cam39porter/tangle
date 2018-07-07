@@ -4,19 +4,19 @@ export class GraphNode {
   public id: string;
   public type: string;
   public text: string;
-  public level: number;
+  public resultClass: string;
   public parents: Session[];
   constructor(
     id: string,
     type: string,
     text: string,
-    level: number,
+    resultClass: string,
     parents: Session[]
   ) {
     this.id = id;
     this.type = type;
     this.text = text;
-    this.level = level;
+    this.resultClass = resultClass;
     this.parents = parents;
   }
 }

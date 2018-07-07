@@ -21,7 +21,7 @@ export function buildGraph(
     const r2 = path[4];
     const secondDegree = path[5];
     const secondDegreeParents = path[6];
-    nodes.set(root.urn.getId(), formatCapture(root, rootParents));
+    nodes.set(root.urn.getId(), formatCapture(root, true, rootParents));
     if (firstDegree) {
       if (!nodes.has(firstDegree.properties["id"])) {
         nodes.set(firstDegree.properties["id"], formatNode(firstDegree));
@@ -39,7 +39,7 @@ export function buildGraph(
       if (!nodes.has(secondDegree.urn.getId())) {
         nodes.set(
           secondDegree.urn.getId(),
-          formatCapture(secondDegree, secondDegreeParents)
+          formatCapture(secondDegree, false, secondDegreeParents)
         );
       }
       const edge = formatEdge(

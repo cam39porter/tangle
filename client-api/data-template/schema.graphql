@@ -97,7 +97,7 @@ type Node {
   id: String!
   type: NodeType!
   text: String
-  level: Int
+  resultClass: ResultClass
   parents: [Session!]!
 }
 
@@ -107,6 +107,11 @@ enum NodeType {
   Tag
   Session
   Link
+}
+
+enum ResultClass {
+  DIRECT_RESULT
+  RELATED
 }
 
 enum EdgeType {

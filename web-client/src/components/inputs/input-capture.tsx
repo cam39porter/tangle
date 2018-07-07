@@ -172,7 +172,7 @@ class InputCapture extends React.Component<Props, State> {
       .createSessionCapture({
         variables: {
           sessionId: sessionData.sessionId,
-          previousCaptureId: sessionData.previousId,
+          previousId: sessionData.previousId,
           body
         },
         optimisticResponse: {

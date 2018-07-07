@@ -1268,11 +1268,11 @@
                   "defaultValue": null
                 },
                 {
-                  "name": "captureRelation",
+                  "name": "previousId",
                   "description": "",
                   "type": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "CaptureRelation",
+                    "kind": "SCALAR",
+                    "name": "String",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -1616,60 +1616,6 @@
           "inputFields": null,
           "interfaces": [],
           "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "CaptureRelation",
-          "description": "",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "captureId",
-              "description": "",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "relationshipType",
-              "description": "",
-              "type": {
-                "kind": "ENUM",
-                "name": "CaptureRelationType",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "ENUM",
-          "name": "CaptureRelationType",
-          "description": "",
-          "fields": null,
-          "inputFields": null,
-          "interfaces": null,
-          "enumValues": [
-            {
-              "name": "COMMENTED_ON",
-              "description": "",
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "PREVIOUS",
-              "description": "",
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
           "possibleTypes": null
         },
         {

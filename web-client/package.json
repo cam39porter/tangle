@@ -38,6 +38,7 @@
     "draft-js-hashtag-plugin": "2.0.3",
     "draft-js-inline-toolbar-plugin": "2.0.3",
     "draft-js-linkify-plugin": "2.0.1",
+    "draft-js-markdown-shortcuts-plugin": "0.4.1",
     "draft-js-plugins-editor": "2.1.1",
     "draft-js-static-toolbar-plugin": "2.0.2",
     "echarts": "^4.0.4",

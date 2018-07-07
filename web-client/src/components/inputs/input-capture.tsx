@@ -34,16 +34,17 @@ import "draft-js-hashtag-plugin/lib/plugin.css";
 import createHashtagPlugin from "draft-js-hashtag-plugin";
 import "draft-js-linkify-plugin/lib/plugin.css";
 import createLinkifyPlugin from "draft-js-linkify-plugin";
-import "draft-js-static-toolbar-plugin/lib/plugin.css";
-import createToolbarPlugin from "draft-js-static-toolbar-plugin";
-import {
-  ItalicButton,
-  BoldButton,
-  UnderlineButton,
-  HeadlineThreeButton,
-  UnorderedListButton,
-  OrderedListButton
-} from "draft-js-buttons";
+// import "draft-js-static-toolbar-plugin/lib/plugin.css";
+// import createToolbarPlugin from "draft-js-static-toolbar-plugin";
+// import {
+//   ItalicButton,
+//   BoldButton,
+//   UnderlineButton,
+//   HeadlineThreeButton,
+//   UnorderedListButton,
+//   OrderedListButton
+// } from "draft-js-buttons";
+import createMarkdownShortcutsPlugin from "draft-js-markdown-shortcuts-plugin";
 
 import ReactResizeDetector from "react-resize-detector";
 
@@ -91,18 +92,23 @@ class InputCapture extends React.Component<Props, State> {
   numberOfOptimisticCaptures: number = 0;
   hashtagPlugin = createHashtagPlugin();
   linkifyPlugin = createLinkifyPlugin();
-  toolbarPlugin = createToolbarPlugin({
-    structure: [
-      ItalicButton,
-      BoldButton,
-      UnderlineButton,
-      HeadlineThreeButton,
-      UnorderedListButton,
-      OrderedListButton
-    ]
-  });
-  plugins = [this.linkifyPlugin, this.hashtagPlugin, this.toolbarPlugin];
-  Toolbar = this.toolbarPlugin.Toolbar;
+  // toolbarPlugin = createToolbarPlugin({
+  //   structure: [
+  //     ItalicButton,
+  //     BoldButton,
+  //     UnderlineButton,
+  //     HeadlineThreeButton,
+  //     UnorderedListButton,
+  //     OrderedListButton
+  //   ]
+  // });
+  markdownPlugin = createMarkdownShortcutsPlugin();
+  plugins = [
+    this.linkifyPlugin,
+    this.hashtagPlugin,
+    this.markdownPlugin /* this.toolbarPlugin */
+  ];
+  // Toolbar = this.toolbarPlugin.Toolbar;
 
   constructor(props: Props) {
     super(props);
@@ -218,10 +224,29 @@ class InputCapture extends React.Component<Props, State> {
       });
   };
 
+  focusIsBeginning = (editorState: Draft.EditorState) => {
+    const selectionState = editorState.getSelection();
+    const startKey = selectionState.getStartKey();
+    const focusKey = selectionState.getFocusKey();
+    const offset = selectionState.getFocusOffset();
+    return focusKey === startKey && offset === 0;
+  };
+
+  focusIsEnd = (editorState: Draft.EditorState) => {
+    const contentState = editorState.getCurrentContent();
+    const selectionState = editorState.getSelection();
+    const lastBlock = contentState.getLastBlock();
+    const lastKey = lastBlock.getKey();
+    const lastBlockLength = lastBlock.getLength();
+    const focusKey = selectionState.getFocusKey();
+    const offset = selectionState.getFocusOffset();
+    return focusKey === lastKey && lastBlockLength === offset;
+  };
+
   handleKeyBindings = (e: React.KeyboardEvent<{}>) => {
     const keyCode = e.keyCode;
 
-    if (keyCode === 13 /* `Enter` key */) {
+    if (keyCode === 13 /* Enter */) {
       if (e.nativeEvent.shiftKey) {
         return "new-line";
       } else {
@@ -303,13 +328,13 @@ class InputCapture extends React.Component<Props, State> {
           });
         }}
       >
-        {this.state.isFocus && (
+        {/* {this.state.isFocus && (
           <div className={`absolute relative top--2 left--1 w-100`}>
             <div className={`flex absolute top--1 left-0`}>
               <this.Toolbar />
             </div>
           </div>
-        )}
+        )} */}
         <div className={`flex-grow`}>
           <ReactResizeDetector
             handleHeight={true}
@@ -324,6 +349,19 @@ class InputCapture extends React.Component<Props, State> {
             style={{
               width: `${editorWidth}px`
             }}
+            onKeyDown={e => {
+              const keyCode = e.keyCode;
+              if (keyCode === 38 || keyCode === 37 /* Up or Left Arrow */) {
+                if (this.focusIsBeginning(this.state.editorState)) {
+                  this.props.focusOnPrevious && this.props.focusOnPrevious();
+                }
+              }
+              if (keyCode === 40 || keyCode === 39 /* Right or Down Arrow */) {
+                if (this.focusIsEnd(this.state.editorState)) {
+                  this.props.focusOnNext && this.props.focusOnNext();
+                }
+              }
+            }}
           >
             <Editor
               ref={editor => {
@@ -336,11 +374,17 @@ class InputCapture extends React.Component<Props, State> {
                 command:
                   | Draft.DraftEditorCommand
                   | "new-line"
-                  | "create-capture",
+                  | "create-capture"
+                  | "previous",
                 editorState: Draft.EditorState
               ) => {
                 if (command === "new-line") {
                   this.handleNewLine(editorState);
+                  return "handled";
+                }
+
+                if (command === "previous") {
+                  this.props.focusOnPrevious && this.props.focusOnPrevious();
                   return "handled";
                 }
 

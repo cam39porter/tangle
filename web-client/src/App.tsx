@@ -67,7 +67,7 @@ class App extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className={`vh-100 w-100 avenir`}>
+      <div className={`vh-100 w-100 sans-serif`}>
         {this.state.isAuthenticated === null ? null : (
           <div>
             {this.state.isAuthenticated ? (

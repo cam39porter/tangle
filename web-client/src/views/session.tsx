@@ -200,6 +200,7 @@ class Session extends React.Component<Props, State> {
                         const focusOnNext = this.inputsFocus.get(nextId);
                         if (focusOnNext) {
                           focusOnNext();
+                          this.scrollTo(nextId);
                         }
                       }}
                       focusOnPrevious={() => {
@@ -212,6 +213,7 @@ class Session extends React.Component<Props, State> {
 
                         if (focusOnPrevious) {
                           focusOnPrevious();
+                          this.scrollTo(previousId);
                         }
                       }}
                     />

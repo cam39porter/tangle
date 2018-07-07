@@ -47,13 +47,16 @@ const executableSchema: GraphQLSchema = makeExecutableSchema({
 initAuth();
 
 const baseMorganFormat =
-  `:date[iso] :reqId :userId :remote-addr :remote-user :referrer :user-agent ` +
+  `:date[iso] :reqId :userId :env :remote-addr :remote-user :referrer :user-agent ` +
   `:method :url HTTP/:http-version ` +
   `:status :res[content-length] :response-time`;
 
 const reqMorganFormat = `req:  ${baseMorganFormat}`;
 const respMorganFormat = `resp: ${baseMorganFormat}`;
 
+morgan.token("env", () => {
+  return process.env.NODE_ENV;
+});
 morgan.token("reqId", req => {
   const requestContext = (req["requestContext"] as RequestContext) || null;
   return requestContext ? requestContext.reqId : "-";

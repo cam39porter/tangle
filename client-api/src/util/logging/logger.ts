@@ -29,8 +29,9 @@ function formatStr(
 ): string {
   const req = hasAuthenticatedUser() ? getRequestContext() : null;
   const formatted = `${new Date().toISOString()} ${(req && req.reqId) ||
-    "-"} ${(req && req.user.urn.toRaw()) || "-"} ${scope} -- ${message ||
-    ""} -- ${stacktrace || ""}`;
+    "-"} ${(req && req.user.urn.toRaw()) || "-"} ${
+    process.env.NODE_ENV
+  } ${scope} -- ${message || ""} -- ${stacktrace || ""}`;
   return formatted;
 }
 

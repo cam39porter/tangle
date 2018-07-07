@@ -174,7 +174,7 @@ class Session extends React.Component<Props, State> {
                 index === 0 ? undefined : sessionItems[index - 1].id;
               const nextId =
                 index === sessionItems.length - 1
-                  ? undefined
+                  ? "input-capture"
                   : sessionItems[index + 1].id;
 
               return (
@@ -226,12 +226,27 @@ class Session extends React.Component<Props, State> {
             >
               <ScrollContainerElement name={"input-capture"}>
                 <CardCapture
+                  handleFocus={focus => {
+                    this.inputsFocus.set("input-capture", focus);
+                  }}
                   sessionId={sessionCaptures.id}
                   previousId={
                     sessionItems.length > 0
                       ? sessionItems[sessionItems.length - 1].id
                       : sessionId
                   }
+                  focusOnPrevious={() => {
+                    if (!sessionItems.length) {
+                      return;
+                    }
+                    const focusOnPrevious = this.inputsFocus.get(
+                      sessionItems[sessionItems.length - 1].id
+                    );
+
+                    if (focusOnPrevious) {
+                      focusOnPrevious();
+                    }
+                  }}
                 />
               </ScrollContainerElement>
             </div>

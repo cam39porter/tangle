@@ -250,12 +250,13 @@ class InputCapture extends React.Component<Props, State> {
     const content = editorState.getCurrentContent();
     const plainText = content.getPlainText();
 
-    if (!plainText) {
+    // TODO: navigate to next capture in the list
+    if (captureId) {
+      this.props.focusOnNext && this.props.focusOnNext();
       return "handled";
     }
 
-    // TODO: navigate to next capture in the list
-    if (captureId) {
+    if (!plainText) {
       return "handled";
     }
 

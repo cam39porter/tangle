@@ -213,12 +213,10 @@ class InputCapture extends React.Component<Props, State> {
   };
 
   handleKeyBindings = (e: React.KeyboardEvent<{}>) => {
-    const key = e.key;
-    // const hasCommandModifier =  Draft.KeyBindingUtil.hasCommandModifier(e)
+    const keyCode = e.keyCode;
 
-    if (e.keyCode === 13 /* `Enter` key */) {
+    if (keyCode === 13 /* `Enter` key */) {
       if (e.nativeEvent.shiftKey) {
-        console.log("here");
         return "new-line";
       } else {
         return "return";
@@ -266,7 +264,8 @@ class InputCapture extends React.Component<Props, State> {
   };
 
   handleNewLine = (editorState: Draft.EditorState) => {
-    Draft.RichUtils.insertSoftNewline(editorState);
+    let newEditorState = Draft.RichUtils.insertSoftNewline(editorState);
+    this.setState({ editorState: newEditorState });
   };
 
   render() {

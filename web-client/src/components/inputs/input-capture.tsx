@@ -244,16 +244,6 @@ class InputCapture extends React.Component<Props, State> {
   };
 
   handleKeyBindings = (e: React.KeyboardEvent<{}>) => {
-    const keyCode = e.keyCode;
-
-    if (keyCode === 13 /* Enter */) {
-      if (e.nativeEvent.shiftKey) {
-        return "new-line";
-      } else {
-        return "create-capture";
-      }
-    }
-
     return Draft.getDefaultKeyBinding(e);
   };
 
@@ -301,11 +291,6 @@ class InputCapture extends React.Component<Props, State> {
     return "handled";
   };
 
-  handleNewLine = (editorState: Draft.EditorState) => {
-    let newEditorState = Draft.RichUtils.insertSoftNewline(editorState);
-    this.setState({ editorState: newEditorState });
-  };
-
   handleFocus = () => {
     this.editor && this.editor.focus();
   };
@@ -345,7 +330,7 @@ class InputCapture extends React.Component<Props, State> {
             }}
           />
           <div
-            className={`f6 lh-copy`}
+            className={`editor f6 lh-copy`}
             style={{
               width: `${editorWidth}px`
             }}
@@ -361,6 +346,12 @@ class InputCapture extends React.Component<Props, State> {
                   this.props.focusOnNext && this.props.focusOnNext();
                 }
               }
+
+              if (keyCode === 8 /* Delete */) {
+                if (this.focusIsBeginning(this.state.editorState)) {
+                  this.props.focusOnPrevious && this.props.focusOnPrevious();
+                }
+              }
             }}
           >
             <Editor
@@ -370,26 +361,23 @@ class InputCapture extends React.Component<Props, State> {
               plugins={this.plugins}
               editorState={this.state.editorState}
               onChange={this.handleOnChange}
+              handleReturn={(e, editorState) => {
+                const hasCommandModifier = Draft.KeyBindingUtil.hasCommandModifier(
+                  e
+                );
+
+                if (hasCommandModifier) {
+                  return this.handleCreateCapture(editorState);
+                }
+
+                return "not-handled";
+              }}
               handleKeyCommand={(
-                command:
-                  | Draft.DraftEditorCommand
-                  | "new-line"
-                  | "create-capture"
-                  | "previous",
+                command: Draft.DraftEditorCommand | "previous",
                 editorState: Draft.EditorState
               ) => {
-                if (command === "new-line") {
-                  this.handleNewLine(editorState);
-                  return "handled";
-                }
-
                 if (command === "previous") {
                   this.props.focusOnPrevious && this.props.focusOnPrevious();
-                  return "handled";
-                }
-
-                if (command === "create-capture") {
-                  this.handleCreateCapture(editorState);
                   return "handled";
                 }
 

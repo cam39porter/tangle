@@ -51,6 +51,11 @@ spec:
             configMapKeyRef:
               name: cluster-config
               key: neo4jServiceIP
+        - name: NEO4J_URL
+          valueFrom:
+            configMapKeyRef:
+              name: cluster-config
+              key: neo4jUrl
         - name: NEO4J_USER
           valueFrom:
             secretKeyRef:

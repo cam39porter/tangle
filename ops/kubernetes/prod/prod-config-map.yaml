@@ -1,6 +1,7 @@
 apiVersion: v1
 data:
   neo4jServiceIP: 10.43.249.26
+  neo4jUrl: "bolt+routing://10.43.249.26:7687"
   clientApiServiceIP: 10.43.250.52
   client-api-env: "production"
   neo4j-backup-location: "tangle-prod-neo4j-backup"

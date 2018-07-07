@@ -1,13 +1,11 @@
 import { v1 as neo4j } from "neo4j-driver";
 import { StatementResult } from "neo4j-driver/types/v1";
 import { Logger } from "../util/logging/logger";
-import { isLocal } from "../config";
 // import { getContext, hasAuthenticatedUser } from "../filters/request-context";
 // import { UserUrn } from "../urn/user-urn";
 
 const LOGGER = new Logger("src/db/db.ts");
-const protocol = `bolt${!isLocal() ? "+routing" : ""}`;
-const NEO4J_URL = `${protocol}://${process.env.NEO4J_ENDPOINT}:7687`;
+const NEO4J_URL = process.env.NEO4J_URL;
 const driver = neo4j.driver(
   NEO4J_URL,
   neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD),

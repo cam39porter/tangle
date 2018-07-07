@@ -9,15 +9,12 @@ import {
   deleteCaptureNode
 } from "../../db/services/capture";
 import { getNLPResponse } from "../../nlp/services/nlp";
-import * as cheerio from "cheerio";
 
-import { GraphQLError } from "graphql";
 import { Capture } from "../../db/models/capture";
 import { upsertEntity } from "../../db/services/entity";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { parseLinks, parseTags, stripTags } from "../../helpers/capture-parser";
-import { CaptureRelation } from "../models/capture-relation";
-import { CAPTURE_LABEL } from "../../db/helpers/labels";
+import { CAPTURE_LABEL, SESSION_LABEL } from "../../db/helpers/labels";
 import {
   DISMISSED_RELATION_RELATIONSHIP,
   PREVIOUS_RELATIONSHIP
@@ -27,6 +24,8 @@ import { GraphNode } from "../../surface/models/graph-node";
 import { CaptureUrn } from "../../urn/capture-urn";
 import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
 import { SessionUrn } from "../../urn/session-urn";
+import * as htmltotext from "html-to-text";
+import { Urn } from "../../urn/urn";
 
 export function dismissCaptureRelation(
   fromId: string,
@@ -63,29 +62,23 @@ export function editCapture(urn: CaptureUrn, body: string): Promise<GraphNode> {
 export function createCapture(
   body: string,
   parentUrn: EvernoteNoteUrn | SessionUrn | null,
-  captureRelation: CaptureRelation
+  previousId: Urn | null
 ): Promise<GraphNode> {
   const user: User = getAuthenticatedUser();
-  if (
-    captureRelation &&
-    captureRelation.relationshipType.name === PREVIOUS_RELATIONSHIP.name &&
-    !parentUrn
-  ) {
-    throw new GraphQLError(
-      "Malformed request. SessionId is required if captureRelation is present and of type PREVIOUS"
-    );
-  }
   const plainText = parseHtml(body);
   return createCaptureNode(user.urn, plainText, body, parentUrn)
     .then((capture: Capture) => {
-      if (captureRelation) {
+      if (previousId) {
+        const destLabel = CaptureUrn.isCaptureUrn(previousId)
+          ? CAPTURE_LABEL
+          : SESSION_LABEL;
         return createRelationship(
           user.urn,
           capture.urn.toRaw(),
           CAPTURE_LABEL,
-          captureRelation.captureId,
-          CAPTURE_LABEL,
-          captureRelation.relationshipType
+          previousId.toRaw(),
+          destLabel,
+          PREVIOUS_RELATIONSHIP
         ).then(() => capture);
       } else {
         return Promise.resolve(capture);
@@ -99,8 +92,10 @@ export function createCapture(
 }
 
 function parseHtml(html: string): string {
-  const $ = cheerio.load(html);
-  return $.root().text();
+  return htmltotext.fromString(html, {
+    preserveNewlines: true,
+    singleNewLineParagraphs: true
+  });
 }
 
 function createRelations(

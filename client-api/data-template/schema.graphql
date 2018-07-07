@@ -157,27 +157,13 @@ enum GetAllUseCase {
   RANDOM
 }
 
-enum CaptureRelationType {
-  COMMENTED_ON
-  PREVIOUS
-}
-
-input CaptureRelation {
-  captureId: String
-  relationshipType: CaptureRelationType
-}
-
 input PagingContext {
   pageId: String
   count: Int!
 }
 
 type Mutation {
-  createCapture(
-    body: String!
-    sessionId: String
-    captureRelation: CaptureRelation
-  ): Node!
+  createCapture(body: String!, sessionId: String, previousId: String): Node!
   createSession(title: String, firstCaptureId: String, tags: [String!]): Node!
   editSession(id: String!, title: String, tags: [String!]): Node!
   deleteCapture(id: String!): Boolean!

@@ -5,11 +5,18 @@ export class Capture {
   public urn: CaptureUrn;
   public body: string;
   public created: number;
+  public lastModified: number;
   public parents: Session[];
 
-  constructor(urn: CaptureUrn, body: string, created: number) {
+  constructor(
+    urn: CaptureUrn,
+    body: string,
+    created: number,
+    lastModified: number
+  ) {
     this.urn = urn;
     this.body = body;
     this.created = created;
+    this.lastModified = lastModified;
   }
 }

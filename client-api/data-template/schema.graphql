@@ -25,6 +25,7 @@ type Session {
   id: ID!
   title: String
   created: Float!
+  lastModified: Float!
   itemCollection: SessionItemCollection
 }
 
@@ -37,6 +38,7 @@ type Capture {
   id: ID!
   body: String!
   created: Float!
+  lastModified: Float!
   parents: [Session!]
 }
 

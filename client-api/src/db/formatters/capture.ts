@@ -23,6 +23,7 @@ export function buildFromProps(props: object): Capture {
   return new Capture(
     CaptureUrn.fromRaw(props["id"]),
     props["body"],
-    props["created"]
+    props["created"],
+    props["lastModified"] || props["created"]
   );
 }

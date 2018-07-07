@@ -162,7 +162,7 @@ export function editCaptureNodeAndDeleteRelationships(
     DELETE r
     SET capture.plainText={plainText}
     SET capture.body={html}
-    SET lastModified=TIMESTAMP()
+    SET capture.lastModified=TIMESTAMP()
     RETURN capture`;
   return executeQuery(query, params).then(formatCaptureResult);
 }

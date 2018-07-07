@@ -18,7 +18,7 @@ spec:
           secretName: api-cert
       containers:
       - name: client-api
-        image: gcr.io/opit-193719/client-api:a56a97395bc0a4be87aa8151aa9616b7ae5af322
+        image: gcr.io/opit-193719/client-api:a192ea9b460657a80db2ff37c829681f5f36810b
         imagePullPolicy: Always
         ports:
         - containerPort: 8443
@@ -46,11 +46,6 @@ spec:
             configMapKeyRef:
               name: cluster-config
               key: client-api-env
-        - name: NEO4J_ENDPOINT
-          valueFrom:
-            configMapKeyRef:
-              name: cluster-config
-              key: neo4jServiceIP
         - name: NEO4J_URL
           valueFrom:
             configMapKeyRef:

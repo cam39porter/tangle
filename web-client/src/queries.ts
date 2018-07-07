@@ -300,16 +300,9 @@ export const createSessionCapture = gql`
   mutation createSessionCapture(
     $body: String!
     $sessionId: String!
-    $previousCaptureId: String
+    $previousId: String
   ) {
-    createCapture(
-      body: $body
-      sessionId: $sessionId
-      captureRelation: {
-        captureId: $previousCaptureId
-        relationshipType: PREVIOUS
-      }
-    ) {
+    createCapture(body: $body, sessionId: $sessionId, previousId: $previousId) {
       ...NodeFields
     }
   }

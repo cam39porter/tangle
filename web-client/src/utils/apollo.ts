@@ -118,8 +118,9 @@ const createSessionCaptureUpdate = (store, { data }) => {
   const captureItem = {
     __typename: "Capture",
     id: captureNode.id,
-    created: 0,
-    body: captureNode.text || ""
+    created: Date.now(),
+    body: captureNode.text || "",
+    parents: captureNode.parents
   } as CaptureFieldsFragment;
 
   // SessionItemsCollection

@@ -37,7 +37,8 @@ class Feedback extends React.Component<Props, State> {
     this.state = {
       feedback: "",
       isMinimized: true,
-      placeholder: "Enter your feedback here"
+      placeholder:
+        "Please speak your mind. We need ruthless feedback to launch."
     };
   }
 

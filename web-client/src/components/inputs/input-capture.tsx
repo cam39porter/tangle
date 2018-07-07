@@ -42,9 +42,7 @@ import {
   UnderlineButton,
   HeadlineThreeButton,
   UnorderedListButton,
-  OrderedListButton,
-  BlockquoteButton,
-  CodeBlockButton
+  OrderedListButton
 } from "draft-js-buttons";
 
 import ReactResizeDetector from "react-resize-detector";
@@ -71,7 +69,7 @@ interface Props extends RouteProps {
   editCapture: MutationFunc<editCaptureResponse, editCaptureMutationVariables>;
   sessionData?: {
     sessionId: string;
-    previousId?: string;
+    previousId: string;
   };
   captureId?: string;
   startingHTML?: string;
@@ -96,9 +94,7 @@ class InputCapture extends React.Component<Props, State> {
       UnderlineButton,
       HeadlineThreeButton,
       UnorderedListButton,
-      OrderedListButton,
-      BlockquoteButton,
-      CodeBlockButton
+      OrderedListButton
     ]
   });
   plugins = [this.linkifyPlugin, this.hashtagPlugin, this.toolbarPlugin];
@@ -139,15 +135,102 @@ class InputCapture extends React.Component<Props, State> {
     };
   }
 
+  createCapture = (editorState: Draft.EditorState) => {
+    let { match } = this.props;
+    const body = convertToHTML(editorState.getCurrentContent());
+
+    this.props
+      .createCapture({
+        variables: {
+          body
+        }
+      })
+      .then(res => {
+        const id = res.data.createCapture.id;
+        AnalyticsUtils.trackEvent({
+          category: match.params["id"]
+            ? AnalyticsUtils.Categories.Session
+            : AnalyticsUtils.Categories.Home,
+          action: AnalyticsUtils.Actions.CreateCapture,
+          label: id
+        });
+      })
+      .catch(err => {
+        ErrorsUtils.errorHandler.report(err.message, err.stack);
+      });
+  };
+
+  createSessionCapture = (editorState: Draft.EditorState) => {
+    const { sessionData, location } = this.props;
+    const body = convertToHTML(editorState.getCurrentContent());
+
+    if (!sessionData) {
+      return;
+    }
+
+    this.props
+      .createSessionCapture({
+        variables: {
+          sessionId: sessionData.sessionId,
+          previousCaptureId: sessionData.previousId,
+          body
+        },
+        optimisticResponse: {
+          createCapture: {
+            __typename: "Node",
+            id: `${(this.numberOfOptimisticCaptures =
+              this.numberOfOptimisticCaptures + 1)}:optimistic`,
+            type: NodeType.Capture,
+            text: body,
+            parents: [
+              {
+                __typename: "Session",
+                id: sessionData.sessionId,
+                title: "",
+                created: Date.now()
+              }
+            ]
+          } as NodeFieldsFragment
+        },
+        refetchQueries: ApolloUtils.getCreateSessionCaptureRefetchQueries(
+          location.pathname,
+          location.search,
+          sessionData.sessionId
+        ),
+        update: ApolloUtils.createSessionCaptureUpdate
+      })
+      .then(res => {
+        const id = res.data.createCapture.id;
+        AnalyticsUtils.trackEvent({
+          category: AnalyticsUtils.Categories.Session,
+          action: AnalyticsUtils.Actions.CreateSessionCapture,
+          label: id
+        });
+      })
+      .catch(err => {
+        ErrorsUtils.errorHandler.report(err.message, err.stack);
+      });
+  };
+
   handleKeyBindings = (e: React.KeyboardEvent<{}>) => {
-    if (e.key === "Enter" && Draft.KeyBindingUtil.hasCommandModifier(e)) {
-      return "command-return";
+    const key = e.key;
+    // const hasCommandModifier =  Draft.KeyBindingUtil.hasCommandModifier(e)
+
+    if (e.keyCode === 13 /* `Enter` key */) {
+      if (e.nativeEvent.shiftKey) {
+        console.log("here");
+        return "new-line";
+      } else {
+        return "return";
+      }
     }
 
     return Draft.getDefaultKeyBinding(e);
   };
 
   handleOnChange = (editorState: Draft.EditorState) => {
+    // const currentSelectionState = editorState.getSelection();
+    // console.log(currentSelectionState);
     const currentContent = this.state.editorState.getCurrentContent();
     const newContent = editorState.getCurrentContent();
     if (currentContent !== newContent) {
@@ -158,7 +241,38 @@ class InputCapture extends React.Component<Props, State> {
     });
   };
 
+  handleCreateCapture = (editorState: Draft.EditorState) => {
+    const { sessionData, captureId } = this.props;
+
+    // TODO: navigate to next capture in the list
+    if (captureId) {
+      return "handled";
+    }
+
+    if (sessionData) {
+      this.createSessionCapture(editorState);
+    } else {
+      this.createCapture(editorState);
+    }
+
+    // Clean this for next input
+    let cleanEditorState = EditorUtils.cleanEditorState(editorState);
+
+    this.setState({
+      editorState: cleanEditorState
+    });
+
+    return "handled";
+  };
+
+  handleNewLine = (editorState: Draft.EditorState) => {
+    Draft.RichUtils.insertSoftNewline(editorState);
+  };
+
   render() {
+    const { sessionData, match, captureId } = this.props;
+    const { editorWidth } = this.state;
+
     return (
       <div
         className={`relative flex w-100`}
@@ -192,7 +306,7 @@ class InputCapture extends React.Component<Props, State> {
           <div
             className={`f6 lh-copy`}
             style={{
-              width: `${this.state.editorWidth}px`
+              width: `${editorWidth}px`
             }}
           >
             <Editor
@@ -200,91 +314,20 @@ class InputCapture extends React.Component<Props, State> {
               editorState={this.state.editorState}
               onChange={this.handleOnChange}
               handleKeyCommand={(
-                command: Draft.DraftEditorCommand | "command-return",
+                command:
+                  | Draft.DraftEditorCommand
+                  | "new-line"
+                  | "create-capture",
                 editorState: Draft.EditorState
               ) => {
-                if (command === "command-return") {
-                  let content = editorState.getCurrentContent();
-                  if (!this.props.captureId && content.getPlainText()) {
-                    let body = convertToHTML(content);
-                    if (
-                      this.props.sessionData &&
-                      this.props.sessionData.previousId
-                    ) {
-                      this.props
-                        .createSessionCapture({
-                          variables: {
-                            sessionId: this.props.sessionData.sessionId,
-                            previousCaptureId: this.props.sessionData
-                              .previousId,
-                            body
-                          },
-                          optimisticResponse: {
-                            createCapture: {
-                              __typename: "Node",
-                              id: `${(this.numberOfOptimisticCaptures =
-                                this.numberOfOptimisticCaptures +
-                                1)}:optimistic`,
-                              type: NodeType.Capture,
-                              text: body
-                            } as NodeFieldsFragment
-                          },
-                          refetchQueries: ApolloUtils.getCreateSessionCaptureRefetchQueries(
-                            this.props.location.pathname,
-                            this.props.location.search,
-                            this.props.sessionData.sessionId
-                          ),
-                          update: ApolloUtils.createSessionCaptureUpdate
-                        })
-                        .then(res => {
-                          const id = res.data.createCapture.id;
-                          AnalyticsUtils.trackEvent({
-                            category: AnalyticsUtils.Categories.Session,
-                            action: AnalyticsUtils.Actions.CreateSessionCapture,
-                            label: id
-                          });
-                        })
-                        .catch(err => {
-                          ErrorsUtils.errorHandler.report(
-                            err.message,
-                            err.stack
-                          );
-                        });
-                    } else {
-                      this.props
-                        .createCapture({
-                          variables: {
-                            body
-                          }
-                        })
-                        .then(res => {
-                          const id = res.data.createCapture.id;
-                          AnalyticsUtils.trackEvent({
-                            category: this.props.match.params["id"]
-                              ? AnalyticsUtils.Categories.Session
-                              : AnalyticsUtils.Categories.Home,
-                            action: AnalyticsUtils.Actions.CreateCapture,
-                            label: id
-                          });
-                        })
-                        .catch(err => {
-                          ErrorsUtils.errorHandler.report(
-                            err.message,
-                            err.stack
-                          );
-                        });
-                    }
+                if (command === "new-line") {
+                  this.handleNewLine(editorState);
+                  return "handled";
+                }
 
-                    let cleanEditorState = EditorUtils.cleanEditorState(
-                      editorState
-                    );
-
-                    this.setState({
-                      editorState: cleanEditorState
-                    });
-
-                    return "handled";
-                  }
+                if (command === "create-capture") {
+                  this.handleCreateCapture(editorState);
+                  return "handled";
                 }
 
                 const newState = Draft.RichUtils.handleKeyCommand(
@@ -296,6 +339,7 @@ class InputCapture extends React.Component<Props, State> {
                   this.handleOnChange(newState);
                   return "handled";
                 }
+
                 return "not-handled";
               }}
               keyBindingFn={this.handleKeyBindings}
@@ -313,13 +357,13 @@ class InputCapture extends React.Component<Props, State> {
                 const endingHtml = convertToHTML(content);
                 if (this.props.startingHTML !== endingHtml) {
                   AnalyticsUtils.trackEvent({
-                    category: this.props.match.params["id"]
+                    category: match.params["id"]
                       ? AnalyticsUtils.Categories.Session
                       : AnalyticsUtils.Categories.Home,
-                    action: this.props.sessionData
+                    action: sessionData
                       ? AnalyticsUtils.Actions.EditSessionCapture
                       : AnalyticsUtils.Actions.EditCapture,
-                    label: this.props.captureId
+                    label: captureId
                   });
                 }
               }}

@@ -19,7 +19,6 @@ import { graphql, compose, QueryProps, MutationFunc } from "react-apollo";
 import HeaderSession from "../components/headers/header-session";
 import CardSessionTitle from "../components/cards/card-session-title";
 import CardCapture from "../components/cards/card-capture";
-import InputCapture from "../components/inputs/input-capture";
 import ScrollContainer from "../components/scroll/scroll-container";
 import ScrollContainerElement from "../components/scroll/scroll-container-element";
 import ReactResizeDetector from "react-resize-detector";
@@ -43,6 +42,8 @@ interface Props extends RouteProps {
   windowHeight: number;
 }
 
+type InputsFocusMap = Map<string, () => void>;
+
 interface State {
   headerHeight: number;
   footerHeight: number;
@@ -52,6 +53,7 @@ const WIDTH = "30em";
 
 class Session extends React.Component<Props, State> {
   _scrollContainer: ScrollContainer | null = null;
+  inputsFocus: InputsFocusMap = new Map();
 
   constructor(props: Props) {
     super(props);
@@ -166,38 +168,72 @@ class Session extends React.Component<Props, State> {
                 />
               </div>
             </div>
-            {sessionItems.map(capture => (
-              <div
-                className={``}
-                style={{
-                  width: WIDTH
-                }}
-                key={capture.id}
-              >
-                <ScrollContainerElement name={capture.id}>
-                  <CardCapture
-                    sessionId={sessionCaptures.id}
-                    captureId={capture.id}
-                    startingText={capture.body}
-                  />
-                </ScrollContainerElement>
-              </div>
-            ))}
+            {sessionItems.map((capture, index) => {
+              const id = capture.id;
+              const previousId =
+                index === 0 ? undefined : sessionItems[index - 1].id;
+              const nextId =
+                index === sessionItems.length - 1
+                  ? undefined
+                  : sessionItems[index + 1].id;
+
+              return (
+                <div
+                  className={``}
+                  style={{
+                    width: WIDTH
+                  }}
+                  key={id}
+                >
+                  <ScrollContainerElement name={id}>
+                    <CardCapture
+                      handleFocus={focus => {
+                        this.inputsFocus.set(id, focus);
+                      }}
+                      sessionId={sessionCaptures.id}
+                      captureId={id}
+                      startingText={capture.body}
+                      focusOnNext={() => {
+                        if (!nextId) {
+                          return;
+                        }
+                        const focusOnNext = this.inputsFocus.get(nextId);
+                        if (focusOnNext) {
+                          focusOnNext();
+                        }
+                      }}
+                      focusOnPrevious={() => {
+                        if (!previousId) {
+                          return;
+                        }
+                        const focusOnPrevious = this.inputsFocus.get(
+                          previousId
+                        );
+
+                        if (focusOnPrevious) {
+                          focusOnPrevious();
+                        }
+                      }}
+                    />
+                  </ScrollContainerElement>
+                </div>
+              );
+            })}
             <div
-              className={`pa3 br4 bg-white ba bw1 b--light-gray`}
               style={{
                 width: WIDTH
               }}
             >
-              <InputCapture
-                sessionData={{
-                  sessionId,
-                  previousId:
+              <ScrollContainerElement name={"input-capture"}>
+                <CardCapture
+                  sessionId={sessionCaptures.id}
+                  previousId={
                     sessionItems.length > 0
                       ? sessionItems[sessionItems.length - 1].id
                       : sessionId
-                }}
-              />
+                  }
+                />
+              </ScrollContainerElement>
             </div>
           </div>
         </ScrollContainer>

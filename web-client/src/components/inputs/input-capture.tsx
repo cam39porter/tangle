@@ -73,6 +73,9 @@ interface Props extends RouteProps {
   };
   captureId?: string;
   startingHTML?: string;
+  focusOnNext?: () => void;
+  focusOnPrevious?: () => void;
+  handleFocus?: (focus: () => void) => void;
 }
 
 interface State {
@@ -83,6 +86,7 @@ interface State {
 }
 
 class InputCapture extends React.Component<Props, State> {
+  editor: Draft.Editor | undefined;
   saveEdit: ((text: string) => void) & Cancelable | undefined;
   numberOfOptimisticCaptures: number = 0;
   hashtagPlugin = createHashtagPlugin();
@@ -102,6 +106,8 @@ class InputCapture extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
+
+    this.props.handleFocus && this.props.handleFocus(this.handleFocus);
 
     let editorState = Draft.EditorState.createEmpty();
 
@@ -219,7 +225,7 @@ class InputCapture extends React.Component<Props, State> {
       if (e.nativeEvent.shiftKey) {
         return "new-line";
       } else {
-        return "return";
+        return "create-capture";
       }
     }
 
@@ -241,6 +247,12 @@ class InputCapture extends React.Component<Props, State> {
 
   handleCreateCapture = (editorState: Draft.EditorState) => {
     const { sessionData, captureId } = this.props;
+    const content = editorState.getCurrentContent();
+    const plainText = content.getPlainText();
+
+    if (!plainText) {
+      return "handled";
+    }
 
     // TODO: navigate to next capture in the list
     if (captureId) {
@@ -266,6 +278,10 @@ class InputCapture extends React.Component<Props, State> {
   handleNewLine = (editorState: Draft.EditorState) => {
     let newEditorState = Draft.RichUtils.insertSoftNewline(editorState);
     this.setState({ editorState: newEditorState });
+  };
+
+  handleFocus = () => {
+    this.editor && this.editor.focus();
   };
 
   render() {
@@ -309,6 +325,9 @@ class InputCapture extends React.Component<Props, State> {
             }}
           >
             <Editor
+              ref={editor => {
+                this.editor = editor;
+              }}
               plugins={this.plugins}
               editorState={this.state.editorState}
               onChange={this.handleOnChange}

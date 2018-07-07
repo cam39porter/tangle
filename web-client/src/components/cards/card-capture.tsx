@@ -28,8 +28,12 @@ interface Props {
     deleteCaptureMutationVariables
   >;
   sessionId?: string;
-  captureId: string;
-  startingText: string;
+  captureId?: string;
+  startingText?: string;
+  previousId?: string;
+  focusOnNext?: () => void;
+  focusOnPrevious?: () => void;
+  handleFocus?: (focus: () => void) => void;
 }
 
 interface State {
@@ -46,9 +50,11 @@ class CardCapture extends React.Component<Props, State> {
   }
 
   render() {
+    const { captureId, startingText, sessionId } = this.props;
+    const { isShowingButtons } = this.state;
+
     return (
       <div
-        key={this.props.captureId}
         onMouseEnter={() => {
           this.setState({
             isShowingButtons: true
@@ -73,63 +79,60 @@ class CardCapture extends React.Component<Props, State> {
               }}
             >
               <InputCapture
-                sessionData={
-                  this.props.sessionId
-                    ? { sessionId: this.props.sessionId }
-                    : undefined
-                }
-                captureId={this.props.captureId}
-                startingHTML={this.props.startingText}
+                handleFocus={this.props.handleFocus}
+                focusOnNext={this.props.focusOnNext}
+                focusOnPrevious={this.props.focusOnPrevious}
+                sessionData={sessionId ? { sessionId } : undefined}
+                captureId={captureId}
+                startingHTML={startingText}
               />
             </div>
           </div>
-          {this.state.isShowingButtons && (
-            <div
-              className={`absolute flex top--1 right-0 br4 ba b--light-gray bg-white`}
-            >
+          {isShowingButtons &&
+            captureId && (
               <div
-                className={`flex-column justify-around pa2 pointer`}
-                onClick={e => {
-                  e.stopPropagation();
-
-                  this.props
-                    .deleteCapture({
-                      variables: { id: this.props.captureId },
-                      optimisticResponse: {
-                        deleteCapture: {
-                          __typename: "Node",
-                          id: this.props.captureId,
-                          type: NodeType.Capture,
-                          text: null,
-                          level: null
-                        }
-                      },
-                      update: ApolloUtils.deleteCaptureUpdate(
-                        this.props.captureId
-                      )
-                    })
-                    .then(() => {
-                      AnalyticsUtils.trackEvent({
-                        category: this.props.sessionId
-                          ? AnalyticsUtils.Categories.Session
-                          : AnalyticsUtils.Categories.Home,
-                        action: this.props.sessionId
-                          ? AnalyticsUtils.Actions.DeleteSessionCapture
-                          : AnalyticsUtils.Actions.DeleteCapture,
-                        label: this.props.captureId
-                      });
-                    })
-                    .catch(err =>
-                      ErrorsUtils.errorHandler.report(err.message, err.stack)
-                    );
-                }}
+                className={`absolute flex top--1 right-0 br4 ba b--light-gray bg-white`}
               >
-                <div>
-                  <ButtonArchive />
+                <div
+                  className={`flex-column justify-around pa2 pointer`}
+                  onClick={e => {
+                    e.stopPropagation();
+                    this.props
+                      .deleteCapture({
+                        variables: { id: captureId },
+                        optimisticResponse: {
+                          deleteCapture: {
+                            __typename: "Node",
+                            id: this.props.captureId,
+                            type: NodeType.Capture,
+                            text: null,
+                            level: null
+                          }
+                        },
+                        update: ApolloUtils.deleteCaptureUpdate(captureId)
+                      })
+                      .then(() => {
+                        AnalyticsUtils.trackEvent({
+                          category: sessionId
+                            ? AnalyticsUtils.Categories.Session
+                            : AnalyticsUtils.Categories.Home,
+                          action: sessionId
+                            ? AnalyticsUtils.Actions.DeleteSessionCapture
+                            : AnalyticsUtils.Actions.DeleteCapture,
+                          label: captureId
+                        });
+                      })
+                      .catch(err =>
+                        ErrorsUtils.errorHandler.report(err.message, err.stack)
+                      );
+                  }}
+                >
+                  <div>
+                    <ButtonArchive />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </div>
     );

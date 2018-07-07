@@ -22,7 +22,7 @@ export function getMostRecent(
   WHERE session.owner = {userUrn}
   ${before ? "AND session.created <= {before}" : ""}
   RETURN session
-  ORDER BY session.created DESC
+  ORDER BY session.lastModified DESC, session.created DESC
   LIMIT {count}`;
   const params = [
     new Param("userUrn", user.toRaw()),
@@ -107,6 +107,28 @@ export function deleteSession(
   return executeQuery(query, params).then(() => true);
 }
 
+export function touchLastModified(
+  userUrn: UserUrn,
+  sessionId: SessionUrn
+): Promise<Session> {
+  const query = `
+  MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
+  SET session.lastModified = TIMESTAMP()
+  RETURN session`;
+  const params = [
+    new Param("userId", userUrn.toRaw()),
+    new Param("sessionId", sessionId.toRaw())
+  ];
+  return executeQuery(query, params).then((result: StatementResult) => {
+    if (!result.records[0]) {
+      throw new NotFoundError(
+        `Session with id ${sessionId.toRaw()} could not be found.`
+      );
+    }
+    return formatBasicSession(result.records[0].get("session"));
+  });
+}
+
 export function edit(
   userId: UserUrn,
   sessionId: SessionUrn,
@@ -114,6 +136,7 @@ export function edit(
 ): Promise<Session> {
   const query = `
     MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
+    SET session.lastModified = TIMESTAMP()
     ${title ? "SET session.title = {title}" : "REMOVE session.title"}
     RETURN session`;
   const params = [
@@ -139,6 +162,7 @@ export function create(userId: UserUrn, title: string): Promise<Session> {
     CREATE (session:Session {id:{sessionUrn},
       ${title ? "title:{title}," : ""}
       created:TIMESTAMP(),
+      lastModified:TIMESTAMP(),
       owner:{userId}})
     CREATE (session)<-[:CREATED]-(u)
     RETURN session`;

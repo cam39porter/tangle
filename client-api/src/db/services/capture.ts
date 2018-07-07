@@ -29,7 +29,7 @@ export function getMostRecent(
   const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
   OPTIONAL MATCH (capture)<-[:INCLUDES]-(session:Session {owner:{userId}})
   RETURN capture, collect(session) as sessions
-  ORDER BY capture.created DESC
+  ORDER BY capture.lastModified DESC, capture.created DESC
   SKIP {start} LIMIT {count}`;
   return executeQuery(query, params).then(result => {
     return result.records.map(record =>
@@ -162,6 +162,7 @@ export function editCaptureNodeAndDeleteRelationships(
     DELETE r
     SET capture.plainText={plainText}
     SET capture.body={html}
+    SET lastModified=TIMESTAMP()
     RETURN capture`;
   return executeQuery(query, params).then(formatCaptureResult);
 }
@@ -184,6 +185,7 @@ export function createCaptureNode(
       body:{html},
       plainText:{plainText},
       created:TIMESTAMP(),
+      lastModified:TIMESTAMP(),
       owner:{userId}
     })
     ${parentUrn ? "CREATE (capture)<-[:INCLUDES]-(parent)" : ""}

@@ -26,6 +26,8 @@ import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
 import { SessionUrn } from "../../urn/session-urn";
 import * as htmltotext from "html-to-text";
 import { Urn } from "../../urn/urn";
+import { UserUrn } from "../../urn/user-urn";
+import { touchLastModified } from "../../db/services/session";
 
 export function dismissCaptureRelation(
   fromId: string,
@@ -62,33 +64,55 @@ export function editCapture(urn: CaptureUrn, body: string): Promise<GraphNode> {
 export function createCapture(
   body: string,
   parentUrn: EvernoteNoteUrn | SessionUrn | null,
-  previousId: Urn | null
+  previousUrn: Urn | null
 ): Promise<GraphNode> {
   const user: User = getAuthenticatedUser();
   const plainText = parseHtml(body);
-  return createCaptureNode(user.urn, plainText, body, parentUrn)
-    .then((capture: Capture) => {
-      if (previousId) {
-        const destLabel = CaptureUrn.isCaptureUrn(previousId)
-          ? CAPTURE_LABEL
-          : SESSION_LABEL;
-        return createRelationship(
-          user.urn,
-          capture.urn.toRaw(),
-          CAPTURE_LABEL,
-          previousId.toRaw(),
-          destLabel,
-          PREVIOUS_RELATIONSHIP
-        ).then(() => capture);
-      } else {
-        return Promise.resolve(capture);
-      }
-    })
-    .then((capture: Capture) => {
-      return createRelations(capture.urn, plainText).then(() =>
-        formatCapture(capture)
-      );
-    });
+  return createCaptureNode(user.urn, plainText, body, parentUrn).then(
+    (capture: Capture) => {
+      return Promise.all([
+        updateParentModified(user.urn, parentUrn),
+        createPreviousRelationship(user.urn, capture.urn, previousUrn),
+        createRelations(capture.urn, plainText)
+      ]).then(() => formatCapture(capture));
+    }
+  );
+}
+
+function updateParentModified(
+  userUrn: UserUrn,
+  parentUrn: SessionUrn | EvernoteNoteUrn | null
+): Promise<boolean> {
+  if (parentUrn && SessionUrn.isSessionUrn(parentUrn)) {
+    // touch
+    return Promise.resolve(touchLastModified(userUrn, parentUrn)).then(
+      () => true
+    );
+  } else {
+    return Promise.resolve(true);
+  }
+}
+
+function createPreviousRelationship(
+  userUrn: UserUrn,
+  captureUrn: CaptureUrn,
+  previousUrn: Urn | null
+): Promise<boolean> {
+  if (previousUrn) {
+    const destLabel = CaptureUrn.isCaptureUrn(previousUrn)
+      ? CAPTURE_LABEL
+      : SESSION_LABEL;
+    return createRelationship(
+      userUrn,
+      captureUrn.toRaw(),
+      CAPTURE_LABEL,
+      previousUrn.toRaw(),
+      destLabel,
+      PREVIOUS_RELATIONSHIP
+    ).then(() => true);
+  } else {
+    return Promise.resolve(true);
+  }
 }
 
 function parseHtml(html: string): string {

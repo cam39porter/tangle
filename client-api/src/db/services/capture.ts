@@ -29,7 +29,7 @@ export function getMostRecent(
   const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
   OPTIONAL MATCH (capture)<-[:INCLUDES]-(session:Session {owner:{userId}})
   RETURN capture, collect(session) as sessions
-  ORDER BY capture.lastModified DESC, capture.created DESC
+  ORDER BY capture.lastModified DESC
   SKIP {start} LIMIT {count}`;
   return executeQuery(query, params).then(result => {
     return result.records.map(record =>

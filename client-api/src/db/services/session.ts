@@ -22,7 +22,7 @@ export function getMostRecent(
   WHERE session.owner = {userUrn}
   ${before ? "AND session.created <= {before}" : ""}
   RETURN session
-  ORDER BY session.lastModified DESC, session.created DESC
+  ORDER BY session.lastModified DESC
   LIMIT {count}`;
   const params = [
     new Param("userUrn", user.toRaw()),

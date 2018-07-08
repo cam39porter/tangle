@@ -50,9 +50,13 @@ import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 import { convertToHTML, convertFromHTML } from "draft-convert";
-import EditorUtils from "../../utils/editor";
 import { debounce, Cancelable } from "lodash";
-import { AnalyticsUtils, ApolloUtils, ErrorsUtils } from "../../utils";
+import {
+  AnalyticsUtils,
+  ApolloUtils,
+  ErrorsUtils,
+  EditorUtils
+} from "../../utils";
 
 const TIME_TO_SAVE = 500; // ms till change is automatically captured
 
@@ -74,9 +78,9 @@ interface Props extends RouteProps {
   };
   captureId?: string;
   startingHTML?: string;
-  focusOnNext?: () => void;
-  focusOnPrevious?: () => void;
   handleFocus?: (focus: () => void) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 interface State {
@@ -91,7 +95,29 @@ class InputCapture extends React.Component<Props, State> {
   saveEdit: ((text: string) => void) & Cancelable | undefined;
   numberOfOptimisticCaptures: number = 0;
   hashtagPlugin = createHashtagPlugin();
-  linkifyPlugin = createLinkifyPlugin();
+  linkifyPlugin = createLinkifyPlugin({
+    component: props => {
+      const { target, href, children, className } = props;
+      console.log(props);
+      return (
+        <a
+          href={href}
+          className={className}
+          onClick={() => {
+            let confirmation = confirm(
+              `Are you sure you would like to navigate to ${href}`
+            );
+
+            if (confirmation) {
+              window.open(href, target);
+            }
+          }}
+        >
+          {children}
+        </a>
+      );
+    }
+  });
   // toolbarPlugin = createToolbarPlugin({
   //   structure: [
   //     ItalicButton,
@@ -224,25 +250,6 @@ class InputCapture extends React.Component<Props, State> {
       });
   };
 
-  focusIsBeginning = (editorState: Draft.EditorState) => {
-    const selectionState = editorState.getSelection();
-    const startKey = selectionState.getStartKey();
-    const focusKey = selectionState.getFocusKey();
-    const offset = selectionState.getFocusOffset();
-    return focusKey === startKey && offset === 0;
-  };
-
-  focusIsEnd = (editorState: Draft.EditorState) => {
-    const contentState = editorState.getCurrentContent();
-    const selectionState = editorState.getSelection();
-    const lastBlock = contentState.getLastBlock();
-    const lastKey = lastBlock.getKey();
-    const lastBlockLength = lastBlock.getLength();
-    const focusKey = selectionState.getFocusKey();
-    const offset = selectionState.getFocusOffset();
-    return focusKey === lastKey && lastBlockLength === offset;
-  };
-
   handleKeyBindings = (e: React.KeyboardEvent<{}>) => {
     return Draft.getDefaultKeyBinding(e);
   };
@@ -267,7 +274,6 @@ class InputCapture extends React.Component<Props, State> {
 
     // TODO: navigate to next capture in the list
     if (captureId) {
-      this.props.focusOnNext && this.props.focusOnNext();
       return "handled";
     }
 
@@ -334,25 +340,6 @@ class InputCapture extends React.Component<Props, State> {
             style={{
               width: `${editorWidth}px`
             }}
-            onKeyDown={e => {
-              const keyCode = e.keyCode;
-              if (keyCode === 38 || keyCode === 37 /* Up or Left Arrow */) {
-                if (this.focusIsBeginning(this.state.editorState)) {
-                  this.props.focusOnPrevious && this.props.focusOnPrevious();
-                }
-              }
-              if (keyCode === 40 || keyCode === 39 /* Right or Down Arrow */) {
-                if (this.focusIsEnd(this.state.editorState)) {
-                  this.props.focusOnNext && this.props.focusOnNext();
-                }
-              }
-
-              if (keyCode === 8 /* Delete */) {
-                if (this.focusIsBeginning(this.state.editorState)) {
-                  this.props.focusOnPrevious && this.props.focusOnPrevious();
-                }
-              }
-            }}
           >
             <Editor
               ref={editor => {
@@ -373,14 +360,9 @@ class InputCapture extends React.Component<Props, State> {
                 return "not-handled";
               }}
               handleKeyCommand={(
-                command: Draft.DraftEditorCommand | "previous",
+                command: Draft.DraftEditorCommand,
                 editorState: Draft.EditorState
               ) => {
-                if (command === "previous") {
-                  this.props.focusOnPrevious && this.props.focusOnPrevious();
-                  return "handled";
-                }
-
                 const newState = Draft.RichUtils.handleKeyCommand(
                   editorState,
                   command
@@ -396,11 +378,13 @@ class InputCapture extends React.Component<Props, State> {
               keyBindingFn={this.handleKeyBindings}
               placeholder={`Capture a thought...`}
               onFocus={() => {
+                this.props.onFocus && this.props.onFocus();
                 this.setState({
                   isFocus: true
                 });
               }}
               onBlur={() => {
+                this.props.onBlur && this.props.onBlur();
                 this.setState({
                   isFocus: false
                 });

@@ -163,6 +163,7 @@ class GridCaptures extends React.Component<Props, State> {
                       key={capture.id}
                     >
                       <CardCapture
+                        sessionParent={capture.parents}
                         captureId={capture.id}
                         startingText={capture.body}
                       />

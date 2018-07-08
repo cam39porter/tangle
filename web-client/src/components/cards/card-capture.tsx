@@ -27,30 +27,37 @@ interface Props {
     deleteCaptureResponse,
     deleteCaptureMutationVariables
   >;
+  sessionParents?: Array<{
+    __typename: "Session";
+    id: string;
+    title: string | null;
+    created: number;
+  }>;
   sessionId?: string;
   captureId?: string;
   startingText?: string;
   previousId?: string;
-  focusOnNext?: () => void;
-  focusOnPrevious?: () => void;
-  handleFocus?: (focus: () => void) => void;
 }
 
 interface State {
+  isFocus: boolean;
   isShowingButtons: boolean;
 }
 
 class CardCapture extends React.Component<Props, State> {
+  focus;
+
   constructor(nextProps: Props) {
     super(nextProps);
 
     this.state = {
+      isFocus: false,
       isShowingButtons: false
     };
   }
 
   render() {
-    const { captureId, startingText, sessionId } = this.props;
+    const { captureId, startingText, sessionId, sessionParents } = this.props;
     const { isShowingButtons } = this.state;
 
     return (
@@ -65,28 +72,46 @@ class CardCapture extends React.Component<Props, State> {
             isShowingButtons: false
           });
         }}
+        onClick={() => {
+          this.focus && this.focus();
+        }}
       >
+        {sessionParents &&
+          sessionParents.length && (
+            <div className={`pa2 h2 gray f6 pointer dim`}>
+              {sessionParents[0].title}
+            </div>
+          )}
         <div
           id={`list-capture`}
-          className={`relative flex flex-wrap pa3 w-100 br4 ba bw1 b--light-gray
-          } bg-white`}
+          className={`relative flex pa3 w-100 br4 ba bw1 bg-white ${
+            this.state.isFocus ? "b--accent" : "b--light-gray"
+          }`}
         >
-          <div className={`flex-grow dt`}>
-            <div
-              className={`dtc v-mid`}
-              style={{
-                cursor: "text"
+          <div
+            className={`flex-grow flex-column justify-around`}
+            style={{
+              cursor: "text"
+            }}
+          >
+            <InputCapture
+              handleFocus={focus => {
+                this.focus = focus;
               }}
-            >
-              <InputCapture
-                handleFocus={this.props.handleFocus}
-                focusOnNext={this.props.focusOnNext}
-                focusOnPrevious={this.props.focusOnPrevious}
-                sessionData={sessionId ? { sessionId } : undefined}
-                captureId={captureId}
-                startingHTML={startingText}
-              />
-            </div>
+              onFocus={() => {
+                this.setState({
+                  isFocus: true
+                });
+              }}
+              onBlur={() => {
+                this.setState({
+                  isFocus: false
+                });
+              }}
+              sessionData={sessionId ? { sessionId } : undefined}
+              captureId={captureId}
+              startingHTML={startingText}
+            />
           </div>
           {isShowingButtons &&
             captureId && (

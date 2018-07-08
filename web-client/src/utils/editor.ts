@@ -34,22 +34,36 @@ const cleanEditorState = (
 
 const moveSelectionToEnd = editorState => {
   const content = editorState.getCurrentContent();
-  const blockMap = content.getBlockMap();
-
-  const key = blockMap.last().getKey();
-  const length = blockMap.last().getLength();
+  const key = content.getLastBlock().getKey();
 
   const selection = new Draft.SelectionState({
     anchorKey: key,
     anchorOffset: length,
     focusKey: key,
-    focusOffset: length
+    focusOffset: length,
+    isBackward: false
   });
 
-  return Draft.EditorState.forceSelection(editorState, selection);
+  return Draft.EditorState.acceptSelection(editorState, selection);
+};
+
+const moveSelectionToStart = editorState => {
+  const content = editorState.getCurrentContent();
+  const key = content.getFirstBlock().getKey();
+
+  const selection = new Draft.SelectionState({
+    anchorKey: key,
+    anchorOffset: 0,
+    focusKey: key,
+    focusOffset: 0,
+    isBackward: false
+  });
+
+  return Draft.EditorState.acceptSelection(editorState, selection);
 };
 
 export default {
   cleanEditorState,
-  moveSelectionToEnd
+  moveSelectionToEnd,
+  moveSelectionToStart
 };

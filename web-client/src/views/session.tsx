@@ -42,8 +42,6 @@ interface Props extends RouteProps {
   windowHeight: number;
 }
 
-type InputsFocusMap = Map<string, () => void>;
-
 interface State {
   headerHeight: number;
   footerHeight: number;
@@ -53,7 +51,6 @@ const WIDTH = "30em";
 
 class Session extends React.Component<Props, State> {
   _scrollContainer: ScrollContainer | null = null;
-  inputsFocus: InputsFocusMap = new Map();
 
   constructor(props: Props) {
     super(props);
@@ -187,35 +184,9 @@ class Session extends React.Component<Props, State> {
                 >
                   <ScrollContainerElement name={id}>
                     <CardCapture
-                      handleFocus={focus => {
-                        this.inputsFocus.set(id, focus);
-                      }}
                       sessionId={sessionCaptures.id}
                       captureId={id}
                       startingText={capture.body}
-                      focusOnNext={() => {
-                        if (!nextId) {
-                          return;
-                        }
-                        const focusOnNext = this.inputsFocus.get(nextId);
-                        if (focusOnNext) {
-                          focusOnNext();
-                          this.scrollTo(nextId);
-                        }
-                      }}
-                      focusOnPrevious={() => {
-                        if (!previousId) {
-                          return;
-                        }
-                        const focusOnPrevious = this.inputsFocus.get(
-                          previousId
-                        );
-
-                        if (focusOnPrevious) {
-                          focusOnPrevious();
-                          this.scrollTo(previousId);
-                        }
-                      }}
                     />
                   </ScrollContainerElement>
                 </div>
@@ -228,27 +199,12 @@ class Session extends React.Component<Props, State> {
             >
               <ScrollContainerElement name={"input-capture"}>
                 <CardCapture
-                  handleFocus={focus => {
-                    this.inputsFocus.set("input-capture", focus);
-                  }}
                   sessionId={sessionCaptures.id}
                   previousId={
                     sessionItems.length > 0
                       ? sessionItems[sessionItems.length - 1].id
                       : sessionId
                   }
-                  focusOnPrevious={() => {
-                    if (!sessionItems.length) {
-                      return;
-                    }
-                    const focusOnPrevious = this.inputsFocus.get(
-                      sessionItems[sessionItems.length - 1].id
-                    );
-
-                    if (focusOnPrevious) {
-                      focusOnPrevious();
-                    }
-                  }}
                 />
               </ScrollContainerElement>
             </div>

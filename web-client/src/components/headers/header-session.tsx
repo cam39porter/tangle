@@ -5,7 +5,7 @@ import * as React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 
 // Components
-import ButtonExit from "../buttons/button-exit";
+import ButtonArrowLeft from "../buttons/button-arrow-left";
 import Header from "./header";
 
 // Utils
@@ -34,7 +34,7 @@ class HeaderSurface extends React.Component<Props, State> {
         }
         right={
           <div
-            className={`flex-column justify-around ph2`}
+            className={`flex-column justify-around ph2 pointer`}
             onClick={() => {
               if (this.props.location.pathname.includes("/related")) {
                 this.props.history.push(`/`);
@@ -52,7 +52,7 @@ class HeaderSurface extends React.Component<Props, State> {
             }}
           >
             <div>
-              <ButtonExit />
+              <ButtonArrowLeft />
             </div>
           </div>
           /* tslint:disable-next-line */

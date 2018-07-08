@@ -29,6 +29,10 @@ interface State {
   placeholder: string;
 }
 
+const FEEDBACK_PLEASE =
+  "Please speak your mind, we appreciate (brutal honesty | ruthless candor | etc.)";
+const THANK_YOU = "Thank you for your feedback!";
+
 // Class
 class Feedback extends React.Component<Props, State> {
   constructor(nextProps: Props) {
@@ -37,8 +41,7 @@ class Feedback extends React.Component<Props, State> {
     this.state = {
       feedback: "",
       isMinimized: true,
-      placeholder:
-        "Please speak your mind. We need ruthless feedback to launch."
+      placeholder: FEEDBACK_PLEASE
     };
   }
 
@@ -54,6 +57,7 @@ class Feedback extends React.Component<Props, State> {
           className={`flex justify-between pa2 near-white pointer`}
           onClick={() => {
             this.setState({
+              placeholder: this.state.isMinimized ? FEEDBACK_PLEASE : THANK_YOU,
               isMinimized: !this.state.isMinimized
             });
           }}
@@ -93,7 +97,7 @@ class Feedback extends React.Component<Props, State> {
                       .then(() => {
                         this.setState({
                           feedback: "",
-                          placeholder: "Thank you for your feedback!"
+                          placeholder: THANK_YOU
                         });
                       })
                       .catch(err => {

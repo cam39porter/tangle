@@ -78,7 +78,13 @@ class CardSession extends React.Component<Props, State> {
           }}
         >
           <div className={`flex-grow flex-column justify-around`}>
-            <div className={`f5 dark-gray`}>
+            <div
+              className={`f5 dark-gray`}
+              style={{
+                overflow: "hidden",
+                whiteSpace: "nowrap"
+              }}
+            >
               {this.props.title || "Untitled "}
             </div>
           </div>

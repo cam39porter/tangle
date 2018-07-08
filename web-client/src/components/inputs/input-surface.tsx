@@ -5,7 +5,6 @@ import * as React from "react";
 import { withRouter, RouteComponentProps } from "react-router";
 
 // Components
-import * as Draft from "draft-js";
 import ButtonSurface from "./../buttons/button-surface";
 import ReactResizeDetector from "react-resize-detector";
 
@@ -21,70 +20,53 @@ interface RouteProps extends RouteComponentProps<{}> {}
 interface Props extends RouteProps {}
 
 interface State {
-  editorState: Draft.EditorState;
-  editorWidth: number;
+  text: string;
 }
 
 class InputSurface extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    let editorState = Draft.EditorState.createEmpty();
-
-    const startingHTML = NetworkUtils.getQuery(this.props.location.search);
-    if (startingHTML) {
-      editorState = Draft.EditorState.createWithContent(
-        convertFromHTML(startingHTML)
-      );
-    }
+    const query = NetworkUtils.getQuery(this.props.location.search);
 
     this.state = {
-      editorState,
-      editorWidth: 0
+      text: query
     };
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const startingHTML = NetworkUtils.getQuery(this.props.location.search);
-    const nextStartingHTML = NetworkUtils.getQuery(nextProps.location.search);
-    if (startingHTML === nextStartingHTML) {
+    const startingQuery = NetworkUtils.getQuery(this.props.location.search);
+    const nextQuery = NetworkUtils.getQuery(nextProps.location.search);
+    if (startingQuery === nextQuery) {
       return;
     }
-    let nextEditorState = EditorUtils.cleanEditorState(this.state.editorState);
-    nextEditorState = Draft.EditorState.createWithContent(
-      convertFromHTML(nextStartingHTML)
-    );
-    nextEditorState = EditorUtils.moveSelectionToEnd(nextEditorState);
 
     this.setState({
-      editorState: nextEditorState
+      text: nextQuery
     });
   }
 
-  handleOnChange = (editorState: Draft.EditorState) => {
+  handleOnChange = e => {
     this.setState({
-      editorState
+      text: e.target.value
     });
   };
 
-  handleExit = (url, query) => {
+  handleExit = url => {
     if (this.props.match.params["id"]) {
       this.props.history.push(`${url}/related`);
     } else {
       this.props.history.push(`${url}/recent`);
     }
 
-    const nextEditorState = EditorUtils.cleanEditorState(
-      this.state.editorState
-    );
     this.setState({
-      editorState: nextEditorState
+      text: ""
     });
   };
 
   handleSearch = (query, url) => {
     if (!query) {
-      this.handleExit(url, query);
+      this.handleExit(url);
       AnalyticsUtils.trackEvent({
         category: this.props.match.params["id"]
           ? AnalyticsUtils.Categories.Session
@@ -101,9 +83,7 @@ class InputSurface extends React.Component<Props, State> {
   render() {
     let isSearching = this.props.location.pathname.includes("/search");
 
-    const query = trim(
-      this.state.editorState.getCurrentContent().getPlainText()
-    );
+    const query = trim(this.state.text);
     const url = this.props.match.url;
 
     return (
@@ -127,45 +107,31 @@ class InputSurface extends React.Component<Props, State> {
         >
           <ButtonSurface />
         </div>
-        <div className={`flex-grow pv2`}>
-          <ReactResizeDetector
-            handleHeight={true}
-            onResize={(width, _) => {
-              this.setState({
-                editorWidth: width
-              });
-            }}
-          />
-          <div
-            className={`f6 lh-copy`}
-            style={{
-              width: `${this.state.editorWidth}px`
-            }}
-          >
-            <Draft.Editor
-              editorState={this.state.editorState}
-              onChange={this.handleOnChange}
-              placeholder={`Search your tangle...`}
-              handleReturn={(_, editorState) => {
-                this.handleSearch(query, url);
-                AnalyticsUtils.trackEvent({
-                  category: this.props.match.params["id"]
-                    ? AnalyticsUtils.Categories.Session
-                    : AnalyticsUtils.Categories.Home,
-                  action: AnalyticsUtils.Actions.EnterToExecuteSearch,
-                  label: query
-                });
-                return "handled";
-              }}
-            />
-          </div>
-        </div>
+        <input
+          onKeyDown={e => {
+            if (e.key !== "Enter") {
+              return;
+            }
+            this.handleSearch(query, url);
+            AnalyticsUtils.trackEvent({
+              category: this.props.match.params["id"]
+                ? AnalyticsUtils.Categories.Session
+                : AnalyticsUtils.Categories.Home,
+              action: AnalyticsUtils.Actions.EnterToExecuteSearch,
+              label: query
+            });
+          }}
+          value={this.state.text}
+          className={`flex-grow pv2 f6`}
+          placeholder={"Search your tangle"}
+          onChange={this.handleOnChange}
+        />
         <div
           className={`flex-column justify-around f7 ${
             isSearching || query ? "gray" : "white"
           } pointer`}
           onClick={() => {
-            this.handleExit(url, query);
+            this.handleExit(url);
             AnalyticsUtils.trackEvent({
               category: this.props.match.params["id"]
                 ? AnalyticsUtils.Categories.Session

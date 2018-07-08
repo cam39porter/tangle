@@ -1,6 +1,9 @@
 // React
 import * as React from "react";
 
+// Router
+import { withRouter, RouteComponentProps } from "react-router";
+
 // GraphQL
 import {
   // Archive Capture
@@ -22,7 +25,7 @@ import InputCapture from "../inputs/input-capture";
 import { ApolloUtils, AnalyticsUtils, ErrorsUtils } from "../../utils/index";
 
 // Types
-interface Props {
+interface Props extends RouteComponentProps<{}> {
   deleteCapture: MutationFunc<
     deleteCaptureResponse,
     deleteCaptureMutationVariables
@@ -32,6 +35,7 @@ interface Props {
     id: string;
     title: string | null;
     created: number;
+    lastModified: number;
   }>;
   sessionId?: string;
   captureId?: string;
@@ -51,9 +55,15 @@ class CardCapture extends React.Component<Props, State> {
     super(nextProps);
 
     this.state = {
-      isFocus: false,
+      isFocus: !this.props.captureId,
       isShowingButtons: false
     };
+  }
+
+  componentDidMount() {
+    if (this.state.isFocus && this.focus) {
+      this.focus();
+    }
   }
 
   render() {
@@ -76,12 +86,22 @@ class CardCapture extends React.Component<Props, State> {
           this.focus && this.focus();
         }}
       >
-        {sessionParents &&
-          sessionParents.length && (
-            <div className={`pa2 h2 gray f6 pointer dim`}>
-              {sessionParents[0].title}
-            </div>
-          )}
+        {sessionParents && sessionParents.length > 0 ? (
+          <div
+            className={`flex-column justify-around h3 gray f6 pointer dim`}
+            onClick={() => {
+              this.props.history.push(
+                `/collection/${encodeURIComponent(
+                  sessionParents[0].id
+                )}/format/list/related`
+              );
+            }}
+          >
+            {sessionParents[0].title}
+          </div>
+        ) : (
+          !this.props.sessionId && <div className={`h3`} />
+        )}
         <div
           id={`list-capture`}
           className={`relative flex pa3 w-100 br4 ba bw1 bg-white ${
@@ -172,6 +192,9 @@ const withArchiveCapture = graphql<deleteCaptureResponse, Props>(
   }
 );
 
-const CardCaptureWithData = compose(withArchiveCapture)(CardCapture);
+const CardCaptureWithData = compose(
+  withArchiveCapture,
+  withRouter
+)(CardCapture);
 
 export default CardCaptureWithData;

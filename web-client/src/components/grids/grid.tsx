@@ -156,14 +156,14 @@ class GridCaptures extends React.Component<Props, State> {
                 <div className={`flex flex-wrap`}>
                   {captures.map(capture => (
                     <div
-                      className={`pv4 center`}
+                      className={`pv3 center`}
                       style={{
                         width: WIDTH
                       }}
                       key={capture.id}
                     >
                       <CardCapture
-                        sessionParent={capture.parents}
+                        sessionParents={capture.parents}
                         captureId={capture.id}
                         startingText={capture.body}
                       />

@@ -27,6 +27,7 @@ import {
 import { graphql, compose, MutationFunc, withApollo } from "react-apollo";
 
 // Components
+import ButtonCapture from "../buttons/button-capture";
 import "draft-js/dist/Draft.css";
 import * as Draft from "draft-js";
 import Editor from "draft-js-plugins-editor";
@@ -34,16 +35,6 @@ import "draft-js-hashtag-plugin/lib/plugin.css";
 import createHashtagPlugin from "draft-js-hashtag-plugin";
 import "draft-js-linkify-plugin/lib/plugin.css";
 import createLinkifyPlugin from "draft-js-linkify-plugin";
-// import "draft-js-static-toolbar-plugin/lib/plugin.css";
-// import createToolbarPlugin from "draft-js-static-toolbar-plugin";
-// import {
-//   ItalicButton,
-//   BoldButton,
-//   UnderlineButton,
-//   HeadlineThreeButton,
-//   UnorderedListButton,
-//   OrderedListButton
-// } from "draft-js-buttons";
 import createMarkdownShortcutsPlugin from "draft-js-markdown-shortcuts-plugin";
 
 import ReactResizeDetector from "react-resize-detector";
@@ -97,8 +88,7 @@ class InputCapture extends React.Component<Props, State> {
   hashtagPlugin = createHashtagPlugin();
   linkifyPlugin = createLinkifyPlugin({
     component: props => {
-      const { target, href, children, className } = props;
-      console.log(props);
+      const { href, children, className } = props;
       return (
         <a
           href={href}
@@ -112,23 +102,12 @@ class InputCapture extends React.Component<Props, State> {
       );
     }
   });
-  // toolbarPlugin = createToolbarPlugin({
-  //   structure: [
-  //     ItalicButton,
-  //     BoldButton,
-  //     UnderlineButton,
-  //     HeadlineThreeButton,
-  //     UnorderedListButton,
-  //     OrderedListButton
-  //   ]
-  // });
   markdownPlugin = createMarkdownShortcutsPlugin();
   plugins = [
     this.linkifyPlugin,
     this.hashtagPlugin,
     this.markdownPlugin /* this.toolbarPlugin */
   ];
-  // Toolbar = this.toolbarPlugin.Toolbar;
 
   constructor(props: Props) {
     super(props);
@@ -249,8 +228,6 @@ class InputCapture extends React.Component<Props, State> {
   };
 
   handleOnChange = (editorState: Draft.EditorState) => {
-    // const currentSelectionState = editorState.getSelection();
-    // console.log(currentSelectionState);
     const currentContent = this.state.editorState.getCurrentContent();
     const newContent = editorState.getCurrentContent();
     if (currentContent !== newContent) {
@@ -281,12 +258,7 @@ class InputCapture extends React.Component<Props, State> {
       this.createCapture(editorState);
     }
 
-    // Clean this for next input
-    let cleanEditorState = EditorUtils.cleanEditorState(editorState);
-
-    this.setState({
-      editorState: cleanEditorState
-    });
+    this.clearEditor(editorState);
 
     return "handled";
   };
@@ -295,13 +267,22 @@ class InputCapture extends React.Component<Props, State> {
     this.editor && this.editor.focus();
   };
 
+  clearEditor = (editorState: Draft.EditorState) => {
+    // Clean this for next input
+    let cleanEditorState = EditorUtils.cleanEditorState(editorState);
+
+    this.setState({
+      editorState: cleanEditorState
+    });
+  };
+
   render() {
     const { sessionData, match, captureId } = this.props;
     const { editorWidth } = this.state;
 
     return (
       <div
-        className={`relative flex w-100`}
+        className={`relative flex-column w-100`}
         onMouseEnter={() => {
           this.setState({
             isHovering: true
@@ -313,13 +294,31 @@ class InputCapture extends React.Component<Props, State> {
           });
         }}
       >
-        {/* {this.state.isFocus && (
-          <div className={`absolute relative top--2 left--1 w-100`}>
-            <div className={`flex absolute top--1 left-0`}>
-              <this.Toolbar />
+        {!captureId && (
+          <div className={`flex justify-between`}>
+            <div />
+            <div className={`flex`}>
+              <div
+                className={`pr2 flex-column justify-around code accent`}
+                style={{
+                  fontSize: "10px"
+                }}
+              >
+                cmd + return
+              </div>
+              <div
+                className={`pointer pa1 accent br-100 ba b--accent`}
+                style={{ userSelect: "none" }}
+                onClick={e => {
+                  e.stopPropagation();
+                  this.handleCreateCapture(this.state.editorState);
+                }}
+              >
+                <ButtonCapture />
+              </div>
             </div>
           </div>
-        )} */}
+        )}
         <div className={`flex-grow`}>
           <ReactResizeDetector
             handleHeight={true}

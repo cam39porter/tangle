@@ -429,6 +429,17 @@ class GraphVisualization extends React.Component<Props, State> {
   }
 
   render() {
+    let focusNode: NodeFieldsFragment | undefined;
+
+    if (this.state.graphFocus && this.state.graphFocus.data.id) {
+      focusNode = this.props.nodes.find(node => {
+        if (!(this.state.graphFocus && this.state.graphFocus.data.id)) {
+          return false;
+        }
+        return node.id === this.state.graphFocus.data.id;
+      });
+    }
+
     return (
       <div
         className={`relative vh-100`}
@@ -446,18 +457,18 @@ class GraphVisualization extends React.Component<Props, State> {
           opts={{ renderer: "canvas" }}
           onEvents={this.getEvents()}
         />
-        {this.state.graphFocus &&
-          this.state.graphFocus.data.id && (
-            <div
-              className={`absolute top-2 left-2 z-5 br4`}
-              style={{ width: WIDTH }}
-            >
-              <CardCapture
-                captureId={this.state.graphFocus.data.id}
-                startingText={this.state.graphFocus.data.name}
-              />
-            </div>
-          )}
+        {focusNode && (
+          <div
+            className={`absolute top-2 left-2 z-5 br4`}
+            style={{ width: WIDTH }}
+          >
+            <CardCapture
+              captureId={focusNode.id}
+              startingText={focusNode.text}
+              sessionParents={focusNode.parents}
+            />
+          </div>
+        )}
       </div>
     );
   }

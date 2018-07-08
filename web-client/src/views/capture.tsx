@@ -2,7 +2,7 @@
 import * as React from "react";
 
 // Components
-import InputCapture from "../components/inputs/input-capture";
+import CardCapture from "../components/cards/card-capture";
 
 // Types
 interface Props {}
@@ -20,8 +20,12 @@ class Capture extends React.Component<Props, State> {
       <div
         className={`vh-100 flex-column items-center justify-around bg-light-gray overflow-auto`}
       >
-        <div className={`pa3 br4 bg-white`} style={{ minWidth: "35em" }}>
-          <InputCapture />
+        <div
+          style={{
+            minWidth: "30em"
+          }}
+        >
+          <CardCapture />
         </div>
       </div>
     );

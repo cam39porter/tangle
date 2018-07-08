@@ -88,7 +88,7 @@ class CardCapture extends React.Component<Props, State> {
       >
         {sessionParents && sessionParents.length > 0 ? (
           <div
-            className={`flex-column justify-around h3 gray f6 pointer dim`}
+            className={`flex-column justify-around h3`}
             onClick={() => {
               this.props.history.push(
                 `/collection/${encodeURIComponent(
@@ -104,7 +104,9 @@ class CardCapture extends React.Component<Props, State> {
               });
             }}
           >
-            {sessionParents[0].title}
+            <span className={`gray f6 pointer dim`}>
+              {sessionParents[0].title}
+            </span>
           </div>
         ) : (
           !this.props.sessionId && <div className={`h3`} />

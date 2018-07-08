@@ -296,7 +296,7 @@ class GraphVisualization extends React.Component<Props, State> {
               category: this.props.match.params["id"]
                 ? AnalyticsUtils.Categories.Session
                 : AnalyticsUtils.Categories.Home,
-              action: AnalyticsUtils.Actions.FocusOnCapture,
+              action: AnalyticsUtils.Actions.FocusOnTag,
               label: e.data.id
             });
             return;
@@ -310,14 +310,24 @@ class GraphVisualization extends React.Component<Props, State> {
               label: e.data.id
             });
             return;
-          case NodeType.Capture:
-            // TODO: get sessions this is a part of and if it is a part of the current session notify the user
+          case ResultClass.DIRECT_RESULT:
             this.setState({ graphFocus: e }, () => {
               AnalyticsUtils.trackEvent({
                 category: this.props.match.params["id"]
                   ? AnalyticsUtils.Categories.Session
                   : AnalyticsUtils.Categories.Home,
-                action: AnalyticsUtils.Actions.FocusOnCapture,
+                action: AnalyticsUtils.Actions.FocusOnDirectResultCapture,
+                label: e.data.id
+              });
+            });
+            return;
+          case ResultClass.RELATED:
+            this.setState({ graphFocus: e }, () => {
+              AnalyticsUtils.trackEvent({
+                category: this.props.match.params["id"]
+                  ? AnalyticsUtils.Categories.Session
+                  : AnalyticsUtils.Categories.Home,
+                action: AnalyticsUtils.Actions.FocusOnRelatedCapture,
                 label: e.data.id
               });
             });
@@ -376,7 +386,9 @@ class GraphVisualization extends React.Component<Props, State> {
           switch (e.data.category) {
             case NodeType.Session:
               return this.renderTooltip(e);
-            case NodeType.Capture:
+            case ResultClass.DIRECT_RESULT:
+              return this.renderTooltip(e);
+            case ResultClass.RELATED:
               return this.renderTooltip(e);
             default:
               return "";
@@ -462,9 +474,18 @@ class GraphVisualization extends React.Component<Props, State> {
           this.state.graphFocus.data.id &&
           focusNode && (
             <div
-              className={`absolute top-2 left-2 z-5 br4`}
+              className={`absolute relative top-2 left-2 z-5`}
               style={{ width: WIDTH }}
             >
+              <div
+                className={`absolute top-0 right-0 pa2 pointer ba br4 f7 bg-white b--accent accent`}
+                style={{ userSelect: "none" }}
+                onClick={() => {
+                  this.setState({ graphFocus: null });
+                }}
+              >
+                Hide
+              </div>
               <CardCapture
                 key={focusNode.id}
                 captureId={focusNode.id}

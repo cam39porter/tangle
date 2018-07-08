@@ -17,7 +17,8 @@ import {
   editCaptureMutationVariables,
   // Types
   NodeType,
-  NodeFieldsFragment
+  NodeFieldsFragment,
+  ResultClass
 } from "../../__generated__/types";
 import {
   createSessionCapture,
@@ -204,6 +205,7 @@ class InputCapture extends React.Component<Props, State> {
               this.numberOfOptimisticCaptures + 1)}:optimistic`,
             type: NodeType.Capture,
             text: body,
+            resultClass: ResultClass.DIRECT_RESULT,
             parents: [
               {
                 __typename: "Session",

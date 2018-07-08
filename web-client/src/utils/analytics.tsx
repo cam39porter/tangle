@@ -36,7 +36,9 @@ enum Actions {
   EnterToClearSearch = "enter_to_clear-search",
   FocusOnSessionCapture = "focus_on-session-capture",
   FocusOnEntity = "focus_on-entity",
-  FocusOnCapture = "focus_on-capture",
+  FocusOnTag = "focus_on-tag",
+  FocusOnRelatedCapture = "focus_on-related_capture",
+  FocusOnDirectResultCapture = "focus_on-direct_result_capture",
   ClickToSignOut = "click_to-sign_out",
   // Non Interaction
   ViewedRelatedGrid = "viewed-related_grid",

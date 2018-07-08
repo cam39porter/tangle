@@ -95,6 +95,13 @@ class CardCapture extends React.Component<Props, State> {
                   sessionParents[0].id
                 )}/format/list/related`
               );
+              AnalyticsUtils.trackEvent({
+                category: sessionParents[0].id
+                  ? AnalyticsUtils.Categories.Session
+                  : AnalyticsUtils.Categories.Home,
+                action: AnalyticsUtils.Actions.OpenSession,
+                label: captureId
+              });
             }}
           >
             {sessionParents[0].title}
@@ -149,11 +156,14 @@ class CardCapture extends React.Component<Props, State> {
                           deleteCapture: {
                             __typename: "Node",
                             id: this.props.captureId,
-                            type: NodeType.Capture,
-                            text: null,
-                            level: null
+                            type: NodeType.Capture
                           }
                         },
+                        refetchQueries: ApolloUtils.updateCaptureRefetchQueries(
+                          location.pathname,
+                          location.search,
+                          sessionId
+                        ),
                         update: ApolloUtils.deleteCaptureUpdate(captureId)
                       })
                       .then(() => {

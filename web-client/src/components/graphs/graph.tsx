@@ -23,19 +23,16 @@ import { GraphEvent } from "../../types";
 import {
   NodeFieldsFragment,
   EdgeFieldsFragment,
-  NodeType
+  NodeType,
+  ResultClass
 } from "../../__generated__/types";
 
-const NOT_FOCUS_COLOR = "#CCCCCC";
+const RELATED_COLOR = "#CCCCCC";
 const TAG_COLOR = "#333333";
 const ENTITY_COLOR = "#555555";
-const SESSION_COLOR = "#111C77";
 const OTHER_COLOR = "#F4F4F4";
 
 const TEXT_COLOR = "#777777";
-
-const FOCUS_TYPE = "focus";
-const NOT_FOCUS_TYPE = "not_focus";
 
 const WIDTH = "30em";
 
@@ -53,6 +50,7 @@ interface State {
   graphFocus: GraphEvent | null;
   nodes: Array<NodeFieldsFragment>;
   edges: Array<EdgeFieldsFragment>;
+  currentSessionId?: string;
 }
 
 const filterDuplicateNodes = (nodes: Array<NodeFieldsFragment>) =>
@@ -67,21 +65,18 @@ class GraphVisualization extends React.Component<Props, State> {
     this.state = {
       graphFocus: null,
       nodes: filterDuplicateNodes(props.nodes),
-      edges: props.edges
+      edges: props.edges,
+      currentSessionId: decodeURIComponent(this.props.match.params["id"])
     };
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (
-      this.props.location.pathname !== nextProps.location.pathname ||
-      this.props.location.search !== nextProps.location.search
-    ) {
-      this.setState({
-        graphFocus: null,
-        nodes: filterDuplicateNodes(nextProps.nodes),
-        edges: nextProps.edges
-      });
-    }
+    this.setState({
+      graphFocus: null,
+      nodes: filterDuplicateNodes(nextProps.nodes),
+      edges: nextProps.edges,
+      currentSessionId: decodeURIComponent(this.props.match.params["id"])
+    });
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
@@ -178,10 +173,29 @@ class GraphVisualization extends React.Component<Props, State> {
 
         // Captures
         default:
+          const sessionParents = node.parents;
+          if (
+            sessionParents &&
+            sessionParents.length > 0 &&
+            sessionParents[0].id === this.state.currentSessionId
+          ) {
+            return {
+              id: node.id,
+              name: node.text,
+              category: NodeType.Session,
+              symbolSize: 24,
+              label: {
+                show: false,
+                emphasis: {
+                  show: false
+                }
+              }
+            };
+          }
           return {
             id: node.id,
             name: node.text,
-            category: NodeType.Capture, // node.level === 0 ? FOCUS_TYPE : NOT_FOCUS_TYPE,
+            category: node.resultClass,
             symbolSize: 24,
             label: {
               show: false,
@@ -212,7 +226,15 @@ class GraphVisualization extends React.Component<Props, State> {
   getCategories() {
     return [
       {
-        name: NodeType.Capture,
+        name: NodeType.Session,
+        itemStyle: {
+          normal: {
+            color: config.baseColor
+          }
+        }
+      },
+      {
+        name: ResultClass.DIRECT_RESULT,
         itemStyle: {
           normal: {
             color: config.accentColor
@@ -220,18 +242,10 @@ class GraphVisualization extends React.Component<Props, State> {
         }
       },
       {
-        name: FOCUS_TYPE,
+        name: ResultClass.RELATED,
         itemStyle: {
           normal: {
-            color: config.accentColor
-          }
-        }
-      },
-      {
-        name: NOT_FOCUS_TYPE,
-        itemStyle: {
-          normal: {
-            color: NOT_FOCUS_COLOR
+            color: RELATED_COLOR
           }
         }
       },
@@ -256,14 +270,6 @@ class GraphVisualization extends React.Component<Props, State> {
         itemStyle: {
           normal: {
             color: OTHER_COLOR
-          }
-        }
-      },
-      {
-        name: NodeType.Session,
-        itemStyle: {
-          normal: {
-            color: SESSION_COLOR
           }
         }
       }
@@ -317,14 +323,11 @@ class GraphVisualization extends React.Component<Props, State> {
             });
             return;
           case NodeType.Session:
-            this.props.history.push(
-              `/collection/${e.data.id}/format/graph/related`
-            );
             AnalyticsUtils.trackEvent({
               category: this.props.match.params["id"]
                 ? AnalyticsUtils.Categories.Session
                 : AnalyticsUtils.Categories.Home,
-              action: AnalyticsUtils.Actions.FocusOnSession,
+              action: AnalyticsUtils.Actions.FocusOnSessionCapture,
               label: e.data.id
             });
             return;
@@ -336,6 +339,21 @@ class GraphVisualization extends React.Component<Props, State> {
       // mouseout: this.props.onMouseOut
     };
   }
+
+  renderTooltip = (e: GraphEvent) => {
+    let lines = e.data.name.match(/.{1,67}/g);
+    if (!lines) {
+      lines = [e.data.name];
+    }
+    let preview = lines[0].replace(/\r?\n|\r/g, "");
+    if (lines.length > 1) {
+      preview = preview + "...";
+    }
+    return `
+  <div class="pa1 ph3 shadow-1 br4 bg-white f6 dark-gray">
+    ${preview}
+  </div>`;
+  };
 
   getOption() {
     return {
@@ -357,26 +375,9 @@ class GraphVisualization extends React.Component<Props, State> {
         formatter: (e: GraphEvent) => {
           switch (e.data.category) {
             case NodeType.Session:
-              return `
-              <div class="pa1 ph3 shadow-1 br4 bg-white f5 dark-gray">
-                <p>
-                  ${e.data.name}
-                </p>
-              </div>`;
-
+              return this.renderTooltip(e);
             case NodeType.Capture:
-              let lines = e.data.name.match(/.{1,67}/g);
-              if (!lines) {
-                lines = [e.data.name];
-              }
-              let preview = lines[0].replace(/\r?\n|\r/g, "");
-              if (lines.length > 1) {
-                preview = preview + "...";
-              }
-              return `
-              <div class="pa1 ph3 shadow-1 br4 bg-white f6 dark-gray">
-                ${preview}
-              </div>`;
+              return this.renderTooltip(e);
             default:
               return "";
           }
@@ -457,18 +458,21 @@ class GraphVisualization extends React.Component<Props, State> {
           opts={{ renderer: "canvas" }}
           onEvents={this.getEvents()}
         />
-        {focusNode && (
-          <div
-            className={`absolute top-2 left-2 z-5 br4`}
-            style={{ width: WIDTH }}
-          >
-            <CardCapture
-              captureId={focusNode.id}
-              startingText={focusNode.text}
-              sessionParents={focusNode.parents}
-            />
-          </div>
-        )}
+        {this.state.graphFocus &&
+          this.state.graphFocus.data.id &&
+          focusNode && (
+            <div
+              className={`absolute top-2 left-2 z-5 br4`}
+              style={{ width: WIDTH }}
+            >
+              <CardCapture
+                key={focusNode.id}
+                captureId={focusNode.id}
+                startingText={focusNode.text}
+                sessionParents={focusNode.parents}
+              />
+            </div>
+          )}
       </div>
     );
   }

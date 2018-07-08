@@ -60,51 +60,55 @@ const SESSION_READ_FRAGMENT_NO_ID = {
 };
 
 // Create Capture Queries to Refetch
-const getCreateSessionCaptureRefetchQueries = (
+const updateCaptureRefetchQueries = (
   path: string,
   search: string,
-  sessionId: string
+  sessionId?: string
 ) => {
-  switch (path) {
-    case "/search":
-      return [
-        {
-          query: graphSearch,
-          variables: {
-            rawQuery: NetworkUtils.getQuery(search),
-            start: 0,
-            count: config.resultCount
-          }
+  if (path.includes("/search")) {
+    return [
+      {
+        query: graphSearch,
+        variables: {
+          rawQuery: NetworkUtils.getQuery(search),
+          start: 0,
+          count: config.resultCount
         }
-      ];
-    case "/recent":
-      return [
-        {
-          query: graphGetRecent,
-          variables: {
-            start: 0,
-            count: config.resultCount
-          }
-        }
-      ];
-    default:
-      return [
-        {
-          query: getRelatedCapturesBySession,
-          variables: {
-            sessionId: sessionId,
-            pagingInfo: null,
-            count: config.resultCount
-          }
-        },
-        {
-          query: graphGetDetailed,
-          variables: {
-            id: sessionId
-          }
-        }
-      ];
+      }
+    ];
   }
+  if (path.includes("/recent")) {
+    return [
+      {
+        query: graphGetRecent,
+        variables: {
+          start: 0,
+          count: config.resultCount
+        }
+      }
+    ];
+  }
+
+  if (sessionId) {
+    return [
+      {
+        query: getRelatedCapturesBySession,
+        variables: {
+          sessionId: sessionId,
+          pagingInfo: null,
+          count: config.resultCount
+        }
+      },
+      {
+        query: graphGetDetailed,
+        variables: {
+          id: sessionId
+        }
+      }
+    ];
+  }
+
+  return [];
 };
 
 // Create Session Capture Update
@@ -300,7 +304,7 @@ const deleteCaptureUpdate: (
 };
 
 export default {
-  getCreateSessionCaptureRefetchQueries,
+  updateCaptureRefetchQueries,
   createSessionCaptureUpdate,
   deleteSessionUpdate,
   editSessionUpdate,

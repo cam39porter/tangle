@@ -22,6 +22,7 @@ export const nodeFragment = gql`
     id
     type
     text
+    resultClass
     parents {
       id
       title

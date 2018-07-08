@@ -130,7 +130,14 @@ class InputCapture extends React.Component<Props, State> {
                 variables: {
                   id: this.props.captureId,
                   body: text
-                }
+                },
+                refetchQueries: ApolloUtils.updateCaptureRefetchQueries(
+                  location.pathname,
+                  location.search,
+                  this.props.sessionData
+                    ? this.props.sessionData.sessionId
+                    : undefined
+                )
               })
               .catch(err => {
                 ErrorsUtils.errorHandler.report(err.message, err.stack);
@@ -147,14 +154,18 @@ class InputCapture extends React.Component<Props, State> {
   }
 
   createCapture = (editorState: Draft.EditorState) => {
-    let { match } = this.props;
+    let { match, location } = this.props;
     const body = convertToHTML(editorState.getCurrentContent());
 
     this.props
       .createCapture({
         variables: {
           body
-        }
+        },
+        refetchQueries: ApolloUtils.updateCaptureRefetchQueries(
+          location.pathname,
+          location.search
+        )
       })
       .then(res => {
         const id = res.data.createCapture.id;
@@ -203,7 +214,7 @@ class InputCapture extends React.Component<Props, State> {
             ]
           } as NodeFieldsFragment
         },
-        refetchQueries: ApolloUtils.getCreateSessionCaptureRefetchQueries(
+        refetchQueries: ApolloUtils.updateCaptureRefetchQueries(
           location.pathname,
           location.search,
           sessionData.sessionId

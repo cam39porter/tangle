@@ -34,7 +34,7 @@ enum Actions {
   ClickToExecuteSearch = "click_to_execute-search",
   ClickToClearSearch = "click_to_clear-search",
   EnterToClearSearch = "enter_to_clear-search",
-  FocusOnSession = "focus_on-session",
+  FocusOnSessionCapture = "focus_on-session-capture",
   FocusOnEntity = "focus_on-entity",
   FocusOnCapture = "focus_on-capture",
   ClickToSignOut = "click_to-sign_out",

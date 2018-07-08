@@ -105,6 +105,7 @@ export const sessionWithoutItemCollectionFragment = gql`
     id
     title
     created
+    lastModified
   }
 `;
 
@@ -113,6 +114,7 @@ export const sessionFragment = gql`
     id
     title
     created
+    lastModified
     itemCollection {
       ...SessionItemCollectionFields
     }
@@ -126,6 +128,7 @@ export const sessionCollectionFragment = gql`
       id
       title
       created
+      lastModified
     }
     pagingInfo {
       ...PagingInfoFields

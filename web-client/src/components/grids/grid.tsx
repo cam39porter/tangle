@@ -112,7 +112,7 @@ class GridCaptures extends React.Component<Props, State> {
                       <CardSession
                         sessionId={session.id}
                         title={session.title}
-                        created={session.created}
+                        created={session.lastModified}
                       />
                     </div>
                   ))}

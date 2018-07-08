@@ -104,13 +104,7 @@ class InputCapture extends React.Component<Props, State> {
           href={href}
           className={className}
           onClick={() => {
-            let confirmation = confirm(
-              `Are you sure you would like to navigate to ${href}`
-            );
-
-            if (confirmation) {
-              window.open(href, target);
-            }
+            window.open(href, "_blank");
           }}
         >
           {children}

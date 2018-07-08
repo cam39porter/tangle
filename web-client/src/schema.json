@@ -492,12 +492,12 @@
               "deprecationReason": null
             },
             {
-              "name": "level",
+              "name": "resultClass",
               "description": "",
               "args": [],
               "type": {
-                "kind": "SCALAR",
-                "name": "Int",
+                "kind": "ENUM",
+                "name": "ResultClass",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -575,6 +575,29 @@
           "possibleTypes": null
         },
         {
+          "kind": "ENUM",
+          "name": "ResultClass",
+          "description": "",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": [
+            {
+              "name": "DIRECT_RESULT",
+              "description": "",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "RELATED",
+              "description": "",
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "possibleTypes": null
+        },
+        {
           "kind": "OBJECT",
           "name": "Session",
           "description": "",
@@ -609,6 +632,22 @@
             },
             {
               "name": "created",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "lastModified",
               "description": "",
               "args": [],
               "type": {
@@ -763,6 +802,22 @@
             },
             {
               "name": "created",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "lastModified",
               "description": "",
               "args": [],
               "type": {

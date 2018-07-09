@@ -44,11 +44,11 @@ function authFilter(req, res, next): void {
       })
       .catch(error => {
         LOGGER.error(error);
-        res.send(401, error);
+        res.status(401).send(error);
       });
   } else {
     LOGGER.error("Authorization header not provided");
-    res.send(400, "Authorization header not provided");
+    res.status(500).send("Authorization header not provided");
   }
 }
 

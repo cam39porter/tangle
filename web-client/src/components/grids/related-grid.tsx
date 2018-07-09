@@ -67,7 +67,7 @@ class RelatedGrid extends React.Component<Props, State> {
       <Grid
         sessions={[]}
         captures={captures}
-        emptyCapturesMessage={`We could not find any captures related to your collection. Try hitting the visualize button to watch your tangle grow.`}
+        emptyCapturesMessage={`We could not find any captures related to your current collection. Try hitting the visualize button to watch your tangle grow.`}
         headerHeight={this.props.headerHeight}
       />
     );

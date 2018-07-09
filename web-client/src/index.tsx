@@ -60,11 +60,12 @@ const errorLink = onError(({ networkError, graphQLErrors }) => {
       localStorage.removeItem("idToken");
       firebaseAuth().signOut();
       AnalyticsUtils.setUserId(undefined);
+    } else {
+      ErrorsUtils.errorHandler.report(
+        networkError.message,
+        networkError.stack ? networkError.stack : {}
+      );
     }
-    ErrorsUtils.errorHandler.report(
-      networkError.message,
-      networkError.stack ? networkError.stack : {}
-    );
   } else if (graphQLErrors) {
     let error = graphQLErrors[0];
     ErrorsUtils.errorHandler.report(

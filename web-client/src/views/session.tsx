@@ -73,6 +73,10 @@ class Session extends React.Component<Props, State> {
     }
   }
 
+  shouldComponentUpdate(nextProps: Props) {
+    return true;
+  }
+
   componentWillUnmount() {
     this.handleDeleteSession();
   }

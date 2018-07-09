@@ -117,7 +117,7 @@ class CardSession extends React.Component<Props, State> {
               </div>
             ) : (
               <div className={`tr f6 gray w4`}>
-                <TimeAgo date={this.props.created} live={true} />
+                <TimeAgo date={this.props.created} live={false} />
               </div>
             )}
           </div>

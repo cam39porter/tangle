@@ -54,6 +54,12 @@ const errorLink = onError(({ networkError, graphQLErrors }) => {
         firebaseAuth().signOut();
         AnalyticsUtils.setUserId(undefined);
       }
+    } else if (networkError["statusCode"] === 400) {
+      const errorMessage = `It seems that your email address is not whitelisted. Please make sure you log in with the same email you used to sign up on usetangle.com. Contact info@usetangle.com if you have any quesitons or believe this is an error.`;
+      alert(errorMessage);
+      localStorage.removeItem("idToken");
+      firebaseAuth().signOut();
+      AnalyticsUtils.setUserId(undefined);
     }
     ErrorsUtils.errorHandler.report(
       networkError.message,

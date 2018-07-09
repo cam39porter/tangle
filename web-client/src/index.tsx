@@ -47,7 +47,6 @@ const errorLink = onError(({ networkError, graphQLErrors }) => {
       if (user !== null) {
         user.getIdToken(true).then(idToken => {
           localStorage.setItem("idToken", idToken);
-          AnalyticsUtils.setUserId(user.uid);
         });
       } else {
         localStorage.removeItem("idToken");

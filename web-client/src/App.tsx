@@ -45,6 +45,7 @@ class App extends React.Component<Props, State> {
             if (user) {
               user.getIdToken(true).then(idToken => {
                 localStorage.setItem("idToken", idToken);
+                AnalyticsUtils.setUserId(user.uid);
                 this.setState({
                   isAuthenticated: true
                 });

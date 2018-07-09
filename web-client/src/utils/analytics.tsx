@@ -3,6 +3,7 @@ import * as React from "react";
 
 // Utils
 import * as GoogleAnalytics from "react-ga";
+import { assign } from "lodash";
 
 // Types
 import { RouteComponentProps } from "react-router";
@@ -55,6 +56,8 @@ const gaOptions = {
   forceSSL: true
 };
 
+let currentUserId: string | undefined;
+
 // Google Analytics Tracking
 GoogleAnalytics.initialize("UA-121634830-1", {
   titleCase: false,
@@ -64,12 +67,15 @@ GoogleAnalytics.initialize("UA-121634830-1", {
 
 // Set a field to track
 const setUserId = (userId: string | undefined) => {
-  GoogleAnalytics.set({ userId });
+  currentUserId = userId;
+  GoogleAnalytics.set({ userId: currentUserId });
 };
 
 // Track Event
 const trackEvent = (event: GoogleAnalytics.EventArgs) => {
-  Promise.resolve(GoogleAnalytics.event(event));
+  Promise.resolve(
+    GoogleAnalytics.event(assign(event, { dimension1: currentUserId }))
+  );
 };
 
 // Page Tracking HOC

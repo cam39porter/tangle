@@ -25,7 +25,7 @@ class Mobile extends React.Component<Props, State> {
           <div className={`flex-grow`}>
             <img
               src="https://storage.googleapis.com/usetangle-static-assets/logo.png"
-              className={`pa2 bb b--accent`}
+              className={`pa2 bb bw1 b--accent`}
               style={{
                 maxHeight: "2.5em"
               }}

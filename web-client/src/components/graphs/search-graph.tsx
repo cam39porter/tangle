@@ -75,8 +75,7 @@ class SearchGraph extends React.Component<Props, State> {
       return (
         <Help>
           <div>
-            We could not find any captures or collections that matched your
-            search.
+            We could not find any captures to visualize from your search.
           </div>
         </Help>
       );

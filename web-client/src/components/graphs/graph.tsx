@@ -14,7 +14,7 @@ import CardCapture from "../cards/card-capture";
 
 // Config / Utils
 import config from "../../cfg";
-import { isEqual, uniqBy } from "lodash";
+import { isEqual, uniqBy, findIndex } from "lodash";
 import windowSize from "react-window-size";
 import { AnalyticsUtils } from "../../utils/index";
 
@@ -47,7 +47,7 @@ interface Props extends RouteComponentProps<{}> {
 }
 
 interface State {
-  graphFocus: GraphEvent | null;
+  focusNode: NodeFieldsFragment | null;
   nodes: Array<NodeFieldsFragment>;
   edges: Array<EdgeFieldsFragment>;
   currentSessionId?: string;
@@ -63,7 +63,7 @@ class GraphVisualization extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      graphFocus: null,
+      focusNode: null,
       nodes: filterDuplicateNodes(props.nodes),
       edges: props.edges,
       currentSessionId: decodeURIComponent(this.props.match.params["id"])
@@ -71,8 +71,17 @@ class GraphVisualization extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
+    const { focusNode } = this.state;
+    let focusNodeIndex = -1;
+    if (focusNode !== null) {
+      focusNodeIndex = findIndex(
+        nextProps.nodes,
+        node => node.id === focusNode.id
+      );
+    }
+
     this.setState({
-      graphFocus: null,
+      focusNode: focusNodeIndex === -1 ? null : focusNode,
       nodes: filterDuplicateNodes(nextProps.nodes),
       edges: nextProps.edges,
       currentSessionId: decodeURIComponent(this.props.match.params["id"])
@@ -87,14 +96,14 @@ class GraphVisualization extends React.Component<Props, State> {
       return true;
     }
 
-    if (this.state.graphFocus === null && nextState.graphFocus !== null) {
+    if (this.state.focusNode === null && nextState.focusNode !== null) {
       return true;
     }
-    if (this.state.graphFocus !== null && nextState.graphFocus === null) {
+    if (this.state.focusNode !== null && nextState.focusNode === null) {
       return true;
     }
-    if (this.state.graphFocus !== null && nextState.graphFocus !== null) {
-      if (this.state.graphFocus.data.id !== nextState.graphFocus.data.id) {
+    if (this.state.focusNode !== null && nextState.focusNode !== null) {
+      if (this.state.focusNode.id !== nextState.focusNode.id) {
         return true;
       }
     }
@@ -286,6 +295,13 @@ class GraphVisualization extends React.Component<Props, State> {
     this.props.history.push(`${splitPath.join("/")}`);
   };
 
+  setFocusNode = (e: GraphEvent) => {
+    const nextFocusNode = this.props.nodes.find(node => node.id === e.data.id);
+    this.setState({
+      focusNode: nextFocusNode ? nextFocusNode : null
+    });
+  };
+
   getEvents() {
     return {
       click: (e: GraphEvent) => {
@@ -311,25 +327,23 @@ class GraphVisualization extends React.Component<Props, State> {
             });
             return;
           case ResultClass.DIRECT_RESULT:
-            this.setState({ graphFocus: e }, () => {
-              AnalyticsUtils.trackEvent({
-                category: this.props.match.params["id"]
-                  ? AnalyticsUtils.Categories.Session
-                  : AnalyticsUtils.Categories.Home,
-                action: AnalyticsUtils.Actions.FocusOnDirectResultCapture,
-                label: e.data.id
-              });
+            this.setFocusNode(e);
+            AnalyticsUtils.trackEvent({
+              category: this.props.match.params["id"]
+                ? AnalyticsUtils.Categories.Session
+                : AnalyticsUtils.Categories.Home,
+              action: AnalyticsUtils.Actions.FocusOnDirectResultCapture,
+              label: e.data.id
             });
             return;
           case ResultClass.RELATED:
-            this.setState({ graphFocus: e }, () => {
-              AnalyticsUtils.trackEvent({
-                category: this.props.match.params["id"]
-                  ? AnalyticsUtils.Categories.Session
-                  : AnalyticsUtils.Categories.Home,
-                action: AnalyticsUtils.Actions.FocusOnRelatedCapture,
-                label: e.data.id
-              });
+            this.setFocusNode(e);
+            AnalyticsUtils.trackEvent({
+              category: this.props.match.params["id"]
+                ? AnalyticsUtils.Categories.Session
+                : AnalyticsUtils.Categories.Home,
+              action: AnalyticsUtils.Actions.FocusOnRelatedCapture,
+              label: e.data.id
             });
             return;
           case NodeType.Session:
@@ -442,16 +456,7 @@ class GraphVisualization extends React.Component<Props, State> {
   }
 
   render() {
-    let focusNode: NodeFieldsFragment | undefined;
-
-    if (this.state.graphFocus && this.state.graphFocus.data.id) {
-      focusNode = this.props.nodes.find(node => {
-        if (!(this.state.graphFocus && this.state.graphFocus.data.id)) {
-          return false;
-        }
-        return node.id === this.state.graphFocus.data.id;
-      });
-    }
+    const { focusNode } = this.state;
 
     return (
       <div
@@ -470,30 +475,28 @@ class GraphVisualization extends React.Component<Props, State> {
           opts={{ renderer: "canvas" }}
           onEvents={this.getEvents()}
         />
-        {this.state.graphFocus &&
-          this.state.graphFocus.data.id &&
-          focusNode && (
+        {focusNode && (
+          <div
+            className={`absolute relative top-2 left-2 z-5`}
+            style={{ width: WIDTH }}
+          >
             <div
-              className={`absolute relative top-2 left-2 z-5`}
-              style={{ width: WIDTH }}
+              className={`absolute top-0 right-0 pa2 pointer ba br4 f7 bg-white b--accent accent`}
+              style={{ userSelect: "none" }}
+              onClick={() => {
+                this.setState({ focusNode: null });
+              }}
             >
-              <div
-                className={`absolute top-0 right-0 pa2 pointer ba br4 f7 bg-white b--accent accent`}
-                style={{ userSelect: "none" }}
-                onClick={() => {
-                  this.setState({ graphFocus: null });
-                }}
-              >
-                Hide
-              </div>
-              <CardCapture
-                key={focusNode.id}
-                captureId={focusNode.id}
-                startingText={focusNode.text}
-                sessionParents={focusNode.parents}
-              />
+              Hide
             </div>
-          )}
+            <CardCapture
+              key={focusNode.id}
+              captureId={focusNode.id}
+              startingText={focusNode.text}
+              sessionParents={focusNode.parents}
+            />
+          </div>
+        )}
       </div>
     );
   }

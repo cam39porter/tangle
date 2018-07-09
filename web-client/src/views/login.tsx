@@ -20,8 +20,8 @@ class Login extends React.Component<Props, State> {
   render() {
     return (
       <div className={`dt vh-100 w-100 bg-near-white`}>
-        <div className={`dtc v-mid center`}>
-          <div className={`tc`}>
+        <div className={`dtc v-mid`}>
+          <div className={`center measure pa4 bg-white br4 shadow-1 tc`}>
             <div>
               <img
                 src="https://storage.googleapis.com/usetangle-static-assets/logo.png"
@@ -46,6 +46,30 @@ class Login extends React.Component<Props, State> {
                   }`
                 }}
               />
+              <p className={`pt4 center tl f6 lh-copy`}>
+                By selecting one of the above sign in options for Tangle, you
+                agree to the Terms of Service and Privacy Policy linked below.
+              </p>
+              <div className={`flex-column center w5`}>
+                <a
+                  className={`pa2 link dim`}
+                  href={
+                    "https://storage.googleapis.com/usetangle-static-assets/terms-of-service.docx.pdf"
+                  }
+                  target={"_blank"}
+                >
+                  Terms of Service
+                </a>
+                <a
+                  className={`pa2 link dim`}
+                  href={
+                    "https://storage.googleapis.com/usetangle-static-assets/privacy-policy.docx.pdf"
+                  }
+                  target={"_blank"}
+                >
+                  Privacy Policy
+                </a>
+              </div>
             </div>
           </div>
         </div>

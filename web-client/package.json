@@ -49,6 +49,7 @@
     "qs": "^6.5.1",
     "react": "^16.2.0",
     "react-apollo": "2.0.4",
+    "react-device-detect": "1.5.8",
     "react-dom": "^16.2.0",
     "react-feather": "^1.0.8",
     "react-firebaseui": "1.2.3",

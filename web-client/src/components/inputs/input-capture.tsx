@@ -49,6 +49,7 @@ import {
   ErrorsUtils,
   EditorUtils
 } from "../../utils";
+import { isBrowser } from "react-device-detect";
 
 const TIME_TO_SAVE = 500; // ms till change is automatically captured
 
@@ -311,14 +312,17 @@ class InputCapture extends React.Component<Props, State> {
           <div className={`flex justify-between`}>
             <div />
             <div className={`flex`}>
-              <div
-                className={`pr2 flex-column justify-around code accent`}
-                style={{
-                  fontSize: "10px"
-                }}
-              >
-                cmd + return
-              </div>
+              {isBrowser && (
+                <div
+                  className={`pr2 flex-column justify-around code accent`}
+                  style={{
+                    fontSize: "10px"
+                  }}
+                >
+                  cmd + return
+                </div>
+              )}
+
               <div
                 className={`pointer pa1 accent br-100 ba b--accent`}
                 style={{ userSelect: "none" }}

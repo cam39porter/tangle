@@ -25,6 +25,7 @@ import {
   CaptureFieldsFragment,
   SessionWithoutItemCollectionFieldsFragment
 } from "../../__generated__/types";
+import { isMobile } from "react-device-detect";
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {

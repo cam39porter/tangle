@@ -9,7 +9,8 @@ import { RouteComponentProps } from "react-router";
 
 enum Categories {
   Session = "session",
-  Home = "home"
+  Home = "home",
+  Mobile = "mobile"
 }
 
 enum Actions {

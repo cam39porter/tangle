@@ -24,6 +24,7 @@ import Markdown from "../help/markdown";
 
 // Utils
 import { ApolloUtils, AnalyticsUtils, ErrorsUtils } from "../../utils/index";
+import { isBrowser, isMobile } from "react-device-detect";
 
 // Types
 interface Props extends RouteComponentProps<{}> {
@@ -110,7 +111,7 @@ class CardCapture extends React.Component<Props, State> {
             </span>
           </div>
         ) : (
-          !this.props.sessionId && <div className={`h3`} />
+          !this.props.sessionId && !isMobile && <div className={`h3`} />
         )}
         <div
           id={`list-capture`}
@@ -192,11 +193,12 @@ class CardCapture extends React.Component<Props, State> {
               </div>
             )}
         </div>
-        {!captureId && (
-          <div className={`center`}>
-            <Markdown />
-          </div>
-        )}
+        {!captureId &&
+          isBrowser && (
+            <div className={`center`}>
+              <Markdown />
+            </div>
+          )}
       </div>
     );
   }

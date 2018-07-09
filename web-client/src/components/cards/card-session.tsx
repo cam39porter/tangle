@@ -14,6 +14,7 @@ import { graphql, compose, MutationFunc } from "react-apollo";
 
 // Components
 import ButtonArchive from "./../buttons/button-archive";
+import TimeAgo from "react-timeago";
 
 // Utils
 import { ApolloUtils, AnalyticsUtils, ErrorsUtils } from "../../utils";
@@ -60,8 +61,7 @@ class CardSession extends React.Component<Props, State> {
         }}
       >
         <div
-          id={`list-session`}
-          className={`flex justify-between pa3 w-100 bb bw1 b--light-gray bg-animate hover-bg-white pointer`}
+          className={`flex justify-between pa3 bb bw1 b--light-gray bg-animate hover-bg-white pointer`}
           onClick={() => {
             this.props.history.push(
               `/collection/${encodeURIComponent(
@@ -77,16 +77,8 @@ class CardSession extends React.Component<Props, State> {
             });
           }}
         >
-          <div className={`flex-grow flex-column justify-around`}>
-            <div
-              className={`f5 dark-gray`}
-              style={{
-                overflow: "hidden",
-                whiteSpace: "nowrap"
-              }}
-            >
-              {this.props.title || "Untitled "}
-            </div>
+          <div className={`flex-column justify-around f5 dark-gray`}>
+            {this.props.title || "Untitled "}
           </div>
           <div className={`relative flex-column justify-around`}>
             {this.state.isShowingButtons ? (
@@ -124,8 +116,8 @@ class CardSession extends React.Component<Props, State> {
                 <ButtonArchive />
               </div>
             ) : (
-              <div className={`tr f6 gray`}>
-                {new Date(this.props.created).toDateString()}
+              <div className={`tr f6 gray w4`}>
+                <TimeAgo date={this.props.created} live={true} />
               </div>
             )}
           </div>

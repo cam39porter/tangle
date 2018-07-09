@@ -18,32 +18,70 @@ interface Props extends RouteProps {
   handleIsGraphView: () => void;
 }
 
-interface State {}
+interface State {
+  showLegend: boolean;
+}
 
 class HeaderSurface extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+
+    this.state = {
+      showLegend: true
+    };
   }
 
   render() {
+    const { isGraphView, handleIsGraphView, location, match } = this.props;
+
     return (
       <Header
-        left={null}
+        left={
+          isGraphView && (
+            <div className={`flex-column justify-around`}>
+              <div className={`flex f7`}>
+                {(location.pathname.includes("/related") ||
+                  location.pathname.includes("/search")) && (
+                  <div className={`flex pa2`}>
+                    <div className={`br-100 bg-base h1 w1`} />
+                    <div className={`ph2`}>current collection</div>
+                  </div>
+                )}
+                {location.pathname.includes("/recent") && (
+                  <div className={`flex pa2`}>
+                    <div className={`br-100 bg-accent h1 w1`} />
+                    <div className={`ph2`}>recently modified</div>
+                  </div>
+                )}
+                {location.pathname.includes("/search") && (
+                  <div className={`flex pa2`}>
+                    <div className={`br-100 bg-accent h1 w1`} />
+                    <div className={`ph2`}>search result</div>
+                  </div>
+                )}
+                <div className={`flex pa2`}>
+                  <div className={`br-100 bg-moon-gray h1 w1`} />
+                  <div className={`ph2`}>related</div>
+                </div>
+              </div>
+            </div>
+          )
+        }
         right={
           <React.Fragment>
             <div className={`flex`}>
               <div className={`flex-column justify-around`}>
                 <div
                   className={`pa2 pointer ${
-                    this.props.isGraphView ? "br4 bg-accent light-gray" : ""
+                    isGraphView ? "br4 bg-accent light-gray" : ""
                   }`}
                   onClick={() => {
-                    this.props.handleIsGraphView();
+                    handleIsGraphView();
                     AnalyticsUtils.trackEvent({
-                      category: this.props.match.params["id"]
+                      category: match.params["id"]
                         ? AnalyticsUtils.Categories.Session
                         : AnalyticsUtils.Categories.Home,
-                      action: this.props.isGraphView
+                      action: isGraphView
                         ? AnalyticsUtils.Actions.NavigateFromGraph
                         : AnalyticsUtils.Actions.NavigateToGraph
                       //  TODO: label: search=query pivot=id recent

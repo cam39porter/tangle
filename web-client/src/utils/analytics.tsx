@@ -67,7 +67,7 @@ const setUserId = (userId: string | undefined) => {
   GoogleAnalytics.set({ userId });
 };
 
-// Track Even
+// Track Event
 const trackEvent = (event: GoogleAnalytics.EventArgs) => {
   Promise.resolve(GoogleAnalytics.event(event));
 };

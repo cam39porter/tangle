@@ -126,23 +126,23 @@ class InputSurface extends React.Component<Props, State> {
           placeholder={"Search your tangle"}
           onChange={this.handleOnChange}
         />
-        <div
-          className={`flex-column justify-around f7 ${
-            isSearching || query ? "gray" : "white"
-          } pointer`}
-          onClick={() => {
-            this.handleExit(url);
-            AnalyticsUtils.trackEvent({
-              category: this.props.match.params["id"]
-                ? AnalyticsUtils.Categories.Session
-                : AnalyticsUtils.Categories.Home,
-              action: AnalyticsUtils.Actions.ClickToClearSearch,
-              label: query
-            });
-          }}
-        >
-          <div className={`ph2`}>Clear</div>
-        </div>
+        {(isSearching || query) && (
+          <div
+            className={`flex-column justify-around f7 pointer`}
+            onClick={() => {
+              this.handleExit(url);
+              AnalyticsUtils.trackEvent({
+                category: this.props.match.params["id"]
+                  ? AnalyticsUtils.Categories.Session
+                  : AnalyticsUtils.Categories.Home,
+                action: AnalyticsUtils.Actions.ClickToClearSearch,
+                label: query
+              });
+            }}
+          >
+            <div className={`ph2`}>Clear</div>
+          </div>
+        )}
       </div>
     );
   }

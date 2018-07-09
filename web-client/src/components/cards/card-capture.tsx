@@ -20,6 +20,7 @@ import { deleteCapture } from "../../queries";
 // Components
 import ButtonArchive from "./../buttons/button-archive";
 import InputCapture from "../inputs/input-capture";
+import Markdown from "../help/markdown";
 
 // Utils
 import { ApolloUtils, AnalyticsUtils, ErrorsUtils } from "../../utils/index";
@@ -191,6 +192,11 @@ class CardCapture extends React.Component<Props, State> {
               </div>
             )}
         </div>
+        {!captureId && (
+          <div className={`center`}>
+            <Markdown />
+          </div>
+        )}
       </div>
     );
   }

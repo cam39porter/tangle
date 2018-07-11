@@ -7,22 +7,26 @@ import "./tachyons.css";
 import "draft-js/dist/Draft.css";
 
 // Routing
-import { RouteProps } from "react-router";
+import { RouteProps, Redirect } from "react-router";
 import { Route, Switch } from "react-router-dom";
 
 // Components
+import Settings from "./views/settings";
 import Login from "./views/login";
 import Main from "./views/main";
 
 // Config / Utils
 import { FirebaseUtils, AnalyticsUtils, ErrorsUtils } from "./utils";
-const withTracker = AnalyticsUtils.withTracker;
 
 // Types
+import { User } from "firebase";
+
 interface Props extends RouteProps {}
 
 interface State {
   isAuthenticated: boolean | null;
+  isEmailVerified: boolean | null;
+  user: User | null;
 }
 
 class App extends React.Component<Props, State> {
@@ -32,9 +36,23 @@ class App extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      isAuthenticated: null
+      isAuthenticated: null,
+      isEmailVerified: null,
+      user: null
     };
   }
+
+  setUserIdToken = (user: User) => {
+    user.getIdToken(true).then(idToken => {
+      localStorage.setItem("idToken", idToken);
+      AnalyticsUtils.setUserId(user.uid);
+      this.setState({
+        isAuthenticated: true,
+        isEmailVerified: user.emailVerified,
+        user: user
+      });
+    });
+  };
 
   componentWillMount() {
     FirebaseUtils.firebaseAuth()
@@ -43,13 +61,7 @@ class App extends React.Component<Props, State> {
         this.removeFirebaseListener = FirebaseUtils.firebaseAuth().onIdTokenChanged(
           user => {
             if (user) {
-              user.getIdToken(true).then(idToken => {
-                localStorage.setItem("idToken", idToken);
-                AnalyticsUtils.setUserId(user.uid);
-                this.setState({
-                  isAuthenticated: true
-                });
-              });
+              this.setUserIdToken(user);
             } else {
               this.setState({
                 isAuthenticated: false
@@ -67,18 +79,32 @@ class App extends React.Component<Props, State> {
   }
 
   render() {
+    const { isAuthenticated, isEmailVerified, user } = this.state;
     return (
       <div className={`vh-100 w-100 sans-serif`}>
-        {this.state.isAuthenticated === null ? null : (
+        {isAuthenticated === null ? null : (
           <div>
-            {this.state.isAuthenticated ? (
-              <Switch>
-                <Route path="/" component={withTracker(Main)} />
-              </Switch>
+            {isAuthenticated ? (
+              isEmailVerified === null ? null : (
+                <div>
+                  {!isEmailVerified ? (
+                    <Switch>
+                      <Route
+                        path="/settings"
+                        render={props => <Settings {...props} user={user} />}
+                      />
+                      <Redirect to="/settings" />
+                    </Switch>
+                  ) : (
+                    <Route
+                      path="/"
+                      component={AnalyticsUtils.withTracker(Main)}
+                    />
+                  )}
+                </div>
+              )
             ) : (
-              <Switch>
-                <Route to="/" component={Login} />
-              </Switch>
+              <Route to="/" component={Login} />
             )}
           </div>
         )}

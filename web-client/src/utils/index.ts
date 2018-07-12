@@ -5,6 +5,7 @@ import WindowUtils from "./window";
 import ApolloUtils from "./apollo";
 import EditorUtils from "./editor";
 import AnalyticsUtils from "./analytics";
+import RestClientUtils from "./rest-client";
 
 export {
   ErrorsUtils,
@@ -13,5 +14,6 @@ export {
   WindowUtils,
   ApolloUtils,
   EditorUtils,
-  AnalyticsUtils
+  AnalyticsUtils,
+  RestClientUtils
 };

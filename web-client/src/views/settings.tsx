@@ -30,7 +30,7 @@ class Settings extends React.Component<Props, State> {
   }
 
   render() {
-    const { user, location } = this.props;
+    const { user } = this.props;
     const { emailSent } = this.state;
 
     return (

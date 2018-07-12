@@ -6,8 +6,10 @@ import { RouteComponentProps, withRouter } from "react-router";
 
 // Components
 import InputSurface from "../inputs/input-surface";
+import InputFileUpload from "../inputs/input-file-upload";
 import Header from "./header";
 import { AnalyticsUtils } from "../../utils/index";
+
 // Utils
 
 // Types
@@ -37,7 +39,7 @@ class HeaderSurface extends React.Component<Props, State> {
     return (
       <Header
         left={
-          isGraphView && (
+          isGraphView ? (
             <div className={`flex-column justify-around`}>
               <div className={`flex f7`}>
                 {location.pathname.includes("collection/") && (
@@ -63,6 +65,10 @@ class HeaderSurface extends React.Component<Props, State> {
                   <div className={`ph2`}>related</div>
                 </div>
               </div>
+            </div>
+          ) : (
+            <div className={`flex-column justify-around`}>
+              <InputFileUpload />
             </div>
           )
         }

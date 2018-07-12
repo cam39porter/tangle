@@ -11,7 +11,7 @@ const axiosInstance = axios.create({
   }
 });
 
-export function uploadFile(data: FormData) {
+function uploadFile(data: FormData) {
   axiosInstance
     .post("/uploadHtml", data)
     .then(response => {
@@ -21,3 +21,7 @@ export function uploadFile(data: FormData) {
       ErrorsUtils.errorHandler.report(error.message, error.stack);
     });
 }
+
+export default {
+  uploadFile
+};

@@ -142,7 +142,6 @@ unset NEO4J_dbms_txLog_rotation_retentionPolicy NEO4J_UDC_SOURCE \
 # Custom settings for tangle
 # Logging
 : ${NEO4J_dbms_logs_query_enabled:=true}
-: ${NEO4J_dbms_logs_query_parameter__logging__enabled:=true}
 : ${NEO4J_dbms_logs_query_time__logging__enabled:=true}
 : ${NEO4J_dbms_logs_query_allocation__logging__enabled:=true}
 : ${NEO4J_dbms_logs_query_page__logging__enabled:=true}

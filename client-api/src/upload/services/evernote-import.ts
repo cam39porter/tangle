@@ -15,6 +15,7 @@ import { UserUrn } from "../../urn/user-urn";
 import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
 import { v4 as uuidv4 } from "uuid/v4";
 import { Logger } from "../../util/logging/logger";
+import { isLocal, isDev } from "../../config";
 
 const LOGGER = new Logger("src/upload/services/evernote-import.ts");
 const readFileAsync = promisify(fs.readFile);
@@ -67,9 +68,14 @@ function createEvernoteNote(
   noteUrn: EvernoteNoteUrn,
   note: EvernoteUpload
 ): Promise<void> {
-  return create(userId, noteUrn, note).then(() => {
-    return createEvernoteCaptures(noteUrn, note).then(() => null);
-  });
+  // Dont write yet- lets figure out the schema first
+  if (isLocal() || isDev()) {
+    return Promise.resolve(null);
+  } else {
+    return create(userId, noteUrn, note).then(() => {
+      return createEvernoteCaptures(noteUrn, note).then(() => null);
+    });
+  }
 }
 
 function createEvernoteCaptures(

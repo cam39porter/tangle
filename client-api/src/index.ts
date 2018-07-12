@@ -24,6 +24,8 @@ import * as morgan from "morgan";
 import { isProd, isLocal } from "./config";
 import * as helmet from "helmet";
 import * as compression from "compression";
+import { importEvernoteNoteUpload } from "./upload/services/evernote-import";
+import { ConflictError } from "./util/exceptions/confict-error";
 
 // tslint:disable-next-line
 const { graphqlExpress } = require("apollo-server-express");
@@ -101,8 +103,6 @@ app.use(
   graphqlExpress({ schema: executableSchema, formatError: maskError })
 );
 
-app.use(formidable());
-
 // For local allow insecure connection
 if (isLocal()) {
   http.createServer(app).listen(HTTP_PORT, () => {
@@ -132,3 +132,25 @@ function maskError(error: GraphQLError): GraphQLError {
     return error;
   }
 }
+
+app.use(formidable());
+app.post("/uploadHtml", (req, res) => {
+  if (isProd()) {
+    res.status(404).send("Not Found");
+  }
+  if (req["files"].file.type !== "text/html") {
+    res.status(400).send("Unsupported content type");
+  }
+  importEvernoteNoteUpload(req["files"].file)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(error => {
+      if (error instanceof ConflictError) {
+        res.status(409).end("Object already exists, please delete it first");
+      } else {
+        LOGGER.error(error);
+        res.sendStatus(500);
+      }
+    });
+});

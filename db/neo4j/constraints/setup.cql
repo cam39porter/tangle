@@ -1,0 +1,32 @@
+begin 
+CREATE CONSTRAINT ON (appfeedback:AppFeedback) ASSERT exists(appfeedback.body);
+CREATE CONSTRAINT ON (appfeedback:AppFeedback) ASSERT exists(appfeedback.owner);
+CREATE CONSTRAINT ON (capture:Capture) ASSERT capture.id IS UNIQUE;
+CREATE CONSTRAINT ON (capture:Capture) ASSERT exists(capture.body);
+CREATE CONSTRAINT ON (capture:Capture) ASSERT exists(capture.created);
+CREATE CONSTRAINT ON (capture:Capture) ASSERT exists(capture.lastModified);
+CREATE CONSTRAINT ON (capture:Capture) ASSERT exists(capture.owner);
+CREATE CONSTRAINT ON (capture:Capture) ASSERT exists(capture.plainText);
+CREATE CONSTRAINT ON (entity:Entity) ASSERT entity.id IS UNIQUE;
+CREATE CONSTRAINT ON (entity:Entity) ASSERT exists(entity.id);
+CREATE CONSTRAINT ON (entity:Entity) ASSERT exists(entity.name);
+CREATE CONSTRAINT ON (entity:Entity) ASSERT exists(entity.owner);
+CREATE CONSTRAINT ON (entity:Entity) ASSERT exists(entity.type);
+CREATE CONSTRAINT ON (evernotenote:EvernoteNote) ASSERT evernotenote.id IS UNIQUE;
+CREATE CONSTRAINT ON (session:Session) ASSERT exists(session.created);
+CREATE CONSTRAINT ON (session:Session) ASSERT exists(session.lastModified);
+CREATE CONSTRAINT ON (session:Session) ASSERT exists(session.owner);
+CREATE CONSTRAINT ON (session:Session) ASSERT session.id IS UNIQUE;
+CREATE CONSTRAINT ON (tag:Tag) ASSERT exists(tag.created);
+CREATE CONSTRAINT ON (tag:Tag) ASSERT exists(tag.id);
+CREATE CONSTRAINT ON (tag:Tag) ASSERT exists(tag.name);
+CREATE CONSTRAINT ON (tag:Tag) ASSERT exists(tag.owner);
+CREATE CONSTRAINT ON (tag:Tag) ASSERT tag.id IS UNIQUE;
+CREATE CONSTRAINT ON (user:User) ASSERT exists(user.email);
+CREATE CONSTRAINT ON (user:User) ASSERT exists(user.id);
+CREATE CONSTRAINT ON (user:User) ASSERT exists(user.name);
+CREATE CONSTRAINT ON (user:User) ASSERT user.email IS UNIQUE;
+CREATE CONSTRAINT ON (user:User) ASSERT user.id IS UNIQUE;
+CREATE CONSTRAINT ON (whitelistedemail:WhitelistedEmail) ASSERT exists(whitelistedemail.email);
+CREATE CONSTRAINT ON (whitelistedemail:WhitelistedEmail) ASSERT whitelistedemail.email IS UNIQUE;
+commit

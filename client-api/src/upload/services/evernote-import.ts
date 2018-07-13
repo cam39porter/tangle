@@ -10,7 +10,7 @@ import { create, deleteNote } from "../../db/services/evernote-note";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { EvernoteUpload } from "../models/evernote-upload";
 import { parseEvernoteHtml } from "./evernote-html-parser";
-import { saveOverwrite, saveSafely } from "./file-db";
+import { save } from "./file-db";
 import { UserUrn } from "../../urn/user-urn";
 import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
 import { v4 as uuidv4 } from "uuid/v4";
@@ -34,17 +34,9 @@ export function importEvernoteNoteUpload(file): Promise<void> {
     }
     const uuid = uuidv4();
     const noteUrn = new EvernoteNoteUrn(uuid);
-    return (
-      saveSafely(noteUrn, file)
-        .then(() => createEvernoteNote(user.urn, noteUrn, note))
-        // TODO cmccrack require overwrite param from frontend to do this
-        .catch(() => {
-          return saveOverwrite(noteUrn, file).then(() =>
-            deleteEvernoteNote(noteUrn).then(() =>
-              createEvernoteNote(user.urn, noteUrn, note)
-            )
-          );
-        })
+
+    return save(noteUrn, file).then(() =>
+      createEvernoteNote(user.urn, noteUrn, note)
     );
   });
 }

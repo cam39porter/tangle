@@ -18,9 +18,17 @@ export function parseEvernoteHtml(data): EvernoteUpload {
       .slice(0, -5)
   );
 
-  const contents = parseBody($("body").html());
+  const bodyHtml = $("body").html();
+  const contents = parseBody(bodyHtml);
 
-  return new EvernoteUpload(created, lastModified, tags, title, contents);
+  return new EvernoteUpload(
+    created,
+    lastModified,
+    tags,
+    title,
+    bodyHtml,
+    contents
+  );
 }
 
 function parseBody(html: string): string[] {

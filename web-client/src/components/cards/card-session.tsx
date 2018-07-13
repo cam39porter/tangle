@@ -49,12 +49,12 @@ class CardSession extends React.Component<Props, State> {
     return (
       <div
         key={this.props.sessionId}
-        onMouseEnter={() => {
+        onMouseOver={() => {
           this.setState({
             isShowingButtons: true
           });
         }}
-        onMouseLeave={() => {
+        onMouseOut={() => {
           this.setState({
             isShowingButtons: false
           });

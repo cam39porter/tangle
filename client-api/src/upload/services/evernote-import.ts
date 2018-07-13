@@ -21,24 +21,22 @@ const LOGGER = new Logger("src/upload/services/evernote-import.ts");
 const readFileAsync = promisify(fs.readFile);
 
 export function importEvernoteNoteUpload(file): Promise<void> {
-  return readFileAsync(file.path).then(data => {
-    const user: User = getAuthenticatedUser();
-    let note: EvernoteUpload = null;
-    try {
-      note = parseEvernoteHtml(data);
-    } catch (err) {
-      LOGGER.error(`Could not parse html, error ${err}`);
-      throw new Error(
-        "Could not parse html. Please email cole@usetangle.com with your issue"
-      );
-    }
-    const uuid = uuidv4();
-    const noteUrn = new EvernoteNoteUrn(uuid);
-
-    return save(noteUrn, file).then(() =>
-      createEvernoteNote(user.urn, noteUrn, note)
+  const user: User = getAuthenticatedUser();
+  let note: EvernoteUpload = null;
+  try {
+    note = parseEvernoteHtml(file.buffer);
+  } catch (err) {
+    LOGGER.error(`Could not parse html, error ${err}`);
+    throw new Error(
+      "Could not parse html. Please email cole@usetangle.com with your issue"
     );
-  });
+  }
+  const uuid = uuidv4();
+  const noteUrn = new EvernoteNoteUrn(uuid);
+
+  return save(noteUrn, file).then(() =>
+    createEvernoteNote(user.urn, noteUrn, note)
+  );
 }
 
 export function deleteEvernoteNote(noteUrn: EvernoteNoteUrn): Promise<void> {

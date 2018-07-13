@@ -6,14 +6,13 @@ const axiosInstance = axios.create({
   baseURL: config.REACT_APP_API_BASE_URL,
   timeout: 100000,
   headers: {
-    authorization: `Bearer: ${localStorage.getItem("idToken")}`,
-    "Content-Type": "multipart/form-data"
+    authorization: `Bearer: ${localStorage.getItem("idToken")}`
   }
 });
 
 function uploadFile(data: FormData) {
   axiosInstance
-    .post("/uploadHtml", data.get("file"))
+    .post("/uploadHtml", data)
     .then(res => {
       console.log("success");
     })

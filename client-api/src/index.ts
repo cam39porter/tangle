@@ -9,7 +9,7 @@ import { makeExecutableSchema } from "graphql-tools";
 
 import * as http from "http";
 import * as https from "https";
-import * as formidable from "express-formidable";
+import * as multer from "multer";
 import * as fs from "fs";
 import { GraphQLSchema, GraphQLError } from "graphql";
 import * as path from "path";
@@ -26,7 +26,7 @@ import * as helmet from "helmet";
 import * as compression from "compression";
 import { importEvernoteNoteUpload } from "./upload/services/evernote-import";
 import { ConflictError } from "./util/exceptions/confict-error";
-
+import * as util from "util";
 // tslint:disable-next-line
 const { graphqlExpress } = require("apollo-server-express");
 
@@ -132,16 +132,13 @@ function maskError(error: GraphQLError): GraphQLError {
     return error;
   }
 }
+const upload = multer();
 
-app.use(formidable());
-app.post("/uploadHtml", (req, res) => {
+app.post("/uploadHtml", upload.single("file"), (req, res) => {
   if (isProd()) {
     res.status(404).send("Not Found");
   }
-  if (req["files"].file.type !== "text/html") {
-    res.status(400).send("Unsupported content type");
-  }
-  importEvernoteNoteUpload(req["files"].file)
+  importEvernoteNoteUpload(req["file"])
     .then(() => {
       res.sendStatus(200);
     })

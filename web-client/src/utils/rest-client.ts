@@ -13,8 +13,8 @@ const axiosInstance = axios.create({
 
 function uploadFile(data: FormData) {
   axiosInstance
-    .post("/uploadHtml", data)
-    .then(response => {
+    .post("/uploadHtml", data.get("file"))
+    .then(res => {
       console.log("success");
     })
     .catch(error => {

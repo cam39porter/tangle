@@ -12,7 +12,7 @@ interface State {}
 
 // Class
 class InputFileUpload extends React.Component<Props, State> {
-  formRef: HTMLFormElement | null = null;
+  inputRef: HTMLInputElement | null = null;
 
   constructor(nextProps: Props) {
     super(nextProps);
@@ -24,18 +24,32 @@ class InputFileUpload extends React.Component<Props, State> {
         <div
           className={`ph2 dim`}
           onClick={() => {
-            if (!this.formRef) {
+            if (
+              !(
+                this.inputRef &&
+                this.inputRef.files &&
+                this.inputRef.files.length > 0
+              )
+            ) {
               return;
             }
-            const formData = new FormData(this.formRef);
+            const formData = new FormData();
+            formData.append("file", this.inputRef.files[0]);
             RestClientUtils.uploadFile(formData);
           }}
         >
           <ButtonImport />
         </div>
 
-        <form ref={e => (this.formRef = e)}>
-          <input className={`ph2 f7`} type="file" accept=".html" />
+        <form>
+          <input
+            ref={e => {
+              this.inputRef = e;
+            }}
+            className={`ph2 f7`}
+            type="file"
+            accept=".html"
+          />
         </form>
       </div>
     );

@@ -6,7 +6,7 @@ import { concat, flatten } from "lodash";
 
 const MIN_CHUNK_SIZE = 500; // characters
 
-export interface Position {
+export interface IPosition {
   line: number;
   column: number;
   offset: number;
@@ -14,9 +14,9 @@ export interface Position {
 
 export class Chunk {
   public html: string;
-  public start: Position;
-  public end: Position;
-  constructor(html: string, start: Position, end: Position) {
+  public start: IPosition;
+  public end: IPosition;
+  constructor(html: string, start: IPosition, end: IPosition) {
     this.html = html;
     this.start = start;
     this.end = end;
@@ -24,7 +24,7 @@ export class Chunk {
 }
 
 const parseChunks = (node: any, chunks: Chunk[]) => {
-  let children = node.children;
+  const children = node.children;
   if (children) {
     const newChunks = children.map(childNode => {
       const childText = toString(childNode);
@@ -53,7 +53,7 @@ const parseChunks = (node: any, chunks: Chunk[]) => {
 };
 
 export const chunkHtml = (html: string): Chunk[] => {
-  let tree = unified()
+  const tree = unified()
     .use(parse)
     .parse(html);
 

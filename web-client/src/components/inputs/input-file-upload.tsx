@@ -36,11 +36,11 @@ class InputFileUpload extends React.Component<Props, State> {
             const formData = new FormData();
             formData.append("file", this.inputRef.files[0]);
             RestClientUtils.uploadFile(formData);
+            this.inputRef.value = "";
           }}
         >
           <ButtonImport />
         </div>
-
         <form>
           <input
             ref={e => {

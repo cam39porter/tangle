@@ -172,7 +172,7 @@ input PagingContext {
 type Mutation {
   createCapture(body: String!, sessionId: String, previousId: String): Node!
   createSession(title: String, firstCaptureId: String, tags: [String!]): Node!
-  editSession(id: String!, title: String, tags: [String!]): Node!
+  editSession(id: String!, title: String, tags: [String!], body: String): Node!
   deleteCapture(id: String!): Boolean!
   deleteSession(id: String!): Boolean!
   editCapture(id: String!, body: String!): Node!

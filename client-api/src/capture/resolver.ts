@@ -66,13 +66,18 @@ export default {
       // @ts-ignore
       parent,
       // @ts-ignore
-      { id, title, tags },
+      { id, title, tags, body },
       // @ts-ignore
       context,
       // @ts-ignore
       info
     ): Promise<GraphNode> {
-      return editSession(SessionUrn.fromRaw(id), title, tags);
+      return editSession(
+        SessionUrn.fromRaw(id),
+        captureXSS.process(title),
+        tags,
+        captureXSS.process(body)
+      );
     },
     // @ts-ignore
     deleteSession(parent, { id }, context, info): Promise<boolean> {

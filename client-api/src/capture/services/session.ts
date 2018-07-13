@@ -55,10 +55,11 @@ export function create(
 export function edit(
   urn: SessionUrn,
   title: string,
-  tags: string[]
+  tags: string[],
+  body: string
 ): Promise<GraphNode> {
   const userId = getAuthenticatedUser().urn;
-  return editSession(userId, urn, title).then((session: Session) => {
+  return editSession(userId, urn, title, body).then((session: Session) => {
     return deleteTags(userId, session.urn).then(() =>
       createTags(userId, session.urn, tags).then(() => formatSession(session))
     );

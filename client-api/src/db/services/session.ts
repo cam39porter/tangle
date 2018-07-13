@@ -132,17 +132,20 @@ export function touchLastModified(
 export function edit(
   userId: UserUrn,
   sessionId: SessionUrn,
-  title: string
+  title: string,
+  body: string
 ): Promise<Session> {
   const query = `
     MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
     SET session.lastModified = TIMESTAMP()
     ${title ? "SET session.title = {title}" : "REMOVE session.title"}
+    ${body ? "SET session.body = {body}" : ""}
     RETURN session`;
   const params = [
     new Param("userId", userId.toRaw()),
     new Param("sessionId", sessionId.toRaw()),
-    new Param("title", title)
+    new Param("title", title),
+    new Param("body", body)
   ];
   return executeQuery(query, params).then((result: StatementResult) => {
     if (!result.records[0]) {

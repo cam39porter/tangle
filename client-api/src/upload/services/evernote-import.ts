@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import { promisify } from "util";
-import { createCapture } from "../../capture/services/capture";
 import { User } from "../../db/models/user";
 import {
   deleteCaptureNode,
@@ -16,6 +15,7 @@ import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
 import { v4 as uuidv4 } from "uuid/v4";
 import { Logger } from "../../util/logging/logger";
 import { isLocal, isDev } from "../../config";
+import { updateCaptures } from "../../chunk/services/chunk";
 
 const LOGGER = new Logger("src/upload/services/evernote-import.ts");
 const readFileAsync = promisify(fs.readFile);
@@ -65,19 +65,7 @@ function createEvernoteNote(
     return Promise.resolve(null);
   } else {
     return create(userId, noteUrn, note).then(() => {
-      return createEvernoteCaptures(noteUrn, note).then(() => null);
+      return updateCaptures(noteUrn, note.body, note.created).then(() => null);
     });
   }
-}
-
-function createEvernoteCaptures(
-  noteUrn: EvernoteNoteUrn,
-  note: EvernoteUpload
-): Promise<void> {
-  const batchCreates = Promise.all(
-    note.contents.map(content => {
-      return createCapture(content, noteUrn, null);
-    })
-  );
-  return batchCreates.then(() => null);
 }

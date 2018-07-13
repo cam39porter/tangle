@@ -43,7 +43,8 @@ export default {
       return createCapture(
         captureXSS.process(body),
         (sessionId && SessionUrn.fromRaw(sessionId)) || null,
-        (previousId && Urn.fromRaw(previousId)) || null
+        (previousId && Urn.fromRaw(previousId)) || null,
+        null
       );
     },
     createSession(

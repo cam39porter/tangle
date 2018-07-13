@@ -14,12 +14,8 @@ export interface IPosition {
 
 export class Chunk {
   public html: string;
-  public start: IPosition;
-  public end: IPosition;
-  constructor(html: string, start: IPosition, end: IPosition) {
+  constructor(html: string) {
     this.html = html;
-    this.start = start;
-    this.end = end;
   }
 }
 
@@ -33,29 +29,20 @@ const parseChunks = (node: any, chunks: Chunk[]) => {
         return chunks;
       }
       return childLength < MIN_CHUNK_SIZE
-        ? [
-            new Chunk(
-              toHtml(childNode),
-              childNode.position.start,
-              childNode.position.end
-            )
-          ]
+        ? [new Chunk(toHtml(childNode))]
         : parseChunks(childNode, chunks);
     });
     chunks = concat(chunks, newChunks);
   } else {
-    chunks = concat(
-      chunks,
-      new Chunk(toHtml(node), node.position.start, node.position.end)
-    );
+    chunks = concat(chunks, new Chunk(toHtml(node)));
   }
   return flatten(chunks);
 };
 
-export const chunkHtml = (html: string): Chunk[] => {
+export function chunkHtml(html: string): Chunk[] {
   const tree = unified()
     .use(parse)
     .parse(html);
 
-  return parseChunks(tree, []);
-};
+  return parseChunks(tree.children[0].children[1], []);
+}

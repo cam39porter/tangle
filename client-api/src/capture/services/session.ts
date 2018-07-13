@@ -24,6 +24,7 @@ import { CaptureUrn } from "../../urn/capture-urn";
 import { formatSession } from "../../surface/formatters/graph-node";
 import { SessionUrn } from "../../urn/session-urn";
 import { UserUrn } from "../../urn/user-urn";
+import { updateCaptures } from "../../chunk/services/chunk";
 
 export function create(
   title: string,
@@ -60,9 +61,17 @@ export function edit(
 ): Promise<GraphNode> {
   const userId = getAuthenticatedUser().urn;
   return editSession(userId, urn, title, body).then((session: Session) => {
-    return deleteTags(userId, session.urn).then(() =>
+    const updateTags = deleteTags(userId, session.urn).then(() =>
       createTags(userId, session.urn, tags).then(() => formatSession(session))
     );
+    if (body) {
+      return Promise.all([
+        updateTags,
+        updateCaptures(session.urn, body, session.created)
+      ]).then(both => both[0]);
+    } else {
+      return updateTags;
+    }
   });
 }
 

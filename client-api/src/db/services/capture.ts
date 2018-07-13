@@ -171,10 +171,13 @@ export function createCaptureNode(
   userId: UserUrn,
   plainText: string,
   html: string,
-  parentUrn: EvernoteNoteUrn | SessionUrn | null
+  parentUrn: EvernoteNoteUrn | SessionUrn | null,
+  previouslyCreated: number | null
 ): Promise<Capture> {
   const uuid = uuidv4();
   const captureUrn = new CaptureUrn(uuid);
+  const now = Date.now();
+  const created = previouslyCreated || now;
   const parentQuery = parentUrn
     ? `OPTIONAL MATCH (u)-[:CREATED]-(parent {id:{parentId}}) WHERE parent:Session OR parent:EvernoteNote`
     : ``;
@@ -184,8 +187,8 @@ export function createCaptureNode(
       id:{captureUrn},
       body:{html},
       plainText:{plainText},
-      created:TIMESTAMP(),
-      lastModified:TIMESTAMP(),
+      created:{created},
+      lastModified:{now},
       owner:{userId}
     })
     ${parentUrn ? "CREATE (capture)<-[:INCLUDES]-(parent)" : ""}
@@ -195,7 +198,9 @@ export function createCaptureNode(
     new Param("plainText", escape(plainText)),
     new Param("html", escape(html)),
     new Param("parentId", parentUrn ? parentUrn.toRaw() : null),
-    new Param("captureUrn", captureUrn.toRaw())
+    new Param("captureUrn", captureUrn.toRaw()),
+    new Param("now", now),
+    new Param("created", created)
   ];
   return executeQuery(query, params).then(formatCaptureResult);
 }

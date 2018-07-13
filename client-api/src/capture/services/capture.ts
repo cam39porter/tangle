@@ -64,19 +64,24 @@ export function editCapture(urn: CaptureUrn, body: string): Promise<GraphNode> {
 export function createCapture(
   body: string,
   parentUrn: EvernoteNoteUrn | SessionUrn | null,
-  previousUrn: Urn | null
+  previousUrn: Urn | null,
+  previouslyCreated: number | null
 ): Promise<GraphNode> {
   const user: User = getAuthenticatedUser();
   const plainText = parseHtml(body);
-  return createCaptureNode(user.urn, plainText, body, parentUrn).then(
-    (capture: Capture) => {
-      return Promise.all([
-        updateParentModified(user.urn, parentUrn),
-        createPreviousRelationship(user.urn, capture.urn, previousUrn),
-        createRelations(capture.urn, plainText)
-      ]).then(() => formatCapture(capture, true));
-    }
-  );
+  return createCaptureNode(
+    user.urn,
+    plainText,
+    body,
+    parentUrn,
+    previouslyCreated
+  ).then((capture: Capture) => {
+    return Promise.all([
+      updateParentModified(user.urn, parentUrn),
+      createPreviousRelationship(user.urn, capture.urn, previousUrn),
+      createRelations(capture.urn, plainText)
+    ]).then(() => formatCapture(capture, true));
+  });
 }
 
 function updateParentModified(

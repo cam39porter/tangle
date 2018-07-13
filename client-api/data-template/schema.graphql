@@ -24,6 +24,7 @@ union SessionItem = Capture
 type Session {
   id: ID!
   title: String
+  body: String
   created: Float!
   lastModified: Float!
   itemCollection: SessionItemCollection

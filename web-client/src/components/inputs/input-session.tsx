@@ -174,7 +174,7 @@ class InputSession extends React.Component<Props, State> {
           <input
             value={title}
             type="text"
-            className={`w-90 pb3 f3 fw3 accent overflow-hidden`}
+            className={`w-90 pb3 f4 fw3 accent overflow-hidden`}
             onChange={this.handleTitleChange}
             onBlur={() => {
               const endingTitle = title;

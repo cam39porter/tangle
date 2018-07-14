@@ -101,7 +101,7 @@ class Session extends React.Component<Props, State> {
       return <div />;
     }
 
-    const { title, id, body } = data.getSession;
+    const { title, id, body, created, lastModified } = data.getSession;
 
     return (
       <div className={``}>
@@ -115,7 +115,7 @@ class Session extends React.Component<Props, State> {
               });
             }}
           />
-          <HeaderSession />
+          <HeaderSession created={created} lastModified={lastModified} />
         </div>
         <div
           className={`flex-column pa3`}

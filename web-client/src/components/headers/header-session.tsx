@@ -7,6 +7,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 // Components
 import ButtonArrowLeft from "../buttons/button-arrow-left";
 import Header from "./header";
+import TimeAgo from "react-timeago";
 
 // Utils
 import { AnalyticsUtils } from "../../utils/index";
@@ -14,7 +15,10 @@ import { AnalyticsUtils } from "../../utils/index";
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
 
-interface Props extends RouteProps {}
+interface Props extends RouteProps {
+  created: number;
+  lastModified: number;
+}
 
 interface State {}
 
@@ -24,11 +28,16 @@ class HeaderSurface extends React.Component<Props, State> {
   }
 
   render() {
+    const { created } = this.props;
+
     return (
       <Header
         left={
           <div className={`flex-column justify-around ph2`}>
-            Current Collection
+            <div className={`flex f7`}>
+              <span className={`pr1`}>Created</span>
+              <TimeAgo date={created} live={false} />
+            </div>
           </div>
           /* tslint:disable-next-line */
         }

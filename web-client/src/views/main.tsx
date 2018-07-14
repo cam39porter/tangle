@@ -69,14 +69,14 @@ class Main extends React.Component<Props, State> {
                     {/* Session */}
                     <ErrorBoundary>
                       <Switch>
-                        <Route path={`/collection/:id`} component={Session} />
+                        <Route path={`/note/:id`} component={Session} />
                       </Switch>
                     </ErrorBoundary>
                     {/* Surface */}
                     <ErrorBoundary>
                       <Switch>
                         <Route
-                          path={`/collection/:id/format/:type/`}
+                          path={`/note/:id/format/:type/`}
                           component={Surface}
                         />
                         <Route path={`/format/:type`} component={Surface} />

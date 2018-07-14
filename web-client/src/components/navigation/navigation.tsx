@@ -48,7 +48,7 @@ class Navigation extends React.Component<Props, State> {
                   }`
                 );
                 AnalyticsUtils.trackEvent({
-                  category: this.props.location.pathname.includes("collection")
+                  category: this.props.location.pathname.includes("note")
                     ? AnalyticsUtils.Categories.Session
                     : AnalyticsUtils.Categories.Home,
                   action: AnalyticsUtils.Actions.CloseQuickCreate
@@ -61,7 +61,7 @@ class Navigation extends React.Component<Props, State> {
                 }capture=true`
               );
               AnalyticsUtils.trackEvent({
-                category: this.props.location.pathname.includes("collection")
+                category: this.props.location.pathname.includes("note")
                   ? AnalyticsUtils.Categories.Session
                   : AnalyticsUtils.Categories.Home,
                 action: AnalyticsUtils.Actions.OpenQuickCreate
@@ -78,7 +78,7 @@ class Navigation extends React.Component<Props, State> {
             const user = auth.currentUser ? auth.currentUser.uid : "";
 
             AnalyticsUtils.trackEvent({
-              category: this.props.location.pathname.includes("collection")
+              category: this.props.location.pathname.includes("note")
                 ? AnalyticsUtils.Categories.Session
                 : AnalyticsUtils.Categories.Home,
               action: AnalyticsUtils.Actions.ClickToSignOut,

@@ -42,10 +42,10 @@ class HeaderSurface extends React.Component<Props, State> {
           isGraphView ? (
             <div className={`flex-column justify-around`}>
               <div className={`flex f7`}>
-                {location.pathname.includes("collection/") && (
+                {location.pathname.includes("note/") && (
                   <div className={`flex pa2`}>
                     <div className={`br-100 bg-base h1 w1`} />
-                    <div className={`ph2`}>current collection</div>
+                    <div className={`ph2`}>current note</div>
                   </div>
                 )}
                 {location.pathname.includes("/recent") && (

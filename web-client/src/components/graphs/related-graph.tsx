@@ -72,9 +72,7 @@ class RelatedGraph extends React.Component<Props, State> {
     if (nodes.length === 0) {
       return (
         <Help>
-          <div>
-            Capture a thought in the collection to see it visualized here.
-          </div>
+          <div>Start composing your note to see it visualized here.</div>
         </Help>
       );
     }

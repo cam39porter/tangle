@@ -67,7 +67,7 @@ class GridCaptures extends React.Component<Props, State> {
             this.props.emptySessionsMessage) && (
             <div className={`pv4`}>
               <div className={`flex justify-between pb4 w-100 gray`}>
-                <div className={`flex-column justify-around`}>Collections</div>
+                <div className={`flex-column justify-around`}>Notes</div>
                 <div
                   className={`flex-column justify-around f6 bb b--accent pointer dark-gray`}
                   onClick={() => {
@@ -76,7 +76,7 @@ class GridCaptures extends React.Component<Props, State> {
                       .then(res => {
                         let id = res.data.createSession.id;
                         this.props.history.push(
-                          `/collection/${encodeURIComponent(
+                          `/note/${encodeURIComponent(
                             res.data.createSession.id
                           )}/format/list/related`
                         );
@@ -97,7 +97,7 @@ class GridCaptures extends React.Component<Props, State> {
                       });
                   }}
                 >
-                  Create a new collection
+                  Create a new note
                 </div>
               </div>
               {this.props.sessions.length === 0 ? (

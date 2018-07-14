@@ -127,18 +127,18 @@ class Surface extends React.Component<Props, State> {
               {/* Recent */}
               <Route path={`/format/:type/recent`} render={this.renderRecent} />
               <Route
-                path={`/collection/:id/format/:type/recent`}
+                path={`/note/:id/format/:type/recent`}
                 render={this.renderRecent}
               />
               {/* Search  */}
               <Route path={`/format/:type/search`} render={this.renderSearch} />
               <Route
-                path={`/collection/:id/format/:type/search`}
+                path={`/note/:id/format/:type/search`}
                 render={this.renderSearch}
               />
               {/* Related */}
               <Route
-                path={`/collection/:id/format/:type/related`}
+                path={`/note/:id/format/:type/related`}
                 render={this.renderRelated}
               />
             </Switch>

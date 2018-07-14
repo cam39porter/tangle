@@ -169,7 +169,7 @@ class InputSession extends React.Component<Props, State> {
     const { editorWidth, editorHeight, title } = this.state;
 
     return (
-      <div className={`flex-grow flex-column pa3 br4 bg-white`}>
+      <div className={`flex-grow flex-column pa3 br4 bg-editor-gray`}>
         <div>
           <input
             value={title}

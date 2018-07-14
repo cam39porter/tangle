@@ -87,7 +87,7 @@ class InputSurface extends React.Component<Props, State> {
 
     return (
       <div
-        className={`flex ph2 bg-white br4 ba ${
+        className={`flex ph2 bg-editor-gray br4 ba ${
           isSearching ? "b--accent" : "b--white"
         }`}
       >

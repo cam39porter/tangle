@@ -28,6 +28,19 @@ body {
 .b--base {
   border-color: #111c77;
 }
+
+.editor-gray {
+  color: #fefefe;
+}
+
+.bg-editor-gray {
+  background-color: #fefefe;
+}
+
+.b--editor-gray {
+  border-color: #fefefe;
+}
+
 /* [END] Colors */
 
 /* [START] Create a column that fills the page vertically */

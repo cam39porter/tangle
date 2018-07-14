@@ -48,7 +48,7 @@ class CardCapture extends React.Component<Props, State> {
 
     return (
       <div
-        className={`pa3 dark-gray bg-white bw1 br4 ba b--light-gray lh-copy`}
+        className={`pa3 dark-gray bw1 br3 bg-animate hover-bg-white bg-near-white ba b--light-gray lh-copy`}
         style={{
           maxWidth: "20em",
           width: "20em"

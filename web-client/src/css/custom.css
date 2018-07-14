@@ -67,7 +67,6 @@ input {
 
 /* [START] Draft */
 .editor :global(.public-DraftEditor-content) {
-  max-height: 300px;
   overflow: auto;
 }
 /* [END] Draft */

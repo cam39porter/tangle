@@ -17,7 +17,7 @@ class Markdown extends React.Component<Props, State> {
   render() {
     return (
       <div
-        className={`pa2 flex flex-wrap gray`}
+        className={`pa3 pt0 flex gray justify-around`}
         style={{
           fontSize: "10px",
           userSelect: "none"

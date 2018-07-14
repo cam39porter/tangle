@@ -152,7 +152,7 @@ class GridCaptures extends React.Component<Props, State> {
                   {this.props.emptyCapturesMessage}
                 </div>
               ) : (
-                <div className={`flex flex-wrap`}>
+                <div className={`flex-column center`}>
                   {captures.map(capture => (
                     <div className={`pa3`} key={capture.id}>
                       <CardCapture

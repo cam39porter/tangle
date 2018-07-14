@@ -24,7 +24,7 @@ enum Actions {
   DeleteSession = "delete-session",
   DeleteSessionCapture = "delete-session_capture",
   EditCapture = "edit-capture",
-  EditSessionCapture = "edit-session_capture",
+  EditSessionBody = "edit-session_body",
   EditSessionTitle = "edit-session_title",
   OpenSession = "open-session",
   CloseSession = "close-session",

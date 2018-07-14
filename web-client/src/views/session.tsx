@@ -17,15 +17,12 @@ import { graphql, compose, QueryProps, MutationFunc } from "react-apollo";
 
 // Components
 import HeaderSession from "../components/headers/header-session";
-import InputSessionTitle from "../components/inputs/input-session-title";
-import CardCapture from "../components/cards/card-capture";
-import ScrollContainer from "../components/scroll/scroll-container";
-import ScrollContainerElement from "../components/scroll/scroll-container-element";
 import ReactResizeDetector from "react-resize-detector";
 
 // Utils
 import windowSize from "react-window-size";
-import { ApolloUtils, ErrorsUtils } from "../utils/index";
+import InputSession from "../components/inputs/input-session";
+import Markdown from "../components/help/markdown";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -36,7 +33,6 @@ interface Props extends RouteProps {
     deleteSessionResponse,
     deleteSessionMutationVariables
   >;
-  scrollToId?: string;
   // Window Size
   windowWidth: number;
   windowHeight: number;
@@ -47,11 +43,7 @@ interface State {
   footerHeight: number;
 }
 
-const WIDTH = "30em";
-
 class Session extends React.Component<Props, State> {
-  _scrollContainer: ScrollContainer | null = null;
-
   constructor(props: Props) {
     super(props);
 
@@ -61,11 +53,11 @@ class Session extends React.Component<Props, State> {
     };
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.scrollToId) {
-      this.scrollTo(nextProps.scrollToId);
-    }
+  shouldComponentUpdate(props: Props, state: State) {
+    return true;
+  }
 
+  componentWillReceiveProps(nextProps: Props) {
     const sessionId = decodeURIComponent(this.props.match.params["id"]);
     const nextSessionId = decodeURIComponent(nextProps.match.params["id"]);
     if (sessionId !== nextSessionId) {
@@ -73,110 +65,84 @@ class Session extends React.Component<Props, State> {
     }
   }
 
-  shouldComponentUpdate(nextProps: Props) {
-    return true;
-  }
-
   componentWillUnmount() {
     this.handleDeleteSession();
   }
 
   handleDeleteSession = () => {
-    const sessionCaptures = this.props.data.getSession;
-    if (
-      !(
-        sessionCaptures &&
-        sessionCaptures.itemCollection &&
-        sessionCaptures.itemCollection.items
-      ) || // Do not delete if session has a title or captures
-      (sessionCaptures.title || sessionCaptures.itemCollection.items.length > 0)
-    ) {
-      return;
-    }
-
-    this.props
-      .deleteSession({
-        variables: {
-          sessionId: sessionCaptures.id
-        },
-        update: ApolloUtils.deleteSessionUpdate(sessionCaptures.id)
-      })
-      .catch(err => {
-        ErrorsUtils.errorHandler.report(err.message, err.stack);
-      });
-  };
-
-  scrollTo = (id: string) => {
-    this._scrollContainer && this._scrollContainer.scrollTo(id);
+    // const sessionCaptures = this.props.data.getSession;
+    // if (
+    //   !(
+    //     sessionCaptures &&
+    //     sessionCaptures.itemCollection &&
+    //     sessionCaptures.itemCollection.items
+    //   ) || // Do not delete if session has a title or captures
+    //   (sessionCaptures.title || sessionCaptures.itemCollection.items.length > 0)
+    // ) {
+    //   return;
+    // }
+    // this.props
+    //   .deleteSession({
+    //     variables: {
+    //       sessionId: sessionCaptures.id
+    //     },
+    //     update: ApolloUtils.deleteSessionUpdate(sessionCaptures.id)
+    //   })
+    //   .catch(err => {
+    //     ErrorsUtils.errorHandler.report(err.message, err.stack);
+    //   });
   };
 
   render() {
-    const sessionCaptures = this.props.data.getSession;
-    if (
-      !(
-        sessionCaptures &&
-        sessionCaptures.itemCollection &&
-        sessionCaptures.itemCollection.items
-      )
-    ) {
+    const { data, windowHeight } = this.props;
+    const { headerHeight, footerHeight } = this.state;
+
+    if (!(data.getSession && !data.loading)) {
       return <div />;
     }
 
-    let sessionItems = sessionCaptures.itemCollection.items;
-
-    let sessionId = decodeURIComponent(this.props.match.params["id"]);
+    const { title, id, body } = data.getSession;
 
     return (
-      <ScrollContainer
-        ref={scrollContainer => (this._scrollContainer = scrollContainer)}
-      >
-        <div className={`bg-near-white ba b--light-gray`}>
-          {/* Header */}
-          <div>
-            <ReactResizeDetector
-              handleHeight={true}
-              onResize={(_, height) => {
-                this.setState({
-                  headerHeight: height
-                });
-              }}
-            />
-            <HeaderSession />
-          </div>
-          <div
-            className={``}
-            style={{
-              height: `${this.props.windowHeight -
-                this.state.headerHeight -
-                this.state.footerHeight}px`
+      <div className={``}>
+        {/* Header */}
+        <div>
+          <ReactResizeDetector
+            handleHeight={true}
+            onResize={(_, height) => {
+              this.setState({
+                headerHeight: height
+              });
             }}
-          >
-            <InputSessionTitle
-              sessionId={sessionCaptures.id}
-              startingTitle={sessionCaptures.title}
-            />
-            <CardCapture
-              sessionId={sessionCaptures.id}
-              previousId={
-                sessionItems.length > 0
-                  ? sessionItems[sessionItems.length - 1].id
-                  : sessionId
-              }
-            />
-          </div>
-          {/* Footer */}
-          <div className={``}>
-            <ReactResizeDetector
-              handleHeight={true}
-              onResize={(_, height) => {
-                this.setState({
-                  footerHeight: height
-                });
-              }}
-            />
-          </div>
+          />
+          <HeaderSession />
         </div>
-      </ScrollContainer>
+        <div
+          className={`flex-column pa3`}
+          style={{
+            width: "35em",
+            height: `${windowHeight - headerHeight - footerHeight}px`
+          }}
+        >
+          <InputSession
+            sessionId={id}
+            startingHtml={body}
+            startingTitle={title}
+          />
+        </div>
+        {/* Footer */}
+        <div className={``}>
+          <ReactResizeDetector
+            handleHeight={true}
+            onResize={(_, height) => {
+              this.setState({
+                footerHeight: height
+              });
+            }}
+          />
+          <Markdown />
+        </div>
+      </div>
     );
   }
 }

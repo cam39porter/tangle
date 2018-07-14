@@ -114,6 +114,7 @@ export const sessionFragment = gql`
   fragment SessionFields on Session {
     id
     title
+    body
     created
     lastModified
     itemCollection {
@@ -292,8 +293,8 @@ export const createSession = gql`
 `;
 
 export const editSession = gql`
-  mutation editSession($sessionId: String!, $title: String) {
-    editSession(id: $sessionId, title: $title) {
+  mutation editSession($sessionId: String!, $title: String, $body: String) {
+    editSession(id: $sessionId, title: $title, body: $body) {
       ...NodeFields
     }
   }

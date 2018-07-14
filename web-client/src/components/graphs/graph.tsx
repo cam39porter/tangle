@@ -10,7 +10,7 @@ import * as echarts from "echarts/lib/echarts";
 import "echarts/lib/component/tooltip";
 import "echarts/lib/chart/graph";
 
-import CardCapture from "../cards/card-capture";
+import CardCapture from "../cards/card-capture-v2";
 
 // Config / Utils
 import config from "../../cfg";
@@ -490,9 +490,8 @@ class GraphVisualization extends React.Component<Props, State> {
               Hide
             </div>
             <CardCapture
-              key={focusNode.id}
               captureId={focusNode.id}
-              startingText={focusNode.text}
+              startingHtml={focusNode.text || ""}
               sessionParents={focusNode.parents}
             />
           </div>

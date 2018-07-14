@@ -2,8 +2,8 @@
 import * as React from "react";
 
 // Components
-import CardCapture from "../components/cards/card-capture";
 import ButtonLogOut from "../components/buttons/button-logout";
+
 // Utils
 import { FirebaseUtils, AnalyticsUtils } from "../utils";
 
@@ -51,14 +51,7 @@ class Mobile extends React.Component<Props, State> {
           </div>
         </div>
         <div className={`flex-column dark-gray`}>
-          <div className={`pv4`}>
-            <CardCapture />
-          </div>
           <p>We do not currently support a mobile experience.</p>
-          <p>
-            Feel free to capture a thought above. It will be accessible on your
-            desktop.
-          </p>
         </div>
       </div>
     );

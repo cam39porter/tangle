@@ -2,7 +2,6 @@
 import * as React from "react";
 
 // Components
-import CardCapture from "../components/cards/card-capture";
 
 // Types
 interface Props {}
@@ -19,15 +18,7 @@ class Capture extends React.Component<Props, State> {
     return (
       <div
         className={`vh-100 flex-column items-center justify-around bg-light-gray overflow-auto`}
-      >
-        <div
-          style={{
-            minWidth: "30em"
-          }}
-        >
-          <CardCapture />
-        </div>
-      </div>
+      />
     );
   }
 }

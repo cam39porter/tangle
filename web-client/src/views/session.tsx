@@ -6,14 +6,12 @@ import { RouteComponentProps } from "react-router";
 
 // GraphQL
 import {
-  deleteSessionMutation as deleteSessionResponse,
-  deleteSessionMutationVariables,
   getSessionQuery as getSessionResponse,
   getSessionQueryVariables
 } from "../__generated__/types";
 
-import { getSession, deleteSession } from "../queries";
-import { graphql, compose, QueryProps, MutationFunc } from "react-apollo";
+import { getSession } from "../queries";
+import { graphql, compose, QueryProps } from "react-apollo";
 
 // Components
 import HeaderSession from "../components/headers/header-session";
@@ -23,16 +21,13 @@ import ReactResizeDetector from "react-resize-detector";
 import windowSize from "react-window-size";
 import InputSession from "../components/inputs/input-session";
 import Markdown from "../components/help/markdown";
+import { isEqual } from "lodash";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
   data: QueryProps<getSessionQueryVariables> & Partial<getSessionResponse>;
-  deleteSession: MutationFunc<
-    deleteSessionResponse,
-    deleteSessionMutationVariables
-  >;
   // Window Size
   windowWidth: number;
   windowHeight: number;
@@ -53,51 +48,11 @@ class Session extends React.Component<Props, State> {
     };
   }
 
-  shouldComponentUpdate(props: Props, state: State) {
-    return true;
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    const sessionId = decodeURIComponent(this.props.match.params["id"]);
-    const nextSessionId = decodeURIComponent(nextProps.match.params["id"]);
-    if (sessionId !== nextSessionId) {
-      this.handleDeleteSession();
-    }
-  }
-
-  componentWillUnmount() {
-    this.handleDeleteSession();
-  }
-
-  handleDeleteSession = () => {
-    // const sessionCaptures = this.props.data.getSession;
-    // if (
-    //   !(
-    //     sessionCaptures &&
-    //     sessionCaptures.itemCollection &&
-    //     sessionCaptures.itemCollection.items
-    //   ) || // Do not delete if session has a title or captures
-    //   (sessionCaptures.title || sessionCaptures.itemCollection.items.length > 0)
-    // ) {
-    //   return;
-    // }
-    // this.props
-    //   .deleteSession({
-    //     variables: {
-    //       sessionId: sessionCaptures.id
-    //     },
-    //     update: ApolloUtils.deleteSessionUpdate(sessionCaptures.id)
-    //   })
-    //   .catch(err => {
-    //     ErrorsUtils.errorHandler.report(err.message, err.stack);
-    //   });
-  };
-
   render() {
     const { data, windowHeight } = this.props;
     const { headerHeight, footerHeight } = this.state;
 
-    if (!(data.getSession && !data.loading)) {
+    if (!data.getSession) {
       return <div />;
     }
 
@@ -159,16 +114,4 @@ const withGetSession = graphql<getSessionResponse, Props>(getSession, {
   })
 });
 
-const withDeleteSession = graphql<deleteSessionResponse, Props>(deleteSession, {
-  name: "deleteSession",
-  alias: "withDeleteSession"
-});
-
-const ListCapturesWithData = windowSize(
-  compose(
-    withGetSession,
-    withDeleteSession
-  )(Session)
-);
-
-export default ListCapturesWithData;
+export default windowSize(compose(withGetSession)(Session));

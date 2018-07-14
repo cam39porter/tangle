@@ -4,18 +4,29 @@ import * as React from "react";
 // Router
 import { RouteComponentProps } from "react-router";
 
+// GraphQL
+import {
+  createSessionMutation as createSessionResponse,
+  createSessionCaptureMutationVariables
+} from "../../__generated__/types";
+import { createSession } from "../../queries";
+import { graphql, MutationFunc } from "react-apollo";
+
 // Components
 import ButtonCapture from "./../buttons/button-capture";
-import ButtonExit from "./../buttons/button-exit";
 import ButtonLogOut from "../buttons/button-logout";
 
 // Utils
-import { NetworkUtils } from "../../utils";
-import { FirebaseUtils, AnalyticsUtils } from "../../utils";
+import { FirebaseUtils, AnalyticsUtils, ErrorsUtils } from "../../utils";
 
 interface RouteProps extends RouteComponentProps<{}> {}
 
-interface Props extends RouteProps {}
+interface Props extends RouteProps {
+  createSession: MutationFunc<
+    createSessionResponse,
+    createSessionCaptureMutationVariables
+  >;
+}
 
 interface State {}
 
@@ -25,11 +36,6 @@ class Navigation extends React.Component<Props, State> {
   }
 
   render() {
-    const isCapturing = NetworkUtils.getCapture(this.props.location.search)
-      ? true
-      : false;
-    const query = NetworkUtils.getQuery(this.props.location.search);
-
     return (
       <div
         className={`flex-column pa2 bg-dark-gray light-gray`}
@@ -41,34 +47,31 @@ class Navigation extends React.Component<Props, State> {
           <div
             className={`pa3 dim bg-accent br-100 pointer`}
             onClick={() => {
-              if (isCapturing) {
-                this.props.history.push(
-                  `${this.props.location.pathname}?${
-                    query ? `query=${query}` : ``
-                  }`
-                );
-                AnalyticsUtils.trackEvent({
-                  category: this.props.location.pathname.includes("note")
-                    ? AnalyticsUtils.Categories.Session
-                    : AnalyticsUtils.Categories.Home,
-                  action: AnalyticsUtils.Actions.CloseQuickCreate
+              this.props
+                .createSession({})
+                .then(res => {
+                  let id = res.data.createSession.id;
+                  this.props.history.push(
+                    `/note/${encodeURIComponent(
+                      res.data.createSession.id
+                    )}/format/list/related`
+                  );
+                  return id;
+                })
+                .then(_ => {
+                  AnalyticsUtils.trackEvent({
+                    category: this.props.location.pathname.includes("note")
+                      ? AnalyticsUtils.Categories.Session
+                      : AnalyticsUtils.Categories.Home,
+                    action: AnalyticsUtils.Actions.OpenQuickCreate
+                  });
+                })
+                .catch(err => {
+                  ErrorsUtils.errorHandler.report(err.message, err.stack);
                 });
-                return;
-              }
-              this.props.history.push(
-                `${this.props.location.pathname}?${
-                  query ? `query=${query}&` : ``
-                }capture=true`
-              );
-              AnalyticsUtils.trackEvent({
-                category: this.props.location.pathname.includes("note")
-                  ? AnalyticsUtils.Categories.Session
-                  : AnalyticsUtils.Categories.Home,
-                action: AnalyticsUtils.Actions.OpenQuickCreate
-              });
             }}
           >
-            {isCapturing ? <ButtonExit /> : <ButtonCapture />}
+            <ButtonCapture />
           </div>
         </div>
         <div
@@ -96,4 +99,9 @@ class Navigation extends React.Component<Props, State> {
   }
 }
 
-export default Navigation;
+const withCreateSession = graphql<createSessionResponse, Props>(createSession, {
+  name: "createSession",
+  alias: "withCreateSession"
+});
+
+export default withCreateSession(Navigation);

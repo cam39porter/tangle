@@ -17,8 +17,10 @@ class Capture extends React.Component<Props, State> {
   render() {
     return (
       <div
-        className={`vh-100 flex-column items-center justify-around bg-light-gray overflow-auto`}
-      />
+        className={`vh-100 flex-column items-center justify-around bg-transparent overflow-auto`}
+      >
+        test
+      </div>
     );
   }
 }

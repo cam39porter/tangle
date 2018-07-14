@@ -9,6 +9,7 @@ import { withRouter, RouteComponentProps } from "react-router";
 // Components
 
 // Utils
+import { AnalyticsUtils } from "../../utils/index";
 
 // Types
 interface Props extends RouteComponentProps<{}> {
@@ -47,7 +48,11 @@ class CardCapture extends React.Component<Props, State> {
 
     return (
       <div
-        className={`pa3 dark-gray bg-animate hover-bg-white br4 ba b--light-gray lh-copy`}
+        className={`pa3 dark-gray bg-white bw1 br4 ba b--light-gray lh-copy`}
+        style={{
+          maxWidth: "20em",
+          width: "20em"
+        }}
         onMouseOver={() => {
           this.setState({
             isMouseOver: true
@@ -59,16 +64,30 @@ class CardCapture extends React.Component<Props, State> {
           });
         }}
       >
-        <div className={`f5 fw4 pointer ${isMouseOver && "accent"}`}>
+        <div
+          className={`f5 pb2 fw4 pointer accent`}
+          onClick={() => {
+            this.props.history.push(
+              `/note/${encodeURIComponent(id)}/format/list/related`
+            );
+            AnalyticsUtils.trackEvent({
+              category: this.props.match.params["id"]
+                ? AnalyticsUtils.Categories.Session
+                : AnalyticsUtils.Categories.Home,
+              action: AnalyticsUtils.Actions.OpenSession,
+              label: id
+            });
+          }}
+        >
           {title || "Untitled"}
         </div>
         <div
           className={`overflow-hidden f7`}
-          style={{
-            width: "35em"
-          }}
           dangerouslySetInnerHTML={{
             __html: startingHtml
+          }}
+          style={{
+            cursor: "default"
           }}
         />
       </div>

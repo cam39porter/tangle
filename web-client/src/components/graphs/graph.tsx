@@ -10,7 +10,7 @@ import * as echarts from "echarts/lib/echarts";
 import "echarts/lib/component/tooltip";
 import "echarts/lib/chart/graph";
 
-import CardCapture from "../cards/card-capture-v2";
+import CardCapture from "../cards/card-capture";
 
 // Config / Utils
 import config from "../../cfg";
@@ -347,6 +347,7 @@ class GraphVisualization extends React.Component<Props, State> {
             });
             return;
           case NodeType.Session:
+            this.setFocusNode(e);
             AnalyticsUtils.trackEvent({
               category: this.props.match.params["id"]
                 ? AnalyticsUtils.Categories.Session
@@ -476,12 +477,9 @@ class GraphVisualization extends React.Component<Props, State> {
           onEvents={this.getEvents()}
         />
         {focusNode && (
-          <div
-            className={`absolute relative top-2 left-2 z-5`}
-            style={{ width: WIDTH }}
-          >
+          <div className={`absolute relative top-1 left-1 z-5`}>
             <div
-              className={`absolute top-0 right-0 pa2 pointer ba br4 f7 bg-white b--accent accent`}
+              className={`absolute top-1 right-1 pa2 pointer ba br4 f7 bg-white b--accent accent`}
               style={{ userSelect: "none" }}
               onClick={() => {
                 this.setState({ focusNode: null });

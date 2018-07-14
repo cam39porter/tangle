@@ -13,19 +13,18 @@ import { createSession } from "../../queries";
 import { graphql, compose, MutationFunc } from "react-apollo";
 
 // Components
-import CardCapture from "./../cards/card-capture-v2";
+import CardCapture from "./../cards/card-capture";
 import CardSession from "./../cards/card-session";
 
 // Utils
 import windowSize from "react-window-size";
-import { NetworkUtils, AnalyticsUtils, ErrorsUtils } from "../../utils";
+import { AnalyticsUtils, ErrorsUtils } from "../../utils";
 
 // Types
 import {
   CaptureFieldsFragment,
   SessionWithoutItemCollectionFieldsFragment
 } from "../../__generated__/types";
-import { isMobile } from "react-device-detect";
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
@@ -52,7 +51,7 @@ class GridCaptures extends React.Component<Props, State> {
   }
 
   render() {
-    const captures = this.props.captures;
+    const { captures } = this.props;
 
     return (
       <div className={``}>
@@ -66,7 +65,7 @@ class GridCaptures extends React.Component<Props, State> {
           {(this.props.sessions.length !== 0 ||
             this.props.emptySessionsMessage) && (
             <div className={`pv4`}>
-              <div className={`flex justify-between pb4 w-100 gray`}>
+              <div className={`flex justify-between w-100 gray`}>
                 <div className={`flex-column justify-around`}>Notes</div>
                 <div
                   className={`flex-column justify-around f6 bb b--accent pointer dark-gray`}
@@ -100,12 +99,13 @@ class GridCaptures extends React.Component<Props, State> {
                   Create a new note
                 </div>
               </div>
-              {this.props.sessions.length === 0 ? (
+              {this.props.sessions.length === 0 &&
+              this.props.captures.length === 0 ? (
                 <div className={`pv4 measure lh-copy gray tc center`}>
                   {this.props.emptySessionsMessage}
                 </div>
               ) : (
-                <div className={``}>
+                <div className={`pt4`}>
                   {this.props.sessions.map(session => (
                     <div className={``} key={session.id}>
                       <CardSession
@@ -122,37 +122,13 @@ class GridCaptures extends React.Component<Props, State> {
 
           {/* Captures */}
           {(captures.length !== 0 || this.props.emptyCapturesMessage) && (
-            <div className={`pv4`}>
-              <div className={`pb2 flex justify-between w-100 gray`}>
-                <div className={`flex-column justify-around`}>Captures</div>
-                <div
-                  className={`flex-column justify-around f6 bb b--accent pointer dark-gray`}
-                  onClick={() => {
-                    const query = NetworkUtils.getQuery(
-                      this.props.location.search
-                    );
-                    this.props.history.push(
-                      `${this.props.location.pathname}?${
-                        query ? `query=${query}&` : ``
-                      }capture=true`
-                    );
-                    AnalyticsUtils.trackEvent({
-                      category: this.props.match.params["id"]
-                        ? AnalyticsUtils.Categories.Session
-                        : AnalyticsUtils.Categories.Home,
-                      action: AnalyticsUtils.Actions.ClickToCreateNewCapture
-                    });
-                  }}
-                >
-                  Create a new capture
-                </div>
-              </div>
+            <div className={``}>
               {captures.length === 0 ? (
                 <div className={`pv4 measure lh-copy gray tc center`}>
                   {this.props.emptyCapturesMessage}
                 </div>
               ) : (
-                <div className={`flex-column center`}>
+                <div className={`flex flex-wrap`}>
                   {captures.map(capture => (
                     <div className={`pa3`} key={capture.id}>
                       <CardCapture

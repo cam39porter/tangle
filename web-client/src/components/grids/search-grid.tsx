@@ -78,7 +78,6 @@ class SearchGrid extends React.Component<Props, State> {
         sessions={sessions}
         emptySessionsMessage={`No notes matched your search`}
         captures={captures}
-        emptyCapturesMessage={`No captures matched your search`}
         headerHeight={this.props.headerHeight}
       />
     );

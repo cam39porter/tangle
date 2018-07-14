@@ -26,7 +26,6 @@ import * as helmet from "helmet";
 import * as compression from "compression";
 import { importEvernoteNoteUpload } from "./upload/services/evernote-import";
 import { ConflictError } from "./util/exceptions/confict-error";
-import * as util from "util";
 // tslint:disable-next-line
 const { graphqlExpress } = require("apollo-server-express");
 

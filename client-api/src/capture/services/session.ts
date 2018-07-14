@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid/v4";
 import { Session } from "../../db/models/session";
 import {
   create as createSession,
@@ -32,25 +33,29 @@ export function create(
   tags: string[]
 ): Promise<GraphNode> {
   const userId = getAuthenticatedUser().urn;
-  return createSession(userId, title).then((session: Session) => {
-    let relationshipPromise;
-    if (firstCaptureUrn) {
-      relationshipPromise = createRelationship(
-        userId,
-        session.urn.toRaw(),
-        SESSION_LABEL,
-        firstCaptureUrn.toRaw(),
-        CAPTURE_LABEL,
-        INCLUDES_RELATIONSHIP
-      );
-    } else {
-      relationshipPromise = Promise.resolve(null);
+  const uuid = uuidv4();
+  const sessionUrn = new SessionUrn(uuid);
+  return createSession(sessionUrn, userId, title, null, null).then(
+    (session: Session) => {
+      let relationshipPromise;
+      if (firstCaptureUrn) {
+        relationshipPromise = createRelationship(
+          userId,
+          session.urn.toRaw(),
+          SESSION_LABEL,
+          firstCaptureUrn.toRaw(),
+          CAPTURE_LABEL,
+          INCLUDES_RELATIONSHIP
+        );
+      } else {
+        relationshipPromise = Promise.resolve(null);
+      }
+      const tagUpserts = createTags(userId, session.urn, tags);
+      return Promise.all([relationshipPromise, tagUpserts]).then(() => {
+        return formatSession(session);
+      });
     }
-    const tagUpserts = createTags(userId, session.urn, tags);
-    return Promise.all([relationshipPromise, tagUpserts]).then(() => {
-      return formatSession(session);
-    });
-  });
+  );
 }
 
 export function edit(

@@ -1,7 +1,7 @@
 import * as Storage from "@google-cloud/storage";
 import { getAuthenticatedUser } from "../../filters/request-context";
-import { EvernoteNoteUrn } from "../../urn/evernote-note-urn";
 import { Logger } from "../../util/logging/logger";
+import { SessionUrn } from "../../urn/session-urn";
 
 const LOGGER = new Logger("src/upload/services/file-db.ts");
 
@@ -11,20 +11,22 @@ const bucketName =
     ? "tangle-prod-bulk-import"
     : "tangle-dev-bulk-import";
 
-export function save(urn: EvernoteNoteUrn, file): Promise<void> {
+export function save(urn: SessionUrn, file): Promise<void> {
   const userId = getAuthenticatedUser().urn;
   const dest = `users/${userId.toRaw()}/${urn.toRaw()}`;
   return writeToDb(dest, file);
 }
 
 function writeToDb(dest: string, file): Promise<void> {
-  return storage
-    .bucket(bucketName)
-    .upload(`${file.path}`, { destination: dest })
-    .then(() => {
-      LOGGER.info(`${file} uploaded to ${bucketName}.`);
+  const remoteFile = storage.bucket(bucketName).file(dest);
+  return remoteFile
+    .save(file.buffer, {
+      metadata: {
+        contentType: file.mimetype
+      },
+      resumable: false
     })
     .catch(err => {
-      LOGGER.error("ERROR:", err);
+      LOGGER.error(err);
     });
 }

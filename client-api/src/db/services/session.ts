@@ -1,5 +1,4 @@
 import { StatementResult } from "neo4j-driver/types/v1";
-import { v4 as uuidv4 } from "uuid/v4";
 import { executeQuery, Param } from "../db";
 import { Session } from "../models/session";
 import { NotFoundError } from "../../util/exceptions/not-found-error";
@@ -157,22 +156,35 @@ export function edit(
   });
 }
 
-export function create(userId: UserUrn, title: string): Promise<Session> {
-  const uuid = uuidv4();
-  const sessionUrn = new SessionUrn(uuid);
+export function create(
+  sessionUrn: SessionUrn,
+  userId: UserUrn,
+  title: string,
+  body: string,
+  previouslyCreated: number | null,
+  imported?: boolean
+): Promise<Session> {
+  const now = Date.now();
+  const created = previouslyCreated || now;
   const query = `
     MATCH (u:User {id:{userId}})
     CREATE (session:Session {id:{sessionUrn},
       ${title ? "title:{title}," : ""}
-      created:TIMESTAMP(),
-      lastModified:TIMESTAMP(),
+      ${body ? "body:{body}," : ""}
+      ${imported ? "imported:{imported}," : ""}
+      created:{created},
+      lastModified:{now},
       owner:{userId}})
     CREATE (session)<-[:CREATED]-(u)
     RETURN session`;
   const params = [
     new Param("userId", userId.toRaw()),
     new Param("sessionUrn", sessionUrn.toRaw()),
-    new Param("title", title)
+    new Param("title", title),
+    new Param("body", body),
+    new Param("created", created),
+    new Param("now", now),
+    new Param("imported", imported && imported.toString())
   ];
   return executeQuery(query, params).then((result: StatementResult) => {
     if (!result.records[0]) {

@@ -17,7 +17,7 @@ import { graphql, compose, QueryProps, MutationFunc } from "react-apollo";
 
 // Components
 import HeaderSession from "../components/headers/header-session";
-import CardSessionTitle from "../components/cards/card-session-title";
+import InputSessionTitle from "../components/inputs/input-session-title";
 import CardCapture from "../components/cards/card-capture";
 import ScrollContainer from "../components/scroll/scroll-container";
 import ScrollContainerElement from "../components/scroll/scroll-container-element";
@@ -127,105 +127,56 @@ class Session extends React.Component<Props, State> {
     let sessionId = decodeURIComponent(this.props.match.params["id"]);
 
     return (
-      <div
-        key={`session-view-${sessionId}`}
-        className={`bg-near-white ba b--light-gray`}
+      <ScrollContainer
+        ref={scrollContainer => (this._scrollContainer = scrollContainer)}
       >
-        {/* Header */}
-        <div>
-          <ReactResizeDetector
-            handleHeight={true}
-            onResize={(_, height) => {
-              this.setState({
-                headerHeight: height
-              });
-            }}
-          />
-          <HeaderSession />
-        </div>
-        <ScrollContainer
-          ref={scrollContainer => (this._scrollContainer = scrollContainer)}
-        >
+        <div className={`bg-near-white ba b--light-gray`}>
+          {/* Header */}
+          <div>
+            <ReactResizeDetector
+              handleHeight={true}
+              onResize={(_, height) => {
+                this.setState({
+                  headerHeight: height
+                });
+              }}
+            />
+            <HeaderSession />
+          </div>
           <div
-            className={`flex-column items-center ph4 pv4 overflow-auto`}
+            className={``}
             style={{
               height: `${this.props.windowHeight -
                 this.state.headerHeight -
                 this.state.footerHeight}px`
             }}
           >
-            <div
-              className={``}
-              style={{
-                width: WIDTH
-              }}
-              key={`session-view-list-${sessionId}`}
-            >
-              <div className={`pa3 br4 bg-white ba bw1 b--light-gray`}>
-                <CardSessionTitle
-                  key={sessionCaptures.id}
-                  sessionId={sessionCaptures.id}
-                  startingTitle={sessionCaptures.title}
-                />
-              </div>
-            </div>
-            {sessionItems.map((capture, index) => {
-              const id = capture.id;
-              const previousId =
-                index === 0 ? undefined : sessionItems[index - 1].id;
-              const nextId =
-                index === sessionItems.length - 1
-                  ? "input-capture"
-                  : sessionItems[index + 1].id;
-
-              return (
-                <div
-                  className={``}
-                  style={{
-                    width: WIDTH
-                  }}
-                  key={id}
-                >
-                  <ScrollContainerElement name={id}>
-                    <CardCapture
-                      sessionId={sessionCaptures.id}
-                      captureId={id}
-                      startingText={capture.body}
-                    />
-                  </ScrollContainerElement>
-                </div>
-              );
-            })}
-            <div
-              style={{
-                width: WIDTH
-              }}
-            >
-              <ScrollContainerElement name={"input-capture"}>
-                <CardCapture
-                  sessionId={sessionCaptures.id}
-                  previousId={
-                    sessionItems.length > 0
-                      ? sessionItems[sessionItems.length - 1].id
-                      : sessionId
-                  }
-                />
-              </ScrollContainerElement>
-            </div>
+            <InputSessionTitle
+              sessionId={sessionCaptures.id}
+              startingTitle={sessionCaptures.title}
+            />
+            <CardCapture
+              sessionId={sessionCaptures.id}
+              previousId={
+                sessionItems.length > 0
+                  ? sessionItems[sessionItems.length - 1].id
+                  : sessionId
+              }
+            />
           </div>
-        </ScrollContainer>
-        {/* Footer */}
-        <div className={``}>
-          <ReactResizeDetector
-            handleHeight={true}
-            onResize={(_, height) => {
-              this.setState({
-                footerHeight: height
-              });
-            }}
-          />
+          {/* Footer */}
+          <div className={``}>
+            <ReactResizeDetector
+              handleHeight={true}
+              onResize={(_, height) => {
+                this.setState({
+                  footerHeight: height
+                });
+              }}
+            />
+          </div>
         </div>
-      </div>
+      </ScrollContainer>
     );
   }
 }

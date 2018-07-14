@@ -13,7 +13,7 @@ import { createSession } from "../../queries";
 import { graphql, compose, MutationFunc } from "react-apollo";
 
 // Components
-import CardCapture from "./../cards/card-capture";
+import CardCapture from "./../cards/card-capture-v2";
 import CardSession from "./../cards/card-session";
 
 // Utils
@@ -45,8 +45,6 @@ interface Props extends RouteProps {
 }
 
 interface State {}
-
-const WIDTH = "30em";
 
 class GridCaptures extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -156,17 +154,11 @@ class GridCaptures extends React.Component<Props, State> {
               ) : (
                 <div className={`flex flex-wrap`}>
                   {captures.map(capture => (
-                    <div
-                      className={`pv3 center`}
-                      style={{
-                        width: WIDTH
-                      }}
-                      key={capture.id}
-                    >
+                    <div className={`pa3`} key={capture.id}>
                       <CardCapture
-                        sessionParents={capture.parents}
+                        sessionParents={capture.parents || []}
                         captureId={capture.id}
-                        startingText={capture.body}
+                        startingHtml={capture.body}
                       />
                     </div>
                   ))}

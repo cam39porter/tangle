@@ -13,20 +13,13 @@ const axiosInstance = axios.create({
 function uploadFile(file: File) {
   const formData = new FormData();
   formData.append("file", file);
-  axiosInstance
-    .post("/uploadHtml", formData)
-    .then(res => {
-      console.log("success");
-    })
-    .catch(error => {
-      ErrorsUtils.errorHandler.report(error.message, error.stack);
-    });
+  return axiosInstance.post("/uploadHtml", formData).then(res => {
+    console.log("success");
+  });
 }
 
 function uploadFiles(files: FileList) {
-  Array.from(files).forEach(file => {
-    uploadFile(file);
-  });
+  return Promise.all(Array.from(files).map(file => uploadFile(file)));
 }
 
 export default {

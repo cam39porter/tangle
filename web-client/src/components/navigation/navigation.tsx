@@ -13,6 +13,8 @@ import { createSession } from "../../queries";
 import { graphql, MutationFunc } from "react-apollo";
 
 // Components
+import ButtonHome from "./../buttons/button-home";
+import ButtonImport from "./../buttons/button-import";
 import ButtonCapture from "./../buttons/button-capture";
 import ButtonLogOut from "../buttons/button-logout";
 
@@ -45,7 +47,7 @@ class Navigation extends React.Component<Props, State> {
       >
         <div className={`flex-column flex-grow`}>
           <div
-            className={`pa3 dim bg-accent br-100 pointer`}
+            className={`pa3 bg-animate hover-bg-light-silver bg-accent br-100 pointer`}
             onClick={() => {
               this.props
                 .createSession({})
@@ -73,9 +75,27 @@ class Navigation extends React.Component<Props, State> {
           >
             <ButtonCapture />
           </div>
+          <div
+            className={`flex-column center justify-around pa3 mt2 bg-animate hover-bg-light-silver br-100 pointer`}
+            onClick={() => {
+              this.props.history.push(`/`);
+              // TODO: add tracking to this
+            }}
+          >
+            <ButtonHome />
+          </div>
+          <div
+            className={`flex-column center justify-around pa3 mt2 bg-animate hover-bg-light-silver br-100 pointer`}
+            onClick={() => {
+              this.props.history.push(`/import`);
+              // TODO: add tracking to this
+            }}
+          >
+            <ButtonImport />
+          </div>
         </div>
         <div
-          className={`flex-column center justify-around pa2 dim pointer`}
+          className={`flex-column center justify-around pa3 br-100 bg-animate hover-bg-light-silver pointer`}
           onClick={() => {
             const auth = FirebaseUtils.firebaseAuth();
             const user = auth.currentUser ? auth.currentUser.uid : "";

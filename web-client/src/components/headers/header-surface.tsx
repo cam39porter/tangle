@@ -66,11 +66,7 @@ class HeaderSurface extends React.Component<Props, State> {
                 </div>
               </div>
             </div>
-          ) : (
-            <div className={`flex-column justify-around`}>
-              <InputFileUpload />
-            </div>
-          )
+          ) : null
         }
         right={
           <React.Fragment>

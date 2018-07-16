@@ -44,6 +44,7 @@ interface Props extends RouteProps {
   startingHtml: string;
   startingTitle: string;
   handleFocus?: (focus: () => void) => void;
+  handleIsSaving: (isSavingNow: boolean) => void;
 }
 
 interface State {
@@ -108,6 +109,9 @@ class InputSession extends React.Component<Props, State> {
             props.sessionId
           )
         })
+        .then(() => {
+          this.props.handleIsSaving(false);
+        })
         .catch(err => {
           ErrorsUtils.errorHandler.report(err.message, err.stack);
         });
@@ -143,6 +147,8 @@ class InputSession extends React.Component<Props, State> {
     const currentContent = this.state.editorState.getCurrentContent();
     const newContent = editorState.getCurrentContent();
     if (currentContent !== newContent) {
+      this.props.handleIsSaving(true);
+
       this.saveEdit &&
         this.saveEdit(convertToHTML(newContent), this.state.title);
     }
@@ -155,21 +161,12 @@ class InputSession extends React.Component<Props, State> {
     this.editor && this.editor.focus();
   };
 
-  clearEditor = (editorState: Draft.EditorState) => {
-    // Clean this for next input
-    let cleanEditorState = EditorUtils.cleanEditorState(editorState);
-
-    this.setState({
-      editorState: cleanEditorState
-    });
-  };
-
   render() {
     const { sessionId } = this.props;
     const { editorWidth, editorHeight, title } = this.state;
 
     return (
-      <div className={`flex-grow flex-column pa3 br4 bg-editor-gray`}>
+      <div className={`relative flex-grow flex-column pa3 br4 bg-editor-gray`}>
         <div>
           <input
             value={title}

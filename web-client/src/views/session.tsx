@@ -22,6 +22,7 @@ import windowSize from "react-window-size";
 import InputSession from "../components/inputs/input-session";
 import Markdown from "../components/help/markdown";
 import { isEqual } from "lodash";
+import { isScalarValue } from "../../node_modules/apollo-utilities";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -36,6 +37,7 @@ interface Props extends RouteProps {
 interface State {
   headerHeight: number;
   footerHeight: number;
+  isSaving: boolean;
 }
 
 class Session extends React.Component<Props, State> {
@@ -44,19 +46,20 @@ class Session extends React.Component<Props, State> {
 
     this.state = {
       headerHeight: 0,
-      footerHeight: 0
+      footerHeight: 0,
+      isSaving: false
     };
   }
 
   render() {
     const { data, windowHeight } = this.props;
-    const { headerHeight, footerHeight } = this.state;
+    const { headerHeight, footerHeight, isSaving } = this.state;
 
     if (!data.getSession) {
       return <div />;
     }
 
-    const { title, id, body, created, lastModified } = data.getSession;
+    const { title, id, body, created } = data.getSession;
 
     return (
       <div className={``}>
@@ -70,7 +73,7 @@ class Session extends React.Component<Props, State> {
               });
             }}
           />
-          <HeaderSession created={created} lastModified={lastModified} />
+          <HeaderSession created={created} isSaving={isSaving} />
         </div>
         <div
           className={`flex-column pa3`}
@@ -83,6 +86,11 @@ class Session extends React.Component<Props, State> {
             sessionId={id}
             startingHtml={body}
             startingTitle={title}
+            handleIsSaving={(isSavingNow: boolean) => {
+              this.setState({
+                isSaving: isSavingNow
+              });
+            }}
           />
         </div>
         {/* Footer */}

@@ -17,7 +17,7 @@ interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
   created: number;
-  lastModified: number;
+  isSaving: boolean;
 }
 
 interface State {}
@@ -28,15 +28,22 @@ class HeaderSurface extends React.Component<Props, State> {
   }
 
   render() {
-    const { created } = this.props;
+    const { created, isSaving } = this.props;
 
     return (
       <Header
         left={
-          <div className={`flex-column justify-around ph2`}>
-            <div className={`flex f7`}>
-              <span className={`pr1`}>Created</span>
-              <TimeAgo date={created} live={false} />
+          <div className={`flex`}>
+            <div className={`flex-column justify-around ph2`}>
+              <div className={`flex f7`}>
+                <span className={`pr1`}>Created</span>
+                <span>{new Date(created).toLocaleDateString()}</span>
+              </div>
+            </div>
+            <div className={`flex-column justify-around ph2`}>
+              <div className={`flex f7`}>
+                {isSaving ? "Saving..." : "Saved"}
+              </div>
             </div>
           </div>
           /* tslint:disable-next-line */

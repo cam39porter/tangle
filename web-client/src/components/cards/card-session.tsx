@@ -50,20 +50,25 @@ class CardSession extends React.Component<Props, State> {
   render() {
     return (
       <div
-        key={this.props.sessionId}
         onMouseOver={() => {
           this.setState({
             isShowingButtons: true
           });
         }}
-        onMouseOut={() => {
+        onMouseLeave={() => {
           this.setState({
             isShowingButtons: false
           });
+          this.state.isShowingAreYouSure &&
+            setTimeout(() => {
+              this.setState({
+                isShowingAreYouSure: false
+              });
+            }, 2000);
         }}
       >
         <div
-          className={`flex justify-between pa3 bb bw1 b--light-gray bg-animate hover-bg-white pointer`}
+          className={`flex justify-between pa3 bb bw1 b--light-gray bg-animate hover-bg-white dark-gray pointer`}
           onClick={() => {
             this.props.history.push(
               `/note/${encodeURIComponent(
@@ -79,54 +84,81 @@ class CardSession extends React.Component<Props, State> {
             });
           }}
         >
-          <div className={`flex-column justify-around f5 dark-gray`}>
+          <div className={`flex-column justify-around f5`}>
             {this.props.title || "Untitled "}
           </div>
-          <div className={`relative flex-column justify-around`}>
-            {this.state.isShowingButtons ? (
-              <div
-                className={``}
-                onClick={e => {
-                  e.stopPropagation();
+          {this.state.isShowingAreYouSure ? (
+            <div className={`flex-column justify-around`}>
+              <div className={`flex f6`}>
+                <div className={`pl3 dib`}>Are you sure?</div>
+                <div
+                  className={`pl3 dib pointer hover-light-red`}
+                  onClick={e => {
+                    e.stopPropagation();
 
-                  this.setState({
-                    isShowingAreYouSure: true
-                  });
-
-                  this.props
-                    .deleteSession({
-                      variables: {
-                        sessionId: this.props.sessionId
-                      },
-                      optimisticResponse: {
-                        deleteSession: true
-                      },
-                      update: ApolloUtils.deleteSessionUpdate(
-                        this.props.sessionId
-                      )
-                    })
-                    .then(() => {
-                      AnalyticsUtils.trackEvent({
-                        category: this.props.match.params["id"]
-                          ? AnalyticsUtils.Categories.Session
-                          : AnalyticsUtils.Categories.Home,
-                        action: AnalyticsUtils.Actions.DeleteSession,
-                        label: this.props.sessionId
+                    this.props
+                      .deleteSession({
+                        variables: {
+                          sessionId: this.props.sessionId
+                        },
+                        optimisticResponse: {
+                          deleteSession: true
+                        },
+                        update: ApolloUtils.deleteSessionUpdate(
+                          this.props.sessionId
+                        )
+                      })
+                      .then(() => {
+                        AnalyticsUtils.trackEvent({
+                          category: this.props.match.params["id"]
+                            ? AnalyticsUtils.Categories.Session
+                            : AnalyticsUtils.Categories.Home,
+                          action: AnalyticsUtils.Actions.DeleteSession,
+                          label: this.props.sessionId
+                        });
+                      })
+                      .catch(err => {
+                        ErrorsUtils.errorHandler.report(err.message, err.stack);
                       });
-                    })
-                    .catch(err => {
-                      ErrorsUtils.errorHandler.report(err.message, err.stack);
+                  }}
+                >
+                  Delete
+                </div>
+                <div
+                  className={`pl3 dib pointer hover-light-green`}
+                  onClick={e => {
+                    e.stopPropagation();
+                    this.setState({
+                      isShowingAreYouSure: false
                     });
-                }}
-              >
-                <ButtonArchive />
+                  }}
+                >
+                  Keep
+                </div>
               </div>
-            ) : (
-              <div className={`tr f6 gray w4`}>
-                <TimeAgo date={this.props.created} live={false} />
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className={`flex-column justify-around`}>
+              {this.state.isShowingButtons ? (
+                <div
+                  className={`ph2`}
+                  onClick={e => {
+                    e.stopPropagation();
+
+                    this.setState({
+                      isShowingAreYouSure: true
+                    });
+                  }}
+                >
+                  <ButtonArchive />
+                </div>
+              ) : (
+                <div className={`tr f6 gray w4`}>
+                  <TimeAgo date={this.props.created} live={false} />
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );

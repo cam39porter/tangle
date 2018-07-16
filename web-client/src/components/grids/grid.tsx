@@ -130,7 +130,16 @@ class GridCaptures extends React.Component<Props, State> {
               ) : (
                 <div className={`flex flex-wrap`}>
                   {captures.map(capture => (
-                    <div className={`pa3`} key={capture.id}>
+                    <div
+                      className={
+                        this.props.match.params["id"]
+                          ? `pa3 ${
+                              this.props.windowWidth > 1360 ? "w-50" : "w-100"
+                            }`
+                          : "pa3"
+                      }
+                      key={capture.id}
+                    >
                       <CardCapture
                         sessionParents={capture.parents || []}
                         captureId={capture.id}

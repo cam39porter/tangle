@@ -10,9 +10,11 @@ const axiosInstance = axios.create({
   }
 });
 
-function uploadFile(data: FormData) {
+function uploadFile(file) {
+  const formData = new FormData();
+  formData.append("file", file);
   axiosInstance
-    .post("/uploadHtml", data)
+    .post("/uploadHtml", formData)
     .then(res => {
       console.log("success");
     })
@@ -21,6 +23,12 @@ function uploadFile(data: FormData) {
     });
 }
 
+function uploadFiles(files: FileList) {
+  Array.from(files).forEach(file => {
+    uploadFile(file);
+  });
+}
+
 export default {
-  uploadFile
+  uploadFiles
 };

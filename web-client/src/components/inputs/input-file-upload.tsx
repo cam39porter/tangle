@@ -33,9 +33,7 @@ class InputFileUpload extends React.Component<Props, State> {
             ) {
               return;
             }
-            const formData = new FormData();
-            formData.append("file", this.inputRef.files[0]);
-            RestClientUtils.uploadFile(formData);
+            RestClientUtils.uploadFiles(this.inputRef.files);
             this.inputRef.value = "";
           }}
         >
@@ -48,6 +46,7 @@ class InputFileUpload extends React.Component<Props, State> {
             }}
             className={`ph2 f7`}
             type="file"
+            multiple={true}
             accept=".html"
           />
         </form>

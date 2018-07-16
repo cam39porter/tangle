@@ -34,6 +34,7 @@ interface Props extends RouteProps {
 
 interface State {
   isShowingButtons: boolean;
+  isShowingAreYouSure: boolean;
 }
 
 class CardSession extends React.Component<Props, State> {
@@ -41,7 +42,8 @@ class CardSession extends React.Component<Props, State> {
     super(nextProps);
 
     this.state = {
-      isShowingButtons: false
+      isShowingButtons: false,
+      isShowingAreYouSure: false
     };
   }
 
@@ -86,6 +88,10 @@ class CardSession extends React.Component<Props, State> {
                 className={``}
                 onClick={e => {
                   e.stopPropagation();
+
+                  this.setState({
+                    isShowingAreYouSure: true
+                  });
 
                   this.props
                     .deleteSession({

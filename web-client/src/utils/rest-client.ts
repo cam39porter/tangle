@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
   }
 });
 
-function uploadFile(file) {
+function uploadFile(file: File) {
   const formData = new FormData();
   formData.append("file", file);
   axiosInstance

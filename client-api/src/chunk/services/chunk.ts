@@ -22,7 +22,7 @@ export function updateCaptures(
   });
 }
 
-function deleteCaptures(
+export function deleteCaptures(
   parentUrn: SessionUrn | EvernoteNoteUrn
 ): Promise<void> {
   const userId = getRequestContext().user.urn;

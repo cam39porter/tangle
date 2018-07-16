@@ -25,7 +25,7 @@ import { CaptureUrn } from "../../urn/capture-urn";
 import { formatSession } from "../../surface/formatters/graph-node";
 import { SessionUrn } from "../../urn/session-urn";
 import { UserUrn } from "../../urn/user-urn";
-import { updateCaptures } from "../../chunk/services/chunk";
+import { updateCaptures, deleteCaptures } from "../../chunk/services/chunk";
 
 export function create(
   title: string,
@@ -80,9 +80,9 @@ export function edit(
   });
 }
 
-export function deleteSession(id: SessionUrn): Promise<boolean> {
+export function deleteSession(urn: SessionUrn): Promise<boolean> {
   const userId = getAuthenticatedUser().urn;
-  return deleteDB(userId, id);
+  return deleteCaptures(urn).then(() => deleteDB(userId, urn));
 }
 
 function deleteTags(userId: UserUrn, sessionId: SessionUrn): Promise<void> {

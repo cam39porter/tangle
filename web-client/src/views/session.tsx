@@ -21,8 +21,6 @@ import ReactResizeDetector from "react-resize-detector";
 import windowSize from "react-window-size";
 import InputSession from "../components/inputs/input-session";
 import Markdown from "../components/help/markdown";
-import { isEqual } from "lodash";
-import { isScalarValue } from "../../node_modules/apollo-utilities";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}

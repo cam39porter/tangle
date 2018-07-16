@@ -135,6 +135,7 @@ class InputSession extends React.Component<Props, State> {
     // Content has changed
     if (newTitle !== this.state.title) {
       const body = convertToHTML(this.state.editorState.getCurrentContent());
+      this.props.handleIsSaving(true);
       this.saveEdit && this.saveEdit(body, newTitle);
     }
 

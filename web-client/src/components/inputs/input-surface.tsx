@@ -8,8 +8,6 @@ import { withRouter, RouteComponentProps } from "react-router";
 import ButtonSurface from "./../buttons/button-surface";
 
 // Utils
-import { convertFromHTML } from "draft-convert";
-import "draft-js/dist/Draft.css";
 import { trim } from "lodash";
 import { NetworkUtils, AnalyticsUtils } from "../../utils";
 
@@ -21,6 +19,8 @@ interface Props extends RouteProps {}
 interface State {
   text: string;
 }
+
+const MAX_LENGTH_SEARCH = 100; // characters
 
 class InputSurface extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -46,6 +46,13 @@ class InputSurface extends React.Component<Props, State> {
   }
 
   handleOnChange = e => {
+    const text: string = e.target.value;
+
+    console.log(text.length);
+    if (text.length >= MAX_LENGTH_SEARCH) {
+      return;
+    }
+
     this.setState({
       text: e.target.value
     });

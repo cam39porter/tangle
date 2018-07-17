@@ -27,14 +27,11 @@ import ReactResizeDetector from "react-resize-detector";
 // Utils
 import { convertToHTML, convertFromHTML } from "draft-convert";
 import { debounce, Cancelable } from "lodash";
-import {
-  AnalyticsUtils,
-  ApolloUtils,
-  ErrorsUtils,
-  EditorUtils
-} from "../../utils";
+import { AnalyticsUtils, ApolloUtils, ErrorsUtils } from "../../utils";
 
 const TIME_TO_SAVE = 500; // ms till change is automatically captured
+const MAX_LENGTH_SESSION = 500000; // character / 1 MB
+const MAX_LENGTH_TITLE = 200; // characters
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -132,6 +129,10 @@ class InputSession extends React.Component<Props, State> {
   handleTitleChange = e => {
     const newTitle = e.target.value;
 
+    if (newTitle.length >= MAX_LENGTH_TITLE) {
+      return;
+    }
+
     // Content has changed
     if (newTitle !== this.state.title) {
       const body = convertToHTML(this.state.editorState.getCurrentContent());
@@ -140,7 +141,7 @@ class InputSession extends React.Component<Props, State> {
     }
 
     this.setState({
-      title: e.target.value
+      title: newTitle
     });
   };
 
@@ -160,6 +161,73 @@ class InputSession extends React.Component<Props, State> {
 
   handleFocus = () => {
     this.editor && this.editor.focus();
+  };
+
+  getLengthOfSelectedText = () => {
+    const currentSelection = this.state.editorState.getSelection();
+    const isCollapsed = currentSelection.isCollapsed();
+
+    let length = 0;
+
+    if (!isCollapsed) {
+      const currentContent = this.state.editorState.getCurrentContent();
+      const startKey = currentSelection.getStartKey();
+      const endKey = currentSelection.getEndKey();
+      const startBlock = currentContent.getBlockForKey(startKey);
+      const isStartAndEndBlockAreTheSame = startKey === endKey;
+      const startBlockTextLength = startBlock.getLength();
+      const startSelectedTextLength =
+        startBlockTextLength - currentSelection.getStartOffset();
+      const endSelectedTextLength = currentSelection.getEndOffset();
+      const keyAfterEnd = currentContent.getKeyAfter(endKey);
+      if (isStartAndEndBlockAreTheSame) {
+        length +=
+          currentSelection.getEndOffset() - currentSelection.getStartOffset();
+      } else {
+        let currentKey = startKey;
+
+        while (currentKey && currentKey !== keyAfterEnd) {
+          if (currentKey === startKey) {
+            length += startSelectedTextLength + 1;
+          } else if (currentKey === endKey) {
+            length += endSelectedTextLength;
+          } else {
+            length += currentContent.getBlockForKey(currentKey).getLength() + 1;
+          }
+
+          currentKey = currentContent.getKeyAfter(currentKey);
+        }
+      }
+    }
+
+    return length;
+  };
+
+  handleBeforeInput = () => {
+    const currentContent = this.state.editorState.getCurrentContent();
+    const currentContentLength = currentContent.getPlainText("").length;
+    const selectedTextLength = this.getLengthOfSelectedText();
+
+    if (currentContentLength - selectedTextLength > MAX_LENGTH_SESSION - 1) {
+      return "handled";
+    }
+
+    return "not-handled";
+  };
+
+  handlePastedText = pastedText => {
+    const currentContent = this.state.editorState.getCurrentContent();
+    const currentContentLength = currentContent.getPlainText("").length;
+    const selectedTextLength = this.getLengthOfSelectedText();
+
+    if (
+      currentContentLength + pastedText.length - selectedTextLength >
+      MAX_LENGTH_SESSION
+    ) {
+      return "handled";
+    }
+
+    return "not-handled";
   };
 
   render() {
@@ -185,6 +253,7 @@ class InputSession extends React.Component<Props, State> {
               }
             }}
             placeholder={`Title`}
+            maxLength={MAX_LENGTH_TITLE}
           />
         </div>
         <div className={`flex-grow overflow-auto`}>
@@ -240,6 +309,8 @@ class InputSession extends React.Component<Props, State> {
                   });
                 }
               }}
+              handleBeforeInput={this.handleBeforeInput}
+              handlePastedText={this.handlePastedText}
               spellCheck={true}
             />
           </div>

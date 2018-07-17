@@ -131,11 +131,29 @@ function maskError(error: GraphQLError): GraphQLError {
     return error;
   }
 }
-const upload = multer();
 
-app.post("/uploadHtml", upload.single("file"), (req, res) => {
+const upload = multer({
+  limits: {
+    fileSize: 1 * 1000 * 1000
+  }
+});
+
+app.post("/uploadHtml", upload.single("file"), (err, req, res, _) => {
   if (isProd()) {
     res.status(404).send("Not Found");
+  }
+  if (err) {
+    let status = 500;
+    if (err.code == "LIMIT_FILE_SIZE") {
+      LOGGER.warn("Attempted upload with too large of a file");
+      status = 400;
+    }
+    LOGGER.error(err);
+    if (isProd()) {
+      res.sendStatus(status);
+    } else {
+      res.status(status).send(err);
+    }
   }
   importEvernoteNoteUpload(req["file"])
     .then(() => {

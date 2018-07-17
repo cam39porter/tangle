@@ -31,6 +31,11 @@ queue.process("parse upload", (job, done) => {
       done();
     })
     .catch(err => {
+      LOGGER.error(
+        `Failed upload for user ${job.data.userUrn} with id ${
+          job.data.sessionUrn
+        }`
+      );
       LOGGER.error(err);
       done(err);
     });

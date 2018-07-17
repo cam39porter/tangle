@@ -296,13 +296,6 @@
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
 
-"@types/express-formidable@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@types/express-formidable/-/express-formidable-1.0.3.tgz#1d764aed0cc7175e87cf8be1507f34039c66b1c9"
-  dependencies:
-    "@types/express" "*"
-    "@types/formidable" "*"
-
 "@types/express-serve-static-core@*":
   version "4.11.1"
   resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.11.1.tgz#f6f7212382d59b19d696677bcaa48a37280f5d45"
@@ -322,13 +315,6 @@
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@types/form-data/-/form-data-2.2.1.tgz#ee2b3b8eaa11c0938289953606b745b738c54b1e"
   dependencies:
-    "@types/node" "*"
-
-"@types/formidable@*":
-  version "1.0.31"
-  resolved "https://registry.yarnpkg.com/@types/formidable/-/formidable-1.0.31.tgz#274f9dc2d0a1a9ce1feef48c24ca0859e7ec947b"
-  dependencies:
-    "@types/events" "*"
     "@types/node" "*"
 
 "@types/google-cloud__storage@1.1.7", "@types/google-cloud__storage@^1.1.7":
@@ -369,6 +355,12 @@
 "@types/morgan@1.7.35":
   version "1.7.35"
   resolved "https://registry.yarnpkg.com/@types/morgan/-/morgan-1.7.35.tgz#6358f502931cc2583d7a94248c41518baa688494"
+  dependencies:
+    "@types/express" "*"
+
+"@types/multer@1.3.7":
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/@types/multer/-/multer-1.3.7.tgz#9fe1de9f44f401ff2eaf0d4468cf16935a9c6866"
   dependencies:
     "@types/express" "*"
 

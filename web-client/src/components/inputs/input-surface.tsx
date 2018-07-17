@@ -48,7 +48,6 @@ class InputSurface extends React.Component<Props, State> {
   handleOnChange = e => {
     const text: string = e.target.value;
 
-    console.log(text.length);
     if (text.length >= MAX_LENGTH_SEARCH) {
       return;
     }

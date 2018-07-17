@@ -72,7 +72,7 @@ export function edit(
     if (body) {
       return Promise.all([
         updateTags,
-        updateCaptures(session.urn, body, session.created)
+        updateCaptures(userId, session.urn, body, session.created)
       ]).then(both => both[0]);
     } else {
       return updateTags;
@@ -82,7 +82,7 @@ export function edit(
 
 export function deleteSession(urn: SessionUrn): Promise<boolean> {
   const userId = getAuthenticatedUser().urn;
-  return deleteCaptures(urn).then(() => deleteDB(userId, urn));
+  return deleteCaptures(userId, urn).then(() => deleteDB(userId, urn));
 }
 
 function deleteTags(userId: UserUrn, sessionId: SessionUrn): Promise<void> {

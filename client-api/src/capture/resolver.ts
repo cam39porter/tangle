@@ -16,6 +16,7 @@ import * as xss from "xss";
 import { create as createFeedback } from "../db/services/feedback";
 import { reportClientError } from "../util/logging/logger";
 import { Urn } from "../urn/urn";
+import { getRequestContext } from "../filters/request-context";
 
 const xssOptions = { whiteList: xss.whiteList };
 const captureXSS = new xss.FilterXSS(xssOptions);
@@ -40,7 +41,9 @@ export default {
       // @ts-ignore
       info
     ): Promise<GraphNode> {
+      const userId = getRequestContext().user.urn;
       return createCapture(
+        userId,
         captureXSS.process(body),
         (sessionId && SessionUrn.fromRaw(sessionId)) || null,
         (previousId && Urn.fromRaw(previousId)) || null,

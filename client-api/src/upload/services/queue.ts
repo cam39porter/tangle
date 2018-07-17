@@ -107,6 +107,8 @@ function createEvernoteNote(
     note.created,
     true
   ).then(() => {
-    return updateCaptures(noteUrn, note.body, note.created).then(() => null);
+    return updateCaptures(userId, noteUrn, note.body, note.created).then(
+      () => null
+    );
   });
 }

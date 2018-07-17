@@ -1,5 +1,3 @@
-import { User } from "../../db/models/user";
-import { upsert as upsertLink } from "../../db/services/link";
 import { createRelationship } from "../../db/services/relationship";
 import { upsert as upsertTag } from "../../db/services/tag";
 
@@ -13,7 +11,7 @@ import { getNLPResponse } from "../../nlp/services/nlp";
 import { Capture } from "../../db/models/capture";
 import { upsertEntity } from "../../db/services/entity";
 import { getAuthenticatedUser } from "../../filters/request-context";
-import { parseLinks, parseTags, stripTags } from "../../helpers/capture-parser";
+import { parseTags, stripTags } from "../../helpers/capture-parser";
 import { CAPTURE_LABEL, SESSION_LABEL } from "../../db/helpers/labels";
 import {
   DISMISSED_RELATION_RELATIONSHIP,
@@ -57,29 +55,31 @@ export function editCapture(urn: CaptureUrn, body: string): Promise<GraphNode> {
     plainText,
     body
   ).then(capture =>
-    createRelations(urn, plainText).then(() => formatCapture(capture, true))
+    createRelations(userId, urn, plainText).then(() =>
+      formatCapture(capture, true)
+    )
   );
 }
 
 export function createCapture(
+  userUrn: UserUrn,
   body: string,
   parentUrn: EvernoteNoteUrn | SessionUrn | null,
   previousUrn: Urn | null,
   previouslyCreated: number | null
 ): Promise<GraphNode> {
-  const user: User = getAuthenticatedUser();
   const plainText = parseHtml(body);
   return createCaptureNode(
-    user.urn,
+    userUrn,
     plainText,
     body,
     parentUrn,
     previouslyCreated
   ).then((capture: Capture) => {
     return Promise.all([
-      updateParentModified(user.urn, parentUrn),
-      createPreviousRelationship(user.urn, capture.urn, previousUrn),
-      createRelations(capture.urn, plainText)
+      updateParentModified(userUrn, parentUrn),
+      createPreviousRelationship(userUrn, capture.urn, previousUrn),
+      createRelations(userUrn, capture.urn, plainText)
     ]).then(() => formatCapture(capture, true));
   });
 }
@@ -128,13 +128,13 @@ function parseHtml(html: string): string {
 }
 
 function createRelations(
+  userUrn: UserUrn,
   captureUrn: CaptureUrn,
   body: string
 ): Promise<boolean> {
   const promises = [
-    createTags(captureUrn, body),
-    createLinks(captureUrn, body),
-    createEntities(captureUrn, body)
+    createTags(userUrn, captureUrn, body),
+    createEntities(userUrn, captureUrn, body)
   ];
   return Promise.all(promises)
     .then(() => true)
@@ -143,32 +143,28 @@ function createRelations(
     });
 }
 
-function createTags(captureUrn: CaptureUrn, body: string): Promise<boolean> {
-  const user: User = getAuthenticatedUser();
+function createTags(
+  userUrn: UserUrn,
+  captureUrn: CaptureUrn,
+  body: string
+): Promise<boolean> {
   return Promise.all(
     parseTags(body).map(tag =>
-      upsertTag(user.urn, tag, captureUrn, CAPTURE_LABEL)
+      upsertTag(userUrn, tag, captureUrn, CAPTURE_LABEL)
     )
   ).then(() => true);
 }
 
-function createLinks(captureUrn: CaptureUrn, body: string): Promise<boolean> {
-  const user: User = getAuthenticatedUser();
-  return Promise.all(
-    parseLinks(body).map(link => upsertLink(user.urn, link, captureUrn))
-  ).then(() => true);
-}
-
 function createEntities(
+  userUrn: UserUrn,
   captureUrn: CaptureUrn,
   body: string
 ): Promise<boolean> {
   return getNLPResponse(stripTags(body)).then(nlp => {
-    const user: User = getAuthenticatedUser();
     return Promise.all(
       nlp.entities.map(entity =>
         upsertEntity(
-          user.urn,
+          userUrn,
           entity.name,
           entity.type,
           entity.salience,

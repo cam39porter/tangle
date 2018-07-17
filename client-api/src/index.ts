@@ -138,22 +138,11 @@ const upload = multer({
   }
 });
 
-app.post("/uploadHtml", upload.single("file"), (err, req, res, _) => {
+app.post("/uploadHtml", upload.single("file"), handleUpload, handleUploadError);
+
+function handleUpload(req, res): void {
   if (isProd()) {
     res.status(404).send("Not Found");
-  }
-  if (err) {
-    let status = 500;
-    if (err.code == "LIMIT_FILE_SIZE") {
-      LOGGER.warn("Attempted upload with too large of a file");
-      status = 400;
-    }
-    LOGGER.error(err);
-    if (isProd()) {
-      res.sendStatus(status);
-    } else {
-      res.status(status).send(err);
-    }
   }
   importEvernoteNoteUpload(req["file"])
     .then(() => {
@@ -167,4 +156,20 @@ app.post("/uploadHtml", upload.single("file"), (err, req, res, _) => {
         res.sendStatus(500);
       }
     });
-});
+}
+
+function handleUploadError(err, _req, res, _next): void {
+  if (err) {
+    let status = 500;
+    if (err.code === "LIMIT_FILE_SIZE") {
+      LOGGER.warn("Attempted upload with too large of a file");
+      status = 400;
+    }
+    LOGGER.error(err);
+    if (isProd()) {
+      res.sendStatus(status);
+    } else {
+      res.status(status).send(err);
+    }
+  }
+}

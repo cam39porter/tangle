@@ -9,6 +9,7 @@
     "ordered-imports": false,
     "no-console": true,
     "no-string-literal": false,
+    "variable-name": [true, "allow-leading-underscore"],
     "max-classes-per-file": false,
     "typedef": [true, "call-signature", "property-declaration"],
 

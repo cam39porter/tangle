@@ -6,16 +6,14 @@ export function parseEvernoteHtml(data): EvernoteUpload {
   const tagString = $("meta[name=keywords]").attr("content");
   const tags = tagString ? tagString.split(", ") : [];
   const title = $("title").text();
-  const created = Date.parse(
-    $("meta[name=created]")
-      .attr("content")
-      .slice(0, -5)
-  );
-  const lastModified = Date.parse(
-    $("meta[name=updated]")
-      .attr("content")
-      .slice(0, -5)
-  );
+  const createdHtml = $("meta[name=created]").attr("content");
+  const created = createdHtml
+    ? Date.parse(createdHtml.slice(0, -5))
+    : Date.now();
+  const lastModifiedHtml = $("meta[name=updated]").attr("content");
+  const lastModified = lastModifiedHtml
+    ? Date.parse(lastModifiedHtml.slice(0, -5))
+    : Date.now();
 
   const bodyHtml = $("body").html();
 

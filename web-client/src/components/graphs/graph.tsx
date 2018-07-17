@@ -366,16 +366,17 @@ class GraphVisualization extends React.Component<Props, State> {
   }
 
   renderTooltip = (e: GraphEvent) => {
-    let lines = e.data.name.match(/.{1,67}/g);
+    const text = e.data.name.replace(/<[^>]*>/g, "");
+    let lines = text.match(/.{1,67}/g);
     if (!lines) {
-      lines = [e.data.name];
+      lines = [text];
     }
     let preview = lines[0].replace(/\r?\n|\r/g, "");
     if (lines.length > 1) {
       preview = preview + "...";
     }
     return `
-  <div class="pa1 ph3 shadow-1 br4 bg-white f6 dark-gray">
+  <div class="pa3 shadow-1 br4 bg-white f6 dark-gray">
     ${preview}
   </div>`;
   };

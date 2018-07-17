@@ -100,7 +100,8 @@ class InputFileUpload extends React.Component<Props, State> {
           errorFilesUploaded[index] = {
             name: file.name,
             success: false,
-            error: error.message,
+            error:
+              "We failed to import this file. Make sure this is an HTML export from Evernote. Feel free to try importing it again.",
             progress: 100
           };
 
@@ -116,6 +117,7 @@ class InputFileUpload extends React.Component<Props, State> {
 
   render() {
     const { files, filesUploaded, inProgress, isDone } = this.state;
+    const { history } = this.props;
 
     return (
       <div className={``}>
@@ -189,7 +191,7 @@ class InputFileUpload extends React.Component<Props, State> {
                         <div className={`gray f7`}>{progress}%</div>
                       )}
                     </div>
-                    <div className={`code`}>{name}</div>
+                    <div className={`pr2 code`}>{name}</div>
                     <div className={`light-red f7`}>{error}</div>
                   </div>
                 </div>
@@ -206,6 +208,19 @@ class InputFileUpload extends React.Component<Props, State> {
               We are processing them now and will be accessible on your home
               screen momentarily.
             </p>
+            <div className={`tc`}>
+              <span
+                className={`pa2 br4 bg-accent near-white pointer f5 dim`}
+                style={{
+                  userSelect: "none"
+                }}
+                onClick={() => {
+                  history.push("/");
+                }}
+              >
+                Home
+              </span>
+            </div>
           </div>
         )}
       </div>

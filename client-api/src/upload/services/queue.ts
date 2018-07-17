@@ -47,6 +47,7 @@ export function enqueue(userUrn: UserUrn, sessionUrn: SessionUrn): kue.Job {
       userUrn: userUrn.toRaw(),
       sessionUrn: sessionUrn.toRaw()
     })
+    .ttl(60000)
     .attempts(3)
     .backoff({ type: "exponential" })
     .on("failed attempt", errorMessage => {

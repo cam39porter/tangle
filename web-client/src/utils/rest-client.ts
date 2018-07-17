@@ -17,13 +17,10 @@ const promiseSerial = funcs =>
     Promise.resolve([])
   );
 
-function uploadFile(
-  file: File,
-  config: { onUploadProgress: (progressEvent: ProgressEvent) => void }
-) {
+function uploadFile(file: File) {
   const formData = new FormData();
   formData.append("file", file);
-  return axiosInstance.post("/uploadHtml", formData, config);
+  return axiosInstance.post("/uploadHtml", formData);
 }
 
 export default {

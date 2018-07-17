@@ -19,7 +19,6 @@ interface State {
     name: string;
     success: boolean;
     error: string | null;
-    progress: number | null;
   }>;
 }
 
@@ -61,34 +60,16 @@ class InputFileUpload extends React.Component<Props, State> {
         filesUploaded: startingFilesUpload.concat({
           name: file.name,
           success: false,
-          error: null,
-          progress: 0
+          error: null
         })
       });
-      return RestClientUtils.uploadFile(file, {
-        onUploadProgress: progressEvent => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          const progressFilesUploaded = this.state.filesUploaded;
-          progressFilesUploaded[index] = {
-            name: file.name,
-            success: true,
-            error: null,
-            progress: percentCompleted
-          };
-          this.setState({
-            filesUploaded: progressFilesUploaded
-          });
-        }
-      })
+      return RestClientUtils.uploadFile(file)
         .then(() => {
           const successFilesUploaded = this.state.filesUploaded;
           successFilesUploaded[index] = {
             name: file.name,
             success: true,
-            error: null,
-            progress: 100
+            error: null
           };
 
           this.setState({
@@ -101,8 +82,7 @@ class InputFileUpload extends React.Component<Props, State> {
             name: file.name,
             success: false,
             error:
-              "We failed to import the above file. Make sure this is an HTML export from Evernote. Feel free to try importing it again.",
-            progress: 100
+              "We failed to import the above file. Make sure this is an HTML export from Evernote. Feel free to try importing it again."
           };
 
           this.setState({
@@ -174,7 +154,7 @@ class InputFileUpload extends React.Component<Props, State> {
         <div className={`dt w-100 pv4 f6`}>
           {filesUploaded &&
             filesUploaded.map(fileProgress => {
-              const { name, success, error, progress } = fileProgress;
+              const { name, success, error } = fileProgress;
               return (
                 <div key={name} className={`dt-row`}>
                   <div className={`flex pa2`}>
@@ -183,12 +163,12 @@ class InputFileUpload extends React.Component<Props, State> {
                         <div className={`light-green`}>
                           <Check />
                         </div>
-                      ) : progress === 100 ? (
+                      ) : error ? (
                         <div className={`light-red`}>
                           <X />
                         </div>
                       ) : (
-                        <div className={`gray f7`}>{progress}%</div>
+                        <div className={`gray f7`}>...</div>
                       )}
                     </div>
                     <div className={`code`}>{name}</div>

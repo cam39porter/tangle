@@ -101,7 +101,7 @@ class InputFileUpload extends React.Component<Props, State> {
             name: file.name,
             success: false,
             error:
-              "We failed to import this file. Make sure this is an HTML export from Evernote. Feel free to try importing it again.",
+              "We failed to import the above file. Make sure this is an HTML export from Evernote. Feel free to try importing it again.",
             progress: 100
           };
 
@@ -191,9 +191,9 @@ class InputFileUpload extends React.Component<Props, State> {
                         <div className={`gray f7`}>{progress}%</div>
                       )}
                     </div>
-                    <div className={`pr2 code`}>{name}</div>
-                    <div className={`light-red f7`}>{error}</div>
+                    <div className={`code`}>{name}</div>
                   </div>
+                  <div className={`pa2 light-red f7`}>{error}</div>
                 </div>
               );
             })}

@@ -17,7 +17,7 @@ class Import extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className={`vh-100 w-100`}>
+      <div className={`vh-100 w-100 overflow-auto`}>
         <div className={`pa4 measure-wide center dark-gray lh-copy`}>
           <div className={`f4 pv4`}>Import from Evernote</div>
           <div className={`f6 pb4`}>

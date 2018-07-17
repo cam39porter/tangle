@@ -40,37 +40,40 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const errorLink = onError(({ networkError, graphQLErrors }) => {
-  if (networkError) {
-    if (networkError["statusCode"] === 401) {
-      const user = firebaseAuth().currentUser;
-      if (user !== null) {
-        user.getIdToken(true).then(idToken => {
-          localStorage.setItem("idToken", idToken);
-        });
-      } else {
+const errorLink = onError(({ networkError, graphQLErrors, operation }) => {
+  if (operation.operationName !== "reportError") {
+    if (networkError) {
+      const statusCode = networkError["statusCode"];
+      if (statusCode === 401) {
+        const user = firebaseAuth().currentUser;
+        if (user !== null) {
+          user.getIdToken(true).then(idToken => {
+            localStorage.setItem("idToken", idToken);
+          });
+        } else {
+          localStorage.removeItem("idToken");
+          firebaseAuth().signOut();
+          AnalyticsUtils.setUserId(undefined);
+        }
+      } else if (statusCode === 400) {
+        const errorMessage = `It seems that your email address is not whitelisted. Please make sure you log in with the same email you used to sign up on usetangle.com. Contact info@usetangle.com if you have any quesitons or believe this is an error.`;
+        alert(errorMessage);
         localStorage.removeItem("idToken");
         firebaseAuth().signOut();
         AnalyticsUtils.setUserId(undefined);
+      } else {
+        ErrorsUtils.errorHandler.report(
+          networkError.message,
+          networkError.stack ? networkError.stack : {}
+        );
       }
-    } else if (networkError["statusCode"] === 400) {
-      const errorMessage = `It seems that your email address is not whitelisted. Please make sure you log in with the same email you used to sign up on usetangle.com. Contact info@usetangle.com if you have any quesitons or believe this is an error.`;
-      alert(errorMessage);
-      localStorage.removeItem("idToken");
-      firebaseAuth().signOut();
-      AnalyticsUtils.setUserId(undefined);
-    } else {
+    } else if (graphQLErrors) {
+      let error = graphQLErrors[0];
       ErrorsUtils.errorHandler.report(
-        networkError.message,
-        networkError.stack ? networkError.stack : {}
+        error.message,
+        error.stack ? error.stack : {}
       );
     }
-  } else if (graphQLErrors) {
-    let error = graphQLErrors[0];
-    ErrorsUtils.errorHandler.report(
-      error.message,
-      error.stack ? error.stack : {}
-    );
   }
 });
 

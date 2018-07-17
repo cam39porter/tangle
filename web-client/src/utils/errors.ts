@@ -10,20 +10,17 @@ let errorHandler = {
 
 const initializeCloudReporting = (client: ApolloClient<Object>) => {
   errorHandler.report = (message: String, stacktrace: Object) => {
-    // Do report errors that are caused by reportError (infinite loop)
-    if (!message.includes("reportError")) {
-      client
-        .mutate<reportErrorMutationVariables>({
-          mutation: reportError,
-          variables: {
-            message: message,
-            stacktrace: JSON.stringify(stacktrace)
-          }
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    }
+    client
+      .mutate<reportErrorMutationVariables>({
+        mutation: reportError,
+        variables: {
+          message: message,
+          stacktrace: JSON.stringify(stacktrace)
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 };
 

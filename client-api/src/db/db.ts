@@ -1,6 +1,7 @@
 import { v1 as neo4j } from "neo4j-driver";
 import { StatementResult } from "neo4j-driver/types/v1";
 import { Logger } from "../util/logging/logger";
+import { timeout, TimeoutError } from "promise-timeout";
 // import { getContext, hasAuthenticatedUser } from "../filters/request-context";
 // import { UserUrn } from "../urn/user-urn";
 
@@ -30,7 +31,7 @@ function executeQuery(
   params: Param[]
 ): Promise<StatementResult> {
   const session = driver.session();
-  return session
+  const neoPromise = session
     .writeTransaction(tx => tx.run(cypherQuery, toObj(params)))
     .then(result => {
       session.close();
@@ -44,6 +45,16 @@ function executeQuery(
       LOGGER.error(`Recieved error for query: ${cypherQuery}`);
       LOGGER.error(`Error response: ${error}`);
       throw error;
+    });
+  return timeout(neoPromise, 5000)
+    .then(neo => {
+      return neo;
+    })
+    .catch(err => {
+      if (err instanceof TimeoutError) {
+        LOGGER.error(err.message);
+      }
+      throw err;
     });
 }
 

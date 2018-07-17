@@ -15,7 +15,7 @@ queue.process("parse upload", (job, done) => {
   LOGGER.info(
     `processing upload for user ${job.data.userUrn} with id ${
       job.data.sessionUrn
-    }`
+    }...`
   );
 
   parseAndCreateNote(
@@ -23,9 +23,15 @@ queue.process("parse upload", (job, done) => {
     SessionUrn.fromRaw(job.data.sessionUrn)
   )
     .then(() => {
+      LOGGER.info(
+        `completed upload for user ${job.data.userUrn} with id ${
+          job.data.sessionUrn
+        }`
+      );
       done();
     })
     .catch(err => {
+      LOGGER.error(err);
       done(err);
     });
 });
@@ -69,15 +75,16 @@ function parseAndCreateNote(
     fileStream.on("end", () => {
       try {
         note = parseEvernoteHtml(all);
+        resolve(createEvernoteNote(userUrn, sessionUrn, note));
       } catch (err) {
-        LOGGER.error(`Could not parse html, error ${err}`);
-        throw new Error(
-          "Could not parse html. Please email cole@usetangle.com with your issue"
-        );
+        LOGGER.error(err);
+        reject(err);
       }
-      resolve(createEvernoteNote(userUrn, sessionUrn, note));
     });
-    fileStream.on("error", err => reject(err));
+    fileStream.on("error", err => {
+      LOGGER.error(err);
+      reject(err);
+    });
   });
 }
 

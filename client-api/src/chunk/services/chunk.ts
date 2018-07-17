@@ -15,10 +15,14 @@ export function updateCaptures(
 ): Promise<void> {
   const chunks = chunkHtml(body);
   return deleteCaptures(parentUrn).then(() => {
-    const batchCreates = chunks.map(chunk =>
-      createCapture(chunk.html, parentUrn, null, previouslyCreated)
-    );
-    return Promise.all(batchCreates).then(() => null);
+    const batchCreates = chunks.reduce((promise, chunk) => {
+      return promise.then(() =>
+        createCapture(chunk.html, parentUrn, null, previouslyCreated).then(
+          () => null
+        )
+      );
+    }, Promise.resolve());
+    return batchCreates.then(() => null);
   });
 }
 

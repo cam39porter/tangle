@@ -17,6 +17,8 @@ spec:
         secret:
           secretName: api-cert
       containers:
+      - name: redis
+        image: launcher.gcr.io/google/redis4
       - name: client-api
         image: gcr.io/opit-193719/client-api:a192ea9b460657a80db2ff37c829681f5f36810b
         imagePullPolicy: Always

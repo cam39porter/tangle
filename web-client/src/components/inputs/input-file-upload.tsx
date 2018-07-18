@@ -5,7 +5,7 @@ import * as React from "react";
 import { withRouter, RouteComponentProps } from "react-router";
 
 // Components
-import { RestClientUtils, ErrorsUtils } from "../../utils";
+import { RestClientUtils, ErrorsUtils, AnalyticsUtils } from "../../utils";
 import { Check, X } from "react-feather";
 
 // Types
@@ -140,6 +140,12 @@ class InputFileUpload extends React.Component<Props, State> {
                         inProgress: false,
                         isDone: true
                       });
+                    });
+
+                    AnalyticsUtils.trackEvent({
+                      category: AnalyticsUtils.Categories.Home,
+                      action: AnalyticsUtils.Actions.ClickToImport,
+                      label: files.length.toString()
                     });
 
                     if (!this.inputRef) {

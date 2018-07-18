@@ -33,7 +33,7 @@ class Import extends React.Component<Props, State> {
               </li>
             </ol>
           </div>
-          <div className={`pv2 tc`}>
+          <div className={`pv2`}>
             <DataUsage />
           </div>
           <InputFileUpload />

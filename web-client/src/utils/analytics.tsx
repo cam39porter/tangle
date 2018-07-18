@@ -42,6 +42,7 @@ enum Actions {
   FocusOnRelatedCapture = "focus_on-related_capture",
   FocusOnDirectResultCapture = "focus_on-direct_result_capture",
   ClickToSignOut = "click_to-sign_out",
+  ClickToImport = "click_to-import",
   // Non Interaction
   ViewedRelatedGrid = "viewed-related_grid",
   ViewedSearchGrid = "viewed-search_grid",

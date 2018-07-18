@@ -28,10 +28,12 @@ class DataUsage extends React.Component<Props, State> {
 
     return (
       <div className={`pv2 flex-column justify-around f6 gray`}>
-        {data.getSettings &&
-          `You have used ${Math.round(
-            (data.getSettings.storageUsed / MAX_STORAGE_PER_USER) * 100
-          )}% of your 100 MB data limit`}
+        <div>
+          {data.getSettings &&
+            `You have used ${Math.round(
+              (data.getSettings.storageUsed / MAX_STORAGE_PER_USER) * 100
+            )}% of your 100 MB data limit. There is also a 1 MB limit per note.`}
+        </div>
       </div>
     );
   }
@@ -40,7 +42,8 @@ class DataUsage extends React.Component<Props, State> {
 const withGetSettings = graphql<getSettingsResponse, Props>(getSettings, {
   alias: "withGetSettings",
   options: () => ({
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
+    pollInterval: 2000
   })
 });
 

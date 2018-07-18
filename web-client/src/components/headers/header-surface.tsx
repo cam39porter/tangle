@@ -73,7 +73,7 @@ class HeaderSurface extends React.Component<Props, State> {
             <div className={`flex`}>
               <div className={`flex-column justify-around`}>
                 <div
-                  className={`pa2 pointer ${
+                  className={`pa2 pointer dim ${
                     isGraphView ? "br4 bg-accent light-gray" : ""
                   }`}
                   onClick={() => {

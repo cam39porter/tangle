@@ -1,96 +1,57 @@
 // React
 import * as React from "react";
 
-// Route
-import { RouteComponentProps } from "react-router";
-
 // Components
 
 // Utils
-import { User } from "firebase";
-import { ErrorsUtils } from "../utils/index";
+import { FirebaseUtils, AnalyticsUtils } from "../utils/index";
 
 // Types
-interface Props extends RouteComponentProps<{}> {
-  user: User | null;
-}
+interface Props {}
 
-interface State {
-  emailSent: boolean;
-}
+interface State {}
 
 // Class
 class Settings extends React.Component<Props, State> {
   constructor(nextProps: Props) {
     super(nextProps);
-
-    this.state = {
-      emailSent: false
-    };
   }
 
   render() {
-    const { user } = this.props;
-    const { emailSent } = this.state;
-
     return (
-      <div className={`dt vh-100 w-100 bg-near-white`}>
-        <div className={`dtc v-mid`}>
-          <div className={`center measure pa4 bg-white br4 shadow-1 tc`}>
-            <div>
-              <img
-                src="https://storage.googleapis.com/usetangle-static-assets/logo.png"
-                className={`pa2 bb bw2 b--accent`}
-                style={{
-                  maxHeight: "5em"
+      <div className={`vh-100 w-100 overflow-auto`}>
+        <div className={`pa4 measure-wide center dark-gray lh-copy`}>
+          <div className={`f4 pv4`}>Settings</div>
+          <div className={`flex-columnf6 pb4`}>
+            <div className={`pv3`}>
+              <span
+                className={`pointer bb b--accent dim`}
+                onClick={() => {
+                  const auth = FirebaseUtils.firebaseAuth();
+                  const user = auth.currentUser ? auth.currentUser.uid : "";
+
+                  AnalyticsUtils.trackEvent({
+                    category: AnalyticsUtils.Categories.Home,
+                    action: AnalyticsUtils.Actions.ClickToSignOut,
+                    label: user
+                  });
+                  localStorage.removeItem("idToken");
+                  auth.signOut();
+                  AnalyticsUtils.setUserId(undefined);
                 }}
-              />
-              {user ? (
-                <div className={`lh-copy pv4`}>
-                  <div>
-                    <p>All we need is for you to verify your email.</p>
-                    <p>Once verified you will have full access to Tangle.</p>
-                    <p className={`pb4`}>
-                      To send the verification email, click below.
-                    </p>
-                    {emailSent ? (
-                      <span className={`tc accent`}>
-                        Your verification email has been successfully sent.
-                      </span>
-                    ) : (
-                      <span
-                        className={`pa3 dim tc br4 bg-accent white pointer`}
-                        onClick={() => {
-                          user
-                            .sendEmailVerification({
-                              url:
-                                process.env.REACT_APP_ENV === "production"
-                                  ? "https://tangleapp.co/"
-                                  : process.env.REACT_APP_ENV === "development"
-                                    ? "https://dev.tangleapp.co/"
-                                    : "http://localhost:3000/"
-                            })
-                            .then(() => {
-                              this.setState({
-                                emailSent: true
-                              });
-                            })
-                            .catch(err => {
-                              ErrorsUtils.errorHandler.report(
-                                err.message,
-                                err.stack
-                              );
-                            });
-                        }}
-                      >
-                        Send Email
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <p>Uh oh. We messed up.</p>
-              )}
+              >
+                Sign out
+              </span>
+            </div>
+            <div className={`pv3`}>
+              <span
+                className={`pointer bb b--accent dim`}
+                onClick={() => {
+                  //
+                }}
+              >
+                Delete Account
+              </span>
             </div>
           </div>
         </div>

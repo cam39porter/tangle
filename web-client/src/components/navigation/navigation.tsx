@@ -16,7 +16,7 @@ import { graphql, MutationFunc } from "react-apollo";
 import ButtonHome from "./../buttons/button-home";
 import ButtonImport from "./../buttons/button-import";
 import ButtonCapture from "./../buttons/button-capture";
-import ButtonLogOut from "../buttons/button-logout";
+import ButtonSettings from "../buttons/button-settings";
 
 // Utils
 import { FirebaseUtils, AnalyticsUtils, ErrorsUtils } from "../../utils";
@@ -97,22 +97,11 @@ class Navigation extends React.Component<Props, State> {
         <div
           className={`flex-column center justify-around pa3 br-100 bg-animate hover-bg-light-silver pointer`}
           onClick={() => {
-            const auth = FirebaseUtils.firebaseAuth();
-            const user = auth.currentUser ? auth.currentUser.uid : "";
-
-            AnalyticsUtils.trackEvent({
-              category: this.props.location.pathname.includes("note")
-                ? AnalyticsUtils.Categories.Session
-                : AnalyticsUtils.Categories.Home,
-              action: AnalyticsUtils.Actions.ClickToSignOut,
-              label: user
-            });
-            localStorage.removeItem("idToken");
-            auth.signOut();
-            AnalyticsUtils.setUserId(undefined);
+            this.props.history.push(`/settings`);
+            // TODO: add tracking to this
           }}
         >
-          <ButtonLogOut />
+          <ButtonSettings />
         </div>
       </div>
     );

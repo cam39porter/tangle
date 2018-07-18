@@ -9,6 +9,7 @@ import Session from "../views/session";
 import Navigation from "../components/navigation/navigation";
 import Surface from "./surface";
 import Import from "./import";
+import Settings from "./settings";
 import Mobile from "./mobile";
 import ErrorBoundary from "../components/help/error-boundary";
 import Feedback from "../components/help/feedback";
@@ -72,6 +73,7 @@ class Main extends React.Component<Props, State> {
                       />
                       <Route path={`/format/:type`} component={Surface} />
                       <Route path={`/import`} component={Import} />
+                      <Route path={`/settings`} component={Settings} />
                       <Redirect
                         from={"/"}
                         to={`/format/list/recent${this.props.location.search}`}

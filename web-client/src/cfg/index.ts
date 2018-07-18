@@ -1,7 +1,7 @@
 export default {
   accentColor: "#ff9e37",
   baseColor: "#111c77",
-  resultCount: 10,
+  resultCount: 15,
   firebase: {
     apiKey: "AIzaSyBhTwOzozQBpWVeXkccGjqLnWIrgj9RVak",
     authDomain: "opit-193719.firebaseapp.com",

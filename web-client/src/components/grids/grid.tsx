@@ -72,7 +72,7 @@ class GridCaptures extends React.Component<Props, State> {
                   <div className={`flex-column justify-around`}>Notes</div>
                 </div>
                 <div
-                  className={`flex-column justify-around f6 bb b--accent pointer dark-gray`}
+                  className={`flex-column justify-around f6 bb b--accent pointer dark-gray dim`}
                   onClick={() => {
                     this.props
                       .createSession({})
@@ -124,7 +124,7 @@ class GridCaptures extends React.Component<Props, State> {
                   ))}
                   {loadMoreSessions && (
                     <div className={`pv4 tc`} onClick={loadMoreSessions}>
-                      <span className={`pointer bb b--accent f6`}>
+                      <span className={`pointer bb b--accent f6 dim`}>
                         Load More Notes
                       </span>
                     </div>
@@ -142,7 +142,7 @@ class GridCaptures extends React.Component<Props, State> {
                   {this.props.emptyCapturesMessage}
                 </div>
               ) : (
-                <div className={`flex flex-wrap`}>
+                <div className={`flex flex-wrap pb4`}>
                   {captures.map(capture => (
                     <div
                       className={

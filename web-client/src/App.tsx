@@ -11,7 +11,7 @@ import { RouteProps, Redirect } from "react-router";
 import { Route, Switch } from "react-router-dom";
 
 // Components
-import Settings from "./views/settings";
+import Verify from "./views/verify";
 import Login from "./views/login";
 import Main from "./views/main";
 
@@ -90,10 +90,10 @@ class App extends React.Component<Props, State> {
                   {!isEmailVerified ? (
                     <Switch>
                       <Route
-                        path="/settings"
-                        render={props => <Settings {...props} user={user} />}
+                        path="/verify"
+                        render={props => <Verify {...props} user={user} />}
                       />
-                      <Redirect to="/settings" />
+                      <Redirect to="/verify" />
                     </Switch>
                   ) : (
                     <Route

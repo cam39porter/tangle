@@ -65,7 +65,7 @@ class CardCapture extends React.Component<Props, State> {
         }}
       >
         <div
-          className={`f6 pb2 fw3 pointer accent`}
+          className={`f6 pb2 fw3 pointer accent dim`}
           onClick={() => {
             this.props.history.push(
               `/note/${encodeURIComponent(id)}/format/list/related`

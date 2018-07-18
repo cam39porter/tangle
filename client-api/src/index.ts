@@ -26,6 +26,9 @@ import * as helmet from "helmet";
 import * as compression from "compression";
 import { importEvernoteNoteUpload } from "./upload/services/evernote-import";
 import { ConflictError } from "./util/exceptions/confict-error";
+import { getBasic } from "./db/services/session";
+import { UserUrn } from "./urn/user-urn";
+import { SessionUrn } from "./urn/session-urn";
 // tslint:disable-next-line
 const { graphqlExpress } = require("apollo-server-express");
 
@@ -74,6 +77,18 @@ const app = express();
 app.get("/", (_, res) => {
   res.send("running");
 });
+app.get("/healthy", (_, res) => {
+  getBasic(
+    UserUrn.fromRaw("urn:hex:user:6eb4487b-8e73-4c20-9048-ebb0c89ff0c6"),
+    SessionUrn.fromRaw("urn:hex:session:3bad771c-8ad4-4b70-99b7-bc4f4f69d9d4")
+  )
+    .then(session => {
+      res.send(session);
+    })
+    .catch(() => {
+      res.sendStatus(500);
+    });
+});
 
 app.use(morgan(reqMorganFormat, { immediate: true }));
 app.use(contextService.middleware("request"));
@@ -97,6 +112,7 @@ app.use(morgan(respMorganFormat));
 app.use(authFilter);
 app.use(setRequestContext);
 app.use(compression());
+
 app.use(
   "/graphql",
   graphqlExpress({ schema: executableSchema, formatError: maskError })

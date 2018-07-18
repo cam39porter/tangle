@@ -21,7 +21,9 @@ export function getRecentSessions(
       return transformFromCountPlusOne(
         sessions,
         pagingContext,
-        sessions.length > 0 ? sessions.slice(-1)[0].created.toString() : null,
+        sessions.length > 0
+          ? sessions.slice(-1)[0].lastModified.toString()
+          : null,
         null
       );
     }

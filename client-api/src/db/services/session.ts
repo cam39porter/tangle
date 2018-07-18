@@ -19,7 +19,7 @@ export function getMostRecent(
   const query = `
   MATCH (session:Session)
   WHERE session.owner = {userUrn}
-  ${before ? "AND session.created <= {before}" : ""}
+  ${before ? "AND session.lastModified <= {before}" : ""}
   RETURN session
   ORDER BY session.lastModified DESC
   LIMIT {count}`;

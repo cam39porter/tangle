@@ -192,7 +192,7 @@ export function create(
 ): Promise<Session> {
   const now = Date.now();
   const created = previouslyCreated || now;
-  const size = body.length;
+  const size = body && body.length;
   const query = `
     MATCH (u:User {id:{userId}})
     CREATE (session:Session {id:{sessionUrn},

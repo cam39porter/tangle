@@ -20,6 +20,7 @@ import Help from "../help/help";
 
 // Utils
 import config from "../../cfg";
+import { concat } from "lodash";
 
 // Types
 
@@ -44,8 +45,13 @@ class RecentGrid extends React.Component<Props, State> {
     const sessionCollection = this.props.sessionData.getRecentSessions;
     let sessions: Array<SessionWithoutItemCollectionFieldsFragment> = [];
 
+    const fetchMore = this.props.sessionData.fetchMore;
+    let nextSessionPageId: string | null = null;
+
     if (sessionCollection && sessionCollection.items) {
       sessions = sessionCollection.items;
+      nextSessionPageId =
+        sessionCollection.pagingInfo && sessionCollection.pagingInfo.nextPageId;
     }
 
     if (this.props.sessionData.loading) {
@@ -62,6 +68,37 @@ class RecentGrid extends React.Component<Props, State> {
         emptySessionsMessage={`Try creating your first note.`}
         captures={[]}
         headerHeight={this.props.headerHeight}
+        loadMoreSessions={
+          nextSessionPageId
+            ? () => {
+                fetchMore({
+                  variables: {
+                    count: config.resultCount,
+                    pageId: nextSessionPageId
+                  },
+                  updateQuery: (prevResult, { fetchMoreResult }) => {
+                    if (!fetchMoreResult) {
+                      return prevResult;
+                    }
+
+                    const nextGetRecentSessions = {
+                      __typename: "SessionCollection",
+                      items: concat(
+                        prevResult["getRecentSessions"]["items"],
+                        fetchMoreResult["getRecentSessions"]["items"]
+                      ),
+                      pagingInfo:
+                        fetchMoreResult["getRecentSessions"]["pagingInfo"]
+                    };
+
+                    return {
+                      getRecentSessions: nextGetRecentSessions
+                    };
+                  }
+                });
+              }
+            : undefined
+        }
       />
     );
   }

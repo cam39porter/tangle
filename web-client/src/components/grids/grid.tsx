@@ -38,6 +38,8 @@ interface Props extends RouteProps {
   emptyCapturesMessage?: string;
   sessionId?: string;
   headerHeight: number;
+  // Paging
+  loadMoreSessions?: () => void;
   // Window Size
   windowWidth: number;
   windowHeight: number;
@@ -51,7 +53,7 @@ class GridCaptures extends React.Component<Props, State> {
   }
 
   render() {
-    const { captures } = this.props;
+    const { captures, loadMoreSessions } = this.props;
 
     return (
       <div className={``}>
@@ -66,7 +68,9 @@ class GridCaptures extends React.Component<Props, State> {
             this.props.emptySessionsMessage) && (
             <div className={`pv4`}>
               <div className={`flex justify-between w-100 gray`}>
-                <div className={`flex-column justify-around`}>Notes</div>
+                <div className={`flex`}>
+                  <div className={`flex-column justify-around`}>Notes</div>
+                </div>
                 <div
                   className={`flex-column justify-around f6 bb b--accent pointer dark-gray`}
                   onClick={() => {
@@ -107,7 +111,10 @@ class GridCaptures extends React.Component<Props, State> {
               ) : (
                 <div className={`pt4`}>
                   {this.props.sessions.map(session => (
-                    <div className={``} key={session.id}>
+                    <div
+                      className={``}
+                      key={`${session.created}:${session.id}:${session.title}`}
+                    >
                       <CardSession
                         sessionId={session.id}
                         title={session.title}
@@ -115,6 +122,13 @@ class GridCaptures extends React.Component<Props, State> {
                       />
                     </div>
                   ))}
+                  {loadMoreSessions && (
+                    <div className={`pv4 tc`} onClick={loadMoreSessions}>
+                      <span className={`pointer bb b--accent f6`}>
+                        Load More Notes
+                      </span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

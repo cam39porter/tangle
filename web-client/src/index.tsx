@@ -100,8 +100,6 @@ const client = new ApolloClient({
           return "SessionItemCollection";
         case "SessionCollection":
           return "SessionCollection";
-        case "Session":
-          return object["id"];
         default:
           return defaultDataIdFromObject(object);
       }

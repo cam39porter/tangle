@@ -114,7 +114,7 @@ const withGetSession = graphql<getSessionResponse, Props>(getSession, {
   options: (props: Props) => ({
     variables: {
       sessionId: decodeURIComponent(props.match.params["id"]),
-      count: 20
+      count: 0
     },
     fetchPolicy: "network-only"
   })

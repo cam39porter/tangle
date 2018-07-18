@@ -122,6 +122,21 @@ class InputSession extends React.Component<Props, State> {
     };
   }
 
+  componentWillReceiveProps(nextProps: Props) {
+    const startingHtml = this.props.startingHtml;
+    const nextStartingHtml = nextProps.startingHtml;
+
+    if (startingHtml !== nextStartingHtml) {
+      const editorState = Draft.EditorState.createWithContent(
+        convertFromHTML(nextStartingHtml)
+      );
+
+      this.setState({
+        editorState
+      });
+    }
+  }
+
   handleKeyBindings = (e: React.KeyboardEvent<{}>) => {
     return Draft.getDefaultKeyBinding(e);
   };

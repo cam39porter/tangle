@@ -97,6 +97,7 @@ class InputFileUpload extends React.Component<Props, State> {
 
   render() {
     const { files, filesUploaded, inProgress, isDone } = this.state;
+    const filesExceedMax = files && files.length > 50;
     const { history } = this.props;
 
     return (
@@ -114,42 +115,48 @@ class InputFileUpload extends React.Component<Props, State> {
               onChange={this.handleOnChange}
             />
           </form>
-          <span
-            className={`pa2 br4 ${
-              inProgress ? "bg-gray" : "bg-accent"
-            } near-white pointer dim`}
-            style={{
-              userSelect: "none"
-            }}
-            onClick={() => {
-              if (!(files && !inProgress)) {
-                return;
-              }
-
-              this.setState(
-                {
-                  inProgress: true,
-                  filesUploaded: [],
-                  isDone: false
-                },
-                () => {
-                  this.uploadFiles(files).finally(() => {
-                    this.setState({
-                      inProgress: false,
-                      isDone: true
-                    });
-                  });
-
-                  if (!this.inputRef) {
-                    return;
-                  }
-                  this.inputRef.value = "";
+          {!filesExceedMax ? (
+            <span
+              className={`pa2 br4 ${
+                inProgress ? "bg-gray" : "bg-accent"
+              } near-white pointer dim`}
+              style={{
+                userSelect: "none"
+              }}
+              onClick={() => {
+                if (!(files && !inProgress)) {
+                  return;
                 }
-              );
-            }}
-          >
-            {inProgress ? "Importing" : "Import"}
-          </span>
+
+                this.setState(
+                  {
+                    inProgress: true,
+                    filesUploaded: [],
+                    isDone: false
+                  },
+                  () => {
+                    this.uploadFiles(files).finally(() => {
+                      this.setState({
+                        inProgress: false,
+                        isDone: true
+                      });
+                    });
+
+                    if (!this.inputRef) {
+                      return;
+                    }
+                    this.inputRef.value = "";
+                  }
+                );
+              }}
+            >
+              {inProgress ? "Importing" : "Import"}
+            </span>
+          ) : (
+            <span className={`pa2 light-red`}>
+              Sorry, you can only upload 50 or fewer files at a time.
+            </span>
+          )}
         </div>
         <div className={`dt w-100 pv4 f6`}>
           {filesUploaded &&

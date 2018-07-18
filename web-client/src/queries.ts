@@ -258,6 +258,14 @@ export const search = gql`
   ${searchResultsFragment}
 `;
 
+export const getSettings = gql`
+  query getSettings {
+    getSettings {
+      storageUsed
+    }
+  }
+`;
+
 // Mutations
 export const createCapture = gql`
   mutation createCapture($body: String!) {

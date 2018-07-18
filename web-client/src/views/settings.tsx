@@ -2,6 +2,7 @@
 import * as React from "react";
 
 // Components
+import DataUsage from "../components/help/data-usage";
 
 // Utils
 import { FirebaseUtils, AnalyticsUtils } from "../utils/index";
@@ -47,17 +48,40 @@ class Settings extends React.Component<Props, State> {
             </div>
             <div className={`pv3 flex-column`}>
               <div>
+                <span className={``}>Data Limit</span>
+              </div>
+              <DataUsage />
+            </div>
+            <div className={`pv3 flex-column`}>
+              <div>
                 <span
                   className={`pointer bb b--accent dim`}
                   onClick={() => {
-                    //
+                    window.location.href = `https://usetangle.com/blog-guide`;
+                  }}
+                >
+                  How to Guide
+                </span>
+                <div className={`pt2 f6 gray`}>
+                  This will take you to basic guide on how to use to Tangle.
+                </div>
+              </div>
+            </div>
+            <div className={`pv3 flex-column`}>
+              <div>
+                <span
+                  className={`pointer bb b--accent dim`}
+                  onClick={() => {
+                    window.location.href = `mailto:alpha@usetangle.com?subject=Account Deletion Request`;
                   }}
                 >
                   Delete Account
                 </span>
               </div>
-              <div className={`pt2 f6`}>
-                This will send us an email requesting deletion of your account.
+              <div className={`pt2 f6 gray`}>
+                This will prompt you to send us an email with your account
+                deletion request. We will follow up and promptly delete your
+                account and any data we have associated with it.
               </div>
             </div>
           </div>

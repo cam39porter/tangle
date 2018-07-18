@@ -3,6 +3,7 @@ import * as React from "react";
 
 // Components
 import InputFileUpload from "../components/inputs/input-file-upload";
+import DataUsage from "../components/help/data-usage";
 
 // Types
 interface Props {}
@@ -20,7 +21,7 @@ class Import extends React.Component<Props, State> {
       <div className={`vh-100 w-100 overflow-auto`}>
         <div className={`pa4 measure-wide center dark-gray lh-copy`}>
           <div className={`f4 pv4`}>Import from Evernote</div>
-          <div className={`f6 pb4`}>
+          <div className={`f6`}>
             <ol>
               <li>
                 Export your Evernote note or notebook as <code>HTML</code>
@@ -31,6 +32,9 @@ class Import extends React.Component<Props, State> {
                 <code>.html</code> files from the previous step.
               </li>
             </ol>
+          </div>
+          <div className={`pv2 tc`}>
+            <DataUsage />
           </div>
           <InputFileUpload />
         </div>

@@ -16,6 +16,7 @@ import { Session } from "../db/models/session";
 import { Capture } from "../db/models/capture";
 import { getRelatedCapturesBySession } from "./services/expand";
 import { SearchResults } from "./models/search-results";
+import { getStorageUsed } from "./services/settings";
 
 export default {
   Query: {
@@ -56,6 +57,10 @@ export default {
     // @ts-ignore
     getDetailed(parent, { id }, context, info): Promise<SurfaceResults> {
       return getNode(Urn.fromRaw(id));
+    },
+    // @ts-ignore
+    getSettings(parent, _params, context, info): Promise<Settings> {
+      return getStorageUsed();
     },
     getAll(
       // @ts-ignore

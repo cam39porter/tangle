@@ -224,3 +224,14 @@ export function create(
     return formatBasicSession(result.records[0].get("session"));
   });
 }
+
+export function getSessionStorageUsed(userUrn: UserUrn): Promise<number> {
+  const query = `
+  MATCH (session:Session)
+  WHERE session.owner = {userUrn}
+  RETURN sum(session.size) as size`;
+  const params = [new Param("userUrn", userUrn.toRaw())];
+  return executeQuery(query, params).then(result => {
+    return result.records[0].get("size");
+  });
+}

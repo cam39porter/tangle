@@ -4,7 +4,7 @@ import * as toString from "hast-util-to-string";
 import * as toHtml from "hast-util-to-html";
 import { concat, flatten } from "lodash";
 
-const MIN_CHUNK_SIZE = 500; // characters
+const MIN_CHUNK_SIZE = 300; // characters
 
 export interface IPosition {
   line: number;

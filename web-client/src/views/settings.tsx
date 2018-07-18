@@ -22,36 +22,43 @@ class Settings extends React.Component<Props, State> {
       <div className={`vh-100 w-100 overflow-auto`}>
         <div className={`pa4 measure-wide center dark-gray lh-copy`}>
           <div className={`f4 pv4`}>Settings</div>
-          <div className={`flex-columnf6 pb4`}>
-            <div className={`pv3`}>
-              <span
-                className={`pointer bb b--accent dim`}
-                onClick={() => {
-                  const auth = FirebaseUtils.firebaseAuth();
-                  const user = auth.currentUser ? auth.currentUser.uid : "";
+          <div className={`flex-column pb4`}>
+            <div className={`pv3 flex-column`}>
+              <div>
+                <span
+                  className={`pointer bb b--accent dim`}
+                  onClick={() => {
+                    const auth = FirebaseUtils.firebaseAuth();
+                    const user = auth.currentUser ? auth.currentUser.uid : "";
 
-                  AnalyticsUtils.trackEvent({
-                    category: AnalyticsUtils.Categories.Home,
-                    action: AnalyticsUtils.Actions.ClickToSignOut,
-                    label: user
-                  });
-                  localStorage.removeItem("idToken");
-                  auth.signOut();
-                  AnalyticsUtils.setUserId(undefined);
-                }}
-              >
-                Sign out
-              </span>
+                    AnalyticsUtils.trackEvent({
+                      category: AnalyticsUtils.Categories.Home,
+                      action: AnalyticsUtils.Actions.ClickToSignOut,
+                      label: user
+                    });
+                    localStorage.removeItem("idToken");
+                    auth.signOut();
+                    AnalyticsUtils.setUserId(undefined);
+                  }}
+                >
+                  Sign out
+                </span>
+              </div>
             </div>
-            <div className={`pv3`}>
-              <span
-                className={`pointer bb b--accent dim`}
-                onClick={() => {
-                  //
-                }}
-              >
-                Delete Account
-              </span>
+            <div className={`pv3 flex-column`}>
+              <div>
+                <span
+                  className={`pointer bb b--accent dim`}
+                  onClick={() => {
+                    //
+                  }}
+                >
+                  Delete Account
+                </span>
+              </div>
+              <div className={`pt2 f6`}>
+                This will send us an email requesting deletion of your account.
+              </div>
             </div>
           </div>
         </div>

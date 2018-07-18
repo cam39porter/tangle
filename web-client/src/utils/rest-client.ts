@@ -4,10 +4,7 @@ import { ErrorsUtils } from "../utils";
 
 const axiosInstance = axios.create({
   baseURL: cfg.REACT_APP_API_BASE_URL,
-  timeout: 100000,
-  headers: {
-    authorization: `Bearer: ${localStorage.getItem("idToken")}`
-  }
+  timeout: 100000
 });
 
 const promiseSerial = funcs =>
@@ -20,7 +17,11 @@ const promiseSerial = funcs =>
 function uploadFile(file: File) {
   const formData = new FormData();
   formData.append("file", file);
-  return axiosInstance.post("/uploadHtml", formData);
+  return axiosInstance.post("/uploadHtml", formData, {
+    headers: {
+      authorization: `Bearer: ${localStorage.getItem("idToken")}`
+    }
+  });
 }
 
 export default {

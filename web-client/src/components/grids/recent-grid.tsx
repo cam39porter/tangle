@@ -71,6 +71,7 @@ class RecentGrid extends React.Component<Props, State> {
         loadMoreSessions={
           nextSessionPageId
             ? () => {
+                console.log(nextSessionPageId);
                 fetchMore({
                   variables: {
                     count: config.resultCount,
@@ -80,6 +81,9 @@ class RecentGrid extends React.Component<Props, State> {
                     if (!fetchMoreResult) {
                       return prevResult;
                     }
+
+                    console.log(prevResult["getRecentSessions"]);
+                    console.log(fetchMoreResult["getRecentSessions"]);
 
                     const nextGetRecentSessions = {
                       __typename: "SessionCollection",

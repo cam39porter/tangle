@@ -185,7 +185,8 @@ export function create(
   title: string,
   body: string,
   previouslyCreated: number | null,
-  imported?: boolean
+  imported?: boolean,
+  size?: number
 ): Promise<Session> {
   const now = Date.now();
   const created = previouslyCreated || now;
@@ -195,6 +196,7 @@ export function create(
       ${title ? "title:{title}," : ""}
       ${body ? "body:{body}," : ""}
       ${imported ? "imported:{imported}," : ""}
+      ${size ? "size:{size}," : ""}
       created:{created},
       lastModified:{now},
       owner:{userId}})
@@ -207,7 +209,8 @@ export function create(
     new Param("body", body),
     new Param("created", created),
     new Param("now", now),
-    new Param("imported", imported && imported.toString())
+    new Param("imported", imported && imported.toString()),
+    new Param("size", size && size.toString())
   ];
   return executeQuery(query, params).then((result: StatementResult) => {
     if (!result.records[0]) {

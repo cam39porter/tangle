@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio";
 import { EvernoteUpload } from "../models/evernote-upload";
 
-export function parseEvernoteHtml(data): EvernoteUpload {
+export function parseEvernoteHtml(data: string): EvernoteUpload {
   const $ = cheerio.load(data);
   const tagString = $("meta[name=keywords]").attr("content");
   const tags = tagString ? tagString.split(", ") : [];
@@ -17,5 +17,12 @@ export function parseEvernoteHtml(data): EvernoteUpload {
 
   const bodyHtml = $("body").html();
 
-  return new EvernoteUpload(created, lastModified, tags, title, bodyHtml);
+  return new EvernoteUpload(
+    created,
+    lastModified,
+    tags,
+    title,
+    bodyHtml,
+    data.length
+  );
 }

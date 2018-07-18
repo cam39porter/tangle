@@ -28,6 +28,8 @@ import { SessionUrn } from "../../urn/session-urn";
 import { UserUrn } from "../../urn/user-urn";
 import { updateCaptures, deleteCaptures } from "../../chunk/services/chunk";
 import { deleteFile } from "../../upload/services/import-db";
+import { hasAvailableStorage } from "../../surface/services/settings";
+import { ExceededStorageAllowanceError } from "../../util/exceptions/exceeded-storage-allowance-error";
 
 export function create(
   title: string,
@@ -37,27 +39,35 @@ export function create(
   const userId = getAuthenticatedUser().urn;
   const uuid = uuidv4();
   const sessionUrn = new SessionUrn(uuid);
-  return createSession(sessionUrn, userId, title, null, null).then(
-    (session: Session) => {
-      let relationshipPromise;
-      if (firstCaptureUrn) {
-        relationshipPromise = createRelationship(
-          userId,
-          session.urn.toRaw(),
-          SESSION_LABEL,
-          firstCaptureUrn.toRaw(),
-          CAPTURE_LABEL,
-          INCLUDES_RELATIONSHIP
-        );
-      } else {
-        relationshipPromise = Promise.resolve(null);
-      }
-      const tagUpserts = createTags(userId, session.urn, tags);
-      return Promise.all([relationshipPromise, tagUpserts]).then(() => {
-        return formatSession(session);
-      });
+  return hasAvailableStorage().then(hasAvailableStorageBool => {
+    if (!hasAvailableStorageBool) {
+      throw new ExceededStorageAllowanceError(
+        "User has exceeded storage allowance, cannot create session"
+      );
+    } else {
+      return createSession(sessionUrn, userId, title, null, null).then(
+        (session: Session) => {
+          let relationshipPromise;
+          if (firstCaptureUrn) {
+            relationshipPromise = createRelationship(
+              userId,
+              session.urn.toRaw(),
+              SESSION_LABEL,
+              firstCaptureUrn.toRaw(),
+              CAPTURE_LABEL,
+              INCLUDES_RELATIONSHIP
+            );
+          } else {
+            relationshipPromise = Promise.resolve(null);
+          }
+          const tagUpserts = createTags(userId, session.urn, tags);
+          return Promise.all([relationshipPromise, tagUpserts]).then(() => {
+            return formatSession(session);
+          });
+        }
+      );
     }
-  );
+  });
 }
 
 export function edit(

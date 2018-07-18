@@ -6,7 +6,7 @@ import { UserUrn } from "../../urn/user-urn";
 import { Logger } from "../../util/logging/logger";
 import { updateCaptures } from "../../chunk/services/chunk";
 import { SessionUrn } from "../../urn/session-urn";
-import { getFile } from "./file-db";
+import { getFile } from "./import-db";
 
 const LOGGER = new Logger("src/upload/services/queue.ts");
 

@@ -9,7 +9,8 @@ export class Session {
       properties["title"],
       properties["body"],
       properties["created"],
-      properties["lastModified"] || properties["created"]
+      properties["imported"] || false,
+      properties["lastModified"]
     );
   }
   public urn: SessionUrn;
@@ -17,18 +18,21 @@ export class Session {
   public body: string;
   public created: number;
   public lastModified: number;
+  public imported: boolean;
   public itemCollection: CollectionResult<Capture>;
   constructor(
     urn: SessionUrn,
     title: string,
     body: string,
     created: number,
+    imported: boolean,
     lastModified: number
   ) {
     this.urn = urn;
     this.title = title;
     this.body = body;
     this.created = created;
+    this.imported = imported;
     this.lastModified = lastModified;
   }
 }

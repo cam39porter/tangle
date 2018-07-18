@@ -54,6 +54,29 @@ export function batchGetSessions(
   });
 }
 
+export function getBasic(
+  userId: UserUrn,
+  sessionId: SessionUrn
+): Promise<Session> {
+  const query = `
+  MATCH (session:Session {id:{sessionId}, owner:{userId}})
+  RETURN session
+  `;
+  const params = [
+    new Param("userId", userId.toRaw()),
+    new Param("sessionId", sessionId.toRaw())
+  ];
+  return executeQuery(query, params).then(result => {
+    if (!result.records[0]) {
+      throw new NotFoundError(
+        `Session with id ${sessionId.toRaw()} could not be found.`
+      );
+    }
+    const row = result.records[0];
+    return formatBasicSession(row.get("session"));
+  });
+}
+
 export function get(
   userId: UserUrn,
   sessionId: SessionUrn,

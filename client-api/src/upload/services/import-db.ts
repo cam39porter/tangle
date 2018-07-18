@@ -13,8 +13,26 @@ const bucketName =
     ? "tangle-prod-bulk-import"
     : "tangle-dev-bulk-import";
 
+export function deleteFile(
+  userUrn: UserUrn,
+  sessionUrn: SessionUrn
+): Promise<void> {
+  const dest = buildDest(userUrn, sessionUrn);
+  return storage
+    .bucket(bucketName)
+    .file(dest)
+    .delete()
+    .then(() => {
+      LOGGER.info(`File deleted at location ${dest}`);
+    })
+    .catch(err => {
+      LOGGER.error(`Failed to delete file at location ${dest}`);
+      LOGGER.error(err);
+    });
+}
+
 export function getFile(userUrn: UserUrn, sessionUrn: SessionUrn): ReadStream {
-  const dest = `users/${userUrn.toRaw()}/${sessionUrn.toRaw()}`;
+  const dest = buildDest(userUrn, sessionUrn);
   return storage
     .bucket(bucketName)
     .file(dest)
@@ -23,8 +41,12 @@ export function getFile(userUrn: UserUrn, sessionUrn: SessionUrn): ReadStream {
 
 export function save(urn: SessionUrn, file): Promise<void> {
   const userId = getAuthenticatedUser().urn;
-  const dest = `users/${userId.toRaw()}/${urn.toRaw()}`;
+  const dest = buildDest(userId, urn);
   return writeToDb(dest, file);
+}
+
+function buildDest(userUrn: UserUrn, sessionUrn: SessionUrn): string {
+  return `users/${userUrn.toRaw()}/${sessionUrn.toRaw()}`;
 }
 
 function writeToDb(dest: string, file): Promise<void> {

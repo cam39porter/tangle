@@ -3,7 +3,8 @@ import { Session } from "../../db/models/session";
 import {
   create as createSession,
   edit as editSession,
-  deleteSession as deleteDB
+  deleteSession as deleteDB,
+  getBasic
 } from "../../db/services/session";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { GraphNode } from "../../surface/models/graph-node";
@@ -26,6 +27,7 @@ import { formatSession } from "../../surface/formatters/graph-node";
 import { SessionUrn } from "../../urn/session-urn";
 import { UserUrn } from "../../urn/user-urn";
 import { updateCaptures, deleteCaptures } from "../../chunk/services/chunk";
+import { deleteFile } from "../../upload/services/import-db";
 
 export function create(
   title: string,
@@ -82,7 +84,19 @@ export function edit(
 
 export function deleteSession(urn: SessionUrn): Promise<boolean> {
   const userId = getAuthenticatedUser().urn;
-  return deleteCaptures(userId, urn).then(() => deleteDB(userId, urn));
+  return deleteCaptures(userId, urn)
+    .then(() => {
+      return getBasic(userId, urn).then(session => {
+        return deleteDB(userId, urn).then(() => {
+          if (session.imported) {
+            return deleteFile(userId, urn);
+          } else {
+            return Promise.resolve();
+          }
+        });
+      });
+    })
+    .then(() => true);
 }
 
 function deleteTags(userId: UserUrn, sessionId: SessionUrn): Promise<void> {

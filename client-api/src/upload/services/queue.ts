@@ -105,8 +105,7 @@ function createEvernoteNote(
     note.title,
     note.body,
     note.created,
-    true,
-    note.rawSize
+    true
   ).then(() => {
     return updateCaptures(userId, noteUrn, note.body, note.created).then(
       () => null

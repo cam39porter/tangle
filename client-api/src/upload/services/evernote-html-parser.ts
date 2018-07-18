@@ -17,12 +17,5 @@ export function parseEvernoteHtml(data: string): EvernoteUpload {
 
   const bodyHtml = $("body").html();
 
-  return new EvernoteUpload(
-    created,
-    lastModified,
-    tags,
-    title,
-    bodyHtml,
-    data.length
-  );
+  return new EvernoteUpload(created, lastModified, tags, title, bodyHtml);
 }

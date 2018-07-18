@@ -157,17 +157,20 @@ export function edit(
   title: string,
   body: string
 ): Promise<Session> {
+  const size = body && body.length;
   const query = `
     MATCH (session:Session {id:{sessionId}})<-[:CREATED]-(u:User {id:{userId}})
     SET session.lastModified = TIMESTAMP()
     ${title ? "SET session.title = {title}" : "REMOVE session.title"}
     ${body ? "SET session.body = {body}" : ""}
+    ${size ? "SET session.size = {size}" : ""}
     RETURN session`;
   const params = [
     new Param("userId", userId.toRaw()),
     new Param("sessionId", sessionId.toRaw()),
     new Param("title", title),
-    new Param("body", body)
+    new Param("body", body),
+    new Param("size", size)
   ];
   return executeQuery(query, params).then((result: StatementResult) => {
     if (!result.records[0]) {
@@ -185,11 +188,11 @@ export function create(
   title: string,
   body: string,
   previouslyCreated: number | null,
-  imported?: boolean,
-  size?: number
+  imported?: boolean
 ): Promise<Session> {
   const now = Date.now();
   const created = previouslyCreated || now;
+  const size = body.length;
   const query = `
     MATCH (u:User {id:{userId}})
     CREATE (session:Session {id:{sessionUrn},
@@ -210,7 +213,7 @@ export function create(
     new Param("created", created),
     new Param("now", now),
     new Param("imported", imported && imported.toString()),
-    new Param("size", size && size.toString())
+    new Param("size", size)
   ];
   return executeQuery(query, params).then((result: StatementResult) => {
     if (!result.records[0]) {

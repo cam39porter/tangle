@@ -41,10 +41,10 @@ class CardCapture extends React.Component<Props, State> {
   render() {
     const { captureId, startingHtml, sessionParents } = this.props;
     const { isMouseOver } = this.state;
-    const { title, id } =
-      sessionParents.length > 0
-        ? sessionParents[0]
-        : { id: "", title: "No parent" };
+    const hasParents = sessionParents.length > 0;
+    const { title, id } = hasParents
+      ? sessionParents[0]
+      : { id: "", title: "" };
 
     return (
       <div
@@ -64,23 +64,25 @@ class CardCapture extends React.Component<Props, State> {
           });
         }}
       >
-        <div
-          className={`f6 pb2 fw3 pointer accent dim`}
-          onClick={() => {
-            this.props.history.push(
-              `/note/${encodeURIComponent(id)}/format/list/related`
-            );
-            AnalyticsUtils.trackEvent({
-              category: this.props.match.params["id"]
-                ? AnalyticsUtils.Categories.Session
-                : AnalyticsUtils.Categories.Home,
-              action: AnalyticsUtils.Actions.OpenSession,
-              label: id
-            });
-          }}
-        >
-          {title || "Untitled"}
-        </div>
+        {hasParents && (
+          <div
+            className={`f6 pb2 fw3 pointer accent dim`}
+            onClick={() => {
+              this.props.history.push(
+                `/note/${encodeURIComponent(id)}/format/list/related`
+              );
+              AnalyticsUtils.trackEvent({
+                category: this.props.match.params["id"]
+                  ? AnalyticsUtils.Categories.Session
+                  : AnalyticsUtils.Categories.Home,
+                action: AnalyticsUtils.Actions.OpenSession,
+                label: id
+              });
+            }}
+          >
+            {title || "Untitled"}
+          </div>
+        )}
         <div
           className={`overflow-hidden f7`}
           dangerouslySetInnerHTML={{

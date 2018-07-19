@@ -157,9 +157,6 @@ const upload = multer({
 app.post("/uploadHtml", upload.single("file"), handleUpload, handleUploadError);
 
 function handleUpload(req, res): void {
-  if (isProd()) {
-    res.status(404).send("Not Found");
-  }
   importEvernoteNoteUpload(req["file"])
     .then(() => {
       res.sendStatus(200);

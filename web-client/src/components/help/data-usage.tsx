@@ -32,7 +32,7 @@ class DataUsage extends React.Component<Props, State> {
           {data.getSettings &&
             `You have used ${Math.round(
               (data.getSettings.storageUsed / MAX_STORAGE_PER_USER) * 100
-            )}% of your 100 MB data limit. There is also a 1 MB limit per note.`}
+            )}% of your 100 MB data limit. There a is also a 1 MB limit per note.`}
         </div>
       </div>
     );

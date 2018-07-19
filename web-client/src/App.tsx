@@ -88,13 +88,10 @@ class App extends React.Component<Props, State> {
               isEmailVerified === null ? null : (
                 <div>
                   {!isEmailVerified ? (
-                    <Switch>
-                      <Route
-                        path="/verify"
-                        render={props => <Verify {...props} user={user} />}
-                      />
-                      <Redirect to="/verify" />
-                    </Switch>
+                    <Route
+                      path="/"
+                      component={AnalyticsUtils.withTracker(Main)}
+                    />
                   ) : (
                     <Route
                       path="/"

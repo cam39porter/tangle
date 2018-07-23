@@ -65,7 +65,21 @@ class RecentGrid extends React.Component<Props, State> {
     return (
       <Grid
         sessions={sessions}
-        emptySessionsMessage={`Try creating your first note or import your notes from Evernote.`}
+        emptySessionsMessage={
+          <React.Fragment>
+            <div>
+              For details on how to get started with Tangle, follow this{" "}
+              <span
+                className={`pointer bb b--accent dim`}
+                onClick={() => {
+                  window.open(`https://usetangle.com/blog-guide`);
+                }}
+              >
+                guide
+              </span>.
+            </div>
+          </React.Fragment>
+        }
         captures={[]}
         headerHeight={this.props.headerHeight}
         loadMoreSessions={

@@ -34,7 +34,7 @@ interface Props extends RouteProps {
   >;
   sessions: Array<SessionWithoutItemCollectionFieldsFragment>;
   captures: Array<CaptureFieldsFragment>;
-  emptySessionsMessage?: string;
+  emptySessionsMessage?: React.ReactChild;
   emptyCapturesMessage?: string;
   sessionId?: string;
   headerHeight: number;

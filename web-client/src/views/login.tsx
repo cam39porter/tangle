@@ -70,6 +70,18 @@ class Login extends React.Component<Props, State> {
                   Privacy Policy
                 </a>
               </div>
+              <p className={`pt4 center tl f6 lh-copy`}>
+                If you have trouble logging in because you are not whitelisted,
+                you can request early access.
+              </p>
+              <span
+                className={`pointer bb b--accent dim`}
+                onClick={() => {
+                  window.location.href = `https://ventures.us17.list-manage.com/subscribe?u=710569ad280cf37e55faa0612&id=1f711ff76c`;
+                }}
+              >
+                Request Early Access
+              </span>
             </div>
           </div>
         </div>

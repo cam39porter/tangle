@@ -41,7 +41,7 @@ export default {
       // @ts-ignore
       info
     ): Promise<GraphNode> {
-      const userId = getRequestContext().user.urn;
+      const userId = getRequestContext().loggedInUser.urn;
       return createCapture(
         userId,
         captureXSS.process(body),

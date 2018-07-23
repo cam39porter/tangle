@@ -1,7 +1,4 @@
-import {
-  getRandomCapture as getRandomCaptureClient,
-  batchGetCaptures
-} from "../../db/services/capture";
+import { batchGetCaptures } from "../../db/services/capture";
 import { getAuthenticatedUser } from "../../filters/request-context";
 import { search as searchClient } from "../clients/search";
 import { SurfaceResults } from "../models/surface-results";
@@ -18,27 +15,23 @@ export function search(
   count: number
 ): Promise<SurfaceResults> {
   const userId = getAuthenticatedUser().urn;
-  if (!rawQuery || rawQuery.length === 0) {
-    return getRandomCapture();
-  } else {
-    return searchClient(
-      rawQuery,
-      new PagingContext(start.toString(), count),
-      new PagingContext(start.toString(), count)
-    ).then(searchResults => {
-      return expandCaptures(userId, searchResults.captures.items, null).then(
-        surfaceResults => {
-          const pagingInfo = searchResults.captures.pagingInfo;
-          surfaceResults.pageInfo = new PageInfo(
-            parseFloat(pagingInfo.nextPageId),
-            count,
-            pagingInfo.total
-          );
-          return surfaceResults;
-        }
-      );
-    });
-  }
+  return searchClient(
+    rawQuery,
+    new PagingContext(start.toString(), count),
+    new PagingContext(start.toString(), count)
+  ).then(searchResults => {
+    return expandCaptures(userId, searchResults.captures.items, null).then(
+      surfaceResults => {
+        const pagingInfo = searchResults.captures.pagingInfo;
+        surfaceResults.pageInfo = new PageInfo(
+          parseFloat(pagingInfo.nextPageId),
+          count,
+          pagingInfo.total
+        );
+        return surfaceResults;
+      }
+    );
+  });
 }
 
 export function searchV2(
@@ -64,11 +57,4 @@ export function searchV2(
       );
     });
   });
-}
-
-function getRandomCapture(): Promise<SurfaceResults> {
-  const userId = getAuthenticatedUser().urn;
-  return getRandomCaptureClient(userId).then(capture =>
-    expandCaptures(userId, [capture.urn], null)
-  );
 }

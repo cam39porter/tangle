@@ -15,7 +15,7 @@ export function importEvernoteNoteUpload(file): Promise<void> {
     } else {
       const uuid = uuidv4();
       const noteUrn = new SessionUrn(uuid);
-      const userUrn = getRequestContext().user.urn;
+      const userUrn = getRequestContext().loggedInUser.urn;
       return save(noteUrn, file)
         .then(() => enqueue(userUrn, noteUrn))
         .then(() => null);

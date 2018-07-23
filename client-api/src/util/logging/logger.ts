@@ -29,7 +29,7 @@ function formatStr(
 ): string {
   const req = hasAuthenticatedUser() ? getRequestContext() : null;
   const formatted = `${new Date().toISOString()} ${(req && req.reqId) ||
-    "-"} ${(req && req.user.urn.toRaw()) || "-"} ${
+    "-"} ${(req && req.loggedInUser.urn.toRaw()) || "-"} ${
     process.env.NODE_ENV
   } ${scope} -- ${message || ""} -- ${stacktrace || ""}`;
   return formatted;

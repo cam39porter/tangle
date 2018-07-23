@@ -1,6 +1,5 @@
 import { SurfaceResults } from "./models/surface-results";
 import {
-  getAllByUseCase,
   getNode,
   getAllMostRecent,
   getMostRecentCaptures
@@ -61,17 +60,6 @@ export default {
     // @ts-ignore
     getSettings(parent, _params, context, info): Promise<Settings> {
       return getStorageUsed();
-    },
-    getAll(
-      // @ts-ignore
-      parent,
-      { useCase, timezoneOffset },
-      // @ts-ignore
-      context,
-      // @ts-ignore
-      info
-    ): Promise<SurfaceResults> {
-      return getAllByUseCase(useCase, timezoneOffset);
     },
     getMostRecent(
       // @ts-ignore

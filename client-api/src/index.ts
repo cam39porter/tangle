@@ -67,7 +67,7 @@ morgan.token("reqId", req => {
 });
 morgan.token("userId", req => {
   const requestContext = (req["requestContext"] as RequestContext) || null;
-  return requestContext ? requestContext.user.urn.toRaw() : "-";
+  return requestContext ? requestContext.loggedInUser.urn.toRaw() : "-";
 });
 
 const HTTPS_PORT = 8443;

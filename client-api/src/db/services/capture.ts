@@ -43,12 +43,13 @@ export function batchGetCaptures(
   captureUrns: CaptureUrn[]
 ): Promise<Capture[]> {
   const params = [
-    new Param("userId", userId.toRaw()),
+    new Param("userUrns", [userId.toRaw()]),
     new Param("captureUrns", captureUrns.map(urn => urn.toRaw()))
   ];
-  const query = `MATCH (capture:Capture {owner:{userId}})
-  WHERE capture.id IN {captureUrns}
-  OPTIONAL MATCH (capture)<-[:INCLUDES]-(session:Session {owner:{userId}})
+  const query = `MATCH (capture:Capture)
+  WHERE capture.id IN {captureUrns} AND capture.owner IN {userUrns}
+  OPTIONAL MATCH (capture)<-[:INCLUDES]-(session:Session)
+  WHERE session.owner IN {userUrns}
   RETURN capture, collect(session) as sessions`;
   return executeQuery(query, params).then(result => {
     const captures = result.records.map(record =>
@@ -56,22 +57,6 @@ export function batchGetCaptures(
     );
     return hydrate(captureUrns, captures, capture => capture.urn);
   });
-}
-
-export function getAllSince(
-  userId: UserUrn,
-  since: number
-): Promise<Capture[]> {
-  const params = [
-    new Param("userId", userId.toRaw()),
-    new Param("since", since)
-  ];
-  const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
-  WHERE capture.created > {since}
-  RETURN capture
-  ORDER BY capture.created DESC
-  LIMIT 50`;
-  return executeQuery(query, params).then(formatCaptureArray);
 }
 
 export function getCapture(
@@ -118,15 +103,6 @@ export function getCapturesByRelatedNode(
   return executeQuery(query, params).then(result => {
     return formatCaptureArray(result);
   });
-}
-
-export function getRandomCapture(userId: UserUrn): Promise<Capture> {
-  const params = [new Param("userId", userId.toRaw())];
-  const query = `MATCH (capture:Capture)<-[created:CREATED]-(user:User {id:{userId}})
-  RETURN capture, rand() as number
-  ORDER BY number
-  LIMIT 1`;
-  return executeQuery(query, params).then(formatCaptureResult);
 }
 
 export function deleteCaptureNode(

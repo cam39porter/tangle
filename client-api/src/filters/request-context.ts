@@ -3,25 +3,25 @@ import * as contextService from "request-context";
 import { v4 as uuidv4 } from "uuid/v4";
 
 export class RequestContext {
-  public user: User;
+  public loggedInUser: User;
   public reqId: string;
-  constructor(user: User) {
-    this.user = user;
+  constructor(loggedInUser: User) {
+    this.loggedInUser = loggedInUser;
     this.reqId = uuidv4();
   }
 }
 
-export function setReqeustContext(user: User): void {
+export function setRequestContext(user: User): void {
   const req = new RequestContext(user);
   contextService.set("request", req);
 }
 
 export function hasAuthenticatedUser(): boolean {
-  return contextService.get("request:user");
+  return contextService.get("request:loggedInUser");
 }
 
 export function getAuthenticatedUser(): User {
-  const userJson = contextService.get("request:user");
+  const userJson = contextService.get("request:loggedInUser");
   if (!userJson) {
     throw new Error("Authenticated user has not yet been set. Cannot proceed");
   }

@@ -153,7 +153,6 @@ type Query {
     sessionPagingContext: PagingContext
   ): SearchResults!
   getDetailed(id: String!): SurfaceResults!
-  getAll(useCase: String!, timezoneOffset: Int): SurfaceResults!
   getMostRecent(start: Int = 0, count: Int = 10): SurfaceResults!
   getSession(id: String!, itemsPagingContext: PagingContext): Session!
   getRecentSessions(pagingContext: PagingContext): SessionCollection!

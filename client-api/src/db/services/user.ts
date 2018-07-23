@@ -27,7 +27,9 @@ function doMerge(user: User): Promise<User> {
       email:{email}
     })
     ON CREATE SET u.created=TIMESTAMP()
-    RETURN u`;
+    WITH u
+    OPTIONAL MATCH (u)-[:HAS_FULL_READ_PERMISSION]->(other:User)
+    RETURN u, collect(other) as others`;
   return executeQuery(query, params).then(formatUser);
 }
 
@@ -45,11 +47,18 @@ export function getUser(urn: UserUrn): Promise<User> {
   const params = [new Param("urn", urn.toRaw())];
   const query = `
     MATCH (u:User {id:{urn}})
-    RETURN u`;
+    OPTIONAL MATCH (u)-[:HAS_FULL_READ_PERMISSION]->(other:User)
+    RETURN u, collect(other) as others`;
   return executeQuery(query, params).then(formatUser);
 }
 
 function formatUser(result: StatementResult): User {
   const props = result.records[0].get("u").properties;
-  return new User(UserUrn.fromRaw(props["id"]), props["email"], props["name"]);
+  const userUrn = UserUrn.fromRaw(props["id"]);
+  const others = result.records[0].get("others") || [];
+  const canReadUrns = others.map(node =>
+    UserUrn.fromRaw(node.properties["id"])
+  );
+  canReadUrns.push(userUrn);
+  return new User(userUrn, props["email"], props["name"], canReadUrns);
 }

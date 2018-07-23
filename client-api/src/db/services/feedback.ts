@@ -2,7 +2,7 @@ import { executeQuery, Param } from "../db";
 import { getRequestContext } from "../../filters/request-context";
 
 export function create(body: string): Promise<boolean> {
-  const userId = getRequestContext().user.urn;
+  const userId = getRequestContext().loggedInUser.urn;
   const params = [new Param("userId", userId.toRaw()), new Param("body", body)];
   const query = `
     CREATE (feedback:AppFeedback {

@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
 import { User } from "../db/models/user";
 import { mergeUser, getUser } from "../db/services/user";
-import { setReqeustContext } from "./request-context";
+import { setRequestContext } from "./request-context";
 import { UserUrn } from "../urn/user-urn";
 import { Logger } from "../util/logging/logger";
 import { NotWhitelistedError } from "../util/exceptions/not-whitelisted-error";
@@ -27,10 +27,15 @@ function authFilter(req, res, next): void {
     const encodedToken = parseAuthorization(req.get("authorization"));
     verify(encodedToken)
       .then((token: admin.auth.DecodedIdToken) => {
-        const user = new User(new UserUrn(token.uid), token.email, token.name);
+        const user = new User(
+          new UserUrn(token.uid),
+          token.email,
+          token.name,
+          []
+        );
         mergeUser(user)
           .then(() => {
-            setReqeustContext(user);
+            setRequestContext(user);
             next();
           })
           .catch(error => {
@@ -53,7 +58,7 @@ function authFilter(req, res, next): void {
 }
 
 function setDevOverride(urn: UserUrn): Promise<void> {
-  return getUser(urn).then(user => setReqeustContext(user));
+  return getUser(urn).then(user => setRequestContext(user));
 }
 
 function verify(encodedToken): Promise<admin.auth.DecodedIdToken> {

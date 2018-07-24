@@ -173,8 +173,8 @@ unset NEO4J_dbms_txLog_rotation_retentionPolicy NEO4J_UDC_SOURCE \
 : ${NEO4J_com_graphaware_module_ES_keyProperty:=uuid}
 : ${NEO4J_com_graphaware_module_ES_node:=hasLabel('Capture')}
 : ${NEO4J_com_graphaware_module_ES_retryOnError:=true}
-: ${NEO4J_com_graphaware_module_ES_queueSize:=100}
-: ${NEO4J_com_graphaware_module_ES_reindexBatchSize:=100}
+: ${NEO4J_com_graphaware_module_ES_queueSize:=2000}
+: ${NEO4J_com_graphaware_module_ES_reindexBatchSize:=500}
 : ${NEO4J_com_graphaware_module_ES_bulk:=true}
 : ${NEO4J_com_graphaware_module_ES_initializeUntil:=1529538950524}
 

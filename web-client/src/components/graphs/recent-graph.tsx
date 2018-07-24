@@ -64,7 +64,7 @@ class RecentGraph extends React.Component<Props, State> {
       return (
         <Help>
           <div>
-            Try capturing a thought with the big orange button to see it
+            Try capturing a thought with the big orange "+" button to see it
             visualized here.
           </div>
         </Help>

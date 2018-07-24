@@ -52,7 +52,7 @@ class Feedback extends React.PureComponent<Props, State> {
       <div
         className={`flex-column pa1 br2 bg-gray`}
         style={{
-          width: "20em"
+          width: "25em"
         }}
       >
         <div
@@ -113,6 +113,18 @@ class Feedback extends React.PureComponent<Props, State> {
                   <ButtonSend />
                 </div>
               </div>
+            </div>
+            <div
+              className={`pb2 pt3 f6 near-white tc pointer dim`}
+              onClick={e => {
+                e.stopPropagation();
+                window.location.href = `mailto:alpha@usetangle.com?subject=Feedback&body=${
+                  this.state.feedback
+                }`;
+              }}
+            >
+              Or <span className={`bb b--accent`}>click here</span> to send an
+              email with screenshots
             </div>
           </div>
         )}

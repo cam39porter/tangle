@@ -5,6 +5,7 @@ import { unregister as unregisterServiceWorker } from "./registerServiceWorker";
 
 // Components
 import App from "./App";
+import Maintenance from "./views/maintenance";
 
 // Apollo
 import { ApolloClient } from "apollo-client";
@@ -115,6 +116,10 @@ if (process.env.REACT_APP_ENV === "production") {
 
 class ApolloWrappedApp extends React.Component<object, object> {
   render() {
+    if (process.env.REACT_APP_MAINTENANCE) {
+      return <Maintenance />;
+    }
+
     return (
       <Router>
         <ApolloProvider client={client}>

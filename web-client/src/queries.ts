@@ -78,6 +78,8 @@ export const captureFragment = gql`
     id
     body
     created
+    lastModified
+    authorName
     parents {
       id
       title

@@ -18,6 +18,7 @@
     "types": "rm -rf ./src/__generated__ && mkdir ./src/__generated__ && apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts",
     "deploy:web:dev": "REACT_APP_ENV=development yarn build && gcloud -q app deploy ./dev.yaml",
     "deploy:web:prod": "REACT_APP_ENV=production yarn build && gcloud -q app deploy ./prod.yaml",
+    "deploy:web:maintenance": "REACT_APP_ENV=production REACT_APP_MAINTENANCE=true yarn build && gcloud -q app deploy ./prod.yaml",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "css": "tachyons src/css/app.css > src/tachyons.css --minify",

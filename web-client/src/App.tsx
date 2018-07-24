@@ -11,7 +11,7 @@ import { RouteProps, Redirect } from "react-router";
 import { Route, Switch } from "react-router-dom";
 
 // Components
-import Verify from "./views/verify";
+// import Verify from "./views/verify";
 import Login from "./views/login";
 import Main from "./views/main";
 

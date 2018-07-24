@@ -46,7 +46,7 @@ function executeQuery(
       LOGGER.error(`Error response: ${error}`);
       throw error;
     });
-  return timeout(neoPromise, 5000)
+  return timeout(neoPromise, 10000)
     .then(neo => {
       return neo;
     })

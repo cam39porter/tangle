@@ -9,9 +9,11 @@ export function formatBasicCapture(record: Node): Capture {
 
 export function formatCaptureWithSessions(
   captureRecord: Node,
-  sessionRecords: Node[]
+  sessionRecords: Node[],
+  authorName?: string
 ): Capture {
   const capture = buildFromProps(captureRecord.properties);
+  capture.authorName = authorName || null;
   const basicSessions = sessionRecords.map(sessionRecord =>
     formatBasicSession(sessionRecord)
   );

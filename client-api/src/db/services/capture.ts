@@ -39,22 +39,32 @@ export function getMostRecent(
 }
 
 export function batchGetCaptures(
-  userId: UserUrn,
+  loggedInUser: UserUrn,
+  userUrns: UserUrn[],
   captureUrns: CaptureUrn[]
 ): Promise<Capture[]> {
   const params = [
-    new Param("userUrns", [userId.toRaw()]),
+    new Param("userUrns", userUrns.map(urn => urn.toRaw())),
     new Param("captureUrns", captureUrns.map(urn => urn.toRaw()))
   ];
-  const query = `MATCH (capture:Capture)
+  const query = `MATCH (capture:Capture)<-[:CREATED]-(author:User)
   WHERE capture.id IN {captureUrns} AND capture.owner IN {userUrns}
   OPTIONAL MATCH (capture)<-[:INCLUDES]-(session:Session)
   WHERE session.owner IN {userUrns}
-  RETURN capture, collect(session) as sessions`;
+  RETURN capture, author, collect(session) as sessions`;
   return executeQuery(query, params).then(result => {
-    const captures = result.records.map(record =>
-      formatCaptureWithSessions(record.get("capture"), record.get("sessions"))
-    );
+    const captures = result.records.map(record => {
+      const author = record.get("author");
+      const someoneElsesName =
+        author && author.properties["id"] !== loggedInUser.toRaw()
+          ? author.properties["name"]
+          : null;
+      return formatCaptureWithSessions(
+        record.get("capture"),
+        record.get("sessions"),
+        someoneElsesName
+      );
+    });
     return hydrate(captureUrns, captures, capture => capture.urn);
   });
 }

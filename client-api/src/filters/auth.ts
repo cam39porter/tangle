@@ -34,8 +34,8 @@ function authFilter(req, res, next): void {
           []
         );
         mergeUser(user)
-          .then(() => {
-            setRequestContext(user);
+          .then(returnedUser => {
+            setRequestContext(returnedUser);
             next();
           })
           .catch(error => {

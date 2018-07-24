@@ -75,7 +75,10 @@ function searchCaptures(
   rawQuery: string,
   capturePagingContext: PagingContext
 ): Promise<CollectionResult<CaptureUrn>> {
-  const userId = getAuthenticatedUser().urn;
+  const userUrns = getAuthenticatedUser().readPermissionedUsers;
+  const userClauses = userUrns.map(userUrn => {
+    return { match: { owner: userUrn.toRaw() } };
+  });
   const start = parseFloat(capturePagingContext.pageId);
   const esquery = {
     index: "neo4j-index-node",
@@ -84,8 +87,16 @@ function searchCaptures(
       size: capturePagingContext.count,
       query: {
         bool: {
-          must: { match: { plainText: rawQuery } },
-          filter: { match: { owner: userId.toRaw() } }
+          must: [
+            {
+              match: { plainText: rawQuery }
+            },
+            {
+              bool: {
+                should: userClauses
+              }
+            }
+          ]
         }
       }
     }

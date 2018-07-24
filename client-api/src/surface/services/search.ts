@@ -46,7 +46,11 @@ export function searchV2(
     sessionPagingContext
   ).then(searchResults => {
     return Promise.all([
-      batchGetCaptures(userId, searchResults.captures.items),
+      batchGetCaptures(
+        userId,
+        getAuthenticatedUser().readPermissionedUsers,
+        searchResults.captures.items
+      ),
       batchGetSessions(userId, searchResults.sessions.items)
     ]).then(promises => {
       const captures = promises[0];

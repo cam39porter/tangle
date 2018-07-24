@@ -30,7 +30,7 @@ interface State {
 }
 
 const FEEDBACK_PLEASE =
-  "Please speak your mind, we appreciate (brutal honesty, ruthless candor, etc.)";
+  "Please speak your mind, we appreciate brutal honesty, ruthless candor, etc.";
 const THANK_YOU = "Thank you for your feedback!";
 
 // Class

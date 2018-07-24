@@ -1,5 +1,0 @@
-steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', 'us.gcr.io/opit-193719/neo4j-image', '.' ]
-images:
-- 'us.gcr.io/opit-193719/neo4j-image'

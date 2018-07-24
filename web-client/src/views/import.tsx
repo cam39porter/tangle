@@ -28,8 +28,8 @@ class Import extends React.Component<Props, State> {
               </li>
               <br />
               <li>
-                Click "Choose Files" below and select the exported{" "}
-                <code>.html</code> files from the previous step.
+                Click "Choose Files" below and select no more than 50 of the
+                exported <code>.html</code> files from the previous step.
               </li>
             </ol>
           </div>

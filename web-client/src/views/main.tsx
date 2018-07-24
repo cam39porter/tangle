@@ -12,8 +12,7 @@ import Import from "./import";
 import Settings from "./settings";
 import Mobile from "./mobile";
 import ErrorBoundary from "../components/help/error-boundary";
-import Feedback from "../components/help/feedback";
-import { BrowserView, MobileView, isMobile } from "react-device-detect";
+import { BrowserView, MobileView } from "react-device-detect";
 
 // Utils
 import windowSize from "react-window-size";
@@ -49,7 +48,6 @@ class Main extends React.Component<Props, State> {
           </Switch>
         </MobileView>
         <BrowserView>
-          {isMobile && <Redirect to={"/mobile"} />}
           <div className={`flex w-100 vh-100`}>
             {/* Navigation */}
             <ErrorBoundary>
@@ -81,9 +79,6 @@ class Main extends React.Component<Props, State> {
                     </Switch>
                   </ErrorBoundary>
                 </div>
-              </div>
-              <div className={`fixed right-1 bottom-0 z-max`}>
-                <Feedback />
               </div>
             </ErrorBoundary>
           </div>

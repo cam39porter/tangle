@@ -7,10 +7,11 @@ import "./tachyons.css";
 import "draft-js/dist/Draft.css";
 
 // Routing
-import { RouteProps, Redirect } from "react-router";
-import { Route, Switch } from "react-router-dom";
+import { RouteProps } from "react-router";
+import { Route } from "react-router-dom";
 
 // Components
+import Feedback from "./components/help/feedback";
 // import Verify from "./views/verify";
 import Login from "./views/login";
 import Main from "./views/main";
@@ -98,6 +99,9 @@ class App extends React.Component<Props, State> {
                       component={AnalyticsUtils.withTracker(Main)}
                     />
                   )}
+                  <div className={`fixed right-1 bottom-0 z-max`}>
+                    <Feedback />
+                  </div>
                 </div>
               )
             ) : (

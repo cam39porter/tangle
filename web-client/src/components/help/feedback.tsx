@@ -15,6 +15,8 @@ import ChevronDown from "../buttons/button-chevron-down";
 import ButtonSend from "../buttons/button-send";
 import { ErrorsUtils } from "../../utils/index";
 
+// Utils
+
 // Types
 interface Props {
   sendFeedback: MutationFunc<
@@ -34,7 +36,7 @@ const FEEDBACK_PLEASE =
 const THANK_YOU = "Thank you for your feedback!";
 
 // Class
-class Feedback extends React.Component<Props, State> {
+class Feedback extends React.PureComponent<Props, State> {
   constructor(nextProps: Props) {
     super(nextProps);
 

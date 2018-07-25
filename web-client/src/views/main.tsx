@@ -13,6 +13,9 @@ import Settings from "./settings";
 import Mobile from "./mobile";
 import ErrorBoundary from "../components/help/error-boundary";
 import { BrowserView, MobileView } from "react-device-detect";
+import ButtonExit from "../components/buttons/button-exit";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Utils
 import windowSize from "react-window-size";
@@ -41,12 +44,18 @@ class Main extends React.Component<Props, State> {
 
     return (
       <div className={`bg-near-white`}>
+        {/* Toasts */}
+        <ToastContainer hideProgressBar={true} closeButton={false} />
+
+        {/* Mobile */}
         <MobileView>
           <Switch>
             <Route exact={true} path="/mobile" component={Mobile} />
             <Redirect to={"/mobile"} />
           </Switch>
         </MobileView>
+
+        {/* Browser */}
         <BrowserView>
           <div className={`flex w-100 vh-100`}>
             {/* Navigation */}

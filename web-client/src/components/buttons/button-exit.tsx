@@ -6,7 +6,7 @@ import { X } from "react-feather";
 
 interface Props {}
 
-const ButtonClear = (props: Props) => {
+const ButtonExit = (props: Props) => {
   return (
     <span className={`flex-column justify-around pointer`}>
       <X size={16} />
@@ -14,4 +14,4 @@ const ButtonClear = (props: Props) => {
   );
 };
 
-export default ButtonClear;
+export default ButtonExit;

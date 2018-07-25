@@ -1,6 +1,7 @@
 import { ApolloClient } from "apollo-client";
 import { reportErrorMutationVariables } from "../__generated__/types";
 import { reportError } from "../queries";
+import { toast } from "react-toastify";
 
 let errorHandler = {
   report: (message: String, stacktrace: Object) => {
@@ -24,7 +25,12 @@ const initializeCloudReporting = (client: ApolloClient<Object>) => {
   };
 };
 
+const errorToasts = {
+  createSession: () => toast.error("There was an error creating your note!")
+};
+
 export default {
   initializeCloudReporting,
-  errorHandler
+  errorHandler,
+  errorToasts
 };

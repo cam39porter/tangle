@@ -79,9 +79,7 @@ class GridCaptures extends React.Component<Props, State> {
                       .then(res => {
                         let id = res.data.createSession.id;
                         this.props.history.push(
-                          `/note/${encodeURIComponent(
-                            res.data.createSession.id
-                          )}/format/list/related`
+                          `/note/${encodeURIComponent(id)}/format/list/related`
                         );
                         return id;
                       })
@@ -96,6 +94,7 @@ class GridCaptures extends React.Component<Props, State> {
                         });
                       })
                       .catch(err => {
+                        ErrorsUtils.errorToasts.createSession();
                         ErrorsUtils.errorHandler.report(err.message, err.stack);
                       });
                   }}

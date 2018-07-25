@@ -17,6 +17,7 @@ import ButtonHome from "./../buttons/button-home";
 import ButtonImport from "./../buttons/button-import";
 import ButtonCapture from "./../buttons/button-capture";
 import ButtonSettings from "../buttons/button-settings";
+import { toast } from "react-toastify";
 
 // Utils
 import { FirebaseUtils, AnalyticsUtils, ErrorsUtils } from "../../utils";
@@ -54,21 +55,21 @@ class Navigation extends React.Component<Props, State> {
                 .then(res => {
                   let id = res.data.createSession.id;
                   this.props.history.push(
-                    `/note/${encodeURIComponent(
-                      res.data.createSession.id
-                    )}/format/list/related`
+                    `/note/${encodeURIComponent(id)}/format/list/related`
                   );
                   return id;
                 })
-                .then(_ => {
+                .then(id => {
                   AnalyticsUtils.trackEvent({
                     category: this.props.location.pathname.includes("note")
                       ? AnalyticsUtils.Categories.Session
                       : AnalyticsUtils.Categories.Home,
-                    action: AnalyticsUtils.Actions.OpenQuickCreate
+                    action: AnalyticsUtils.Actions.OpenQuickCreate,
+                    label: id
                   });
                 })
                 .catch(err => {
+                  ErrorsUtils.errorToasts.createSession();
                   ErrorsUtils.errorHandler.report(err.message, err.stack);
                 });
             }}

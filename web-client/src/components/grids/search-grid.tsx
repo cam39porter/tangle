@@ -56,6 +56,15 @@ class SearchGrid extends React.Component<Props, State> {
       captures = searchV2.captures.items;
     }
 
+    const error = this.props.data.error;
+    if (error) {
+      return (
+        <Help>
+          <div>We ran into an issue loading your data.</div>
+        </Help>
+      );
+    }
+
     if (this.props.data.loading) {
       return (
         <Help>

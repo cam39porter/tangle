@@ -21,6 +21,8 @@ import Help from "../help/help";
 // Utils
 import config from "../../cfg";
 import { concat } from "lodash";
+import { ErrorsUtils } from "../../utils/index";
+import ErrorBoundary from "../help/error-boundary";
 
 // Types
 
@@ -52,6 +54,15 @@ class RecentGrid extends React.Component<Props, State> {
       sessions = sessionCollection.items;
       nextSessionPageId =
         sessionCollection.pagingInfo && sessionCollection.pagingInfo.nextPageId;
+    }
+
+    const error = this.props.sessionData.error;
+    if (error) {
+      return (
+        <Help>
+          <div>We ran into an issue loading your data.</div>
+        </Help>
+      );
     }
 
     if (this.props.sessionData.loading) {

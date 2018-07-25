@@ -52,6 +52,15 @@ class SearchGraph extends React.Component<Props, State> {
       edges = data.search.graph.edges;
     }
 
+    const error = data.error;
+    if (error) {
+      return (
+        <Help>
+          <div>We ran into an issue loading your data.</div>
+        </Help>
+      );
+    }
+
     if (data.loading) {
       return (
         <Help>

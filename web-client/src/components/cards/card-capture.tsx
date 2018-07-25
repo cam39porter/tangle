@@ -71,7 +71,7 @@ class CardCapture extends React.Component<Props, State> {
               authorName ? "gray" : "pointer accent dim pb2"
             }`}
             onClick={
-              authorName
+              !authorName
                 ? () => {
                     this.props.history.push(
                       `/note/${encodeURIComponent(id)}/format/list/related`

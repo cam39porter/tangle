@@ -70,18 +70,22 @@ class CardCapture extends React.Component<Props, State> {
             className={`f6 fw3 ${
               authorName ? "gray" : "pointer accent dim pb2"
             }`}
-            onClick={() => {
-              this.props.history.push(
-                `/note/${encodeURIComponent(id)}/format/list/related`
-              );
-              AnalyticsUtils.trackEvent({
-                category: this.props.match.params["id"]
-                  ? AnalyticsUtils.Categories.Session
-                  : AnalyticsUtils.Categories.Home,
-                action: AnalyticsUtils.Actions.OpenSession,
-                label: id
-              });
-            }}
+            onClick={
+              authorName
+                ? () => {
+                    this.props.history.push(
+                      `/note/${encodeURIComponent(id)}/format/list/related`
+                    );
+                    AnalyticsUtils.trackEvent({
+                      category: this.props.match.params["id"]
+                        ? AnalyticsUtils.Categories.Session
+                        : AnalyticsUtils.Categories.Home,
+                      action: AnalyticsUtils.Actions.OpenSession,
+                      label: id
+                    });
+                  }
+                : undefined
+            }
           >
             {title || "Untitled"}
           </div>

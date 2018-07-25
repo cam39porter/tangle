@@ -21,6 +21,7 @@ import ReactResizeDetector from "react-resize-detector";
 import windowSize from "react-window-size";
 import InputSession from "../components/inputs/input-session";
 import Markdown from "../components/help/markdown";
+import { ErrorsUtils } from "../utils/index";
 
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
@@ -52,6 +53,10 @@ class Session extends React.Component<Props, State> {
   render() {
     const { data, windowHeight } = this.props;
     const { headerHeight, footerHeight, isSaving } = this.state;
+
+    if (data.error) {
+      ErrorsUtils.errorToasts.openSession();
+    }
 
     if (!data.getSession) {
       return <div />;

@@ -26,6 +26,7 @@ const initializeCloudReporting = (client: ApolloClient<Object>) => {
 };
 
 const errorToasts = {
+  openSession: () => toast.error("There was an error opening your note!"),
   createSession: () => toast.error("There was an error creating your note!")
 };
 

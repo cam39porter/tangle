@@ -21,6 +21,7 @@ interface Props extends RouteComponentProps<{}> {
   }>;
   captureId: string;
   startingHtml: string;
+  authorName: string | null;
 }
 
 interface State {
@@ -39,7 +40,7 @@ class CardCapture extends React.Component<Props, State> {
   }
 
   render() {
-    const { captureId, startingHtml, sessionParents } = this.props;
+    const { captureId, authorName, startingHtml, sessionParents } = this.props;
     const { isMouseOver } = this.state;
     const hasParents = sessionParents.length > 0;
     const { title, id } = hasParents
@@ -66,7 +67,9 @@ class CardCapture extends React.Component<Props, State> {
       >
         {hasParents && (
           <div
-            className={`f6 pb2 fw3 pointer accent dim`}
+            className={`f6 fw3 ${
+              authorName ? "gray" : "pointer accent dim pb2"
+            }`}
             onClick={() => {
               this.props.history.push(
                 `/note/${encodeURIComponent(id)}/format/list/related`
@@ -83,8 +86,11 @@ class CardCapture extends React.Component<Props, State> {
             {title || "Untitled"}
           </div>
         )}
+        {authorName && (
+          <div className={`gray overflow-hidden f6 pb2`}>{authorName}</div>
+        )}
         <div
-          className={`overflow-hidden f7`}
+          className={`f7`}
           dangerouslySetInnerHTML={{
             __html: startingHtml
           }}

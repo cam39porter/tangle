@@ -157,6 +157,7 @@ class GridCaptures extends React.Component<Props, State> {
                         sessionParents={capture.parents || []}
                         captureId={capture.id}
                         startingHtml={capture.body}
+                        authorName={capture.authorName}
                       />
                     </div>
                   ))}

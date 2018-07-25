@@ -492,6 +492,7 @@ class GraphVisualization extends React.Component<Props, State> {
               captureId={focusNode.id}
               startingHtml={focusNode.text || ""}
               sessionParents={focusNode.parents}
+              authorName={null}
             />
           </div>
         )}

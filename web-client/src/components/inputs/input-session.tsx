@@ -110,6 +110,7 @@ class InputSession extends React.Component<Props, State> {
           this.props.handleIsSaving(false);
         })
         .catch(err => {
+          ErrorsUtils.errorToasts.saveSession();
           ErrorsUtils.errorHandler.report(err.message, err.stack);
         });
     }, TIME_TO_SAVE);

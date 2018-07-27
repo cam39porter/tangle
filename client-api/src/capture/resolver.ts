@@ -17,11 +17,33 @@ import { create as createFeedback } from "../db/services/feedback";
 import { reportClientError } from "../util/logging/logger";
 import { Urn } from "../urn/urn";
 import { getRequestContext } from "../filters/request-context";
+import { createCapturedLink } from "../db/services/captured-link";
 
 const xssOptions = { whiteList: xss.whiteList };
 const captureXSS = new xss.FilterXSS(xssOptions);
 export default {
   Mutation: {
+    // @ts-ignore
+    createCapturedLink(
+      // @ts-ignore
+      parent,
+      // @ts-ignore
+      { title, url, content, byline, length },
+      // @ts-ignore
+      context,
+      // @ts-ignore
+      info
+    ): Promise<string> {
+      const userUrn = getRequestContext().loggedInUser.urn;
+      return createCapturedLink(
+        userUrn,
+        captureXSS.process(title),
+        captureXSS.process(url),
+        captureXSS.process(content),
+        captureXSS.process(byline),
+        length
+      ).then(capturedLink => capturedLink.urn.toRaw());
+    },
     // @ts-ignore
     deleteCapture(parent, { id }, context, info): Promise<boolean> {
       return deleteCapture(CaptureUrn.fromRaw(id));

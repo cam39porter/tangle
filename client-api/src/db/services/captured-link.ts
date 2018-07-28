@@ -21,11 +21,11 @@ export function createCapturedLink(
     CREATE (u)-[created:CREATED]->(capturedLink:CapturedLink {
       id:{capturedLinkUrn},
       owner:{userId},
-      title:{url},
-      content:{content},
+      url:{url},
       title:{title},
       created:{created},
       lastModified:{lastModified}
+      ${content ? ",content:{content}" : ""}
       ${byline ? ",byline:{byline}" : ""}
       ${length ? ",length:{length}" : ""}
     })

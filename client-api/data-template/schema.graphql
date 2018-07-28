@@ -179,7 +179,7 @@ type Mutation {
   createCapturedLink(
     url: String!
     title: String!
-    content: String!
+    content: String
     byline: String
     length: Int
   ): String!

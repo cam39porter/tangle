@@ -27,6 +27,7 @@ function getNLPResponse(body: string): Promise<NLPEntityResponse> {
     })
     .catch(err => {
       LOGGER.error("Failed to get NLP response, error: ", err);
+      return new NLPEntityResponse();
     });
 }
 

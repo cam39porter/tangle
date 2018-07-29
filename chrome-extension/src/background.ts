@@ -16,19 +16,24 @@ firebase.initializeApp(config);
 
 let isSignedIn = false;
 
+const GQL_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://api.tangleapp.co/graphql"
+    : "https://api.dev.tangleapp.co/graphql";
+
 /**
  * Listen for clicks to the browser icon
  */
 chrome.browserAction.onClicked.addListener(tab => {
-  if (!isSignedIn) {
+  const idToken = localStorage.getItem("idToken");
+  if (!isSignedIn && idToken) {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider);
     return;
   }
 
   chrome.tabs.sendMessage(tab.id, { message: "get-readable" }, article => {
-    const idToken = localStorage.getItem("idToken");
-    fetch("https://api.dev.tangleapp.co/graphql", {
+    fetch(GQL_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

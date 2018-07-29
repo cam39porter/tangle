@@ -1,0 +1,22 @@
+{
+  "name": "chrome-extension",
+  "version": "0.1.0",
+  "license": "ISC",
+  "private": true,
+  "scripts": {
+    "dev": "webpack -w -d",
+    "build": "webpack -p"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.71",
+    "copy-webpack-plugin": "4.5.2",
+    "ts-loader": "4.4.2",
+    "typescript": "3.1.0-dev.20180728",
+    "webpack": "4.16.3",
+    "webpack-cli": "3.1.0"
+  },
+  "dependencies": {
+    "@types/node": "10.5.4",
+    "mozilla-readability": "git://github.com/mozilla/readability.git"
+  }
+}

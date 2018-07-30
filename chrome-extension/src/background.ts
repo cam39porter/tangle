@@ -1,7 +1,7 @@
 /// <reference types="chrome" />
 
-import * as firebase from "firebase";
 import * as fetch from "isomorphic-fetch";
+import * as firebase from "firebase";
 
 const config = {
   apiKey: "AIzaSyBhTwOzozQBpWVeXkccGjqLnWIrgj9RVak",
@@ -26,7 +26,7 @@ const GQL_URL =
  */
 chrome.browserAction.onClicked.addListener(tab => {
   const idToken = localStorage.getItem("idToken");
-  if (!isSignedIn && idToken) {
+  if (!isSignedIn) {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider);
     return;
@@ -59,14 +59,16 @@ chrome.browserAction.onClicked.addListener(tab => {
         `,
         variables: {
           url: tab.url,
-          title: article.title || "",
-          content: article.content || "",
-          byline: article.byline || "",
-          length: article.length || 0
+          title: article.title ? article.title : "",
+          content: article.content ? article.content : "",
+          byline: article.byline ? article.byline : "",
+          length: article.length ? article.length : 0
         }
       })
     })
       .then(() => {
+        chrome.tabs.sendMessage(tab.id, { message: "page-saved" });
+        // TODO: set icon color on successful save
         chrome.browserAction.setBadgeBackgroundColor({
           tabId: tab.id,
           color: "#ff9e37"
@@ -86,6 +88,7 @@ function initApp() {
     if (!user) {
       isSignedIn = false;
       localStorage.removeItem("idToken");
+      return;
     }
     user.getIdToken(true).then(idToken => {
       isSignedIn = true;

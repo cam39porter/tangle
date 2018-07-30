@@ -59,10 +59,10 @@ chrome.browserAction.onClicked.addListener(tab => {
         `,
         variables: {
           url: tab.url,
-          title: article.title,
-          content: article.content,
-          byline: article.byline,
-          length: article.length
+          title: article.title || "",
+          content: article.content || "",
+          byline: article.byline || "",
+          length: article.length || 0
         }
       })
     })

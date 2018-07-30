@@ -55,3 +55,7 @@ __generated__/
 
 # Emacs #
 *~
+
+# Chrome Extension Builds #
+*.crx
+*.pem

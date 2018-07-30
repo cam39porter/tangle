@@ -41,7 +41,8 @@ export default {
         captureXSS.process(url),
         captureXSS.process(content),
         captureXSS.process(byline),
-        length
+        length,
+        null
       ).then(capturedLink => capturedLink.urn.toRaw());
     },
     // @ts-ignore

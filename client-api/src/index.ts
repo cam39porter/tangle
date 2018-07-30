@@ -29,6 +29,7 @@ import { ConflictError } from "./util/exceptions/confict-error";
 import { getBasic } from "./db/services/session";
 import { UserUrn } from "./urn/user-urn";
 import { SessionUrn } from "./urn/session-urn";
+import { createCapturedLink } from "./capture/services/captured-link";
 // tslint:disable-next-line
 const { graphqlExpress } = require("apollo-server-express");
 
@@ -153,8 +154,27 @@ const upload = multer({
     fileSize: 1 * 1000 * 1000
   }
 });
-
+app.post("/capturedLinks", handleCreateCaptureLink);
 app.post("/uploadHtml", upload.single("file"), handleUpload, handleUploadError);
+
+function handleCreateCaptureLink(req, res): void {
+  if (!req.body.title) {
+    res.status(400).send("title is required");
+    return;
+  }
+  if (!req.body.url) {
+    res.status(400).send("url is required");
+    return;
+  }
+  createCapturedLink(req.body)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(err => {
+      LOGGER.error(err);
+      res.sendStatus(500);
+    });
+}
 
 function handleUpload(req, res): void {
   importEvernoteNoteUpload(req["file"])

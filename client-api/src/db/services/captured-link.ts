@@ -12,7 +12,8 @@ export function createCapturedLink(
   url: string,
   content: string,
   byline: string | null,
-  length: number | null
+  length: number | null,
+  comment: string | null
 ): Promise<CapturedLink> {
   const uuid = uuidv4();
   const capturedLinkUrn = new CapturedLinkUrn(uuid);
@@ -28,6 +29,7 @@ export function createCapturedLink(
       ${content ? ",content:{content}" : ""}
       ${byline ? ",byline:{byline}" : ""}
       ${length ? ",length:{length}" : ""}
+      ${comment ? ",comment:{comment}" : ""}
     })
     RETURN capturedLink`;
   const params = [
@@ -39,7 +41,8 @@ export function createCapturedLink(
     new Param("lastModified", now.toString()),
     new Param("created", now.toString()),
     new Param("byline", content),
-    new Param("length", length)
+    new Param("length", length),
+    new Param("comment", comment)
   ];
   return executeQuery(query, params).then(res => {
     return format(res.records[0].get("capturedLink"));

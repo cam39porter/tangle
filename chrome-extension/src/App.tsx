@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import "./app.css";
 import * as fetch from "isomorphic-fetch";
 import config from "./config/index";
-import { assign } from "lodash";
 
 export interface IProps {
   article: {
@@ -48,8 +47,7 @@ class App extends Component<IProps, IState> {
             </div>
           ) : (
             <div className={`f6 light-red`}>
-              <p>There was an error saving.</p>
-              <p>Refresh to try again.</p>
+              There was an error saving. Refresh to try again.
             </div>
           )
         ) : (

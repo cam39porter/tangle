@@ -1,7 +1,7 @@
 {
   "name": "Tangle",
-  "version": "0.1.0",
-  "description": "Tangle sharing extension",
+  "version": "0.1.1",
+  "short_name": "Tangle page saving extension.",
   "manifest_version": 2,
   "browser_action": {
     "default_title": "Tangle"
@@ -16,7 +16,12 @@
       "js": ["content.js"]
     }
   ],
-  "permissions": ["tabs", "activeTab", "http://*/*", "https://*/*"],
+  "icons": {
+    "16": "logo-16.png",
+    "48": "logo-48.png",
+    "128": "logo-128.png"
+  },
+  "permissions": ["tabs", "activeTab", "http://*/*", "https://*/*", "storage"],
   "content_security_policy":
     "script-src 'self' https://apis.google.com 'unsafe-eval'; object-src 'self'"
 }

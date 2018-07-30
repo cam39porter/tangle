@@ -1,6 +1,5 @@
 /// <reference types="chrome" />
 
-import * as fetch from "isomorphic-fetch";
 import * as firebase from "firebase";
 import config from "./config/index";
 

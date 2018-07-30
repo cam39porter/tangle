@@ -30,5 +30,12 @@ module.exports = {
     filename: "[name].js",
     path: path.resolve(__dirname, "build")
   },
-  plugins: [new CopyWebpackPlugin([{ from: "manifest.json" }])]
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: "manifest.json" },
+      { from: "./static/logo-16.png" },
+      { from: "./static/logo-48.png" },
+      { from: "./static/logo-128.png" }
+    ])
+  ]
 };

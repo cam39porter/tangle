@@ -17,66 +17,27 @@ import Login from "./views/login";
 import Main from "./views/main";
 
 // Config / Utils
-import { FirebaseUtils, AnalyticsUtils, ErrorsUtils } from "./utils";
+import { AnalyticsUtils } from "./utils";
 
 // Types
-import { User } from "firebase";
 
 interface Props extends RouteProps {}
 
 interface State {
   isAuthenticated: boolean | null;
   isEmailVerified: boolean | null;
-  user: User | null;
+  user: null;
 }
 
 class App extends React.Component<Props, State> {
-  removeFirebaseListener: () => void;
-
   constructor(props: Props) {
     super(props);
 
     this.state = {
-      isAuthenticated: null,
-      isEmailVerified: null,
+      isAuthenticated: true,
+      isEmailVerified: true,
       user: null
     };
-  }
-
-  setUserIdToken = (user: User) => {
-    user.getIdToken(true).then(idToken => {
-      localStorage.setItem("idToken", idToken);
-      AnalyticsUtils.setUserId(user.uid);
-      this.setState({
-        isAuthenticated: true,
-        isEmailVerified: user.emailVerified,
-        user: user
-      });
-    });
-  };
-
-  componentWillMount() {
-    FirebaseUtils.firebaseAuth()
-      .setPersistence(FirebaseUtils.firebaseAuth.Auth.Persistence.LOCAL)
-      .then(() => {
-        this.removeFirebaseListener = FirebaseUtils.firebaseAuth().onIdTokenChanged(
-          user => {
-            if (user) {
-              this.setUserIdToken(user);
-            } else {
-              this.setState({
-                isAuthenticated: false
-              });
-            }
-          }
-        );
-      })
-      .catch(err => {
-        ErrorsUtils.errorHandler.report(err.message, err.stack);
-      });
-  }
-  componentWillUnmount() {
-    this.removeFirebaseListener();
   }
 
   render() {

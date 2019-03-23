@@ -9,6 +9,7 @@
   "main": "server.js",
   "scripts": {
     "start": "REACT_APP_ENV=development react-scripts-ts start",
+    "start:local": "REACT_APP_ENV=local react-scripts-ts start",
     "debug": "yarn prestart && REACT_APP_ENV=local react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
@@ -42,7 +43,6 @@
     "draft-js-plugins-editor": "2.1.1",
     "echarts": "^4.0.4",
     "echarts-for-react": "^2.0.8",
-    "firebase": "4.12.1",
     "graphql": "0.13.0",
     "graphql-tag": "2.8.0",
     "lodash": "^4.17.5",

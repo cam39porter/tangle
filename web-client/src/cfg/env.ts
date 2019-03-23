@@ -1,6 +1,7 @@
 const devApiUrl = "https://api.dev.tangleapp.co";
 const prodApiUrl = "https://api.tangleapp.co";
 const localApiUrl = "http://localhost:8080";
+
 const graphqlEndpoint = "graphql";
 const dev = {
   REACT_APP_API_BASE_URL: devApiUrl,
@@ -21,7 +22,7 @@ const config =
   process.env.REACT_APP_ENV === "production"
     ? prod
     : process.env.REACT_APP_ENV === "development"
-      ? dev
-      : local;
+    ? dev
+    : local;
 
 export default config;

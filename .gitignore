@@ -59,3 +59,6 @@ __generated__/
 # Chrome Extension Builds #
 *.crx
 *.pem
+
+# Node version manager
+nvm/

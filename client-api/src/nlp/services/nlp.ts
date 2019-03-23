@@ -8,7 +8,10 @@ const client = process.env.GCLOUD_APPLICATION_CREDENTIALS
   ? new language.LanguageServiceClient({
       keyFilename: process.env.GCLOUD_APPLICATION_CREDENTIALS
     })
-  : new language.LanguageServiceClient();
+  : new language.LanguageServiceClient({
+      keyFilename:
+        "/Users/colemccracken/Downloads/test-project-193103-9c457e266686.json"
+    });
 
 function getNLPResponse(body: string): Promise<NLPEntityResponse> {
   const document = {

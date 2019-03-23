@@ -14,7 +14,7 @@ import * as fs from "fs";
 import { GraphQLSchema, GraphQLError } from "graphql";
 import * as path from "path";
 import captureResolvers from "./capture/resolver";
-import { authFilter, initAuth } from "./filters/auth";
+import { authFilter } from "./filters/auth";
 import surfaceResolvers from "./surface/resolver";
 import { Logger } from "./util/logging/logger";
 import { getRequestContext, RequestContext } from "./filters/request-context";
@@ -34,7 +34,6 @@ import { createCapturedLink } from "./capture/services/captured-link";
 const { graphqlExpress } = require("apollo-server-express");
 
 const LOGGER = new Logger("src/index.ts");
-
 const schema = fs.readFileSync(
   path.join(__dirname, "../data-template/schema.graphql"),
   "utf8"
@@ -48,8 +47,6 @@ const executableSchema: GraphQLSchema = makeExecutableSchema({
   typeDefs: schema,
   resolvers: [captureResolvers, surfaceResolvers]
 });
-
-initAuth();
 
 const baseMorganFormat =
   `:date[iso] :reqId :userId :env :remote-addr :remote-user :referrer :user-agent ` +
@@ -133,6 +130,7 @@ if (isLocal()) {
     LOGGER.info("Api HTTPS server listening on port " + HTTPS_PORT);
   });
 }
+
 LOGGER.info(`env is ${process.env.NODE_ENV}`);
 
 function setRequestContext(req, _, next): void {

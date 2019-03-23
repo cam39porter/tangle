@@ -215,6 +215,7 @@ export function create(
     new Param("imported", imported && imported.toString()),
     new Param("size", size)
   ];
+  console.log(params);
   return executeQuery(query, params).then((result: StatementResult) => {
     if (!result.records[0]) {
       throw new NotFoundError(

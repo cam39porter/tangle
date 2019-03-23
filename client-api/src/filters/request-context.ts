@@ -1,6 +1,6 @@
 import { User } from "../db/models/user";
 import * as contextService from "request-context";
-import { v4 as uuidv4 } from "uuid/v4";
+import { v4 as uuidv4 } from "uuid";
 
 export class RequestContext {
   public loggedInUser: User;

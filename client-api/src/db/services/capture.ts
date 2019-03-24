@@ -48,9 +48,8 @@ export function batchGetCaptures(
     new Param("captureUrns", captureUrns.map(urn => urn.toRaw()))
   ];
   const query = `MATCH (capture:Capture)<-[:CREATED]-(author:User)
-  WHERE capture.id IN {captureUrns} AND capture.owner IN {userUrns}
+  WHERE capture.id IN {captureUrns}
   OPTIONAL MATCH (capture)<-[:INCLUDES]-(session:Session)
-  WHERE session.owner IN {userUrns}
   RETURN capture, author, collect(session) as sessions`;
   return executeQuery(query, params).then(result => {
     const captures = result.records.map(record => {

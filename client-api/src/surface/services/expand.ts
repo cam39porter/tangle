@@ -45,6 +45,7 @@ function expandGraph(
     new Param("captureIds", captureUrns.map(urn => urn.toRaw())),
     new Param("startUrn", startUrn)
   ];
+
   const query = getExpansionQuery(startUrn);
   return executeQuery(query, params).then((result: StatementResult) => {
     return buildGraph(formatDbResponse(result));

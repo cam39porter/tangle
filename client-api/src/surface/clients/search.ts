@@ -71,7 +71,43 @@ function searchSessions(
   });
 }
 
-function searchCaptures(
+function searchCaptures(rawQuery: string, capturePagingContext: PagingContext) {
+  const userId = getAuthenticatedUser().urn;
+  const start = parseFloat(capturePagingContext.pageId);
+  const query = `
+  MATCH (c:Capture {owner:{userId}})
+  WHERE TOLOWER(c.body) CONTAINS TOLOWER({rawQuery})
+  WITH collect(c)[{start}..{end}] as captures, COUNT(*) as total
+  UNWIND captures as capture
+  RETURN capture, total
+  ORDER BY capture.created
+  `;
+  const params = [
+    new Param("userId", userId.toRaw()),
+    new Param("rawQuery", rawQuery),
+    new Param("start", start),
+    new Param("end", start + capturePagingContext.count)
+  ];
+  return executeQuery(query, params).then(res => {
+    const captureIds = res.records.map(record => {
+      return CaptureUrn.fromRaw(record.get("capture").properties["id"]);
+    });
+    const total = res.records[0] ? res.records[0].get("total") : 0;
+    const nextCapturePageId =
+      start + capturePagingContext.count < total
+        ? (start + capturePagingContext.count).toString()
+        : null;
+    const ret = new CollectionResult(
+      captureIds,
+      new PagingInfo(nextCapturePageId, total)
+    );
+    return ret;
+  });
+}
+
+//@ts-ignore
+// Used for elastic search if we ever set that up again
+function searchCapturesES(
   rawQuery: string,
   capturePagingContext: PagingContext
 ): Promise<CollectionResult<CaptureUrn>> {

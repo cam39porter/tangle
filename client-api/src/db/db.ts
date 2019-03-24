@@ -5,8 +5,10 @@ import { timeout, TimeoutError } from "promise-timeout";
 
 const LOGGER = new Logger("src/db/db.ts");
 
+const NEO4J_URL = "35.247.30.189";
+
 const driver = neo4j.driver(
-  `bolt://35.247.30.189:7687`,
+  `bolt://${NEO4J_URL}:7687`,
   neo4j.auth.basic("neo4j", "password"),
   {
     maxTransactionRetryTime: 1

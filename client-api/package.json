@@ -13,7 +13,7 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "build": "tsc",
     "prepush": "yarn build && yarn lint && yarn test",
-    "start": "node .compiled/index.js",
+    "start": "NODE_ENV=local node .compiled/index.js",
     "start:local": "NODE_ENV=local node .compiled/index.js",
     "deploy:api:dev": "echod 'doesnt work'",
     "deploy:api:prod": "echo 'doesnt work'"

@@ -1,5 +1,5 @@
-const devApiUrl = "https://api.dev.tangleapp.co";
-const prodApiUrl = "https://api.tangleapp.co";
+const devApiUrl = "https://test-project-193103.appspot.com";
+const prodApiUrl = devApiUrl;
 const localApiUrl = "http://localhost:8080";
 
 const graphqlEndpoint = "graphql";

@@ -68,8 +68,8 @@ morgan.token("userId", req => {
   return requestContext ? requestContext.loggedInUser.urn.toRaw() : "-";
 });
 
-const HTTPS_PORT = 8443;
 const HTTP_PORT = 8080;
+const HTTPS_PORT = 443;
 const app = express();
 
 app.get("/", (_, res) => {
@@ -95,7 +95,10 @@ app.use(helmet());
 if (isProd()) {
   app.use(
     cors({
-      origin: ["https://tangleapp.co"],
+      origin: [
+        "https://tangleapp.co",
+        "https://dev-dot-test-project-193103.appspot.com"
+      ],
       methods: ["GET", "POST"],
       optionsSuccessStatus: 200
     })
@@ -122,10 +125,7 @@ if (isLocal()) {
     LOGGER.info("Api HTTP listening on port " + HTTP_PORT);
   });
 } else {
-  const httpsOptions = {
-    key: fs.readFileSync(process.env.TLS_KEY),
-    cert: fs.readFileSync(process.env.TLS_CERT)
-  };
+  const httpsOptions = {};
   https.createServer(httpsOptions, app).listen(HTTPS_PORT, () => {
     LOGGER.info("Api HTTPS server listening on port " + HTTPS_PORT);
   });

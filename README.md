@@ -1,4 +1,4 @@
-# Hex Ventures
+# Tangle
 
 This repo contains a product called Tangle. Development has been discontinued, but you can find a version online at https://dev-dot-test-project-193103.appspot.com/
 

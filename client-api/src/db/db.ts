@@ -5,13 +5,14 @@ import { timeout, TimeoutError } from "promise-timeout";
 
 const LOGGER = new Logger("src/db/db.ts");
 
-const NEO4J_URL = "35.247.30.189";
+const NEO4J_URL = "34.222.241.88";
 
 const driver = neo4j.driver(
   `bolt://${NEO4J_URL}:7687`,
-  neo4j.auth.basic("neo4j", "password"),
+  neo4j.auth.basic("neo4j", "i-0f214232ca2c43649"),
   {
-    maxTransactionRetryTime: 1
+    maxTransactionRetryTime: 1,
+    connectionTimeout: 10000
   }
 );
 

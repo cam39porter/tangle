@@ -1,4 +1,5 @@
-const devApiUrl = "https://test-project-193103.appspot.com";
+const devApiUrl =
+  "http://ec2-34-222-241-88.us-west-2.compute.amazonaws.com:8080";
 const prodApiUrl = devApiUrl;
 const localApiUrl = "http://localhost:8080";
 

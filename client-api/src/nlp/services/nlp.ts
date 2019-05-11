@@ -7,8 +7,7 @@ const LOGGER = new Logger("src/nlp/services/nlp.ts");
 
 const client = isLocal()
   ? new language.LanguageServiceClient({
-      keyFilename:
-        "/Users/colemccracken/Downloads/test-project-193103-9c457e266686.json"
+      keyFilename: "/aws-gcp-key.json"
     })
   : new language.LanguageServiceClient({
       keyFilename: process.env.GCLOUD_APPLICATION_CREDENTIALS

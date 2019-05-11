@@ -5,7 +5,7 @@ import { timeout, TimeoutError } from "promise-timeout";
 
 const LOGGER = new Logger("src/db/db.ts");
 
-const NEO4J_URL = "34.222.241.88";
+const NEO4J_URL = "34.219.241.98";
 
 const driver = neo4j.driver(
   `bolt://${NEO4J_URL}:7687`,

@@ -43,7 +43,6 @@
     "echarts": "^4.0.4",
     "echarts-for-react": "^2.0.15-beta.0",
     "firebase": "^6.0.2",
-    "fsevents": "^2.0.6",
     "graphql": "14.3.0",
     "graphql-tag": "2.10.1",
     "lodash": "^4.17.5",

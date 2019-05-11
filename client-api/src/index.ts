@@ -69,7 +69,7 @@ morgan.token("userId", req => {
 });
 
 const HTTP_PORT = 8080;
-const HTTPS_PORT = 443;
+const HTTPS_PORT = 4443;
 const app = express();
 
 app.get("/", (_, res) => {

@@ -1,4 +1,4 @@
-const devApiUrl = "https://api.tangleapp.co:8080";
+const devApiUrl = "https://api.tangleapp.co:4443";
 const prodApiUrl = devApiUrl;
 const localApiUrl = "http://localhost:8080";
 

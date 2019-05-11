@@ -14,7 +14,7 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "analyze": "source-map-explorer build/static/js/main.*",
-    "types": "rm -rf src/__generated__/* && apollo client:codegen ./src/__generated__/types.ts --endpoint=http://api.tangleapp.co:8080/graphql --includes=src/**/queries.ts --target=typescript --outputFlat",
+    "types": "rm -rf src/__generated__/* && apollo client:codegen ./src/__generated__/types.ts --endpoint=http://localhost:8080/graphql --includes=src/**/queries.ts --target=typescript --outputFlat",
     "deploy:web:dev": "REACT_APP_ENV=development yarn build && gcloud -q app deploy ./dev.yaml",
     "deploy:web:prod": "REACT_APP_ENV=production yarn build && gcloud -q app deploy ./prod.yaml",
     "deploy:web:maintenance": "REACT_APP_ENV=production REACT_APP_MAINTENANCE=true yarn build && gcloud -q app deploy ./prod.yaml",

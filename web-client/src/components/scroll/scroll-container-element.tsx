@@ -1,6 +1,6 @@
 // React
 import * as React from "react";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 
 // Components
 import { ScrollContainerContext } from "./scroll-container";
@@ -14,7 +14,7 @@ interface State {}
 
 class ScrollContainerElement extends React.Component<Props, State> {
   static contextTypes = {
-    scroll: PropTypes.object
+    // scroll: PropTypes.object
   };
 
   context: ScrollContainerContext;
@@ -22,11 +22,11 @@ class ScrollContainerElement extends React.Component<Props, State> {
   _element: React.ReactInstance;
 
   componentDidMount() {
-    this.context.scroll.register(this.props.name, this._element);
+    // this.context.scroll.register(this.props.name, this._element);
   }
 
   componentWillUnmount() {
-    this.context.scroll.unregister(this.props.name);
+    // this.context.scroll.unregister(this.props.name);
   }
 
   render() {

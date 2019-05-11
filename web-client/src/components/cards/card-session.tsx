@@ -6,8 +6,8 @@ import { withRouter, RouteComponentProps } from "react-router";
 
 // GraphQL
 import {
-  deleteSessionMutation as deleteSessionResponse,
-  deleteSessionMutationVariables
+  deleteSession as deleteSessionResponse,
+  deleteSessionVariables
 } from "../../__generated__/types";
 import { deleteSession } from "../../queries";
 import { graphql, compose, MutationFunc } from "react-apollo";
@@ -26,10 +26,7 @@ interface Props extends RouteProps {
   sessionId: string;
   title: string;
   created: string;
-  deleteSession: MutationFunc<
-    deleteSessionResponse,
-    deleteSessionMutationVariables
-  >;
+  deleteSession: MutationFunc<deleteSessionResponse, deleteSessionVariables>;
 }
 
 interface State {

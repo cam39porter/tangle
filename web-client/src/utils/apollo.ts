@@ -19,13 +19,13 @@ import config from "../cfg";
 // Types
 import { MutationUpdaterFn } from "apollo-client";
 import {
-  CaptureFieldsFragment,
-  NodeFieldsFragment,
-  SessionFieldsFragment,
-  SessionCollectionFieldsFragment,
-  SessionItemCollectionFieldsFragment,
-  SurfaceResultsFieldsFragment,
-  CaptureCollectionFieldsFragment
+  CaptureFields,
+  NodeFields,
+  SessionFields,
+  SessionCollectionFields,
+  SessionItemCollectionFields,
+  SurfaceResultsFields,
+  CaptureCollectionFields
 } from "../__generated__/types";
 import { DataProxy } from "apollo-cache";
 
@@ -113,7 +113,7 @@ const updateCaptureRefetchQueries = (
 
 // Create Session Capture Update
 const createSessionCaptureUpdate = (store, { data }) => {
-  let captureNode = data && (data["createCapture"] as NodeFieldsFragment);
+  let captureNode = data && (data["createCapture"] as NodeFields);
 
   if (!captureNode) {
     return;
@@ -125,10 +125,10 @@ const createSessionCaptureUpdate = (store, { data }) => {
     created: Date.now(),
     body: captureNode.text || "",
     parents: captureNode.parents
-  } as CaptureFieldsFragment;
+  } as CaptureFields;
 
   // SessionItemsCollection
-  let sessionItemCollection: SessionItemCollectionFieldsFragment | null = store.readFragment(
+  let sessionItemCollection: SessionItemCollectionFields | null = store.readFragment(
     {
       id: "SessionItemCollection",
       fragment: sessionItemCollectionFragment,
@@ -157,7 +157,7 @@ const deleteSessionUpdate: (
 ) => MutationUpdaterFn = sessionId => {
   return store => {
     // SessionCollection
-    let sessionCollection: SessionCollectionFieldsFragment | null = store.readFragment(
+    let sessionCollection: SessionCollectionFields | null = store.readFragment(
       SESSION_COLLECTION_READ_FRAGMENT
     );
     if (sessionCollection && sessionCollection.items) {
@@ -175,7 +175,7 @@ const deleteSessionUpdate: (
     }
 
     // SurfaceResults
-    const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
+    const surfaceResults: SurfaceResultsFields | null = store.readFragment(
       SURFACE_RESULTS_READ_FRAGMENT
     );
     if (surfaceResults && surfaceResults.graph) {
@@ -203,7 +203,7 @@ const editSessionUpdate: (
 ) => MutationUpdaterFn = (sessionId, title) => {
   return store => {
     // SessionCollection
-    let sessionCollection: SessionCollectionFieldsFragment | null = store.readFragment(
+    let sessionCollection: SessionCollectionFields | null = store.readFragment(
       SESSION_COLLECTION_READ_FRAGMENT
     );
     if (sessionCollection && sessionCollection.items) {
@@ -226,8 +226,9 @@ const editSessionUpdate: (
     // Session
     let sessionReadFragment = assign(SESSION_READ_FRAGMENT_NO_ID, {
       id: sessionId
+      // @ts-ignore
     }) as DataProxy.Fragment;
-    let currentSession: SessionFieldsFragment | null = store.readFragment(
+    let currentSession: SessionFields | null = store.readFragment(
       sessionReadFragment
     );
     if (currentSession) {
@@ -246,7 +247,7 @@ const deleteCaptureUpdate: (
 ) => MutationUpdaterFn = captureId => {
   return store => {
     // Capture Collection
-    let captureCollection: CaptureCollectionFieldsFragment | null = store.readFragment(
+    let captureCollection: CaptureCollectionFields | null = store.readFragment(
       CAPTURE_COLLECTION_READ_FRAGMENT
     );
     if (captureCollection) {
@@ -264,7 +265,7 @@ const deleteCaptureUpdate: (
     }
 
     // SessionItemsCollection
-    let sessionItemCollection: SessionItemCollectionFieldsFragment | null = store.readFragment(
+    let sessionItemCollection: SessionItemCollectionFields | null = store.readFragment(
       SESSION_ITEM_COLLECTION_READ_FRAGMENT
     );
     if (sessionItemCollection && sessionItemCollection.items) {
@@ -282,7 +283,7 @@ const deleteCaptureUpdate: (
     }
 
     // SurfaceResults
-    const surfaceResults: SurfaceResultsFieldsFragment | null = store.readFragment(
+    const surfaceResults: SurfaceResultsFields | null = store.readFragment(
       SURFACE_RESULTS_READ_FRAGMENT
     );
     if (surfaceResults && surfaceResults.graph) {

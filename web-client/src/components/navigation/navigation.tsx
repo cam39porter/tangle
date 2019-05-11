@@ -6,8 +6,8 @@ import { RouteComponentProps } from "react-router";
 
 // GraphQL
 import {
-  createSessionMutation as createSessionResponse,
-  createSessionCaptureMutationVariables
+  createSession as createSessionResponse,
+  createSessionCaptureVariables
 } from "../../__generated__/types";
 import { createSession } from "../../queries";
 import { graphql, MutationFunc } from "react-apollo";
@@ -27,7 +27,7 @@ interface RouteProps extends RouteComponentProps<{}> {}
 interface Props extends RouteProps {
   createSession: MutationFunc<
     createSessionResponse,
-    createSessionCaptureMutationVariables
+    createSessionCaptureVariables
   >;
 }
 
@@ -53,6 +53,8 @@ class Navigation extends React.Component<Props, State> {
               this.props
                 .createSession({})
                 .then(res => {
+                  // @ts-ignore
+
                   let id = res.data.createSession.id;
                   this.props.history.push(
                     `/note/${encodeURIComponent(id)}/format/list/related`
@@ -113,5 +115,6 @@ const withCreateSession = graphql<createSessionResponse, Props>(createSession, {
   name: "createSession",
   alias: "withCreateSession"
 });
+// @ts-ignore
 
 export default withCreateSession(Navigation);

@@ -2,7 +2,7 @@
 import * as React from "react";
 
 // GraphQL
-import { getSettingsQuery as getSettingsResponse } from "../../__generated__/types";
+import { getSettings as getSettingsResponse } from "../../__generated__/types";
 import { graphql, compose, QueryProps } from "react-apollo";
 import { getSettings } from "../../queries";
 

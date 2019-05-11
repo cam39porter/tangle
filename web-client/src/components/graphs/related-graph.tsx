@@ -6,10 +6,10 @@ import { RouteComponentProps } from "react-router";
 
 // GraphQL
 import {
-  getDetailedQuery as getDetailedQueryResponse,
-  getDetailedQueryVariables,
-  NodeFieldsFragment,
-  EdgeFieldsFragment,
+  getDetailed as getDetailedQueryResponse,
+  getDetailedVariables,
+  NodeFields,
+  EdgeFields,
   NodeType
 } from "../../__generated__/types";
 
@@ -28,8 +28,7 @@ import { AnalyticsUtils } from "../../utils/index";
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
-  data: QueryProps<getDetailedQueryVariables> &
-    Partial<getDetailedQueryResponse>;
+  data: QueryProps<getDetailedVariables> & Partial<getDetailedQueryResponse>;
   headerHeight: number;
 }
 
@@ -44,29 +43,12 @@ class RelatedGraph extends React.Component<Props, State> {
   render() {
     const data = this.props.data;
 
-    let nodes: Array<NodeFieldsFragment> = [];
-    let edges: Array<EdgeFieldsFragment> = [];
+    let nodes: Array<NodeFields> = [];
+    let edges: Array<EdgeFields> = [];
 
     if (data && data.getDetailed && data.getDetailed.graph) {
       nodes = data.getDetailed.graph.nodes;
       edges = data.getDetailed.graph.edges;
-    }
-
-    const error = data.error;
-    if (error) {
-      return (
-        <Help>
-          <div>We ran into an issue loading your data.</div>
-        </Help>
-      );
-    }
-
-    if (data.loading) {
-      return (
-        <Help>
-          <div />
-        </Help>
-      );
     }
 
     AnalyticsUtils.trackEvent({
@@ -92,8 +74,11 @@ class RelatedGraph extends React.Component<Props, State> {
 
 const withGetDetailed = graphql<getDetailedQueryResponse, Props>(
   graphGetDetailed,
+  // @ts-ignore
   {
+    // @ts-ignore
     alias: "withGetDetailed",
+    // @ts-ignore
     options: (props: Props) => ({
       variables: {
         id: decodeURIComponent(props.match.params["id"])

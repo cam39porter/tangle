@@ -6,9 +6,9 @@ import { RouteComponentProps } from "react-router";
 
 // GraphQL
 import {
-  getRecentSessionsQuery as getRecentSessionsResponse,
-  getRecentSessionsQueryVariables,
-  SessionWithoutItemCollectionFieldsFragment
+  getRecentSessions as getRecentSessionsResponse,
+  getRecentSessionsVariables,
+  SessionWithoutItemCollectionFields
 } from "../../__generated__/types";
 
 import { getRecentSessions } from "../../queries";
@@ -29,7 +29,7 @@ import ErrorBoundary from "../help/error-boundary";
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
-  sessionData: QueryProps<getRecentSessionsQueryVariables> &
+  sessionData: QueryProps<getRecentSessionsVariables> &
     Partial<getRecentSessionsResponse>;
   query: string;
   headerHeight: number;
@@ -45,8 +45,9 @@ class RecentGrid extends React.Component<Props, State> {
 
   render() {
     const sessionCollection = this.props.sessionData.getRecentSessions;
-    let sessions: Array<SessionWithoutItemCollectionFieldsFragment> = [];
+    let sessions: Array<SessionWithoutItemCollectionFields> = [];
 
+    // @ts-ignore
     const fetchMore = this.props.sessionData.fetchMore;
     let nextSessionPageId: string | null = null;
 
@@ -56,6 +57,7 @@ class RecentGrid extends React.Component<Props, State> {
         sessionCollection.pagingInfo && sessionCollection.pagingInfo.nextPageId;
     }
 
+    // @ts-ignore
     const error = this.props.sessionData.error;
     if (error) {
       return (
@@ -65,6 +67,7 @@ class RecentGrid extends React.Component<Props, State> {
       );
     }
 
+    // @ts-ignore
     if (this.props.sessionData.loading) {
       return (
         <Help>
@@ -87,7 +90,8 @@ class RecentGrid extends React.Component<Props, State> {
                 }}
               >
                 guide
-              </span>.
+              </span>
+              .
             </div>
           </React.Fragment>
         }

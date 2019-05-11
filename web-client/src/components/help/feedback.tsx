@@ -3,8 +3,8 @@ import * as React from "react";
 
 // GraphQL
 import {
-  sendFeedbackMutation as sendFeedbackResponse,
-  sendFeedbackMutationVariables
+  sendFeedback as sendFeedbackResponse,
+  sendFeedbackVariables
 } from "../../__generated__/types";
 import { graphql, compose, MutationFunc } from "react-apollo";
 import { sendFeedback } from "../../queries";
@@ -19,10 +19,7 @@ import { ErrorsUtils } from "../../utils/index";
 
 // Types
 interface Props {
-  sendFeedback: MutationFunc<
-    sendFeedbackResponse,
-    sendFeedbackMutationVariables
-  >;
+  sendFeedback: MutationFunc<sendFeedbackResponse, sendFeedbackVariables>;
 }
 
 interface State {

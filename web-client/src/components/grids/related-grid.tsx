@@ -6,9 +6,9 @@ import { RouteComponentProps } from "react-router";
 
 // GraphQL
 import {
-  getRelatedCapturesBySessionQuery as getRelatedCapturesBySessionResponse,
-  getRelatedCapturesBySessionQueryVariables,
-  CaptureFieldsFragment
+  getRelatedCapturesBySession as getRelatedCapturesBySessionResponse,
+  getRelatedCapturesBySessionVariables,
+  CaptureFields
 } from "../../__generated__/types";
 
 import { getRelatedCapturesBySession } from "../../queries";
@@ -27,7 +27,7 @@ import { AnalyticsUtils } from "../../utils/index";
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
-  data: QueryProps<getRelatedCapturesBySessionQueryVariables> &
+  data: QueryProps<getRelatedCapturesBySessionVariables> &
     Partial<getRelatedCapturesBySessionResponse>;
   headerHeight: number;
 }
@@ -42,12 +42,12 @@ class RelatedGrid extends React.Component<Props, State> {
 
   render() {
     const captureCollection = this.props.data.getRelatedCapturesBySession;
-    let captures: Array<CaptureFieldsFragment> = [];
+    let captures: Array<CaptureFields> = [];
 
     if (captureCollection) {
       captures = captureCollection.items;
     }
-
+    // @ts-ignore
     const error = this.props.data.error;
     if (error) {
       return (
@@ -56,7 +56,7 @@ class RelatedGrid extends React.Component<Props, State> {
         </Help>
       );
     }
-
+    // @ts-ignore
     if (this.props.data.loading) {
       return (
         <Help>
@@ -86,8 +86,11 @@ class RelatedGrid extends React.Component<Props, State> {
 const withGetRelatedCapturesBySession = graphql<
   getRelatedCapturesBySessionResponse,
   Props
+  // @ts-ignore
 >(getRelatedCapturesBySession, {
+  // @ts-ignore
   alias: "withGetRelatedCapturesBySession",
+  // @ts-ignore
   options: (props: Props) => ({
     variables: {
       sessionId: decodeURIComponent(props.match.params["id"]),

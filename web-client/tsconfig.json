@@ -12,10 +12,11 @@
     "rootDirs": ["src", "stories"],
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
+    "noEmitOnError": true,
     "noImplicitThis": true,
     "noImplicitAny": false,
-    "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
+    "strictNullChecks": false,
+    "suppressImplicitAnyIndexErrors": false,
     "noUnusedLocals": false
   },
   "exclude": [

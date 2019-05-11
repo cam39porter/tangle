@@ -6,8 +6,8 @@ import { withRouter, RouteComponentProps } from "react-router";
 
 // GraphQL
 import {
-  createSessionMutation as createSessionResponse,
-  createSessionCaptureMutationVariables
+  createSession as createSessionResponse,
+  createSessionCaptureVariables
 } from "../../__generated__/types";
 import { createSession } from "../../queries";
 import { graphql, compose, MutationFunc } from "react-apollo";
@@ -22,18 +22,18 @@ import { AnalyticsUtils, ErrorsUtils } from "../../utils";
 
 // Types
 import {
-  CaptureFieldsFragment,
-  SessionWithoutItemCollectionFieldsFragment
+  CaptureFields,
+  SessionWithoutItemCollectionFields
 } from "../../__generated__/types";
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
   createSession: MutationFunc<
     createSessionResponse,
-    createSessionCaptureMutationVariables
+    createSessionCaptureVariables
   >;
-  sessions: Array<SessionWithoutItemCollectionFieldsFragment>;
-  captures: Array<CaptureFieldsFragment>;
+  sessions: Array<SessionWithoutItemCollectionFields>;
+  captures: Array<CaptureFields>;
   emptySessionsMessage?: React.ReactChild;
   emptyCapturesMessage?: string;
   sessionId?: string;
@@ -77,6 +77,7 @@ class GridCaptures extends React.Component<Props, State> {
                     this.props
                       .createSession({})
                       .then(res => {
+                        // @ts-ignore
                         let id = res.data.createSession.id;
                         this.props.history.push(
                           `/note/${encodeURIComponent(id)}/format/list/related`

@@ -6,8 +6,8 @@ import { RouteComponentProps } from "react-router";
 
 // GraphQL
 import {
-  getSessionQuery as getSessionResponse,
-  getSessionQueryVariables
+  getSession as getSessionResponse,
+  getSessionVariables
 } from "../__generated__/types";
 
 import { getSession } from "../queries";
@@ -27,7 +27,7 @@ import { ErrorsUtils } from "../utils/index";
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
-  data: QueryProps<getSessionQueryVariables> & Partial<getSessionResponse>;
+  data: QueryProps<getSessionVariables> & Partial<getSessionResponse>;
   // Window Size
   windowWidth: number;
   windowHeight: number;
@@ -53,7 +53,7 @@ class Session extends React.Component<Props, State> {
   render() {
     const { data, windowHeight } = this.props;
     const { headerHeight, footerHeight, isSaving } = this.state;
-
+    // @ts-ignore
     if (data.error) {
       ErrorsUtils.errorToasts.openSession();
     }
@@ -112,10 +112,13 @@ class Session extends React.Component<Props, State> {
     );
   }
 }
-
+// @ts-ignore
 const withGetSession = graphql<getSessionResponse, Props>(getSession, {
+  // @ts-ignore
   name: "data",
+  // @ts-ignore
   alias: "withGetSession",
+  // @ts-ignore
   options: (props: Props) => ({
     variables: {
       sessionId: decodeURIComponent(props.match.params["id"]),

@@ -1,7 +1,7 @@
 // React
 import * as React from "react";
 import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 
 // Config / Utils
 import scrollIntoView from "scroll-into-view";
@@ -19,7 +19,7 @@ export interface ScrollContainerContext {
 
 class ScrollContainer extends React.Component<Props, State> {
   static childContextTypes = {
-    scroll: PropTypes.object
+    // scroll: PropTypes.object
   };
 
   elements = {};

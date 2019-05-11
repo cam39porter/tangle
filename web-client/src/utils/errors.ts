@@ -1,5 +1,5 @@
 import { ApolloClient } from "apollo-client";
-import { reportErrorMutationVariables } from "../__generated__/types";
+import { reportErrorVariables } from "../__generated__/types";
 import { reportError } from "../queries";
 import { toast } from "react-toastify";
 
@@ -12,7 +12,7 @@ let errorHandler = {
 const initializeCloudReporting = (client: ApolloClient<Object>) => {
   errorHandler.report = (message: String, stacktrace: Object) => {
     client
-      .mutate<reportErrorMutationVariables>({
+      .mutate<reportErrorVariables>({
         mutation: reportError,
         variables: {
           message: message,

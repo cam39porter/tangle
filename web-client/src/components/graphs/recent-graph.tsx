@@ -6,10 +6,10 @@ import { RouteComponentProps } from "react-router";
 
 // GraphQL
 import {
-  getMostRecentQuery as getMostRecentResponse,
-  getMostRecentQueryVariables,
-  NodeFieldsFragment,
-  EdgeFieldsFragment
+  getMostRecent as getMostRecentResponse,
+  getMostRecentVariables,
+  NodeFields,
+  EdgeFields
 } from "../../__generated__/types";
 
 import { graphGetRecent } from "../../queries";
@@ -27,8 +27,7 @@ import config from "../../cfg";
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
-  data: QueryProps<getMostRecentQueryVariables> &
-    Partial<getMostRecentResponse>;
+  data: QueryProps<getMostRecentVariables> & Partial<getMostRecentResponse>;
   headerHeight: number;
   query: string;
 }
@@ -44,29 +43,12 @@ class RecentGraph extends React.Component<Props, State> {
   render() {
     const data = this.props.data;
 
-    let nodes: Array<NodeFieldsFragment> = [];
-    let edges: Array<EdgeFieldsFragment> = [];
+    let nodes: Array<NodeFields> = [];
+    let edges: Array<EdgeFields> = [];
 
     if (data && data.getMostRecent && data.getMostRecent.graph) {
       nodes = data.getMostRecent.graph.nodes;
       edges = data.getMostRecent.graph.edges;
-    }
-
-    const error = data.error;
-    if (error) {
-      return (
-        <Help>
-          <div>We ran into an issue loading your data.</div>
-        </Help>
-      );
-    }
-
-    if (data.loading) {
-      return (
-        <Help>
-          <div />
-        </Help>
-      );
     }
 
     if (nodes.length === 0) {
@@ -83,9 +65,11 @@ class RecentGraph extends React.Component<Props, State> {
     return <Graph nodes={nodes} edges={edges} />;
   }
 }
-
+// @ts-ignore
 const withRecent = graphql<getMostRecentResponse, Props>(graphGetRecent, {
+  // @ts-ignore
   alias: "withRecent",
+  // @ts-ignore
   options: (props: Props) => ({
     variables: {
       rawQuery: props.query,

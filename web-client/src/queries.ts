@@ -178,7 +178,7 @@ export const graphSearch = gql`
 `;
 
 export const graphGetRecent = gql`
-  query getMostRecent($start: Int!, $count: Int!) {
+  query getMostRecent($start: Int, $count: Int) {
     getMostRecent(start: $start, count: $count) {
       ...SurfaceResultsFields
     }

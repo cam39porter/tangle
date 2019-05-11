@@ -6,8 +6,8 @@ import { withRouter, RouteComponentProps } from "react-router";
 
 // GraphQL
 import {
-  editSessionMutation as editSessionResponse,
-  editSessionMutationVariables
+  editSession as editSessionResponse,
+  editSessionVariables
 } from "../../__generated__/types";
 import { editSession } from "../../queries";
 import { graphql, compose, MutationFunc, withApollo } from "react-apollo";
@@ -36,7 +36,7 @@ const MAX_LENGTH_TITLE = 200; // characters
 // Types
 interface RouteProps extends RouteComponentProps<{}> {}
 interface Props extends RouteProps {
-  editSession: MutationFunc<editSessionResponse, editSessionMutationVariables>;
+  editSession: MutationFunc<editSessionResponse, editSessionVariables>;
   sessionId: string;
   startingHtml: string;
   startingTitle: string;

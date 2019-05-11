@@ -21,8 +21,8 @@ import { AnalyticsUtils } from "../../utils/index";
 // Types
 import { GraphEvent } from "../../types";
 import {
-  NodeFieldsFragment,
-  EdgeFieldsFragment,
+  NodeFields,
+  EdgeFields,
   NodeType,
   ResultClass
 } from "../../__generated__/types";
@@ -38,8 +38,8 @@ const WIDTH = "30em";
 
 interface Props extends RouteComponentProps<{}> {
   refEChart?: (eChart: ReactEchartsCore) => void;
-  nodes: Array<NodeFieldsFragment>;
-  edges: Array<EdgeFieldsFragment>;
+  nodes: Array<NodeFields>;
+  edges: Array<EdgeFields>;
   headerHeight: number;
   // Window Size
   windowWidth: number;
@@ -47,14 +47,13 @@ interface Props extends RouteComponentProps<{}> {
 }
 
 interface State {
-  focusNode: NodeFieldsFragment | null;
-  nodes: Array<NodeFieldsFragment>;
-  edges: Array<EdgeFieldsFragment>;
+  focusNode: NodeFields | null;
+  nodes: Array<NodeFields>;
+  edges: Array<EdgeFields>;
   currentSessionId?: string;
 }
 
-const filterDuplicateNodes = (nodes: Array<NodeFieldsFragment>) =>
-  uniqBy(nodes, "id");
+const filterDuplicateNodes = (nodes: Array<NodeFields>) => uniqBy(nodes, "id");
 
 class GraphVisualization extends React.Component<Props, State> {
   eChart: ReactEchartsCore | null = null;

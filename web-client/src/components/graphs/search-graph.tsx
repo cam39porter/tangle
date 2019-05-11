@@ -6,10 +6,10 @@ import { RouteComponentProps } from "react-router";
 
 // GraphQL
 import {
-  searchQuery as searchQueryResponse,
-  searchQueryVariables,
-  NodeFieldsFragment,
-  EdgeFieldsFragment,
+  search as searchResponse,
+  searchVariables,
+  NodeFields,
+  EdgeFields,
   NodeType
 } from "../../__generated__/types";
 
@@ -29,7 +29,7 @@ import { AnalyticsUtils } from "../../utils/index";
 interface RouteProps extends RouteComponentProps<{}> {}
 
 interface Props extends RouteProps {
-  data: QueryProps<searchQueryVariables> & Partial<searchQueryResponse>;
+  data: QueryProps<searchVariables> & Partial<searchResponse>;
   headerHeight: number;
   query: string;
 }
@@ -44,29 +44,12 @@ class SearchGraph extends React.Component<Props, State> {
 
   render() {
     const data = this.props.data;
-    let nodes: Array<NodeFieldsFragment> = [];
-    let edges: Array<EdgeFieldsFragment> = [];
+    let nodes: Array<NodeFields> = [];
+    let edges: Array<EdgeFields> = [];
 
     if (data && data.search && data.search.graph) {
       nodes = data.search.graph.nodes;
       edges = data.search.graph.edges;
-    }
-
-    const error = data.error;
-    if (error) {
-      return (
-        <Help>
-          <div>We ran into an issue loading your data.</div>
-        </Help>
-      );
-    }
-
-    if (data.loading) {
-      return (
-        <Help>
-          <div />
-        </Help>
-      );
     }
 
     AnalyticsUtils.trackEvent({
@@ -93,9 +76,12 @@ class SearchGraph extends React.Component<Props, State> {
     return <Graph nodes={nodes} edges={edges} />;
   }
 }
+// @ts-ignore
 
-const withSearch = graphql<searchQueryResponse, Props>(graphSearch, {
+const withSearch = graphql<searchResponse, Props>(graphSearch, {
+  // @ts-ignore
   alias: "withSearch",
+  // @ts-ignore
   options: (props: Props) => ({
     skip: props.query === "",
     variables: {

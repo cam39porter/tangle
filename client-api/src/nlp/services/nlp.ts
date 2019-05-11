@@ -1,17 +1,12 @@
 import language from "@google-cloud/language";
 import { NLPEntity, NLPEntityResponse } from "../models/nlp";
 import { Logger } from "../../util/logging/logger";
-import { isLocal } from "../../config";
 
 const LOGGER = new Logger("src/nlp/services/nlp.ts");
 
-const client = isLocal()
-  ? new language.LanguageServiceClient({
-      keyFilename: "/aws-gcp-key.json"
-    })
-  : new language.LanguageServiceClient({
-      keyFilename: process.env.GCLOUD_APPLICATION_CREDENTIALS
-    });
+const client = new language.LanguageServiceClient({
+  keyFilename: "/aws-gcp-key.json"
+});
 function getNLPResponse(body: string): Promise<NLPEntityResponse> {
   const document = {
     content: body,

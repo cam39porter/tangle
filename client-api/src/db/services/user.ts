@@ -34,7 +34,11 @@ function doMerge(user: User): Promise<User> {
 }
 
 function isUserWhitelisted(email: string): Promise<boolean> {
-  return Promise.resolve(true);
+  if (email) {
+    return Promise.resolve(true);
+  } else {
+    return Promise.resolve(true);
+  }
 }
 
 export function getUser(urn: UserUrn): Promise<User> {

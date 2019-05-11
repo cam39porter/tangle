@@ -7,14 +7,7 @@ const LOGGER = new Logger("src/db/db.ts");
 
 const NEO4J_URL = "34.219.241.98";
 
-const driver = neo4j.driver(
-  `bolt://${NEO4J_URL}:7687`,
-  neo4j.auth.basic("neo4j", "i-0f214232ca2c43649"),
-  {
-    maxTransactionRetryTime: 1,
-    connectionTimeout: 10000
-  }
-);
+const driver = neo4j.driver(`bolt://${NEO4J_URL}:7687`);
 
 driver.onError = error => {
   LOGGER.error("Could not connect to neo4j", error);

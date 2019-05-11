@@ -172,7 +172,7 @@ enum GetAllUseCase {
 
 input PagingContext {
   pageId: String
-  count: Int!
+  count: Int
 }
 
 type Mutation {

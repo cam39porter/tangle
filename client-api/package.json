@@ -3,10 +3,6 @@
   "version": "0.0.1",
   "description": "graphql server",
   "main": "index.js",
-  "engines": {
-    "node": "10.15.0",
-    "yarn": "1.5.1"
-  },
   "scripts": {
     "test": "jest",
     "compile": "tsc -w",

@@ -34,13 +34,7 @@ function doMerge(user: User): Promise<User> {
 }
 
 function isUserWhitelisted(email: string): Promise<boolean> {
-  const params = [new Param("email", email)];
-  const query = `
-    MATCH (u:WhitelistedEmail {email:{email}})
-    RETURN u`;
-  return executeQuery(query, params).then(res => {
-    return res.records.length > 0;
-  });
+  return Promise.resolve(true);
 }
 
 export function getUser(urn: UserUrn): Promise<User> {

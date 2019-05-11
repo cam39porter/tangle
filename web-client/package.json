@@ -2,7 +2,6 @@
   "name": "web-client",
   "productName": "Tangle",
   "version": "0.1.0",
-  "engine": "8.9.4",
   "description": "A web client for empowering people to capture and connect thoughts to create big ideas",
   "private": true,
   "homepage": "./",

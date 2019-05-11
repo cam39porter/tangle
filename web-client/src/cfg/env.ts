@@ -1,5 +1,4 @@
-const devApiUrl =
-  "http://ec2-34-222-241-88.us-west-2.compute.amazonaws.com:8080";
+const devApiUrl = "https://api.tangleapp.co:8080";
 const prodApiUrl = devApiUrl;
 const localApiUrl = "http://localhost:8080";
 
